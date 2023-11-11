@@ -12,16 +12,18 @@ let randomCoords = {
 console.log(`from randomly picking up : (${randomCoords.latitude}, ${randomCoords.longitude})`);
 
 
+
 // ----- show user initial view -----
 let map = L.map('map').setView([randomCoords.latitude, randomCoords.longitude], 30);
     const tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
             attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         }).addTo(map);
-let marker = L.marker([randomCoords.latitude, randomCoords.longitude]).addTo(map);
+var marker = L.marker([randomCoords.latitude, randomCoords.longitude]).addTo(map);
 
 
-// ----- send user postion to socket -----
+
+// ----- send user initial postion to socket -----
 socket.emit(
     "position", 
     {
@@ -30,8 +32,9 @@ socket.emit(
     });
 
 
-// ----- receive partner coords and show on the map -----
-socket.on("position", (partner_info) => {
+
+// ----- receive partners initial postion and show on the map -----
+socket.on("initPosition", (partner_info) => {
     for ( sid in partner_info ) {
         console.log(sid, socket.id);
 
@@ -41,6 +44,20 @@ socket.on("position", (partner_info) => {
     }
 });
 
+
+
+// ----- update parners postion when moving -----
+socket.on("movingPostion", (partner_info) => {
+    let//
+    oldLatLng = [partner_info[socket.id][0].latitude, partner_info[socket.id][0].longitude];
+    newLatLng = [partner_info[socket.id][1].latitude, partner_info[socket.id][1].longitude];
+    
+    console.log(`aim to move: (${newLatLng})`);
+
+    console.log(`marker before moving : ${marker.getLatLng()}`);
+    marker.setLatLng(oldLatLng, newLatLng);
+    console.log(`marker after moving : ${marker.getLatLng()}`);
+});
 
 
 // remove marker when user disconnects
@@ -59,20 +76,21 @@ socket.on("message", (msg) => {
 });
 
 
-// ----- change postion randomly -----
-// setInterval(()=> {
-//     let randomCoords = {
-//         latitude: 24.982 + Math.random()*0.006,
-//         longitude: 121.534 + Math.random()*0.006
-//     };
 
-//     socket.emit(
-//         "position", 
-//         {
-//             latitude: randomCoords.latitude,
-//             longitude: randomCoords.longitude
-//         });
-// }, 2000)
+// ----- change postion randomly -----
+setInterval(()=> {
+    let randomCoords = {
+        latitude: 24.982 + Math.random()*0.006,
+        longitude: 121.534 + Math.random()*0.006
+    };
+
+    socket.emit(
+        "position", 
+        {
+            latitude: randomCoords.latitude,
+            longitude: randomCoords.longitude
+        });
+}, 2000)
 
 
 

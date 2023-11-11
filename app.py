@@ -47,12 +47,17 @@ def position(position):
     user_id = request.sid
 
     print(len(partners_info[user_id]))
-    if len(partners_info[user_id]) > 1:
-        del partners_info[user_id][0]
 
-    partners_info[user_id].append(position)
+    if len(partners_info[user_id]) < 2:
+        partners_info[user_id].append(position)
+        sockitio.emit("initPosition", partners_info)
+
+    if len(partners_info[user_id]) >= 2:
+        del partners_info[user_id][0]
+        partners_info[user_id].append(position)
+        sockitio.emit("movingPostion", partners_info)
+
     print(partners_info)
-    emit("position", partners_info, broadcast=True)
 
 
 
