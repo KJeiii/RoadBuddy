@@ -4,6 +4,7 @@ latitudeRange = [24.988, 24.982], //0.006
 longitudeRange = [121.534, 121.542]; //0.006
 
 
+
 // test user's position by select position from randomPosition
 let randomCoords = {
     latitude: 24.982 + Math.random()*0.006,
@@ -12,15 +13,23 @@ let randomCoords = {
 console.log(`from randomly picking up : (${randomCoords.latitude}, ${randomCoords.longitude})`);
 
 
-
 // ----- show user initial view -----
 let map = L.map('map').setView([randomCoords.latitude, randomCoords.longitude], 30);
     const tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
             attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         }).addTo(map);
-var marker = L.marker([randomCoords.latitude, randomCoords.longitude]).addTo(map);
+var//
+marker = L.marker([randomCoords.latitude, randomCoords.longitude]).addTo(map),
+idArray = [],
+markerArray = [];
 
+
+
+socket.on("connect", () => {
+    idArray.push(socket.id);
+    markerArray.push(marker);
+});
 
 
 // ----- send user initial postion to socket -----
@@ -35,28 +44,40 @@ socket.emit(
 
 // ----- receive partners initial postion and show on the map -----
 socket.on("initPosition", (partner_info) => {
-    for ( sid in partner_info ) {
-        console.log(sid, socket.id);
 
-        if ( sid !== socket.id ) {
+    for ( sid in partner_info ) {
+        console.log(socket.id);
+        if ( sid !== socket.id && !idArray.includes(sid)) {
             let markerToAdd = L.marker([partner_info[sid][0].latitude, partner_info[sid][0].longitude]).addTo(map);
+            idArray.push(sid);
+            markerArray.push(markerToAdd);
         }
     }
+
+    console.log(`idArray: ${idArray}`);
+    console.log(`markerArray: ${markerArray}`);
 });
 
 
 
 // ----- update parners postion when moving -----
 socket.on("movingPostion", (partner_info) => {
-    let//
-    oldLatLng = [partner_info[socket.id][0].latitude, partner_info[socket.id][0].longitude];
-    newLatLng = [partner_info[socket.id][1].latitude, partner_info[socket.id][1].longitude];
-    
-    console.log(`aim to move: (${newLatLng})`);
 
-    console.log(`marker before moving : ${marker.getLatLng()}`);
-    marker.setLatLng(oldLatLng, newLatLng);
-    console.log(`marker after moving : ${marker.getLatLng()}`);
+    for ( id of idArray) {
+        let//
+        oldLatLng = [partner_info[id][0].latitude, partner_info[id][0].longitude],
+        newLatLng = [partner_info[id][1].latitude, partner_info[id][1].longitude],
+        movingMarker = markerArray[idArray.indexOf(id)];
+
+        movingMarker.setLatLng(oldLatLng, newLatLng);
+    }
+
+    
+    
+    // console.log(`aim to move: (${newLatLng})`);
+
+    // console.log(`marker before moving : ${marker.getLatLng()}`);
+    // console.log(`marker after moving : ${marker.getLatLng()}`);
 });
 
 
