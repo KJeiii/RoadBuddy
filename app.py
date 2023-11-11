@@ -4,7 +4,7 @@ from flask_socketio import SocketIO, emit, send
 app = Flask(__name__)
 sockitio = SocketIO(app)
 
-partners_coords = []
+partners_info = {}
 
 @app.route("/")
 def msg():
@@ -13,27 +13,46 @@ def msg():
 
 @sockitio.on("connect")
 def connect():
-    sockitio.emit("message", f'{request.sid} joined')
+    partner_id_to_add = request.sid
+    partners_info[partner_id_to_add] = []
+    total_partners = partners_info.keys()
+
+    sockitio.emit("message", 
+                  f'new partner joins : {request.sid}\n' + 
+                  f'total partners: {total_partners}'
+                  )
 
 
 @sockitio.on("disconnect")
 def disconnect():
-    sockitio.emit("message", f'{request.sid} leaved')
-    print("user disconnected")
+    partner_id_to_delete = request.sid
+    del partners_info[partner_id_to_delete]
+    total_partners = partners_info.keys()
+
+    sockitio.emit("disconnect")
+    sockitio.emit("message", 
+                  f'partner leaves : {request.sid}\n' + 
+                  f'total partners: {total_partners}'
+                  )
 
 
-@sockitio.on("message")
-def message(data):
-    print(data)
-    send(data, broadcast=True)
+# @sockitio.on("message")
+# def message(data):
+#     print(data)
+#     send(data, broadcast=True)
 
 
 @sockitio.on("position")
-def position(own_position):
-    partners_coords.append(own_position)
-    print(partners_coords)
-    emit("position", partners_coords, broadcast=True)
-    emit("message", partners_coords, broadcast=True)
+def position(position):
+    user_id = request.sid
+
+    print(len(partners_info[user_id]))
+    if len(partners_info[user_id]) > 1:
+        del partners_info[user_id][0]
+
+    partners_info[user_id].append(position)
+    print(partners_info)
+    emit("position", partners_info, broadcast=True)
 
 
 

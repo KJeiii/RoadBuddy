@@ -11,6 +11,7 @@ let randomCoords = {
 };
 console.log(`from randomly picking up : (${randomCoords.latitude}, ${randomCoords.longitude})`);
 
+
 // ----- show user initial view -----
 let map = L.map('map').setView([randomCoords.latitude, randomCoords.longitude], 30);
     const tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -30,12 +31,24 @@ socket.emit(
 
 
 // ----- receive partner coords and show on the map -----
-socket.on("position", (partner_coords) => {
-    for ( coord of partner_coords ) {
-        console.log(coord);
-        let marker = L.marker([coord.latitude, coord.longitude]).addTo(map);
+socket.on("position", (partner_info) => {
+    for ( sid in partner_info ) {
+        console.log(sid, socket.id);
+
+        if ( sid !== socket.id ) {
+            let markerToAdd = L.marker([partner_info[sid][0].latitude, partner_info[sid][0].longitude]).addTo(map);
+        }
     }
 });
+
+
+
+// remove marker when user disconnects
+socket.on("disconnect", () => {
+    map.removeLayer(marker);
+});
+
+
 
 // ----- receive msg and show on the view -----
 socket.on("message", (msg) => {
@@ -45,6 +58,21 @@ socket.on("message", (msg) => {
     window.scrollTo(0, document.body.scrollHeight);
 });
 
+
+// ----- change postion randomly -----
+// setInterval(()=> {
+//     let randomCoords = {
+//         latitude: 24.982 + Math.random()*0.006,
+//         longitude: 121.534 + Math.random()*0.006
+//     };
+
+//     socket.emit(
+//         "position", 
+//         {
+//             latitude: randomCoords.latitude,
+//             longitude: randomCoords.longitude
+//         });
+// }, 2000)
 
 
 
