@@ -29,7 +29,7 @@ def disconnect():
     del partners_info[partner_id_to_delete]
     total_partners = partners_info.keys()
 
-    sockitio.emit("disconnect")
+    sockitio.emit("disconnect", partner_id_to_delete)
     sockitio.emit("message", 
                   f'partner leaves : {request.sid}\n' + 
                   f'total partners: {total_partners}'

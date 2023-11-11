@@ -82,8 +82,11 @@ socket.on("movingPostion", (partner_info) => {
 
 
 // remove marker when user disconnects
-socket.on("disconnect", () => {
-    map.removeLayer(marker);
+socket.on("disconnect", (partnerIDToDelete) => {
+    map.removeLayer(markerArray[idArray.indexOf(partnerIDToDelete)]);
+    markerArray.splice(idArray.indexOf(partnerIDToDelete),1);
+    idArray.splice(idArray.indexOf(partnerIDToDelete),1);
+    console.log(`after disconnect ${idArray}`)
 });
 
 
