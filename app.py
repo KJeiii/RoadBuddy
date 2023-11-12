@@ -1,14 +1,49 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, session, redirect, url_for
 from flask_socketio import SocketIO, emit, send
 
 app = Flask(__name__)
+app.secret_key = "3b62657d32897eb69f59c089f0950dbe1ce4fd13"
 sockitio = SocketIO(app)
 
 partners_info = {}
+rooms = {}
+# rooms = {
+#   room_id: {
+#       {username-1 : [old_Postion, new_postion]},
+#       {username-2 : [old_Postion, new_postion]},
+#   }
+# }
 
-@app.route("/")
-def msg():
-    return render_template("index.html")
+@app.route("/", methods = ["POST", "GET"])
+def build_room():
+    if request.method == "POST":
+        username = request.form.get("username")
+        roomID = request.form.get("roomID")
+        initial_position = request.form.get("initial_position")
+        session["username"] = username
+        session["roomID"] = roomID
+
+        rooms[roomID] = {
+            username : [initial_position]
+        }
+
+        print(rooms)
+
+        return redirect(url_for("map"))
+
+    return render_template("build_room.html")
+
+
+
+
+@app.route("/map")
+def map():
+    if session.get("username") == None or session.get("roomID") == None:
+        print("no info")
+        return render_template("build_room.html")
+    
+    return render_template("map.html")
+
 
 
 @sockitio.on("connect")
