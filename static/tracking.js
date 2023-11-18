@@ -36,19 +36,22 @@ socket.on("connect", () => {
 socket.emit(
     "position", 
     {
-        latitude: randomCoords.latitude,
-        longitude: randomCoords.longitude
+        roomID : sessionStorage.getItem("roomID"),
+        coord : {
+            latitude: randomCoords.latitude,
+            longitude: randomCoords.longitude
+        }
     });
 
 
 
 // ----- receive partners initial postion and show on the map -----
-socket.on("initPosition", (partner_info) => {
+socket.on("initPosition", (user_info) => {
 
-    for ( sid in partner_info ) {
+    for ( sid in user_info ) {
         console.log(socket.id);
         if ( sid !== socket.id && !idArray.includes(sid)) {
-            let markerToAdd = L.marker([partner_info[sid][0].latitude, partner_info[sid][0].longitude]).addTo(map);
+            let markerToAdd = L.marker([user_info[sid][0].latitude, user_info[sid][0].longitude]).addTo(map);
             idArray.push(sid);
             markerArray.push(markerToAdd);
         }
@@ -61,12 +64,13 @@ socket.on("initPosition", (partner_info) => {
 
 
 // ----- update parners postion when moving -----
-socket.on("movingPostion", (partner_info) => {
+socket.on("movingPostion", (user_info) => {
+    console.log(user_info);
 
     for ( id of idArray) {
         let//
-        oldLatLng = [partner_info[id][0].latitude, partner_info[id][0].longitude],
-        newLatLng = [partner_info[id][1].latitude, partner_info[id][1].longitude],
+        oldLatLng = [user_info[id][0].latitude, user_info[id][0].longitude],
+        newLatLng = [user_info[id][1].latitude, user_info[id][1].longitude],
         movingMarker = markerArray[idArray.indexOf(id)];
 
         movingMarker.setLatLng(oldLatLng, newLatLng);
@@ -108,12 +112,23 @@ setInterval(()=> {
         longitude: 121.534 + Math.random()*0.006
     };
 
-    socket.emit(
-        "position", 
-        {
+    let data = {
+        roomID: sessionStorage.getItem("roomID"),
+        coord: {
             latitude: randomCoords.latitude,
-            longitude: randomCoords.longitude
-        });
+            longitude: randomCoords.longitude            
+        }
+    };
+    console.log(data);
+
+    socket.emit("position", data);
+
+    // socket.emit(
+    //     "position", 
+    //     {
+    //         latitude: randomCoords.latitude,
+    //         longitude: randomCoords.longitude
+    //     });
 }, 2000)
 
 
