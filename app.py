@@ -1,9 +1,9 @@
 from flask import Flask, render_template, request, session, redirect, url_for
-from flask_socketio import SocketIO, emit, send
+from flask_socketio import SocketIO, emit, send, join_room, leave_room
 
 app = Flask(__name__)
 app.secret_key = "3b62657d32897eb69f59c089f0950dbe1ce4fd13"
-sockitio = SocketIO(app)
+socketio = SocketIO(app)
 
 partners_info = {}
 rooms = {}
@@ -15,69 +15,97 @@ rooms = {}
 # }
 
 @app.route("/", methods = ["POST", "GET"])
-def build_room():
+def room():
     if request.method == "POST":
         username = request.form.get("username")
         roomID = request.form.get("roomID")
-        initial_position = request.form.get("initial_position")
+        initial_latitude = float(request.form.get("initial_position").split(",")[0])
+        initial_longtitude = float(request.form.get("initial_position").split(",")[1])
+        create = request.form.get("create")
+        join = request.form.get("join")
+
+        print(
+            username, 
+            roomID,     
+            initial_latitude, 
+            initial_longtitude, 
+            request.form.get("create", False),
+            request.form.get("join", False)
+            )
+
         session["username"] = username
         session["roomID"] = roomID
 
-        rooms[roomID] = {
-            username : [initial_position]
-        }
+        if create != False:
+            rooms[roomID] = {
+                username : [
+                    {
+                        "latitude" : initial_latitude,
+                        "longtitude" : initial_longtitude
+                    }
+                ]
+            }
+            print(roomID)
+            return redirect(url_for("tracking"))
 
-        print(rooms)
+        if join != False & roomID in rooms.keys():
+            return redirect(url_for("tracking"))
 
-        return redirect(url_for("map"))
-
-    return render_template("build_room.html")
-
+    return render_template("room.html")
 
 
 
-@app.route("/map")
-def map():
+
+@app.route("/tracking")
+def tracking():
     if session.get("username") == None or session.get("roomID") == None:
+
         print("no info")
-        return render_template("build_room.html")
+        return render_template("room.html")
     
-    return render_template("map.html")
+    roomID = session.get("roomID")
+    print(roomID)
+    
+    return render_template("tracking.html")
 
 
 
-@sockitio.on("connect")
+@socketio.on("connect")
 def connect():
+    roomID = session.get("roomID")
+    join_room(roomID)
+
     partner_id_to_add = request.sid
     partners_info[partner_id_to_add] = []
     total_partners = partners_info.keys()
 
-    sockitio.emit("message", 
+    socketio.emit("message", 
+                  f'new team created : {roomID}\n' + 
                   f'new partner joins : {request.sid}\n' + 
-                  f'total partners: {total_partners}'
+                  f'total partners: {len(total_partners)}'
                   )
 
 
-@sockitio.on("disconnect")
+@socketio.on("disconnect")
 def disconnect():
     partner_id_to_delete = request.sid
     del partners_info[partner_id_to_delete]
     total_partners = partners_info.keys()
 
-    sockitio.emit("disconnect", partner_id_to_delete)
-    sockitio.emit("message", 
+    socketio.emit("disconnect", partner_id_to_delete)
+    socketio.emit("message", 
                   f'partner leaves : {request.sid}\n' + 
                   f'total partners: {total_partners}'
                   )
 
 
-# @sockitio.on("message")
+# @socketio.on("message")
 # def message(data):
 #     print(data)
 #     send(data, broadcast=True)
 
 
-@sockitio.on("position")
+@socketio.on("position")
 def position(position):
     user_id = request.sid
 
@@ -85,15 +113,15 @@ def position(position):
 
     if len(partners_info[user_id]) < 2:
         partners_info[user_id].append(position)
-        sockitio.emit("initPosition", partners_info)
+        socketio.emit("initPosition", partners_info)
 
     if len(partners_info[user_id]) >= 2:
         del partners_info[user_id][0]
         partners_info[user_id].append(position)
-        sockitio.emit("movingPostion", partners_info)
+        socketio.emit("movingPostion", partners_info)
 
     print(partners_info)
 
 
 
-sockitio.run(app, debug=True)
+socketio.run(app, debug=True)
