@@ -69,8 +69,8 @@ socket.on("movingPostion", (user_info) => {
 
     for ( id of idArray) {
         let//
-        oldLatLng = [user_info[id][0].latitude, user_info[id][0].longitude],
-        newLatLng = [user_info[id][1].latitude, user_info[id][1].longitude],
+        oldLatLng = [user_info[id]["coords"][0].latitude, user_info[id]["coords"][0].longitude],
+        newLatLng = [user_info[id]["coords"][1].latitude, user_info[id]["coords"][1].longitude],
         movingMarker = markerArray[idArray.indexOf(id)];
 
         movingMarker.setLatLng(oldLatLng, newLatLng);
