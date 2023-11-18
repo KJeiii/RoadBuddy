@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RoadBuddy</title>
+    <link rel="stylesheet" href="../static/room.css">
+</head>
+<body>
+    <form action="/" method="post">
+        <div>
+            <label for="username">姓名</label>
+            <input type="text" name="username">
+        </div>
+        <div>
+            <label for="roomID">隊伍ID</label>
+            <input type="text" name="roomID">
+        </div>
+        <div>
+            <label for="initial_position">初始位置</label>
+            <input type="text" name="initial_position">
+        </div>
+        <div>
+            <button type="submit" name="create">建立隊伍</button>
+            <button type="submit" name="build">加入隊伍</button>
+        </div>
+    </form>
+
+    <script src="../static/room.js"></script>
+</body>
+</html>
