@@ -189,16 +189,24 @@ def position(position):
     user_coords = rooms_info[roomID][userID]["coords"]
 
 
-    if len(user_coords) < 2:
+    if len(user_coords) >= 2:
+        del user_coords[0]
+        user_coords.append(new_coord)
+        socketio.emit("movingPostion", rooms_info[roomID], to=room)
+
+    if len(user_coords) == 1 :
+        user_coords.append(new_coord)
+        socketio.emit("movingPostion", rooms_info[roomID], to=room)
+
+    if len(user_coords) == 0 :
         # user_coords.append(position)
         # socketio.emit("initPosition", user_info)
         user_coords.append(new_coord)
         socketio.emit("initPosition", rooms_info[roomID], to=room)
 
-    if len(user_coords) >= 2:
-        del user_coords[0]
-        user_coords.append(new_coord)
-        socketio.emit("movingPostion", rooms_info[roomID], to=room)
+
+
+
 
     print(user_coords)
 
