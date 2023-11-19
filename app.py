@@ -61,4 +61,4 @@ def position(position):
 
 
 
-sockitio.run(app, debug=True, port=3000)
+sockitio.run(app, debug=True, port=3000, allow_unsafe_werkzeug=True)
