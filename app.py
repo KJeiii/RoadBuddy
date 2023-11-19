@@ -2,7 +2,7 @@ from flask import Flask, render_template, request
 from flask_socketio import SocketIO, emit, send
 
 app = Flask(__name__)
-sockitio = SocketIO(app)
+sockitio = SocketIO(app, cors_allowed_origins="*")
 
 partners_info = {}
 
