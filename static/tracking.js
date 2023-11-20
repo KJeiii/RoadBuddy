@@ -10,7 +10,6 @@ let randomCoords = {
     latitude: 24.982 + Math.random()*0.006,
     longitude: 121.534 + Math.random()*0.006
 };
-console.log(`from randomly picking up : (${randomCoords.latitude}, ${randomCoords.longitude})`);
 
 
 // ----- show user initial view -----
@@ -56,16 +55,13 @@ socket.on("initPosition", (user_info) => {
             markerArray.push(markerToAdd);
         }
     }
-
-    console.log(`idArray: ${idArray}`);
-    console.log(`markerArray: ${markerArray}`);
 });
 
 
 
 // ----- update parners postion when moving -----
 socket.on("movingPostion", (user_info) => {
-    console.log(user_info);
+    console.log(`Update: ${user_info}`);
 
     for (id of idArray) {
         let//
@@ -82,13 +78,10 @@ socket.on("movingPostion", (user_info) => {
 // remove marker when user disconnects
 // Case-1. close brwoser directly
 socket.on("disconnect", (userID) => {
-    console.log(markerArray[idArray.indexOf(userID)]);
-    console.log();
-
     map.removeLayer(markerArray[idArray.indexOf(userID)]);
     markerArray.splice(idArray.indexOf(userID),1);
     idArray.splice(idArray.indexOf(userID),1);
-    console.log(`after disconnect ${idArray}`)
+    console.log(`remaining userID after disconnect ${idArray}`)
 });
 
 // Case-2. press "leave" button
@@ -124,7 +117,7 @@ setInterval(()=> {
             longitude: randomCoords.longitude            
         }
     };
-    // console.log(data);
+    console.log(`new data sent from client : ${data}`);
 
     socket.emit("position", data);
 }, 2000)

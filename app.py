@@ -32,9 +32,9 @@ rooms_info = {}
 @app.route("/", methods = ["POST", "GET"])
 def room():
     session.clear()
-    print(f'session after clearance : {session}')
-    print(f'request method for user ({request.form.get("username")}) : {request.method}')
-    print(f'rooms_info at beginning of room : {rooms_info}')
+    # print(f'session after clearance : {session}')
+    # print(f'request method for user ({request.form.get("username")}) : {request.method}')
+    # print(f'rooms_info at beginning of room : {rooms_info}')
 
     if request.method == "POST":
 
@@ -43,7 +43,7 @@ def room():
         create = request.form.get("create", False)
         join = request.form.get("join", False)
 
-        print(f'(beginning for room) create/join statusfor user ({request.form.get("username")}) : {create}, {join}')
+        # print(f'(beginning for room) create/join statusfor user ({request.form.get("username")}) : {create}, {join}')
 
         if not username or not roomID:
             print("Either Username or roomID is empty.")
@@ -68,7 +68,7 @@ def room():
         # session["initial_latitude"] = float(request.form.get("initial_position").split(",")[0])
         # session["initial_longtitude"] = float(request.form.get("initial_position").split(",")[1])
 
-        print(f'session after build : {session}')
+        # print(f'session after build : {session}')
         print(rooms_info)
 
 
@@ -93,7 +93,7 @@ def connect():
     username = session.get("username")
     roomID = session.get("roomID")
 
-    print(f'(socketio for connect) create/join status for user( {username} ): {session["create"]}, {session["join"]}')
+    # print(f'(socketio for connect) create/join status for user( {username} ): {session["create"]}, {session["join"]}')
 
     if not username or not roomID:
         return
@@ -111,7 +111,6 @@ def connect():
 
         print(f'rooms_info after create/join : {rooms_info}')
 
-        print(f'the roomID ({roomID}) before user ({username}) joins')
         join_room(roomID)
         emit("message", f'new partner joins : {username}\n', to=roomID)
 
