@@ -51,7 +51,7 @@ socket.on("initPosition", (user_info) => {
     for ( sid in user_info ) {
         console.log(socket.id);
         if ( sid !== socket.id && !idArray.includes(sid)) {
-            let markerToAdd = L.marker([user_info[sid][0].latitude, user_info[sid][0].longitude]).addTo(map);
+            let markerToAdd = L.marker([user_info[sid]["coords"][0].latitude, user_info[sid]["coords"][0].longitude]).addTo(map);
             idArray.push(sid);
             markerArray.push(markerToAdd);
         }
@@ -67,7 +67,7 @@ socket.on("initPosition", (user_info) => {
 socket.on("movingPostion", (user_info) => {
     console.log(user_info);
 
-    for ( id of idArray) {
+    for (id of idArray) {
         let//
         oldLatLng = [user_info[id]["coords"][0].latitude, user_info[id]["coords"][0].longitude],
         newLatLng = [user_info[id]["coords"][1].latitude, user_info[id]["coords"][1].longitude],
@@ -76,20 +76,14 @@ socket.on("movingPostion", (user_info) => {
         movingMarker.setLatLng(oldLatLng, newLatLng);
     }
 
-    
-    
-    // console.log(`aim to move: (${newLatLng})`);
-
-    // console.log(`marker before moving : ${marker.getLatLng()}`);
-    // console.log(`marker after moving : ${marker.getLatLng()}`);
 });
 
 
 // remove marker when user disconnects
-socket.on("disconnect", (partnerIDToDelete) => {
-    map.removeLayer(markerArray[idArray.indexOf(partnerIDToDelete)]);
-    markerArray.splice(idArray.indexOf(partnerIDToDelete),1);
-    idArray.splice(idArray.indexOf(partnerIDToDelete),1);
+socket.on("disconnect", (userID) => {
+    map.removeLayer(markerArray[idArray.indexOf(userID)]);
+    markerArray.splice(idArray.indexOf(userID),1);
+    idArray.splice(idArray.indexOf(userID),1);
     console.log(`after disconnect ${idArray}`)
 });
 
@@ -119,7 +113,7 @@ setInterval(()=> {
             longitude: randomCoords.longitude            
         }
     };
-    console.log(data);
+    // console.log(data);
 
     socket.emit("position", data);
 

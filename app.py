@@ -3,7 +3,7 @@ from flask_socketio import SocketIO, emit, send, join_room, leave_room
 
 app = Flask(__name__)
 app.secret_key = "3b62657d32897eb69f59c089f0950dbe1ce4fd13"
-socketio = SocketIO(app)
+socketio = SocketIO(app, logger=True)
 
 partners_info = {}
 
@@ -46,26 +46,46 @@ rooms_info = {}
 
 @app.route("/", methods = ["POST", "GET"])
 def room():
+    session.clear()
+    print(f'session after clearance : {session}')
+    print(f'request method for user ({request.form.get("username")}) : {request.method}')
+    print(f'rooms_info at beginning of room : {rooms_info}')
+
     if request.method == "POST":
-        session["username"] = request.form.get("username")
-        session["roomID"] = request.form.get("roomID")
-        session["initial_latitude"] = float(request.form.get("initial_position").split(",")[0])
-        session["initial_longtitude"] = float(request.form.get("initial_position").split(",")[1])
-        session["create"] = request.form.get("create", False)
-        session["join"] = request.form.get("join", False)
 
-        print(session)
+        username = request.form.get("username")
+        roomID = request.form.get("roomID")
+        create = request.form.get("create", False)
+        join = request.form.get("join", False)
 
-        # if create != False:
-        #     rooms_info[username] = {
-        #         'roomID' : roomID,
-        #         'coords' : [
-        #             {
-        #                 "latitude" : initial_latitude,
-        #                 "longtitude" : initial_longtitude
-        #             }
-        #         ]
-        #     }
+        print(f'(beginning for room) create/join statusfor user ({request.form.get("username")}) : {create}, {join}')
+
+        if not username or not roomID:
+            print("Either Username or roomID is empty.")
+            return redirect(url_for("room"))
+        
+        if create != False and roomID in rooms_info.keys():
+            print(f'{roomID} has already exist.')
+            return redirect(url_for("room"))
+        
+        if join != False and roomID not in rooms_info.keys():
+            print(f'{roomID} has not builded yet.')
+            return redirect(url_for("room"))
+
+        if roomID not in rooms_info.keys():
+            rooms_info[roomID] = {}
+            print(roomID == list(rooms_info.keys())[0])
+
+        session["username"] = username
+        session["roomID"] = roomID
+        session["create"] = create
+        session["join"] = join
+        # session["initial_latitude"] = float(request.form.get("initial_position").split(",")[0])
+        # session["initial_longtitude"] = float(request.form.get("initial_position").split(",")[1])
+
+        print(f'session after build : {session}')
+        print(rooms_info)
+
 
         return redirect(url_for("tracking"))
 
@@ -85,106 +105,97 @@ def tracking():
 
 @socketio.on("connect")
 def connect():
+    username = session.get("username")
+    roomID = session.get("roomID")
 
-    if session["create"] != False:
-        # add new user in user_info
-        # user_info[request.sid] = {
-        #     "username": session["username"],
-        #     "roomID": session["roomID"],
-        #     'coords' : [
-        #         {
-        #             "latitude" : session["initial_latitude"],
-        #             "longtitude" : session["initial_longtitude"]
-        #         }]
-        # }
+    print(f'(socketio for connect) create/join status for user( {username} ): {session["create"]}, {session["join"]}')
 
-        # add new room to rooms_info
-        rooms_info[session["roomID"]] = {
-            request.sid: {
-                "username": session["username"],
-                "coords": [
-                    # {
-                    #     "latitude" : session["initial_latitude"],
-                    #     "longtitude" : session["initial_longtitude"]
-                    # }
-                    ]
-            }
-        }
+    if not username or not roomID:
+        return
+    
+    if roomID not in rooms_info.keys():
+        leave_room(roomID)
+        return
 
-        # add new room in room_list
-        room_list.append(session["roomID"])
-
-        print(rooms_info)
-        # print(user_info)
-
-        join_room(session["roomID"])
-        socketio.emit("message", 
-                    f'new team created : {room_list[len(room_list)-1]}\n' + 
-                    f'new partner joins : {rooms_info[session["roomID"]][request.sid]["username"]}\n'
-                    #   f'total partners: {len(rooms_info.keys())}'
-                    ,to=room)
-
-    if session["join"] != False:
-        # add new user in user_info
-        # user_info[request.sid] = {
-        #     session["username"]: {
-        #         "username": session["username"],
-        #         "roomID": session["roomID"],
-        #         'coords' : [
-        #             {
-        #                 "latitude" : session["initial_latitude"],
-        #                 "longtitude" : session["initial_longtitude"]
-        #             }
-        #         ]
-        #     }
-        # }
-
+    try: 
         # add new member to particular room
-        rooms_info[session["roomID"]][request.sid] = {
-            "username": session["username"],
+        rooms_info[roomID][request.sid] = {
+            "username": username,
             "coords": [
-                {
-                    "latitude" : session["initial_latitude"],
-                    "longtitude" : session["initial_longtitude"]
-                }]
+                # {
+                #     "latitude" : session["initial_latitude"],
+                #     "longtitude" : session["initial_longtitude"]
+                # }
+                ]
         }
 
+        print(f'rooms_info after create/join : {rooms_info}')
 
-        print(user_info)
+        print(f'the roomID ({roomID}) before user ({username}) joins')
+        join_room(roomID)
+        emit("message", 
+            f'new team created : {roomID}\n' + 
+            f'new partner joins : {username}\n'
+            #   f'total partners: {len(rooms_info.keys())}'
+            ,to=room)
 
-        join_room(session["roomID"])
-        socketio.emit("message", 
-                    f'new team created : {room_list[len(room_list)-1]}\n' + 
-                    f'new partner joins : {user_info[request.sid]["username"]}\n'
-                    #   f'total partners: {len(rooms_info.keys())}'
-                    ,to=room)
+
+    except Exception as error:
+        print(f'error in socketio event(connect): {error}')
+
+    # if session["create"] != False:
+    #     # add new room to rooms_info
+    #     rooms_info[roomID] = {
+    #         request.sid: {
+    #             "username": username,
+    #             "coords": [
+    #                 # {
+    #                 #     "latitude" : session["initial_latitude"],
+    #                 #     "longtitude" : session["initial_longtitude"]
+    #                 # }
+    #                 ]
+    #         }
+    #     }
+    #     print(f'create new room: {rooms_info}')
+
+    # if session["join"] != False:
+    #     # add new member to particular room
+    #     rooms_info[roomID][request.sid] = {
+    #         "username": username,
+    #         "coords": [
+    #             # {
+    #             #     "latitude" : session["initial_latitude"],
+    #             #     "longtitude" : session["initial_longtitude"]
+    #             # }
+    #             ]
+    #     }
+    #     print(f'new member join room: {rooms_info}')
+
+
 
 
 @socketio.on("disconnect")
 def disconnect():
     userID = request.sid
-    del user_info[userID]
-    # total_partners = partners_info.keys()
+    username = session.get("username")
+    roomID = session.get("roomID")
 
-    socketio.emit("disconnect", userID)
-    socketio.emit("message", 
-                  f'partner leaves : {request.sid}\n'
-                #   f'total partners: {total_partners}'
-                  )
+    print(f'socketio event (disconnect) : username ({username}), roomID ({roomID})')
+    
+    leave_room(roomID)
+    del rooms_info[roomID][userID]
 
+    emit("disconnect", userID, to=roomID)
+    emit("message", f'partner leaves : {username}\n', to=roomID)
 
-# @socketio.on("message")
-# def message(data):
-#     print(data)
-#     send(data, broadcast=True)
 
 
 @socketio.on("position")
 def position(position):
 
     userID = request.sid
-    # user_coords = user_info[userID]["coords"]
-    roomID = position["roomID"]
+    roomID = session.get("roomID")
+    username = session.get("username")
     new_coord = position["coord"]
     user_coords = rooms_info[roomID][userID]["coords"]
 
@@ -192,25 +203,19 @@ def position(position):
     if len(user_coords) >= 2:
         del user_coords[0]
         user_coords.append(new_coord)
-        socketio.emit("movingPostion", rooms_info[roomID], to=room)
+        emit("movingPostion", rooms_info[roomID], to=roomID)
 
     if len(user_coords) == 1 :
         user_coords.append(new_coord)
-        socketio.emit("movingPostion", rooms_info[roomID], to=room)
+        emit("movingPostion", rooms_info[roomID], to=roomID)
 
     if len(user_coords) == 0 :
-        # user_coords.append(position)
-        # socketio.emit("initPosition", user_info)
         user_coords.append(new_coord)
-        socketio.emit("initPosition", rooms_info[roomID], to=room)
+        emit("initPosition", rooms_info[roomID], to=roomID)
+
+    # print(user_coords)
 
 
 
 
-
-    print(user_coords)
-
-
-
-
-socketio.run(app, debug=True)
+socketio.run(app, debug=True, port=3000)
