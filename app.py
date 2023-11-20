@@ -108,10 +108,7 @@ def connect():
 
         print(f'the roomID ({roomID}) before user ({username}) joins')
         join_room(roomID)
-        emit("message", 
-            f'new team created : {roomID}\n' + 
-            f'new partner joins : {username}\n'
-            ,to=room)
+        emit("message", f'new partner joins : {username}\n', to=roomID)
 
 
     except Exception as error:
