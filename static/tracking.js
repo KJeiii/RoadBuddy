@@ -80,12 +80,23 @@ socket.on("movingPostion", (user_info) => {
 
 
 // remove marker when user disconnects
+// Case-1. close brwoser directly
 socket.on("disconnect", (userID) => {
+    console.log(markerArray[idArray.indexOf(userID)]);
+    console.log();
+
     map.removeLayer(markerArray[idArray.indexOf(userID)]);
     markerArray.splice(idArray.indexOf(userID),1);
     idArray.splice(idArray.indexOf(userID),1);
     console.log(`after disconnect ${idArray}`)
 });
+
+// Case-2. press "leave" button
+let leaveBtn = document.querySelector(".leave");
+leaveBtn.addEventListener("click", () => {
+    window.location.replace("/");
+});
+
 
 
 
@@ -116,13 +127,6 @@ setInterval(()=> {
     // console.log(data);
 
     socket.emit("position", data);
-
-    // socket.emit(
-    //     "position", 
-    //     {
-    //         latitude: randomCoords.latitude,
-    //         longitude: randomCoords.longitude
-    //     });
 }, 2000)
 
 
