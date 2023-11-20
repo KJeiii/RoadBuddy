@@ -3,7 +3,7 @@ from flask_socketio import SocketIO, emit, send, join_room, leave_room
 
 app = Flask(__name__)
 app.secret_key = "3b62657d32897eb69f59c089f0950dbe1ce4fd13"
-socketio = SocketIO(app, logger=True)
+socketio = SocketIO(app, logger=True, cors_allowed_origins="*")
 
 rooms_info = {}
 # rooms_info = {
@@ -164,4 +164,4 @@ def position(position):
 
 
 
-socketio.run(app, debug=True, port=3000)
+socketio.run(app, debug=True, port=3000, allow_unsafe_werkzeug=True)
