@@ -4,7 +4,7 @@ from flask_socketio import SocketIO, emit, send, join_room, leave_room
 app = Flask(__name__)
 app.secret_key = "3b62657d32897eb69f59c089f0950dbe1ce4fd13"
 socketio = SocketIO(app, 
-                    logger=True, 
+                    # logger=True, 
                     cors_allowed_origins="*", 
                     ping_timeout=60,
                     ping_interval=5
@@ -151,14 +151,17 @@ def position(position):
     if len(user_coords) >= 2:
         del user_coords[0]
         user_coords.append(new_coord)
+        print(rooms_info[roomID])
         emit("movingPostion", rooms_info[roomID], to=roomID)
 
     if len(user_coords) == 1 :
         user_coords.append(new_coord)
-        emit("movingPostion", rooms_info[roomID], to=roomID)
+        print(rooms_info[roomID])
+        emit("initPosition", rooms_info[roomID], to=roomID)
 
     if len(user_coords) == 0 :
         user_coords.append(new_coord)
+        print(rooms_info[roomID])
         emit("initPosition", rooms_info[roomID], to=roomID)
 
 
