@@ -83,7 +83,6 @@ socket.on("disconnect", (userID) => {
     map.removeLayer(markerArray[idArray.indexOf(userID)]);
     markerArray.splice(idArray.indexOf(userID),1);
     idArray.splice(idArray.indexOf(userID),1);
-    console.log(`remaining userID after disconnect ${idArray}`)
 });
 
 // Case-2. press "leave" button
