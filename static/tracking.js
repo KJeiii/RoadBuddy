@@ -48,7 +48,6 @@ socket.emit(
 socket.on("initPosition", (user_info) => {
 
     for ( sid in user_info ) {
-        console.log(socket.id);
         if ( sid !== socket.id && !idArray.includes(sid)) {
             let markerToAdd = L.marker([user_info[sid]["coords"][0].latitude, user_info[sid]["coords"][0].longitude]).addTo(map);
             idArray.push(sid);
@@ -61,16 +60,18 @@ socket.on("initPosition", (user_info) => {
 
 // ----- update parners postion when moving -----
 socket.on("movingPostion", (user_info) => {
-    console.log(`idArray : ${idArray}`);
     console.log(`Update: ${user_info}`);
-
+    
     for (id of idArray) {
+        try {
         let//
         oldLatLng = [user_info[id]["coords"][0].latitude, user_info[id]["coords"][0].longitude],
         newLatLng = [user_info[id]["coords"][1].latitude, user_info[id]["coords"][1].longitude],
         movingMarker = markerArray[idArray.indexOf(id)];
 
         movingMarker.setLatLng(oldLatLng, newLatLng);
+        }
+        catch(error) {console.log(`Error from user (${user_info[id]["username"]} : ${error})`)};
     }
 
 });
