@@ -61,6 +61,7 @@ socket.on("initPosition", (user_info) => {
 
 // ----- update parners postion when moving -----
 socket.on("movingPostion", (user_info) => {
+    console.log(`idArray : ${idArray}`);
     console.log(`Update: ${user_info}`);
 
     for (id of idArray) {
@@ -117,7 +118,7 @@ setInterval(()=> {
             longitude: randomCoords.longitude            
         }
     };
-    console.log(`new data sent from client : ${data}`);
+    console.log(`new data sent from client ${socket.id} : ${data}`);
 
     socket.emit("position", data);
 }, 2000)
