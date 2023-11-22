@@ -5,19 +5,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RoadBuddy</title>
 
-    <!-- Leaflet CSS and js file -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-    crossorigin=""/>
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-    crossorigin=""></script>
-
     <!-- custom css -->
     <link rel="stylesheet" href="../static/member.css">
 
 </head>
 <body>
+    <div class="backgroud">
+        <div class="title">
+            <div class="title-signup">註冊</div>
+            <div class="title-login">登入</div>
+        </div>
+
+        <div class="signup">
+            <form action="">
+                <div class="form-div">
+                    <div class="form-div-title">電子信箱</div>
+                    <input type="email" name="email" placeholder="輸入電子信箱">
+                </div>
+                <div class="form-div">
+                    <div class="form-div-title">姓名</div>
+                    <input type="text" name="username" placeholder="輸入姓名">
+                </div>
+                <div class="form-div">
+                    <div class="form-div-title">密碼</div>
+                    <input type="password" name="password" placeholder="輸入密碼">
+                </div>
+                <input type="submit" value="註冊">
+            </form>
+        </div>
+
+    <div>
     
     <!-- custom js -->
     <script src="../static/member.js"></script>
