@@ -61,7 +61,7 @@ class MemberTool(pooling.MySQLConnectionPool):
         connection.commit()
         connection.close()
 
-# test = MemberTool()
-# test.Create_database("roadbuddy")
-# test.Signup("mark", "mark@mail", "123")
+
+test = MemberTool()
+print(test.Search_member(email="mark@mail"))
 
