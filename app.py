@@ -2,6 +2,9 @@ from flask import Flask, render_template, request, session, redirect, url_for
 from flask_socketio import SocketIO, emit, send, join_room, leave_room
 from RoadBuddy import app
 from RoadBuddy.views.routes import *
+from RoadBuddy.controllers.member import member_bp
+
+app.register_blueprint(member_bp)
 
 
 socketio = SocketIO(app, 
