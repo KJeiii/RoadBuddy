@@ -25,11 +25,15 @@ body {
     opacity: 0.7;
     font-size: 25px;
     font-weight: 700;
-    
 }
 
 .start p {
     margin: 0;
+}
+
+.start:hover {
+    cursor:pointer;
+    opacity: 1;
 }
 
 .title {
