@@ -16,6 +16,7 @@ class MemberTool(pooling.MySQLConnectionPool):
         cursor.execute(create_string)
         connection.close()
 
+
     def Create_table(self) -> None:
         connection = self.get_connection()
         cursor = connection.cursor(dictionary=True)
@@ -47,7 +48,7 @@ class MemberTool(pooling.MySQLConnectionPool):
         return result
 
         
-    def Signup(self, user_name: str, email: str, password: str) -> None:
+    def Add_member(self, username: str, email: str, password: str) -> None:
         connection = self.get_connection()
         cursor = connection.cursor(dictionary=True)
 
@@ -55,13 +56,13 @@ class MemberTool(pooling.MySQLConnectionPool):
                         "insert into member (username, email, password)"
                         "values (%s, %s, %s)"
                         )
-        data_string = (user_name, email, password)
+        data_string = (username, email, password)
                     
         cursor.execute(update_string, data_string)
         connection.commit()
         connection.close()
 
 
-test = MemberTool()
-print(test.Search_member(email="mark@mail"))
+# test = MemberTool()
+# print(test.Search_member(email="mark@mail"))
 
