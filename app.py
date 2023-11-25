@@ -28,8 +28,17 @@ rooms_info = {}
 #             },
 # }
 
+@app.route("/")
+def home():
+    return render_template("home.html")
 
-@app.route("/", methods = ["POST", "GET"])
+
+@app.route("/member")
+def member():
+    return render_template("member.html")
+
+
+@app.route("/room", methods = ["POST", "GET"])
 def room():
     session.clear()
     # print(f'session after clearance : {session}')
