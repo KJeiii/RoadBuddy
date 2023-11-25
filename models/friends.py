@@ -21,8 +21,13 @@ class FriendsTool(pooling.MySQLConnectionPool):
  
         cursor.execute(create_string)
         connection.close() 
+        
 
-    def Search_friends(self, email:str) -> list:
+    def Add_friend(self, username:str) -> None:
+        pass
+
+
+    def Search_friends(self, username:str) -> list:
         connection = self.get_connection()
         cursor = connection.cursor(dictionary=True)
 
