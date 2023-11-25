@@ -42,7 +42,7 @@ let addErrorMsg = (cssSelector, msgText) => {
 }
 
 // --- signup ---
-signupBtn.addEventListener("click", () => {
+signupBtn.addEventListener("click", async() => {
     let//
     emailInput = document.querySelector(".signup input[name=email]"),
     usernameInput = document.querySelector(".signup input[name=username]"),
@@ -63,15 +63,37 @@ signupBtn.addEventListener("click", () => {
         addErrorMsg(".signup .email", "(格式錯誤，須包含@)");
     }
 
-    // check if username has used
-
     // check if password is confirmed correctly
     if ( passwordInput.value !== confirmInput.value ) {
         addErrorMsg(".signup .confirm-password", "(兩次密碼不一致，請重新輸入)");
         return;
     }
 
+    // request signup information to api
+    try{
+        let response = await fetch("/api/member", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                email: emailInput.value,
+                username: usernameInput.value,
+                password: passwordInput.value
+            })
+        });
+        let result = response.json();
 
+        if (response.status !== 200) {
+            console.log(result.message);
+            return;
+        }
+
+        console.log(result.message);
+    }
+    catch(error) {
+        console.log(error)
+    }
 
 });
 

@@ -15,16 +15,15 @@ member_bp = Blueprint("member_bp",
 def Signup():
     if request.method == "POST":
         try:
-            email = request.json.email
+            email = request.json["email"]
             if len(memberTool.Search_member(email)) != 0 :
                 response = {
                     "error": True,
                     "message": "註冊失敗，電子信箱重覆"
                 }
                 return jsonify(response), 400
-
-            username = request.json.username
-            password = generate_password_hash(request.json.password)
+            username = request.json["username"]
+            password = generate_password_hash(request.json["password"])
             memberTool.Add_member(username, email, password)
 
             response = {
@@ -42,11 +41,11 @@ def Signup():
         
 # signin and check user status
 @member_bp.route("/api/member/auth", methods = ["PUT"])
-def Signin():
+def Login():
     # signin
     if request.method == "PUT":
         try:
-            email = request.json.email
+            email = request.json["email"]
             if len(memberTool.Search_member(email)) == 0:
                 response = {
                     "error": True,
@@ -55,12 +54,12 @@ def Signin():
                 return jsonify(response), 400
             
             member_info = memberTool.Search_member(email)[0]
-            if check_password_hash(member_info.password, request.json.password):
-                username = request.json.username
+            if check_password_hash(member_info["password"], request.json["password"]):
+                username = request.json["username"]
                 jwt_payload = {
-                    "usi": member_info.user_id,
-                    "usn": member_info.username,
-                    "eml": member_info.email,
+                    "usi": member_info["user_id"],
+                    "usn": member_info["username"],
+                    "eml": member_info["email"],
                     "exp" : dt.datetime.utcnow() + dt.timedelta(days=7)
                 } 
 
@@ -92,9 +91,9 @@ def Signin():
                 JWT = JWT_in_headers[1]
                 jwt_payload = jwt.decode(JWT, os.environ.get("jwtsecret"))
                 response = {
-                    "user_id": jwt_payload.usi,
-                    "username": jwt_payload.usn,
-                    "email": jwt_payload.eml
+                    "user_id": jwt_payload["usi"],
+                    "username": jwt_payload["usn"],
+                    "email": jwt_payload["eml"]
                 }
                 return jsonify(response), 200
         

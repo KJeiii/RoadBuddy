@@ -1,5 +1,6 @@
 from mysql.connector import pooling
 from RoadBuddy.models import db_config
+# from __init__ import db_config
 
 
 class MemberTool(pooling.MySQLConnectionPool):
@@ -64,5 +65,5 @@ class MemberTool(pooling.MySQLConnectionPool):
 
 
 # test = MemberTool()
-# print(test.Search_member(email="mark@mail"))
+# print(test.Search_member(email="123@mail"))
 
