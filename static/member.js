@@ -28,19 +28,20 @@ loginDiv.addEventListener("click", () => {
 let//
 signupBtn = document.querySelector(".signup-btn"),
 loginBtn = document.querySelector(".login-btn");
-var errorMsg = {
-    signup : {
-        empty: "姓名、電子信箱、密碼不可空白",
-        username_exist: "姓名已被使用",
-        email_exist: "電子信箱已被使用",
-        password_not_match: "密碼兩次輸入不一致"
-    },
-    login : {
-        email_incorrect : "此電子信箱尚未註冊",
-        password_incorrect : "密碼不正確"
-    }
-};
 
+let addErrorMsg = (cssSelector, msgText) => {
+    let//
+    inputTitle = document.querySelector(cssSelector),
+    msg = document.createElement("div");
+    msg.textContent = msgText;
+    msg.style.color = "red";
+    msg.style.fontSize = "15px";
+    msg.style.lineHeight = "30px";
+    msg.style.marginLeft = "10px";
+    inputTitle.appendChild(msg)
+}
+
+// --- signup ---
 signupBtn.addEventListener("click", () => {
     let//
     emailInput = document.querySelector(".signup input[name=email]"),
@@ -53,22 +54,44 @@ signupBtn.addEventListener("click", () => {
         if  (input.value === "") {
             input.setAttribute("placeholder", "此欄位不可空白");
             input.style.border = "2px solid rgb(255, 197, 197)";
+            return;
         }
     }
 
     // check email format by identify "@"
     if ( emailInput.value.includes("@") != true ) {
-        let//
-        inputTitle = document.querySelector(".signup .email"),
-        msg = document.createElement("div");
-        msg.textContent = "(格式錯誤，須包含@)";
-        msg.style.color = "red";
-        msg.style.fontSize = "15px";
-        msg.style.lineHeight = "30px";
-        msg.style.marginLeft = "10px";
-        inputTitle.appendChild(msg)
+        addErrorMsg(".signup .email", "(格式錯誤，須包含@)");
     }
 
     // check if username has used
+
+    // check if password is confirmed correctly
+    if ( passwordInput.value !== confirmInput.value ) {
+        addErrorMsg(".signup .confirm-password", "(兩次密碼不一致，請重新輸入)");
+        return;
+    }
+
+
+
+});
+
+// --- login ---
+loginBtn.addEventListener("click", () => {
+    let//
+    emailInput = document.querySelector(".login input[name=email]"),
+    passwordInput = document.querySelector(".login input[name=password]");
+    
+    // feedback error message when one of the inputs is empty
+    for ( input of [emailInput, passwordInput] ) {
+        if  (input.value === "") {
+            input.setAttribute("placeholder", "此欄位不可空白");
+            input.style.border = "2px solid rgb(255, 197, 197)";
+            return;
+        }
+    }
+
+    // check if user has signed up already by email
+
+    // check if password is correct
 
 });
