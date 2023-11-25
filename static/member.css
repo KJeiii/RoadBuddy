@@ -26,8 +26,10 @@ body {
     margin-left: 20px;
     margin: 20px 20px 0 20px ;
     /* background-color: rgba(174,221,223,0.8); */
+}
 
-
+.title-signup:hover, .title-login:hover {
+    cursor: pointer;
 }
 
 .title-signup {
@@ -49,6 +51,8 @@ body {
 
 .signup {
     display: flex;
+    flex-wrap: wrap;
+    align-items: center;
     justify-content: center;
     background-color: rgba(174,221,223,0.8);
     border-radius: 0 0 10px 10px;
@@ -59,6 +63,8 @@ body {
 
 .login {
     display: none;
+    flex-wrap: wrap;
+    align-items: center;
     justify-content: center;
     background-color: rgba(251, 251, 251, 0.8);
     border-radius: 0 0 10px 10px;
@@ -67,13 +73,13 @@ body {
 
 }
 
-form {
+/* form {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     justify-content: center;
     width: 80vw;
-}
+} */
 
 .form-div {
     width: 90%;
