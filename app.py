@@ -1,8 +1,9 @@
 from flask import Flask, render_template, request, session, redirect, url_for
 from flask_socketio import SocketIO, emit, send, join_room, leave_room
+from RoadBuddy import app
+from RoadBuddy.views.routes import *
 
-app = Flask(__name__)
-app.secret_key = "3b62657d32897eb69f59c089f0950dbe1ce4fd13"
+
 socketio = SocketIO(app, 
                     # logger=True, 
                     cors_allowed_origins="*", 
@@ -28,14 +29,7 @@ rooms_info = {}
 #             },
 # }
 
-@app.route("/")
-def home():
-    return render_template("home.html")
 
-
-@app.route("/member")
-def member():
-    return render_template("member.html")
 
 
 @app.route("/room", methods = ["POST", "GET"])

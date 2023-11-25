@@ -1,5 +1,5 @@
 from mysql.connector import pooling
-from __init__ import db_config
+from RoadBuddy.models import db_config
 
 
 class MemberTool(pooling.MySQLConnectionPool):
