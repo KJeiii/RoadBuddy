@@ -62,6 +62,6 @@ class MemberTool(pooling.MySQLConnectionPool):
         connection.close()
 
 
-test = MemberTool()
-print(test.Search_member(email="mark@mail"))
+# test = MemberTool()
+# print(test.Search_member(email="mark@mail"))
 
