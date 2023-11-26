@@ -40,7 +40,7 @@ def Signup():
             return jsonify(response), 500
         
 # signin and check user status
-@member_bp.route("/api/member/auth", methods = ["PUT"])
+@member_bp.route("/api/member/auth", methods = ["PUT", "GET"])
 def Login():
     # signin
     if request.method == "PUT":
@@ -55,7 +55,6 @@ def Login():
             
             member_info = memberTool.Search_member(email)[0]
             if check_password_hash(member_info["password"], request.json["password"]):
-                username = request.json["username"]
                 jwt_payload = {
                     "usi": member_info["user_id"],
                     "usn": member_info["username"],

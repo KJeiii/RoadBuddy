@@ -100,7 +100,7 @@ signupBtn.addEventListener("click", async() => {
 });
 
 // --- login ---
-loginBtn.addEventListener("click", () => {
+loginBtn.addEventListener("click", async() => {
     let//
     emailInput = document.querySelector(".login input[name=email]"),
     passwordInput = document.querySelector(".login input[name=password]");
@@ -115,7 +115,40 @@ loginBtn.addEventListener("click", () => {
     }
 
     // check if user has signed up already by email
-
     // check if password is correct
+    try {
+        let response = await fetch("/api/member/auth", {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                email: emailInput.value,
+                password: passwordInput.value
+            })
+        });
+
+        let result = await response.json();
+        console.log(result);
+
+        if (response.status === 400) {
+            let msg = result.message;
+            if ( msg.includes("電子信件") ) {
+                addErrorMsg(".login .email", result.message);
+                return;
+            }
+            else{
+                addErrorMsg(".login .password", result.message);
+                return;
+            }
+        }
+        
+        let jwt = result.token;
+        window.localStorage.setItem("token", jwt);
+
+    }
+    catch(error) {
+        console.log(error)
+    }
 
 });
