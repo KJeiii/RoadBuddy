@@ -83,9 +83,10 @@ signupBtn.addEventListener("click", async() => {
                 password: passwordInput.value
             })
         });
-        let result = response.json();
+        let result = await response.json();
 
         if (response.status !== 200) {
+            addErrorMsg(".signup .email", result.message);
             console.log(result.message);
             return;
         }
