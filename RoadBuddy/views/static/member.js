@@ -61,6 +61,7 @@ signupBtn.addEventListener("click", async() => {
     // check email format by identify "@"
     if ( emailInput.value.includes("@") != true ) {
         addErrorMsg(".signup .email", "(格式錯誤，須包含@)");
+        return;
     }
 
     // check if password is confirmed correctly
