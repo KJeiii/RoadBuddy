@@ -8,3 +8,4 @@ app = Flask(__name__,
             static_folder="./views/static")
 
 app.secret_key = "3b62657d32897eb69f59c089f0950dbe1ce4fd13"
+app.json.ensure_ascii = False
