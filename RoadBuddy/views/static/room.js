@@ -29,7 +29,10 @@ menuTeam = document.querySelector(".nav-menu-team"),
 friendsList = document.querySelector(".friends-list"),
 teamsList = document.querySelector(".teams-list"),
 addFriend = document.querySelector(".nav-add-friend"),
-addTeam = document.querySelector(".nav-add-team");
+addTeam = document.querySelector(".nav-add-team"),
+friendsPannel = document.querySelector(".friends-pannel"),
+teamsPannel = document.querySelector(".teams-pannel"),
+closePannel = document.querySelectorAll(".close");
 
 toggleIcon.addEventListener("click", ()=>{
     menu.style.border = "0.5px solid rgb(151, 150, 150)";
@@ -43,7 +46,7 @@ menuFriends.addEventListener("click", ()=>{
     menu.style.border = "none";
     teamsList.style.display = "none";
     addTeam.style.display = "none";
-    friendsList.style.display = "block";
+    friendsList.style.display = "grid";
     addFriend.style.display = "block";
     
 
@@ -55,7 +58,7 @@ menuTeam.addEventListener("click", ()=>{
     menu.style.border = "none";
     friendsList.style.display = "none";
     addFriend.style.display = "none";
-    teamsList.style.display = "block";
+    teamsList.style.display = "grid";
     addTeam.style.display = "block";
 })
 
@@ -64,14 +67,26 @@ menuTeam.addEventListener("click", ()=>{
 // ----- add friend -----
 addFriend.addEventListener("click", () => {
     console.log("add friends");
+    friendsPannel.style.display = "flex";
 })
 
 
 
 // ----- add team -----
 addTeam.addEventListener("click", () => {
-    console.log("add team")
+    console.log("add team");
+    teamsPannel.style.display = "flex";
+
 })
+
+
+// ----- close pannel ----
+for (close of closePannel) {
+    close.addEventListener("click", () => {
+        friendsPannel.style.display = "none";
+        teamsPannel.style.display = "none";
+    })
+};
 
 
 

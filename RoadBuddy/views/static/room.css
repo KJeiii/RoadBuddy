@@ -11,7 +11,7 @@ body {
     background-color: grey;
 }
 
-.pannel {
+.main-pannel {
     position: absolute;
     top: 40vh;
     z-index: 1000;
@@ -44,29 +44,43 @@ nav {
     position: absolute;
     width: 90px;
     border-radius: 0 0 5px 5px;
-    background-color: rgb(151, 150, 150);
+    background-color: rgb(190, 189, 189);
     border-style: 1px solid rgb(151, 150, 150);
     text-align: center;
+    font-size: 15px;
 }
 
 .nav-menu-friend:hover, 
 .nav-menu-team:hover,
 .nav-toggle:hover,
-.nav-add:hover {
+.nav-add:hover
+.close,
+.search-icon {
     cursor: pointer;
 }
 
+/* ------ main pannel -----*/
+.nav-menu-title {
+    text-align: center;
+}
+
 .nav-toggle {
-    width: 15px;
+    width: 20px;
+    height: 20px;
     margin-left: 5px;
+    background-image: url("../static/images/angle-down.svg");
 }
 
 
 .nav-add-friend,
 .nav-add-team 
 {
-    width: 15px;
-    margin-left: calc(100% - 125px);
+    width: 20px;
+    height: 20px;
+    margin-left: calc(100% - 135px);
+    background-image: url("../static/images/plus-icon.svg");
+    background-position: center;
+    background-size: cover;
 }
 
 .nav-add-team {
@@ -81,7 +95,175 @@ nav {
     border-radius: 15px;
 }
 
+.teams-list,
+.friends-list {
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    grid-template-columns: 20% 20% 20% 20%;
+    gap: 10px;
+    margin: 10px 20px;
+}
+
 .teams-list {
     display: none;
+}
+
+.main-pannel .item {
+    height: 20px;
+    text-align: center;
+}
+
+
+/* ------ friends and teams pannel -----*/
+.friends-pannel,
+.teams-pannel {
+    display: none;
+    flex: none;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    position: absolute;
+    top: 10vh;
+    z-index: 1100;
+    width: 100vw;
+    height: 90vh;
+    background-color: white;
+    border-radius: 30px 30px 0 0;
+}
+
+.teams-pannel {
+    display: flex;
+}
+
+/* .friends-pannel {
+    display: flex;
+} */
+
+.pannel-title {
+    font-size: 30px;
+    font-weight: bold;
+    margin-top: 20px;
+}
+
+.search {
+    display: flex;
+    flex: none;
+    margin: 10px 20px 10px 20px;
+    width: 80%;
+    height: 40px;
+}
+
+.close {
+    position: relative;
+    top: -7%;
+    left: 42%;
+    background-image: url("../static/images/close-icon.svg");
+    background-position: center;
+    background-size: cover;
+    width: 20px;
+    height: 20px;
+}
+
+.search-icon {
+    background-image: url("../static/images/search-icon.png");
+    background-position: center;
+    background-size: cover;
+    width: 40px;
+    height: 40px;
+    background-color: rgb(210, 210, 210);
+    border-radius: 30px 0 0 30px;
+}
+
+.create-icon {
+    background-image: url("../static/images/plus-icon.svg");
+    background-position: center;
+    background-size: 50%;
+    background-repeat: no-repeat;
+    width: 40px;
+    height: 40px;
+    background-color: rgb(210, 210, 210);
+    border-radius: 30px 0 0 30px;
+}
+
+input[name=search-friend],
+input[name=create-team]
+ {
+    width: calc(100% - 40px);
+    border-radius: 0 30px 30px 0;
+    border-style: none;
+    background-color: rgb(210, 210, 210);
+    font-size: 15px;
+}
+
+.search-outer {
+    width: 100%;
+    height: 55%;
+}
+
+.search-list {
+    display: grid;
+    justify-content: center;
+    grid-template-columns: 50% 50%;
+    gap: 10px;
+    margin: 10px 50px;
+}
+
+.friends-pannel .item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    height: 20px;
+}
+
+
+.friends-pannel input[type=checkbox],
+.teams-pannel input[type=checkbox] {
+    width: 20px;
+    height: 20px;
+    background-color: lightblue;
+    border-style: none;
+}
+
+label {
+    text-align: center;
+    margin-left: 5px;
+}
+
+/* team pannel */
+.friends-outer {
+    width: 100%;
+    height: 40%;
+}
+
+
+.teams-pannel .friends-list {
+    display: grid;
+    justify-content: center;
+    grid-template-columns: 50% 50%;
+    gap: 10px;
+    margin: 20px 50px 10px 50px;
+}
+
+.teams-pannel .item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    height: 20px;
+}
+
+
+.friends-pannel button,
+.teams-pannel button{
+    width: 30%;
+    height: 40px;
+    border-radius: 20px;
+    border-style: none;
+    background-color: rgb(210, 210, 210);
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 10px;
 }
 

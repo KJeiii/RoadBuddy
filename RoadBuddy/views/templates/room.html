@@ -18,7 +18,7 @@
 <body>
     <div class="background">
         <div id="map"></div>
-        <div class="pannel">
+        <div class="main-pannel">
             <nav>
                 <div class="nav-menu">
                     <div class="nav-menu-title">好友列表</div>
@@ -28,20 +28,106 @@
                     </div>
                 </div>
                 
-                <div class="nav-toggle">^</div>
-                <div class="nav-add-friend">+</div>
-                <div class="nav-add-team">+</div>
+                <div class="nav-toggle"></div>
+                <div class="nav-add-friend"></div>
+                <div class="nav-add-team"></div>
             </nav>
             <div class="user-info"></div>
-            <ul class="friends-list">
-                <li>123</li>
-                <li>123</li>
-            </ul>
-            <ul class="teams-list">
-                <li>456</li>
-                <li>456</li>
-            </ul>
+            <div class="friends-list">
+                <div class="item">123</div>
+                <div class="item">123</div>
+                <div class="item">123</div>
+                <div class="item">123</div>
+                <div class="item">123</div>
+                <div class="item">123</div>
+            </div>
+            <div class="teams-list">
+                <div class="item">456</div>
+                <div class="item">456</div>
+                <div class="item">456</div>
+                <div class="item">456</div>
+                <div class="item">456</div>
+                <div class="item">456</div>
+            </div>
         </div>
+
+        <div class="friends-pannel">
+            <div class="pannel-title">新增好友</div>
+            <div class="close"></div>
+            <div class="search">
+                <div class="search-icon"></div>
+                <input type="text" name="search-friend" placeholder="搜尋姓名">
+            </div>
+            <div class="search-outer">
+                <div class="search-list">
+                    <div class="item">
+                        <input type="checkbox" name="username">
+                        <label for="useranme">Mark</label>
+                    </div>
+                    <div class="item">
+                        <input type="checkbox" name="username">
+                        <label for="useranme">Mark</label>
+                    </div>
+                    <div class="item">
+                        <input type="checkbox" name="username">
+                        <label for="useranme">Mark</label>
+                    </div>
+                    <div class="item">
+                        <input type="checkbox" name="username">
+                        <label for="useranme">Mark</label>
+                    </div>
+                    <div class="item">
+                        <input type="checkbox" name="username">
+                        <label for="useranme">Mark</label>
+                    </div>
+                </div>
+            </div>
+            <button type="button">加入好友</button>
+        </div>
+
+        <div class="teams-pannel">
+            <div class="pannel-title">創建隊伍</div>
+            <div class="close"></div>
+            <div class="search">
+                <div class="create-icon"></div>
+                <input type="text" name="create-team" placeholder="隊伍名稱">
+            </div>
+            <div class="pannel-title">新增隊員</div>
+            <div class="friends-outer">
+                <div class="friends-list">
+                    <div class="item">
+                        <input type="checkbox" name="username">
+                        <label for="useranme">Mark</label>
+                    </div>
+                    <div class="item">
+                        <input type="checkbox" name="username">
+                        <label for="useranme">Mark</label>
+                    </div>
+                    <div class="item">
+                        <input type="checkbox" name="username">
+                        <label for="useranme">Mark</label>
+                    </div>
+                    <div class="item">
+                        <input type="checkbox" name="username">
+                        <label for="useranme">Mark</label>
+                    </div>
+                    <div class="item">
+                        <input type="checkbox" name="username">
+                        <label for="useranme">Mark</label>
+                    </div>
+                    <div class="item">
+                        <input type="checkbox" name="username">
+                        <label for="useranme">Mark</label>
+                    </div>
+                    <div class="item">
+                        <input type="checkbox" name="username">
+                        <label for="useranme">Mark</label>
+                    </div>
+                </div>
+            </div>
+            <button type="button">建立</button>
+        </div>
+
     </div>
         
     <!-- <form action="/" method="post">
