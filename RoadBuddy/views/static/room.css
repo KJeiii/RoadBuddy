@@ -4,6 +4,45 @@ body {
 
 }
 
+.setting {
+    position: absolute;
+    display: flex;
+    flex: none;
+    flex-direction: column;
+    align-items: end;
+    z-index: 1000;
+    top: 15px;
+    right: 15px; 
+
+}
+
+.setting-on,
+.setting-off {
+    width: 30px;
+    height: 30px;
+    background-image: url("../static/images/gear.svg");
+    background-color: white;
+    background-position: center;
+    background-size: 60%;
+    background-repeat: no-repeat;
+    border-radius: 10px;
+}
+
+.setting-off {
+    display: none;
+}
+
+.config,
+.logout {
+    display: none;
+    margin: 5px 0;
+    text-align: end;
+    background-color: white;
+    border-radius: 5px;
+    padding: 5px;
+
+}
+
 #map {
     height: 100vh;
     width: 100vw;
@@ -13,12 +52,33 @@ body {
 
 .main-pannel {
     position: absolute;
-    top: 40vh;
+    top: 65vh;
     z-index: 1000;
     width: 100vw;
     height: 60vh;
     background-color: white;
     border-radius: 30px 30px 0 0;
+}
+
+.pull-up {
+    width: 15px;
+    height: 15px;
+    background-image: url("../static/images/double-angles-up.svg");
+    background-size: cover;
+    background-position: center;
+    margin: auto;
+    margin-top: 10px;
+}
+
+.drop-down {
+    display: none;
+    width: 15px;
+    height: 15px;
+    background-image: url("../static/images/double-angles-down.svg");
+    background-size: cover;
+    background-position: center;
+    margin: auto;
+    margin-top: 10px;
 }
 
 nav {
@@ -50,12 +110,24 @@ nav {
     font-size: 15px;
 }
 
+.setting-on:hover,
+.setting-off:hover,
+.config:hover,
+.logout:hover,
 .nav-menu-friend:hover, 
 .nav-menu-team:hover,
-.nav-toggle:hover,
-.nav-add:hover
-.close,
-.search-icon {
+.nav-toggle-on:hover,
+.nav-toggle-off:hover,
+.nav-add:hover,
+.close:hover,
+.search-icon:hover,
+.teams-list .item:hover,
+.pull-up:hover,
+.drop-down:hover,
+.nav-add-friend:hover,
+.nav-add-team:hover,
+button:hover
+ {
     cursor: pointer;
 }
 
@@ -64,13 +136,17 @@ nav {
     text-align: center;
 }
 
-.nav-toggle {
+.nav-toggle-on,
+.nav-toggle-off {
     width: 20px;
     height: 20px;
     margin-left: 5px;
     background-image: url("../static/images/angle-down.svg");
 }
 
+.nav-toggle-off {
+    display: none;
+}
 
 .nav-add-friend,
 .nav-add-team 
@@ -88,11 +164,30 @@ nav {
 }
 
 .user-info {
+    display: flex;
+    flex: none;
+    justify-content: start;
+    align-items: center;
     width: calc(100% - 40px);
     height: 60px;
     margin: 20px;
     background-color: rgb(234, 234, 234);
     border-radius: 15px;
+}
+
+.user-info .icon {
+    width: 40px;
+    height: 40px;
+    background-image: url("../static/images/user-2.jpeg");
+    background-position: center;
+    background-size: cover;
+    margin-left: 10px;
+    border-radius: 5px;
+}
+
+.user-info .description {
+    font-size: 25px;
+    margin-left: 10px;
 }
 
 .teams-list,
@@ -132,9 +227,9 @@ nav {
     border-radius: 30px 30px 0 0;
 }
 
-.teams-pannel {
+/* .teams-pannel {
     display: flex;
-}
+} */
 
 /* .friends-pannel {
     display: flex;

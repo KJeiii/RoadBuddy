@@ -1,4 +1,64 @@
-// draw initial position on the map
+// ----- elememts -----
+let//
+settingOn = document.querySelector(".setting-on"),
+settingOff = document.querySelector(".setting-off"),
+config = document.querySelector(".config"),
+logout = document.querySelector(".logout"),
+menu = document.querySelector(".nav-menu"),
+menuTitle = document.querySelector(".nav-menu-title"),
+menuList = document.querySelector(".nav-menu-list"),
+toggleOn = document.querySelector(".nav-toggle-on"),
+toggleOff = document.querySelector(".nav-toggle-off"),
+menuFriends = document.querySelector(".nav-menu-friend"),
+menuTeam = document.querySelector(".nav-menu-team"),
+friendsList = document.querySelector(".friends-list"),
+teamsList = document.querySelector(".teams-list"),
+pullUp = document.querySelector(".pull-up"),
+dropDown = document.querySelector(".drop-down"),
+addFriend = document.querySelector(".nav-add-friend"),
+addTeam = document.querySelector(".nav-add-team"),
+mainPannel = document.querySelector(".main-pannel"),
+friendsPannel = document.querySelector(".friends-pannel"),
+teamsPannel = document.querySelector(".teams-pannel"),
+closePannel = document.querySelectorAll(".close");
+
+
+// check user status
+var//
+jwt = window.localStorage.getItem("token"),
+user_id,
+username,
+email;
+
+if ( jwt === null) {
+    window.location.replace("/member");
+}
+else{
+    try {
+        fetch("/api/member/auth", {
+            method: "GET",
+            headers:{
+                "authorization": `Bearer ${jwt}`
+            }
+        })
+        .then((response) => {return response.json()})
+        .then((result) => {
+            console.log(result);
+            user_id = result.user_id;
+            username = result.username;
+            email = result.email;
+
+            // load username
+            document.querySelector(".user-info .description").textContent = `Here we go! ${username}`;
+        })
+    }
+    catch(error){console.log(error)}
+}
+
+
+
+
+// create callback funciton for drawing initial position on the map
 function drawMap(position){
     let initialCoord = {
         latitude: position.coords.latitude,
@@ -16,28 +76,40 @@ function drawMap(position){
 
 function userCoordError(error) {console.log(`Error in drawing initial map: ${error}`)};
 
+// ----- toggle down setting  -----
+settingOn.addEventListener("click", () => {
+    config.style.display = "block";
+    logout.style.display = "block";
+    settingOn.style.display = "none";
+    settingOff.style.display = "block";
+})
 
+settingOff.addEventListener("click", () => {
+    config.style.display = "none";
+    logout.style.display = "none";
+    settingOff.style.display = "none";
+    settingOn.style.display = "block";
+})
+
+// ----- logout -----
+logout.addEventListener("click", () => {
+    window.localStorage.removeItem("token");
+    window.location.replace("/member");
+})
 
 // ----- switch menu -----
-let//
-menu = document.querySelector(".nav-menu"),
-menuTitle = document.querySelector(".nav-menu-title"),
-menuList = document.querySelector(".nav-menu-list"),
-toggleIcon = document.querySelector(".nav-toggle"),
-menuFriends = document.querySelector(".nav-menu-friend"),
-menuTeam = document.querySelector(".nav-menu-team"),
-friendsList = document.querySelector(".friends-list"),
-teamsList = document.querySelector(".teams-list"),
-addFriend = document.querySelector(".nav-add-friend"),
-addTeam = document.querySelector(".nav-add-team"),
-friendsPannel = document.querySelector(".friends-pannel"),
-teamsPannel = document.querySelector(".teams-pannel"),
-closePannel = document.querySelectorAll(".close");
-
-toggleIcon.addEventListener("click", ()=>{
+toggleOn.addEventListener("click", ()=>{
     menu.style.border = "0.5px solid rgb(151, 150, 150)";
     menuList.style.display = "block";
+    toggleOn.style.display = "none";
+    toggleOff.style.display = "block";
+})
 
+toggleOff.addEventListener("click", ()=>{
+    menu.style.border = "none";
+    menuList.style.display = "none";
+    toggleOff.style.display = "none";
+    toggleOn.style.display = "block";
 })
 
 menuFriends.addEventListener("click", ()=>{
@@ -48,8 +120,6 @@ menuFriends.addEventListener("click", ()=>{
     addTeam.style.display = "none";
     friendsList.style.display = "grid";
     addFriend.style.display = "block";
-    
-
 })
 
 menuTeam.addEventListener("click", ()=>{
@@ -68,6 +138,7 @@ menuTeam.addEventListener("click", ()=>{
 addFriend.addEventListener("click", () => {
     console.log("add friends");
     friendsPannel.style.display = "flex";
+    mainPannel.style.display = "none";
 })
 
 
@@ -76,8 +147,21 @@ addFriend.addEventListener("click", () => {
 addTeam.addEventListener("click", () => {
     console.log("add team");
     teamsPannel.style.display = "flex";
-
+    mainPannel.style.display = "none";
 })
+
+
+// ----- use old team -----
+let oldTeam = document.querySelectorAll(".teams-list .item");
+for (team of oldTeam) {
+    team.addEventListener("click", () => {
+        let oldTeamName = team.textContent;
+        document.querySelector(".teams-pannel .pannel-title").textContent = oldTeamName;
+        document.querySelector(".teams-pannel .search").style.display = "none";
+        document.querySelector(".friends-outer").style.height = "55%";
+        teamsPannel.style.display = "flex";
+    })
+}
 
 
 // ----- close pannel ----
@@ -85,67 +169,38 @@ for (close of closePannel) {
     close.addEventListener("click", () => {
         friendsPannel.style.display = "none";
         teamsPannel.style.display = "none";
+        mainPannel.style.display = "block";
+        document.querySelector(".teams-pannel .pannel-title").textContent = "創建隊伍";
+        document.querySelector(".friends-outer").style.height = "40%";
+        document.querySelector(".teams-pannel .search").style.display = "flex";
+
     })
 };
 
 
+// ----- pull up and drop down main pannel ------
+pullUp.addEventListener("click", () => {
+    pullUp.style.display = "none";
+    dropDown.style.display = "block";
+    mainPannel.style.top = "40vh";
+})
+
+dropDown.addEventListener("click", () => {
+    dropDown.style.display = "none";
+    pullUp.style.display = "block";
+    mainPannel.style.top = "65vh";
+})
 
 
 
-
-// if (window.navigator.geolocation) {
-//     try {
-//         window.navigator.geolocation.getCurrentPosition(drawMap, userCoordError);
-//         console.log("check in initialize map")
-//     }
-//     catch(error) {console.log(`Error in getting user postion : ${error}`)}
-// }
-
-
-
-// function initializeMap() {
-//     return new Promise((resolve, reject) => {
-//         if (window.navigator.geolocation) {
-//             try {
-//                 window.navigator.geolocation.getCurrentPosition(drawMap, userCoordError);
-//                 console.log("check in initialize map")
-//                 resolve();
-//             }
-//             catch(error) {console.log(`Error in getting user postion : ${error}`)}
-//         }
-//     })
-// }
-
-
-// async function loadPage() {
-//     initializeMap()
-//         .then(() => {console.log("test")})
-//         .then(() => {
-//             console.log("test");
-//             // add pannel div
-//             let pannelDiv = document.createElement("div");
-//             pannelDiv.setAttribute("class", "pannel");
-//             document.querySelector(".background").append(pannelDiv);
-//         })
-//         .then(() => console.log("Done"))
-//         .catch((error) => console.log(error))
-// }
-
-// loadPage()
-
-
-
-
-
-
-
-
-
-
-
-
-
-// document.querySelector("input[name=initial_position]").value = `${randomCoords.latitude}, ${randomCoords.longitude}`;
+// ----- draw initial map -----
+if (window.navigator.geolocation) {
+    try {
+        window.navigator.geolocation.getCurrentPosition(drawMap, userCoordError);
+        console.log("check in initialize map")
+    }
+    catch(error) {console.log(`Error in getting user postion : ${error}`)}
+}
 
 
 // storage username and roomID on browser session

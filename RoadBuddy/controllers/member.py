@@ -62,7 +62,7 @@ def Login():
                     "exp" : dt.datetime.utcnow() + dt.timedelta(days=7)
                 } 
 
-                JWT = jwt.encode(jwt_payload, os.environ.get("jwtsecret"))
+                JWT = jwt.encode(jwt_payload, os.environ.get("jwtsecret"),)
                 response = {
                     "token": JWT
                 }
@@ -88,7 +88,7 @@ def Login():
             JWT_in_headers = request.headers.get("authorization").split(" ")
             if "Bearer" in JWT_in_headers:
                 JWT = JWT_in_headers[1]
-                jwt_payload = jwt.decode(JWT, os.environ.get("jwtsecret"))
+                jwt_payload = jwt.decode(JWT, os.environ.get("jwtsecret"),"HS256")
                 response = {
                     "user_id": jwt_payload["usi"],
                     "username": jwt_payload["usn"],
