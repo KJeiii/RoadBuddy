@@ -145,6 +145,7 @@ loginBtn.addEventListener("click", async() => {
         
         let jwt = result.token;
         window.localStorage.setItem("token", jwt);
+        window.location.replace("/room");
 
     }
     catch(error) {
