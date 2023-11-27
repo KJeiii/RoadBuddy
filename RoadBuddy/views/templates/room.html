@@ -13,10 +13,37 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
     crossorigin=""></script>
-    
+
 </head>
 <body>
-    <div id="map"></div>
+    <div class="background">
+        <div id="map"></div>
+        <div class="pannel">
+            <nav>
+                <div class="nav-menu">
+                    <div class="nav-menu-title">好友列表</div>
+                    <div class="nav-menu-list">
+                        <div class="nav-menu-friend">好友列表</div>
+                        <div class="nav-menu-team">隊伍列表</div>
+                    </div>
+                </div>
+                
+                <div class="nav-toggle">^</div>
+                <div class="nav-add-friend">+</div>
+                <div class="nav-add-team">+</div>
+            </nav>
+            <div class="user-info"></div>
+            <ul class="friends-list">
+                <li>123</li>
+                <li>123</li>
+            </ul>
+            <ul class="teams-list">
+                <li>456</li>
+                <li>456</li>
+            </ul>
+        </div>
+    </div>
+        
     <!-- <form action="/" method="post">
         <div>
             <label for="username">姓名</label>

@@ -1,8 +1,87 @@
 body {
     margin: 0;
+    width: 100vw;
+
 }
 
 #map {
     height: 100vh;
     width: 100vw;
+    position: static;
+    background-color: grey;
 }
+
+.pannel {
+    position: absolute;
+    top: 40vh;
+    z-index: 1000;
+    width: 100vw;
+    height: 60vh;
+    background-color: white;
+    border-radius: 30px 30px 0 0;
+}
+
+nav {
+    display: flex;
+    flex: none;
+    align-items: center;
+    width: calc(100% -40px);
+    font-size: 20px;
+    margin: 20px;
+}
+
+
+.nav-menu {
+    width: 90px;
+    position: relative;
+    text-align: center;
+    border-radius: 5px 5px 0 0 ;
+
+}
+
+.nav-menu-list {
+    display: none;
+    position: absolute;
+    width: 90px;
+    border-radius: 0 0 5px 5px;
+    background-color: rgb(151, 150, 150);
+    border-style: 1px solid rgb(151, 150, 150);
+    text-align: center;
+}
+
+.nav-menu-friend:hover, 
+.nav-menu-team:hover,
+.nav-toggle:hover,
+.nav-add:hover {
+    cursor: pointer;
+}
+
+.nav-toggle {
+    width: 15px;
+    margin-left: 5px;
+}
+
+
+.nav-add-friend,
+.nav-add-team 
+{
+    width: 15px;
+    margin-left: calc(100% - 125px);
+}
+
+.nav-add-team {
+    display: none;
+}
+
+.user-info {
+    width: calc(100% - 40px);
+    height: 60px;
+    margin: 20px;
+    background-color: rgb(234, 234, 234);
+    border-radius: 15px;
+}
+
+.teams-list {
+    display: none;
+}
+
