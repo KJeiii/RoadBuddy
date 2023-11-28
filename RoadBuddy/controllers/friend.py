@@ -13,15 +13,15 @@ def Load_friend_list():
     if request.method == "POST":
         try:
             user_id = request.json["user_id"]
-            friends_list = friendTool.Load_friend_list(user_id)
+            friend_list = friendTool.Load_friend_list(user_id)
             response = {
                 "ok": True,
-                "data": friends_list 
+                "data": friend_list 
             }
             return jsonify(response), 200
         
         except Exception as error:
-            print(f'Error in controller(friend) - Load_friends_list : {error}')
+            print(f'Error in controller(friend) - Load_friend_list : {error}')
             response = {
                 "error": True,
                 "message": "伺服器內部錯誤"
