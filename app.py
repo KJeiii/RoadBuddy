@@ -3,8 +3,10 @@ from flask_socketio import SocketIO, emit, send, join_room, leave_room
 from RoadBuddy import app
 from RoadBuddy.views.routes import *
 from RoadBuddy.controllers.member import member_bp
+from RoadBuddy.controllers.friend import friends_bp
 
 app.register_blueprint(member_bp)
+app.register_blueprint(friends_bp)
 
 
 socketio = SocketIO(app, 
