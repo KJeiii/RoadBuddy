@@ -3,7 +3,7 @@ from RoadBuddy.models import db_config
 # from __init__ import db_config
 
 
-class FriendsTool(pooling.MySQLConnectionPool):
+class FriendTool(pooling.MySQLConnectionPool):
     def __init__(self):
         super().__init__(pool_name = "RoadBuddy",
                          pool_size = 10,

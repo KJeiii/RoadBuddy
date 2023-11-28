@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, jsonify
 from RoadBuddy.models import friends
 
-friendsTool = friends.FriendsTool()
+friendsTool = friends.FriendTool()
 friends_bp = Blueprint("friends_bp",
                       __name__,
                       template_folder="templates",
