@@ -50,6 +50,20 @@ class FriendsTool(pooling.MySQLConnectionPool):
         connection.close()
 
 
+    def Delete_friend(self, user_id:int, friend_id:int) -> None:
+        connection = self.get_connection()
+        cursor = connection.cursor(dictionary=True)
+
+        delete_string = ("delete from friends "
+                         "where (user_id = %s and friend_id = %s) "
+                         )
+        data_string = (user_id, friend_id)
+
+        cursor.execute(delete_string, data_string)
+        connection.commit()
+        connection.close()
+
+
     def Load_friends_list(self, user_id:int) -> list:
         connection = self.get_connection()
         cursor = connection.cursor(dictionary=True)
@@ -68,5 +82,5 @@ class FriendsTool(pooling.MySQLConnectionPool):
         return result
 
 
-# test = FriendsTool()
-# print(test.Load_friends_list(3))
+test = FriendsTool()
+test.Delete_friend(1,2)
