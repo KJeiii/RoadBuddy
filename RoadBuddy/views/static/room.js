@@ -1,5 +1,5 @@
 // ----- elememts -----
-let//
+var//
 settingOn = document.querySelector(".setting-on"),
 settingOff = document.querySelector(".setting-off"),
 config = document.querySelector(".config"),
@@ -23,63 +23,78 @@ teamsPannel = document.querySelector(".teams-pannel"),
 closePannel = document.querySelectorAll(".close");
 
 
-// check user status
-var//
-jwt = window.localStorage.getItem("token"),
-user_id,
-username,
-email;
+// build function for checking user status
+async function CheckUserStatus() {
+    let jwt = window.localStorage.getItem("token");
 
-if ( jwt === null) {
-    window.location.replace("/member");
-}
-else{
-    try {
-        fetch("/api/member/auth", {
+    try{
+        if ( jwt === null) {return {"ok":false, "data": null}}
+
+        let//
+        response = await fetch("/api/member/auth", {
             method: "GET",
-            headers:{
-                "authorization": `Bearer ${jwt}`
-            }
-        })
-        .then((response) => {return response.json()})
-        .then((result) => {
-            console.log(result);
-            user_id = result.user_id;
-            username = result.username;
-            email = result.email;
+            headers: {"authorization": `Bearer ${jwt}`}
+        }),
+        result = await response.json();
 
-            // load username
-            document.querySelector(".user-info .description").textContent = `Here we go! ${username}`;
-        })
+        if (result.data === null) {return {"ok": false, "data": null}}
+
+        let data = {
+            user_id: result.user_id,
+            username: result.username,
+            email: result.email
+        }
+        return {"ok": true, "data": data}
     }
-    catch(error){console.log(error)}
+    catch(error) {
+        console.log(`Error in CheckUserStatus : ${error}`)
+        throw error
+    }
 }
 
 
-// load friends list 
-try {
-    fetch("/api/friends", {
-        method: "POST",
-        body: JSON.stringify({
-            user_id: user_id,
-            username: username,
-            email: email
-        })
-    })
-    .then((response) => {return response.json()})
-    .then((result) => {
-        for ( data of result) {
+// build function for loading friend list
+async function LoadFriendsList(user_id) {
+    try {
+        let response = await fetch("/api/friends", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({user_id: user_id})
+        });
+
+        let result = await response.json();
+        console.log(result.data)
+        for ( data of result.data) {
             let item = document.createElement("div");
             item.setAttribute("class", "item");
             item.textContent = data.username;
             friendsList.appendChild(item);
         }
-    })
-    .catch((error) => {console.log(`Error in adding friend : ${error}`)})
+        return;
+    }
+    catch(error){
+        console.log(`Erorr in LoadFriendList : ${error}`)
+        throw error
+    }
 }
-catch(error){
-    console.log(`Error in fetching friends data : ${error}`)
-}
+    
+
+// check user status and load info when passing check
+CheckUserStatus()
+    .then((result) => {
+        let data = result.data;
+        // adjust main-pannel description
+        let description = document.querySelector(".main-pannel .description").textContent;
+        document.querySelector(".main-pannel .description").textContent = description + ` ${data.username}`;
+
+        // adjust friends list
+        LoadFriendsList(data.user_id);
+        })
+    .catch((error) => {console.log(error)})
+
+
 
 // create callback funciton for drawing initial position on the map
 function drawMap(position){
