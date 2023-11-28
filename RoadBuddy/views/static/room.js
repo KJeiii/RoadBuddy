@@ -11,7 +11,7 @@ toggleOn = document.querySelector(".nav-toggle-on"),
 toggleOff = document.querySelector(".nav-toggle-off"),
 menuFriends = document.querySelector(".nav-menu-friend"),
 menuTeam = document.querySelector(".nav-menu-team"),
-friendsList = document.querySelector(".friends-list"),
+friendsList = document.querySelector(".main-pannel .friends-list"),
 teamsList = document.querySelector(".teams-list"),
 pullUp = document.querySelector(".pull-up"),
 dropDown = document.querySelector(".drop-down"),
@@ -56,7 +56,30 @@ else{
 }
 
 
-
+// load friends list 
+try {
+    fetch("/api/friends", {
+        method: "POST",
+        body: JSON.stringify({
+            user_id: user_id,
+            username: username,
+            email: email
+        })
+    })
+    .then((response) => {return response.json()})
+    .then((result) => {
+        for ( data of result) {
+            let item = document.createElement("div");
+            item.setAttribute("class", "item");
+            item.textContent = data.username;
+            friendsList.appendChild(item);
+        }
+    })
+    .catch((error) => {console.log(`Error in adding friend : ${error}`)})
+}
+catch(error){
+    console.log(`Error in fetching friends data : ${error}`)
+}
 
 // create callback funciton for drawing initial position on the map
 function drawMap(position){
@@ -75,6 +98,8 @@ function drawMap(position){
 
 
 function userCoordError(error) {console.log(`Error in drawing initial map: ${error}`)};
+
+
 
 // ----- toggle down setting  -----
 settingOn.addEventListener("click", () => {
@@ -96,6 +121,7 @@ logout.addEventListener("click", () => {
     window.localStorage.removeItem("token");
     window.location.replace("/member");
 })
+
 
 // ----- switch menu -----
 toggleOn.addEventListener("click", ()=>{
