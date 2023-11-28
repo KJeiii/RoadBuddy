@@ -11,7 +11,8 @@ toggleOn = document.querySelector(".nav-toggle-on"),
 toggleOff = document.querySelector(".nav-toggle-off"),
 menuFriends = document.querySelector(".nav-menu-friend"),
 menuTeam = document.querySelector(".nav-menu-team"),
-friendsList = document.querySelector(".main-pannel .friends-list"),
+mainPannelFriendsList = document.querySelector(".main-pannel .friends-list"),
+teamPannelFriendsList = document.querySelector(".teams-pannel .friends-list"),
 teamsList = document.querySelector(".teams-list"),
 pullUp = document.querySelector(".pull-up"),
 dropDown = document.querySelector(".drop-down"),
@@ -65,12 +66,28 @@ async function LoadFriendsList(user_id) {
         });
 
         let result = await response.json();
-        console.log(result.data)
+
         for ( data of result.data) {
-            let item = document.createElement("div");
-            item.setAttribute("class", "item");
-            item.textContent = data.username;
-            friendsList.appendChild(item);
+            let mainPannelFriendItem = document.createElement("div");
+            mainPannelFriendItem.setAttribute("class", "item");
+            mainPannelFriendItem.textContent = data.username;
+            mainPannelFriendsList.appendChild(mainPannelFriendItem);
+
+            let//
+            teamPannelFriendItem = document.createElement("div"),
+            input = document.createElement("input"),
+            label = document.createElement("label");
+
+            teamPannelFriendItem.setAttribute("class", "item");
+            input.setAttribute("type", "checkbox");
+            input.setAttribute("id", data.user_id);
+            input.setAttribute("name", data.username);
+            label.setAttribute("for", data.username);
+            label.textContent = data.username;
+
+            teamPannelFriendItem.appendChild(input);
+            teamPannelFriendItem.appendChild(label);
+            teamPannelFriendsList.appendChild(teamPannelFriendItem);
         }
         return;
     }
@@ -159,7 +176,7 @@ menuFriends.addEventListener("click", ()=>{
     menu.style.border = "none";
     teamsList.style.display = "none";
     addTeam.style.display = "none";
-    friendsList.style.display = "grid";
+    mainPannelFriendsList.style.display = "grid";
     addFriend.style.display = "block";
 })
 
@@ -167,7 +184,7 @@ menuTeam.addEventListener("click", ()=>{
     menuTitle.textContent = menuTeam.textContent;
     menuList.style.display = "none";
     menu.style.border = "none";
-    friendsList.style.display = "none";
+    mainPannelFriendsList.style.display = "none";
     addFriend.style.display = "none";
     teamsList.style.display = "grid";
     addTeam.style.display = "block";
