@@ -1,13 +1,13 @@
 from flask import Blueprint, render_template, request, jsonify
-from RoadBuddy.models import friends
+from RoadBuddy.models import friend
 
-friendsTool = friends.FriendTool()
+friendsTool = friend.FriendTool()
 friends_bp = Blueprint("friends_bp",
                       __name__,
                       template_folder="templates",
                       static_folder="static")
 
-# Signup
+# Load friends list
 @friends_bp.route("/api/friends", methods = ["POST"])
 def Load_friends_list():
     if request.method == "POST":
