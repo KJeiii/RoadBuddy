@@ -1,6 +1,6 @@
 from mysql.connector import pooling
-# from RoadBuddy.models import db_config
-from __init__ import db_config
+from RoadBuddy.models import db_config
+# from __init__ import db_config
 
 
 class FriendsTool(pooling.MySQLConnectionPool):
@@ -82,5 +82,3 @@ class FriendsTool(pooling.MySQLConnectionPool):
         return result
 
 
-test = FriendsTool()
-test.Delete_friend(1,2)
