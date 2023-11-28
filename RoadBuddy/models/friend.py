@@ -64,7 +64,7 @@ class FriendTool(pooling.MySQLConnectionPool):
         connection.close()
 
 
-    def Load_friends_list(self, user_id:int) -> list:
+    def Load_friend_list(self, user_id:int) -> list:
         connection = self.get_connection()
         cursor = connection.cursor(dictionary=True)
 
