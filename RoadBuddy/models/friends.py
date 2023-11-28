@@ -50,17 +50,23 @@ class FriendsTool(pooling.MySQLConnectionPool):
         connection.close()
 
 
-    def Search_friends(self, user_id:int) -> list:
+    def Load_friends_list(self, user_id:int) -> list:
         connection = self.get_connection()
         cursor = connection.cursor(dictionary=True)
 
-        search_string = ("select * from friends "
-                         "where user_id = %s"
-                         )
+        search_string = ("select "
+                 "member.user_id, member.username, member.email "
+                 "from friends inner join member "
+                 "on friends.friend_id = member.user_id "
+                 "where friends.user_id = %s"
+                 )
         data_string = (user_id,)
-
+        
         cursor.execute(search_string, data_string)
+        result = cursor.fetchall()
         connection.close()
+        return result
 
 
-    
+# test = FriendsTool()
+# print(test.Load_friends_list(3))
