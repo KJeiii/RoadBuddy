@@ -11,8 +11,10 @@ toggleOn = document.querySelector(".nav-toggle-on"),
 toggleOff = document.querySelector(".nav-toggle-off"),
 menuFriends = document.querySelector(".nav-menu-friend"),
 menuTeam = document.querySelector(".nav-menu-team"),
+mainPannelFriendsOuter = document.querySelector(".main-pannel .friends-outer"),
 mainPannelFriendsList = document.querySelector(".main-pannel .friends-list"),
 teamPannelFriendsList = document.querySelector(".teams-pannel .friends-list"),
+teamsOuter = document.querySelector(".teams-outer"),
 teamsList = document.querySelector(".teams-list"),
 pullUp = document.querySelector(".pull-up"),
 dropDown = document.querySelector(".drop-down"),
@@ -22,6 +24,7 @@ mainPannel = document.querySelector(".main-pannel"),
 friendsPannel = document.querySelector(".friends-pannel"),
 teamsPannel = document.querySelector(".teams-pannel"),
 closePannel = document.querySelectorAll(".close");
+
 
 
 // build function for checking user status
@@ -54,10 +57,11 @@ async function CheckUserStatus() {
 }
 
 
+
 // build function for loading friend list
-async function LoadFriendsList(user_id) {
+async function LoadFriendList(user_id) {
     try {
-        let response = await fetch("/api/friends", {
+        let response = await fetch("/api/friend", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -68,11 +72,13 @@ async function LoadFriendsList(user_id) {
         let result = await response.json();
 
         for ( data of result.data) {
+            // Load friend list in main pannel
             let mainPannelFriendItem = document.createElement("div");
             mainPannelFriendItem.setAttribute("class", "item");
             mainPannelFriendItem.textContent = data.username;
             mainPannelFriendsList.appendChild(mainPannelFriendItem);
-
+            
+            // Load friend list in team pannel
             let//
             teamPannelFriendItem = document.createElement("div"),
             input = document.createElement("input"),
@@ -98,16 +104,52 @@ async function LoadFriendsList(user_id) {
 }
     
 
+
+// build function for loading team list
+async function LoadTeamList(user_id) {
+    try {
+        let response = await fetch("/api/team", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({owner_id: user_id})
+        });
+
+        let result = await response.json();
+        console.log(result);
+
+        for ( data of result.data) {
+            let teamListItem = document.createElement("div");
+            teamListItem.setAttribute("class", "item");
+            teamListItem.setAttribute("id", data.team_id);
+            teamListItem.textContent = data.team_name;
+
+            teamsList.appendChild(teamListItem);
+        }
+        return;
+    }
+    catch(error){
+        console.log(`Erorr in LoadFriendList : ${error}`)
+        throw error
+    }
+}
+
+
+
 // check user status and load info when passing check
 CheckUserStatus()
     .then((result) => {
         let data = result.data;
-        // adjust main-pannel description
+        // update main-pannel description
         let description = document.querySelector(".main-pannel .description").textContent;
         document.querySelector(".main-pannel .description").textContent = description + ` ${data.username}`;
 
-        // adjust friends list
-        LoadFriendsList(data.user_id);
+        // update friends list
+        LoadFriendList(data.user_id);
+
+        // update team list
+        LoadTeamList(data.user_id);
         })
     .catch((error) => {console.log(error)})
 
@@ -174,9 +216,9 @@ menuFriends.addEventListener("click", ()=>{
     menuTitle.textContent = menuFriends.textContent;
     menuList.style.display = "none";
     menu.style.border = "none";
-    teamsList.style.display = "none";
+    teamsOuter.style.display = "none";
     addTeam.style.display = "none";
-    mainPannelFriendsList.style.display = "grid";
+    mainPannelFriendsOuter.style.display = "flex";
     addFriend.style.display = "block";
 })
 
@@ -184,9 +226,9 @@ menuTeam.addEventListener("click", ()=>{
     menuTitle.textContent = menuTeam.textContent;
     menuList.style.display = "none";
     menu.style.border = "none";
-    mainPannelFriendsList.style.display = "none";
+    mainPannelFriendsOuter.style.display = "none";
     addFriend.style.display = "none";
-    teamsList.style.display = "grid";
+    teamsOuter.style.display = "flex";
     addTeam.style.display = "block";
 })
 
@@ -261,28 +303,28 @@ if (window.navigator.geolocation) {
 }
 
 
-// storage username and roomID on browser session
-let createBtn = document.querySelector("button[name=create]");
-createBtn.addEventListener("click", () => {
-    let//
-    username = document.querySelector("input[name=username]").value,
-    roomID = document.querySelector("input[name=roomID]").value;
-    sessionStorage.setItem("username", username);
-    sessionStorage.setItem("roomID", roomID);
-});
+// // storage username and roomID on browser session
+// let createBtn = document.querySelector("button[name=create]");
+// createBtn.addEventListener("click", () => {
+//     let//
+//     username = document.querySelector("input[name=username]").value,
+//     roomID = document.querySelector("input[name=roomID]").value;
+//     sessionStorage.setItem("username", username);
+//     sessionStorage.setItem("roomID", roomID);
+// });
 
-let joinBtn = document.querySelector("button[name=join]");
-joinBtn.addEventListener("click", () => {
-    let//
-    username = document.querySelector("input[name=username]").value,
-    roomID = document.querySelector("input[name=roomID]").value;
-    sessionStorage.setItem("username", username);
-    sessionStorage.setItem("roomID", roomID);
-});
+// let joinBtn = document.querySelector("button[name=join]");
+// joinBtn.addEventListener("click", () => {
+//     let//
+//     username = document.querySelector("input[name=username]").value,
+//     roomID = document.querySelector("input[name=roomID]").value;
+//     sessionStorage.setItem("username", username);
+//     sessionStorage.setItem("roomID", roomID);
+// });
 
 
-// test user's position by select position from randomPosition
-let randomCoords = {
-    latitude: 24.982 + Math.random()*0.006,
-    longitude: 121.534 + Math.random()*0.006
-};
+// // test user's position by select position from randomPosition
+// let randomCoords = {
+//     latitude: 24.982 + Math.random()*0.006,
+//     longitude: 121.534 + Math.random()*0.006
+// };

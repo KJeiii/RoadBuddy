@@ -208,6 +208,15 @@ button:hover
     margin: 10px 10px;
 }
 
+.main-pannel .teams-outer {
+    display: flex;
+    justify-content: center;
+    width: 80%;
+    height: 40%;
+    margin: auto;
+    overflow-y: scroll;    
+}
+
 .teams-list {
     display: grid;
     justify-content: center;
@@ -217,9 +226,6 @@ button:hover
     margin: 10px 10px;
 }
 
-.teams-list {
-    display: none;
-}
 
 .main-pannel .item {
     height: 20px;
