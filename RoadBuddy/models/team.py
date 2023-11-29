@@ -85,6 +85,27 @@ class TeamTool(pooling.MySQLConnectionPool):
         return result
     
 
+    def Search_joined_team(self, user_id:int) -> list:
+        connection = self.get_connection()
+        cursor = connection.cursor(dictionary=True)
+
+        search_string = ('select '
+                         'team.team_name, '
+                         'team.team_id, '
+                         'team.owner_id '
+                         'from team inner join partner '
+                         'on team.team_id = partner.team_id '
+                         'where partner_id = %s'
+                        )
+        data_string = (user_id, )
+                
+        cursor.execute(search_string, data_string)
+        result = cursor.fetchall()
+        connection.close()
+
+        return result        
+    
+
     def Create_partner_table(self) -> None:
         connection = self.get_connection()
         cursor = connection.cursor(dictionary=True)
@@ -128,7 +149,6 @@ class TeamTool(pooling.MySQLConnectionPool):
                          "where partner.team_id = %s"
                          )
         data_string = (team_id, )
-        print(search_string)
                 
         cursor.execute(search_string, data_string)
         result = cursor.fetchall()
@@ -137,10 +157,10 @@ class TeamTool(pooling.MySQLConnectionPool):
         return result
 
 # test = TeamTool()
-# test = TeamTool().Create_team("GoGoGo", 5)
+# test = TeamTool().Create_team("Taipei", 1)
 # test = TeamTool().Create_team("Hsinchu", 5)
 # test = TeamTool().Create_team("20231129", 5)
 
-# test = TeamTool().Add_partner(3, [1,2,6,7,9])
+# test = TeamTool().Add_partner(7, [1,5,6,7,9])
 # test = TeamTool().Search_partner(3)
-# print(test.Search_team_by_userid(5))
+# print(test.Search_joined_team(1))

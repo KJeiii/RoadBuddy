@@ -15,7 +15,6 @@ mainPannelFriendsOuter = document.querySelector(".main-pannel .friends-outer"),
 mainPannelFriendsList = document.querySelector(".main-pannel .friends-list"),
 teamPannelFriendsList = document.querySelector(".teams-pannel .friends-list"),
 teamsOuter = document.querySelector(".teams-outer"),
-teamsList = document.querySelector(".teams-list"),
 pullUp = document.querySelector(".pull-up"),
 dropDown = document.querySelector(".drop-down"),
 addFriend = document.querySelector(".nav-add-friend"),
@@ -111,22 +110,49 @@ async function LoadFriendList(user_id) {
 async function LoadTeamList(user_id) {
     try {
         let response = await fetch("/api/team", {
-            method: "POST",
+            method: "PUT",
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({owner_id: user_id})
+            body: JSON.stringify({user_id: user_id})
         });
 
         let result = await response.json();
 
-        for ( data of result.data) {
-            let teamListItem = document.createElement("div");
-            teamListItem.setAttribute("class", "item");
-            teamListItem.setAttribute("id", data.team_id);
-            teamListItem.textContent = data.team_name;
+        for ( data of result.data.created_team) {
+            let//
+            item = document.createElement("div"),
+            createList = document.querySelector(".create-list");
 
-            teamsList.appendChild(teamListItem);
+            item.setAttribute("class", "item");
+            item.setAttribute("id", data.team_id);
+            item.textContent = data.team_name;
+
+            createList.appendChild(item);
+        }
+
+        for ( data of result.data.joined_team) {
+            let//
+            item = document.createElement("div"),
+            joinList = document.querySelector(".join-list");
+
+            item.setAttribute("class", "item");
+            item.setAttribute("id", data.team_id);
+            item.textContent = data.team_name;
+
+            joinList.appendChild(item);
+        }
+
+        let teamItems = document.querySelectorAll(".teams-outer .item");
+        console.log(teamItems);
+        for ( item of teamItems ) {
+            item.addEventListener("click", () => {
+                document.querySelector(".teams-pannel .pannel-title").textContent = item.textContent;
+                document.querySelector(".teams-pannel .search").style.display = "none";
+                document.querySelector(".friends-outer").style.height = "55%";
+                mainPannel.style.display = "none";
+                teamsPannel.style.display = "flex";
+            })
         }
         return;
     }
@@ -136,6 +162,17 @@ async function LoadTeamList(user_id) {
     }
 }
 
+// ----- use old team -----
+// let oldTeam = document.querySelectorAll(".teams-list .item");
+// for (team of oldTeam) {
+//     team.addEventListener("click", () => {
+//         let oldTeamName = team.textContent;
+//         document.querySelector(".teams-pannel .pannel-title").textContent = oldTeamName;
+//         document.querySelector(".teams-pannel .search").style.display = "none";
+//         document.querySelector(".friends-outer").style.height = "55%";
+//         teamsPannel.style.display = "flex";
+//     })
+// }
 
 
 // check user status and load info when passing check
@@ -152,7 +189,10 @@ CheckUserStatus()
         // update team list
         LoadTeamList(data.user_id);
         })
-    .catch((error) => {console.log(error)})
+    .catch((error) => {
+        console.log(error);
+        window.location.replace("/member");
+    })
 
 
 
@@ -247,7 +287,6 @@ menuTeam.addEventListener("click", ()=>{
 
 // ----- add friend -----
 addFriend.addEventListener("click", () => {
-    console.log("add friends");
     friendsPannel.style.display = "flex";
     mainPannel.style.display = "none";
 })
@@ -256,23 +295,10 @@ addFriend.addEventListener("click", () => {
 
 // ----- add team -----
 addTeam.addEventListener("click", () => {
-    console.log("add team");
     teamsPannel.style.display = "flex";
     mainPannel.style.display = "none";
 })
 
-
-// ----- use old team -----
-let oldTeam = document.querySelectorAll(".teams-list .item");
-for (team of oldTeam) {
-    team.addEventListener("click", () => {
-        let oldTeamName = team.textContent;
-        document.querySelector(".teams-pannel .pannel-title").textContent = oldTeamName;
-        document.querySelector(".teams-pannel .search").style.display = "none";
-        document.querySelector(".friends-outer").style.height = "55%";
-        teamsPannel.style.display = "flex";
-    })
-}
 
 
 // ----- close pannel ----
@@ -293,7 +319,7 @@ for (close of closePannel) {
 pullUp.addEventListener("click", () => {
     pullUp.style.display = "none";
     dropDown.style.display = "block";
-    mainPannel.style.top = "40vh";
+    mainPannel.style.top = "20vh";
 })
 
 dropDown.addEventListener("click", () => {
@@ -304,7 +330,7 @@ dropDown.addEventListener("click", () => {
 
 
 
-// ----- build functino for searching new friend -----
+// ----- build function for searching new friend -----
 async function Search_new_friend(username) {
     let response = await fetch("/api/friend/search", {
         method: "POST",
@@ -340,7 +366,7 @@ searchIcon.addEventListener("click", () => {
     while (searchList.hasChildNodes()) {
         searchList.removeChild(searchList.lastChild)
     }
-    
+
     let username = document.querySelector("input[name=search-friend]").value;
     Search_new_friend(username);
 })

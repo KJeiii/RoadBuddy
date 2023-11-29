@@ -46,14 +46,14 @@ def Login():
     if request.method == "PUT":
         try:
             email = request.json["email"]
-            if len(memberTool.Search_member(email)) == 0:
+            if len(memberTool.Search_member_by_email(email)) == 0:
                 response = {
                     "error": True,
                     "message": "登入失敗，此電子信件尚未註冊"
                 }
                 return jsonify(response), 400
             
-            member_info = memberTool.Search_member(email)[0]
+            member_info = memberTool.Search_member_by_email(email)[0]
             if check_password_hash(member_info["password"], request.json["password"]):
                 jwt_payload = {
                     "usi": member_info["user_id"],

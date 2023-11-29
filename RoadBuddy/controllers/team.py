@@ -8,21 +8,24 @@ team_bp = Blueprint("team_bp",
                       static_folder="static")
 
 # Load team list
-@team_bp.route("/api/team", methods = ["POST"])
-def Load_team_list():
-    if request.method == "POST":
+@team_bp.route("/api/team", methods = ["POST", "PUT"])
+def Team():
+    if request.method == "PUT":
         try:
-            print(request.json)
-            owner_id = request.json["owner_id"]
-            team_list = teamTool.Search_team_by_userid(owner_id)
+            user_id = request.json["user_id"]
+            created_team_list = teamTool.Search_team_by_userid(user_id)
+            joined_team_list = teamTool.Search_joined_team(user_id)
             response = {
                 "ok": True,
-                "data": team_list
+                "data": {
+                    "created_team": created_team_list,
+                    "joined_team": joined_team_list
+                }
             }
             return jsonify(response), 200
         
         except Exception as error:
-            print(f'Error in controller(team) - Load_team_list : {error}')
+            print(f'Error in controller(team) - Team : {error}')
             response = {
                 "error": True,
                 "message": "伺服器內部錯誤"
