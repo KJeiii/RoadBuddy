@@ -24,7 +24,9 @@ friendsPannel = document.querySelector(".friends-pannel"),
 teamsPannel = document.querySelector(".teams-pannel"),
 closePannel = document.querySelectorAll(".close"),
 searchList = document.querySelector(".search-list"),
-searchIcon = document.querySelector(".search-icon");
+searchIcon = document.querySelector(".search-icon"),
+createTeamBtn = document.querySelector(".create-team-btn"),
+startTripBtn = document.querySelector(".start-trip-btn");
 
 
 
@@ -119,6 +121,7 @@ async function LoadTeamList(user_id) {
 
         let result = await response.json();
 
+        // own created teams
         for ( data of result.data.created_team) {
             let//
             item = document.createElement("div"),
@@ -131,6 +134,7 @@ async function LoadTeamList(user_id) {
             createList.appendChild(item);
         }
 
+        // joined teams as a partner
         for ( data of result.data.joined_team) {
             let//
             item = document.createElement("div"),
@@ -143,13 +147,16 @@ async function LoadTeamList(user_id) {
             joinList.appendChild(item);
         }
 
+        // add event to all teams
         let teamItems = document.querySelectorAll(".teams-outer .item");
-
         for ( item of teamItems ) {
             item.addEventListener("click", function() {
                 document.querySelector(".teams-pannel .pannel-title").textContent = this.textContent;
+                document.querySelector(".teams-pannel .pannel-title").setAttribute("id", this.getAttribute("id"));
                 document.querySelector(".teams-pannel .search").style.display = "none";
                 document.querySelector(".friends-outer").style.height = "55%";
+                createTeamBtn.style.display = "none";
+                startTripBtn.style.display = "block";
                 mainPannel.style.display = "none";
                 teamsPannel.style.display = "flex";
             })
@@ -162,17 +169,6 @@ async function LoadTeamList(user_id) {
     }
 }
 
-// ----- use old team -----
-// let oldTeam = document.querySelectorAll(".teams-list .item");
-// for (team of oldTeam) {
-//     team.addEventListener("click", () => {
-//         let oldTeamName = team.textContent;
-//         document.querySelector(".teams-pannel .pannel-title").textContent = oldTeamName;
-//         document.querySelector(".teams-pannel .search").style.display = "none";
-//         document.querySelector(".friends-outer").style.height = "55%";
-//         teamsPannel.style.display = "flex";
-//     })
-// }
 
 
 // check user status and load info when passing check
@@ -310,7 +306,8 @@ for (close of closePannel) {
         document.querySelector(".teams-pannel .pannel-title").textContent = "創建隊伍";
         document.querySelector(".friends-outer").style.height = "40%";
         document.querySelector(".teams-pannel .search").style.display = "flex";
-
+        createTeamBtn.style.display = "block";
+        startTripBtn.style.display = "none";
     })
 };
 
@@ -371,6 +368,13 @@ searchIcon.addEventListener("click", () => {
     Search_new_friend(username);
 })
 
+
+
+// ----- start tracking ----- 
+startTripBtn.addEventListener("click", () => {
+    let team_id = document.querySelector(".teams-pannel .pannel-title").getAttribute("id");
+    
+})
 
 
 // // storage username and roomID on browser session

@@ -457,3 +457,6 @@ label {
     margin-top: 10px;
 }
 
+.teams-pannel button.start-trip {
+    display: none;
+}
