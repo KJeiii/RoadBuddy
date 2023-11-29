@@ -16,7 +16,7 @@ def Signup():
     if request.method == "POST":
         try:
             email = request.json["email"]
-            if len(memberTool.Search_member(email)) != 0 :
+            if len(memberTool.Search_member_by_email(email)) != 0 :
                 response = {
                     "error": True,
                     "message": "註冊失敗，電子信箱重覆"

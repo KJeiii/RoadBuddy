@@ -33,7 +33,7 @@ class MemberTool(pooling.MySQLConnectionPool):
         connection.close()       
 
         
-    def Search_member(self, email: str) -> list:
+    def Search_member_by_email(self, email: str) -> list:
         connection = self.get_connection()
         cursor = connection.cursor(dictionary=True)
 
