@@ -1,13 +1,15 @@
 from flask import Blueprint, render_template, request, jsonify
-from RoadBuddy.models import friend
+from RoadBuddy.models import friend, member
 
 friendTool = friend.FriendTool()
+memberTool = member.MemberTool()
+
 friend_bp = Blueprint("friend_bp",
                       __name__,
                       template_folder="templates",
                       static_folder="static")
 
-# Load friends list
+# Load friends list and find new friends
 @friend_bp.route("/api/friend", methods = ["POST"])
 def Load_friend_list():
     if request.method == "POST":
@@ -29,4 +31,22 @@ def Load_friend_list():
             return jsonify(response), 500
     
 
-
+@friend_bp.route("/api/friend/search", methods = ["POST"])
+def Search_new_friend():
+    if request.method == "POST":
+        try:
+            username = request.json["username"]
+            new_friend_list = memberTool.Search_member_by_username(username)
+            response = {
+                "ok": True,
+                "data": new_friend_list
+            }
+            return jsonify(response), 200
+        
+        except Exception as error:
+            print(f'Error in controller(friend) - Search_new_friend : {error}')
+            response = {
+                "error": True,
+                "message": "伺服器內部錯誤"
+            }
+            return jsonify(response), 500

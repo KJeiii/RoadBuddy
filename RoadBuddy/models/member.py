@@ -47,6 +47,22 @@ class MemberTool(pooling.MySQLConnectionPool):
         connection.close()
 
         return result
+    
+
+    def Search_member_by_username(self, username:str) -> list:
+        connection = self.get_connection()
+        cursor = connection.cursor(dictionary=True)
+
+        search_string = ('select * from member '
+                         'where username like %s'
+                        )
+        data_string = ("%" + username + "%", )
+                
+        cursor.execute(search_string, data_string)
+        result = cursor.fetchall()
+        connection.close()
+
+        return result        
 
         
     def Add_member(self, username: str, email: str, password: str) -> None:
