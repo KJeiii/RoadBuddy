@@ -228,9 +228,13 @@ button:hover
 
 
 .main-pannel .item {
-    height: 20px;
+    height: 40px;
+    width: 65px;
     text-align: center;
     font-size: 20px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 
