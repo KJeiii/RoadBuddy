@@ -1,6 +1,6 @@
 from mysql.connector import pooling
-# from RoadBuddy.models import db_config
-from __init__ import db_config
+from RoadBuddy.models import db_config
+# from __init__ import db_config
 
 
 class TeamTool(pooling.MySQLConnectionPool):
@@ -53,7 +53,7 @@ class TeamTool(pooling.MySQLConnectionPool):
         connection.close() 
 
 
-    def Search_team(self, team_name:str) -> list:
+    def Search_team_by_teamname(self, team_name:str) -> list:
         connection = self.get_connection()
         cursor = connection.cursor(dictionary=True)
 
@@ -69,7 +69,23 @@ class TeamTool(pooling.MySQLConnectionPool):
         return result
     
 
-    def Create_parter_table(self) -> None:
+    def Search_team_by_userid(self, owner_id:int) -> list:
+        connection = self.get_connection()
+        cursor = connection.cursor(dictionary=True)
+
+        search_string = ('select * from team '
+                         'where owner_id = %s'
+                        )
+        data_string = (owner_id, )
+                
+        cursor.execute(search_string, data_string)
+        result = cursor.fetchall()
+        connection.close()
+
+        return result
+    
+
+    def Create_partner_table(self) -> None:
         connection = self.get_connection()
         cursor = connection.cursor(dictionary=True)
 
@@ -106,12 +122,13 @@ class TeamTool(pooling.MySQLConnectionPool):
         search_string = ("select "
                          "member.user_id, "
                          "member.username, "
-                         "member.email, "
+                         "member.email "
                          "from partner inner join member "
                          "on partner.partner_id = member.user_id "
                          "where partner.team_id = %s"
                          )
         data_string = (team_id, )
+        print(search_string)
                 
         cursor.execute(search_string, data_string)
         result = cursor.fetchall()
@@ -119,8 +136,11 @@ class TeamTool(pooling.MySQLConnectionPool):
 
         return result
 
+# test = TeamTool()
+# test = TeamTool().Create_team("GoGoGo", 5)
+# test = TeamTool().Create_team("Hsinchu", 5)
+# test = TeamTool().Create_team("20231129", 5)
 
-# test = TeamTool().Create_team("test", 5)
 # test = TeamTool().Add_partner(3, [1,2,6,7,9])
-test = TeamTool().Search_partner(3)
-print(test)
+# test = TeamTool().Search_partner(3)
+# print(test.Search_team_by_userid(5))
