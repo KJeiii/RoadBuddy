@@ -10,3 +10,8 @@ def home():
 @app.route("/member")
 def member():
     return render_template("member.html")
+
+
+@app.route("/room")
+def room():
+    return render_template("room.html")
