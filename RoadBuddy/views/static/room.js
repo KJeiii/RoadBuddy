@@ -23,7 +23,9 @@ addTeam = document.querySelector(".nav-add-team"),
 mainPannel = document.querySelector(".main-pannel"),
 friendsPannel = document.querySelector(".friends-pannel"),
 teamsPannel = document.querySelector(".teams-pannel"),
-closePannel = document.querySelectorAll(".close");
+closePannel = document.querySelectorAll(".close"),
+searchList = document.querySelector(".search-list"),
+searchIcon = document.querySelector(".search-icon");
 
 
 
@@ -117,7 +119,6 @@ async function LoadTeamList(user_id) {
         });
 
         let result = await response.json();
-        console.log(result);
 
         for ( data of result.data) {
             let teamListItem = document.createElement("div");
@@ -170,8 +171,18 @@ function drawMap(position){
     let marker = L.marker([initialCoord.latitude, initialCoord.longitude]).addTo(map);
 };
 
-
 function userCoordError(error) {console.log(`Error in drawing initial map: ${error}`)};
+
+
+
+// ----- draw initial map -----
+if (window.navigator.geolocation) {
+    try {
+        window.navigator.geolocation.getCurrentPosition(drawMap, userCoordError);
+        console.log("check in initialize map")
+    }
+    catch(error) {console.log(`Error in getting user postion : ${error}`)}
+}
 
 
 
@@ -293,14 +304,47 @@ dropDown.addEventListener("click", () => {
 
 
 
-// ----- draw initial map -----
-if (window.navigator.geolocation) {
-    try {
-        window.navigator.geolocation.getCurrentPosition(drawMap, userCoordError);
-        console.log("check in initialize map")
+// ----- build functino for searching new friend -----
+async function Search_new_friend(username) {
+    let response = await fetch("/api/friend/search", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({username: username})
+    });
+
+    let result = await response.json();
+    console.log(result);
+
+    for (data of result.data) {
+        let item = document.createElement("div"),
+        input = document.createElement("input"),
+        label = document.createElement("label");
+
+        item.setAttribute("class", "item")
+
+        input.setAttribute("type", "checkbox");
+        input.setAttribute("id", data.user_id);
+        input.setAttribute("name", data.username);
+        label.setAttribute("for", data.username);
+        label.textContent = data.username;
+
+        item.appendChild(input);
+        item.appendChild(label);
+        searchList.appendChild(item);
     }
-    catch(error) {console.log(`Error in getting user postion : ${error}`)}
 }
+
+searchIcon.addEventListener("click", () => {
+    while (searchList.hasChildNodes()) {
+        searchList.removeChild(searchList.lastChild)
+    }
+    
+    let username = document.querySelector("input[name=search-friend]").value;
+    Search_new_friend(username);
+})
+
 
 
 // // storage username and roomID on browser session
