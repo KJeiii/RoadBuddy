@@ -144,10 +144,10 @@ async function LoadTeamList(user_id) {
         }
 
         let teamItems = document.querySelectorAll(".teams-outer .item");
-        console.log(teamItems);
+
         for ( item of teamItems ) {
-            item.addEventListener("click", () => {
-                document.querySelector(".teams-pannel .pannel-title").textContent = item.textContent;
+            item.addEventListener("click", function() {
+                document.querySelector(".teams-pannel .pannel-title").textContent = this.textContent;
                 document.querySelector(".teams-pannel .search").style.display = "none";
                 document.querySelector(".friends-outer").style.height = "55%";
                 mainPannel.style.display = "none";
