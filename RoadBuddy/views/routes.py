@@ -15,3 +15,8 @@ def member():
 @app.route("/room")
 def room():
     return render_template("room.html")
+
+
+@app.route("/tracking")
+def tracking(): 
+    return render_template("tracking.html")
