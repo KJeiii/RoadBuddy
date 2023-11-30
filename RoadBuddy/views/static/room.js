@@ -326,6 +326,50 @@ addTeam.addEventListener("click", () => {
     mainPannel.style.display = "none";
 })
 
+createTeamBtn.addEventListener("click", () => {
+    let searchInput = document.querySelector("input[name=create-team]");
+    searchInput.setAttribute("placeholder", "請輸入隊伍名稱");
+
+    if (searchInput.value === "" ) {
+        searchInput.setAttribute("placeholder", "請輸入隊伍名稱");
+        return
+    }
+
+    fetch("/api/team", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+            team_name: searchInput.value,
+            user_id: window.sessionStorage.getItem("user_id")
+        })
+    })
+    .then((response) => {return response.json()})
+    .then((result) => {
+
+        if ( result.error ) {
+            searchInput.value = "";
+            searchInput.setAttribute("placeholder", "隊伍名稱已被使用，請輸入其他名稱");
+            return
+        }
+
+        let//
+        createList = document.querySelector(".create-list"),
+        joinList = document.querySelector(".join-list");
+
+        while ( createList.hasChildNodes() ) {
+            createList.removeChild(createList.lastChild)
+        }
+
+        while ( joinList.hasChildNodes() ) {
+            joinList.removeChild(joinList.lastChild)
+        }
+
+        LoadTeamList(window.sessionStorage.getItem("user_id"));
+        teamsPannel.style.display = "none";
+        mainPannel.style.display = "block";
+    })
+    .catch((error) => {console.log(`Error in creating team : ${error}`)})
+})
 
 
 // ----- close pannel ----
@@ -342,7 +386,7 @@ for (close of closePannel) {
         document.querySelector(".teams-pannel .search").style.display = "flex";
         createTeamBtn.style.display = "block";
         startTripBtn.style.display = "none";
-        while (searchList.hasChildNodes) {
+        while (searchList.hasChildNodes()) {
             searchList.removeChild(searchList.lastChild)
         }
     })
@@ -398,7 +442,6 @@ async function Search_new_friend(username) {
 searchIcon.addEventListener("click", () => {
     let searchInput = document.querySelector("input[name=search-friend]");
     searchInput.setAttribute("placeholder", "搜尋姓名");
-
 
     while (searchList.hasChildNodes()) {
         searchList.removeChild(searchList.lastChild)

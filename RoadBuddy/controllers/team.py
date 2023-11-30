@@ -25,7 +25,36 @@ def Team():
             return jsonify(response), 200
         
         except Exception as error:
-            print(f'Error in controller(team) - Team : {error}')
+            print(f'Error in controller(team) - Team(PUT method) : {error}')
+            response = {
+                "error": True,
+                "message": "伺服器內部錯誤"
+            }
+            return jsonify(response), 500
+    
+    if request.method == "POST":
+        try:
+            team_name = request.json["team_name"]
+            user_id = request.json["user_id"]
+            search_team = teamTool.Search_team_by_teamname(team_name)
+
+            if len(search_team) != 0 :
+                response = {
+                    "error": True,
+                    "message": "隊伍名稱已被使用"
+                }
+                return jsonify(response), 400
+
+            teamTool.Create_team(team_name, user_id)
+
+            response = {
+                "ok": True,
+                "message": "success"
+            }
+            return jsonify(response), 200
+
+        except Exception as error:
+            print(f'Error in controller(team) - Team(POST method) : {error}')
             response = {
                 "error": True,
                 "message": "伺服器內部錯誤"
