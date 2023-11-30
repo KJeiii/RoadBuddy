@@ -92,33 +92,31 @@ socketio = SocketIO(app,
 
 
 
-
-
 @socketio.on("connect")
 def connect():
     username = session.get("username")
-    roomID = session.get("roomID")
+    team_id = session.get("team_id")
 
-    # print(f'(socketio for connect) create/join status for user( {username} ): {session["create"]}, {session["join"]}')
+    print(f'username and team_id in socket event (connect) : {username} / {team_id}')
 
-    if not username or not roomID:
+    if not username or not team_id:
         return
     
-    if roomID not in rooms_info.keys():
-        leave_room(roomID)
+    if team_id not in rooms_info.keys():
+        leave_room(team_id)
         return
 
     try: 
         # add new member to particular room
-        rooms_info[roomID][request.sid] = {
+        rooms_info[team_id][request.sid] = {
             "username": username,
             "coords": []
         }
 
         print(f'rooms_info after create/join : {rooms_info}')
 
-        join_room(roomID)
-        emit("message", f'new partner joins : {username}\n', to=roomID)
+        join_room(team_id)
+        emit("message", f'new partner joins : {username}\n', to=team_id)
 
 
     except Exception as error:
@@ -128,47 +126,48 @@ def connect():
 
 @socketio.on("disconnect")
 def disconnect():
-    userID = request.sid
+    user_socket_id = request.sid
     username = session.get("username")
-    roomID = session.get("roomID")
+    team_id = session.get("team_id")
 
     
-    leave_room(roomID)
-    del rooms_info[roomID][userID]
+    leave_room(team_id)
+    del rooms_info[team_id][user_socket_id]
 
-    if len(rooms_info[roomID].keys()) == 0 :
-        del rooms_info[roomID]
+    if len(rooms_info[team_id].keys()) == 0 :
+        del rooms_info[team_id]
 
-    emit("disconnect", userID, to=roomID)
-    emit("message", f'partner leaves : {username}\n', to=roomID)
+    emit("disconnect", user_socket_id, to=team_id)
+    emit("message", f'partner leaves : {username}\n', to=team_id)
 
 
 
 @socketio.on("position")
 def position(position):
 
-    userID = request.sid
-    roomID = session.get("roomID")
+    print(f'rooms_info in socket event (position) : {rooms_info}')
+    user_socket_id = request.sid
+    team_id = session.get("team_id")
     username = session.get("username")
     new_coord = position["coord"]
-    user_coords = rooms_info[roomID][userID]["coords"]
+    user_coords = rooms_info[team_id][user_socket_id]["coords"]
 
 
     if len(user_coords) >= 2:
         del user_coords[0]
         user_coords.append(new_coord)
-        print(rooms_info[roomID])
-        emit("movingPostion", rooms_info[roomID], to=roomID)
+        print(rooms_info[team_id])
+        emit("movingPostion", rooms_info[team_id], to=team_id)
 
     if len(user_coords) == 1 :
         user_coords.append(new_coord)
-        print(rooms_info[roomID])
-        emit("initPosition", rooms_info[roomID], to=roomID)
+        print(rooms_info[team_id])
+        emit("initPosition", rooms_info[team_id], to=team_id)
 
     if len(user_coords) == 0 :
         user_coords.append(new_coord)
-        print(rooms_info[roomID])
-        emit("initPosition", rooms_info[roomID], to=roomID)
+        print(rooms_info[team_id])
+        emit("initPosition", rooms_info[team_id], to=team_id)
 
 
 
