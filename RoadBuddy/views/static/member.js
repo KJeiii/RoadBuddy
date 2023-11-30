@@ -4,7 +4,7 @@ async function CheckUserStatus() {
     console.log(jwt);
 
     try{
-        if ( jwt === null) {return {"ok":false, "data": null}}
+        if ( jwt === null) {throw {"ok":false, "data": null}}
 
         let//
         response = await fetch("/api/member/auth", {
