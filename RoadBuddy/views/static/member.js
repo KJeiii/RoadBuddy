@@ -135,8 +135,21 @@ signupBtn.addEventListener("click", async() => {
             console.log(result.message);
             return;
         }
+        
+        let//
+        signupForm = document.querySelector(".signup"),
+        loginForm = document.querySelector(".login"),
+        loginBtn = document.querySelector(".login-btn"),
+        loginMailInput = document.querySelector(".login input[name=email]");
+    
+        signupForm.style.display = "none";
+        loginMailInput.value = emailInput.value;
+        loginBtn.style.backgroundColor = "rgba(83,186,190,0.5)";
+        loginForm.style.display = "flex"; 
 
         console.log(result.message);
+
+
     }
     catch(error) {
         console.log(error)
