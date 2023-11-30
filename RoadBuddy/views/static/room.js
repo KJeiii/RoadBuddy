@@ -294,7 +294,7 @@ addFriend.addEventListener("click", () => {
 })
 
 let addFriendBtn = document.querySelector(".friends-pannel button");
-addFriend.addEventListener("click", () => {
+addFriendBtn.addEventListener("click", () => {
     console.log("click");
     let//
     checkboxes = document.querySelectorAll(".friends-pannel input[type=checkbox]"),
@@ -313,7 +313,14 @@ addFriend.addEventListener("click", () => {
         })})
         .then((response) => {return response.json()})
         .then((result) => {
-            LoadFriendList(window.sessionStorage.getItem("user_id"))
+            while ( mainPannelFriendsList.hasChildNodes() ) {
+                mainPannelFriendsList.removeChild(mainPannelFriendsList.lastChild)
+            }
+
+            LoadFriendList(window.sessionStorage.getItem("user_id"));
+            friendsPannel.style.display = "none";
+            mainPannel.style.display = "block";
+
         })
         .catch((error) => {console.log(`Error in add new friend : ${error}`)})
 });
