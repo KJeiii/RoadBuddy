@@ -5,7 +5,7 @@ from RoadBuddy.views.routes import *
 from RoadBuddy.controllers.member import member_bp
 from RoadBuddy.controllers.friend import friend_bp
 from RoadBuddy.controllers.team import team_bp
-from RoadBuddy.controllers.tracking import tracking_bp
+from RoadBuddy.controllers.tracking import tracking_bp, rooms_info
 
 app.register_blueprint(member_bp)
 app.register_blueprint(friend_bp)
@@ -20,23 +20,23 @@ socketio = SocketIO(app,
                     ping_interval=5
                     )
 
-rooms_info = {}
-# rooms_info = {
-#   room_id-1: {
-#       sid-1 : {username: XXX,
-#              coords: [old_Postion, new_postion]
-#             },
-#       sid-2 : {username: XXX,
-#              coords: [old_Postion, new_postion]
-#             },
-#   room_id-2: {
-#       sid-1 : {username: XXX,
-#              coords: [old_Postion, new_postion]
-#             },
-#       sid-2 : {username: XXX,
-#              coords: [old_Postion, new_postion]
-#             },
-# }
+# rooms_info = {}
+# # rooms_info = {
+# #   room_id-1: {
+# #       sid-1 : {username: XXX,
+# #              coords: [old_Postion, new_postion]
+# #             },
+# #       sid-2 : {username: XXX,
+# #              coords: [old_Postion, new_postion]
+# #             },
+# #   room_id-2: {
+# #       sid-1 : {username: XXX,
+# #              coords: [old_Postion, new_postion]
+# #             },
+# #       sid-2 : {username: XXX,
+# #              coords: [old_Postion, new_postion]
+# #             },
+# # }
 
 
 
@@ -91,12 +91,6 @@ rooms_info = {}
 
 
 
-@app.route("/tracking")
-def tracking():
-    if session.get("username") == None or session.get("roomID") == None:
-        return render_template("room.html")
-    
-    return render_template("tracking.html")
 
 
 
