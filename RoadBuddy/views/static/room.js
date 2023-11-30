@@ -372,8 +372,15 @@ searchIcon.addEventListener("click", () => {
 
 // ----- start tracking ----- 
 startTripBtn.addEventListener("click", () => {
-    let team_id = document.querySelector(".teams-pannel .pannel-title").getAttribute("id");
-    
+    let//
+    team_id = document.querySelector(".teams-pannel .pannel-title").getAttribute("id"),
+    team_name = document.querySelector(".teams-pannel .pannel-title").textContent;
+
+    window.sessionStorage.setItem("team_id", team_id);
+    window.sessionStorage.setItem("team_name", team_name);
+
+    window.location.replace("/tracking");
+
 })
 
 

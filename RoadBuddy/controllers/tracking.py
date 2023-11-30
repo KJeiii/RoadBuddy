@@ -1,18 +1,37 @@
 from flask import Blueprint, render_template, redirect, url_for, request, jsonify, session
-from RoadBuddy.models import team
+from RoadBuddy.models import member
 
 tracking_bp = Blueprint("tracking_bp",
                       __name__,
                       template_folder="templates",
                       static_folder="static")
 
-# Load team list
-@tracking_bp.route("/api/tracking", methods = ["POST"])
+rooms_info = {}
+# rooms_info = {
+#   room_id-1: {
+#       sid-1 : {username: XXX,
+#              coords: [old_Postion, new_postion]
+#             },
+#       sid-2 : {username: XXX,
+#              coords: [old_Postion, new_postion]
+#             },
+#   room_id-2: {
+#       sid-1 : {username: XXX,
+#              coords: [old_Postion, new_postion]
+#             },
+#       sid-2 : {username: XXX,
+#              coords: [old_Postion, new_postion]
+#             },
+# }
+
+# tracking
+@tracking_bp.route("/api/tracking", methods = ["POST", "GET"])
 def tracking():
     session.clear()
     # print(f'session after clearance : {session}')
     # print(f'request method for user ({request.form.get("username")}) : {request.method}')
     # print(f'rooms_info at beginning of room : {rooms_info}')
+
 
     if request.method == "POST":
 
