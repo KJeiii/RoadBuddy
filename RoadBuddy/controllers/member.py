@@ -49,7 +49,7 @@ def Login():
             if len(memberTool.Search_member_by_email(email)) == 0:
                 response = {
                     "error": True,
-                    "message": "登入失敗，此電子信件尚未註冊"
+                    "message": "此電子信件尚未註冊"
                 }
                 return jsonify(response), 400
             
@@ -70,7 +70,7 @@ def Login():
             else:
                 response = {
                     "error": True,
-                    "message": "登入失敗，密碼不正確"
+                    "message": "密碼不正確"
                 }
                 return jsonify(response), 400
         

@@ -84,6 +84,16 @@ signupBtn.addEventListener("click", async() => {
     passwordInput = document.querySelector(".signup input[name=password]"),
     confirmInput = document.querySelector(".signup input[name=confirm-password]");
     
+    let emailTitle = document.querySelector(".signup .email");
+    while ( emailTitle.childNodes.length > 2 ) {
+        emailTitle.removeChild(emailTitle.lastChild)
+    }
+
+    let passwordTitle = document.querySelector(".signup .confirm-password");
+    while ( passwordTitle.childNodes.length > 2 ) {
+        passwordTitle.removeChild(passwordTitle.lastChild)
+    }
+
     // feedback error message when one of the inputs is empty
     for ( input of [emailInput, usernameInput, passwordInput, confirmInput] ) {
         if  (input.value === "") {
@@ -139,6 +149,16 @@ loginBtn.addEventListener("click", async() => {
     let//
     emailInput = document.querySelector(".login input[name=email]"),
     passwordInput = document.querySelector(".login input[name=password]");
+
+    let emailTitle = document.querySelector(".login .email");
+    while ( emailTitle.childNodes.length > 2 ) {
+        emailTitle.removeChild(emailTitle.lastChild)
+    }
+
+    let passwordTitle = document.querySelector(".login .password");
+    while ( passwordTitle.childNodes.length > 2 ) {
+        passwordTitle.removeChild(passwordTitle.lastChild)
+    }
     
     // feedback error message when one of the inputs is empty
     for ( input of [emailInput, passwordInput] ) {
