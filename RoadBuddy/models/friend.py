@@ -36,16 +36,16 @@ class FriendTool(pooling.MySQLConnectionPool):
         connection.close() 
         
 
-    def Add_friend(self, user_id:int, friend_id:int) -> None:
+    def Add_friend(self, user_id:int, friend_id:list) -> None:
         connection = self.get_connection()
         cursor = connection.cursor(dictionary=True)
 
         insert_string = ("insert into friends(user_id, friend_id) "
                          "values (%s, %s)"
                          )
-        data_string = (user_id, friend_id)
+        data_string = [(user_id, id) for id in friend_id]
 
-        cursor.execute(insert_string, data_string)
+        cursor.executemany(insert_string, data_string)
         connection.commit()
         connection.close()
 

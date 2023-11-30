@@ -50,3 +50,24 @@ def Search_new_friend():
                 "message": "伺服器內部錯誤"
             }
             return jsonify(response), 500
+
+@friend_bp.route("/api/friend/add", methods = ["POST"])
+def Add_friend():
+    if request.method == "POST": 
+        try:
+            user_id = request.json["user_id"]
+            friend_id = request.json["friend_id"]
+            friendTool.Add_friend(user_id,friend_id)
+            response = {
+                "ok": True,
+                "message": "success"
+            }
+            return jsonify(response), 200
+        
+        except Exception as error:
+            print(f'Error in controller(friend) - Add_friend : {error}')
+            response = {
+                "error": True,
+                "message": "伺服器內部錯誤"
+            }
+            return jsonify(response), 500

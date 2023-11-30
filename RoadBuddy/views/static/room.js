@@ -179,6 +179,12 @@ CheckUserStatus()
         let description = document.querySelector(".main-pannel .description").textContent;
         document.querySelector(".main-pannel .description").textContent = description + ` ${data.username}`;
 
+        // cache username, user_id, email in DOM sessionStorage
+        window.sessionStorage.setItem("username", data.username);
+        window.sessionStorage.setItem("user_id", data.user_id);
+        window.sessionStorage.setItem("email", data.email);
+
+
         // update friends list
         LoadFriendList(data.user_id);
 
@@ -281,15 +287,40 @@ menuTeam.addEventListener("click", ()=>{
 
 
 
-// ----- add friend -----
+// ----- add friend page-----
 addFriend.addEventListener("click", () => {
     friendsPannel.style.display = "flex";
     mainPannel.style.display = "none";
 })
 
+let addFriendBtn = document.querySelector(".friends-pannel button");
+addFriend.addEventListener("click", () => {
+    console.log("click");
+    let//
+    checkboxes = document.querySelectorAll(".friends-pannel input[type=checkbox]"),
+    friendID = [];
+
+    for ( checkbox of checkboxes) {
+        if ( checkbox.checked ) { friendID.push(checkbox.getAttribute("id"))}
+    }
+
+    fetch("/api/friend/add", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+            user_id: window.sessionStorage.getItem("user_id"),
+            friend_id: friendID
+        })})
+        .then((response) => {return response.json()})
+        .then((result) => {
+            LoadFriendList(window.sessionStorage.getItem("user_id"))
+        })
+        .catch((error) => {console.log(`Error in add new friend : ${error}`)})
+});
 
 
-// ----- add team -----
+
+// ----- add team page-----
 addTeam.addEventListener("click", () => {
     teamsPannel.style.display = "flex";
     mainPannel.style.display = "none";
@@ -300,14 +331,20 @@ addTeam.addEventListener("click", () => {
 // ----- close pannel ----
 for (close of closePannel) {
     close.addEventListener("click", () => {
+        // back to main pannel
         friendsPannel.style.display = "none";
         teamsPannel.style.display = "none";
         mainPannel.style.display = "block";
+
+        // teams-pannel recover
         document.querySelector(".teams-pannel .pannel-title").textContent = "創建隊伍";
         document.querySelector(".friends-outer").style.height = "40%";
         document.querySelector(".teams-pannel .search").style.display = "flex";
         createTeamBtn.style.display = "block";
         startTripBtn.style.display = "none";
+        while (searchList.hasChildNodes) {
+            searchList.removeChild(searchList.lastChild)
+        }
     })
 };
 
@@ -338,7 +375,6 @@ async function Search_new_friend(username) {
     });
 
     let result = await response.json();
-    console.log(result);
 
     for (data of result.data) {
         let item = document.createElement("div"),
@@ -360,8 +396,17 @@ async function Search_new_friend(username) {
 }
 
 searchIcon.addEventListener("click", () => {
+    let searchInput = document.querySelector("input[name=search-friend]");
+    searchInput.setAttribute("placeholder", "搜尋姓名");
+
+
     while (searchList.hasChildNodes()) {
         searchList.removeChild(searchList.lastChild)
+    }
+
+    if ( searchInput.value === "" ) {
+        searchInput.setAttribute("placeholder", "請填入姓名");
+        return
     }
 
     let username = document.querySelector("input[name=search-friend]").value;
