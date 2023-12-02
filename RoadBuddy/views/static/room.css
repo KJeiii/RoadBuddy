@@ -199,6 +199,31 @@ button:hover
     overflow-y: scroll;    
 }
 
+/* ------ test ------ */
+.prompt {
+    display: none;
+    position: absolute;
+    top: 20vh;
+    left: 25vw;
+    z-index: 2000;
+    width: 50vw;
+    background-color: white;
+}
+
+.response {
+    display: none;
+    position: absolute;
+    top: 20vh;
+    left: 25vw;
+    z-index: 2000;
+    width: 50vw;
+    background-color: white;
+}
+
+.alert {
+    width: 80%;
+}
+
 .friends-list  {
     display: grid;
     justify-content: center;

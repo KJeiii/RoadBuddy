@@ -90,7 +90,8 @@ socketio = SocketIO(app,
 
 
 
-
+user_info = {}
+sid_reference ={}
 
 @socketio.on("connect")
 def connect():
@@ -122,10 +123,68 @@ def connect():
     except Exception as error:
         print(f'error in socketio event(connect): {error}')
 
+@socketio.on("store_userinfo")
+def store_userinfo(data):
+
+    sid_reference[request.sid] = int(data["user_id"])
+    user_info[int(data["user_id"])] = {
+        "username": data["username"],
+        "sid": request.sid,
+        "email": data["email"]
+    }
+
+    print(f'sid_reference after socket event(store_userinfo) : {sid_reference}')
+    print(f'user_info after socket event(store_userinfo) : {user_info}')
+
+
+@socketio.on("friend_reqeust")
+def friend_request(data):
+    print(data)
+
+    sender_sid = data["sender_sid"]
+    sender_id = sid_reference[sender_sid]
+
+    for id in data["receiver_id"]:
+        sender_data = {
+            "sid": sender_sid,
+            "user_id": sender_id,
+            "username": user_info[sender_id]["username"],
+            "email": user_info[sender_id]["email"]
+        }
+        emit("friend_request", sender_data, to=user_info[id]["sid"])
+        print(f'{user_info[sender_id]["username"]} sends request to {user_info[id]["username"]}')
+
+
+@socketio.on("friend_request_result")
+def friend_request_result(data):
+    print(data)
+
+    # 回寄給sender
+    sender_sid = data["sender_info"]["sid"]
+    receiver_id = sid_reference[data["receiver_sid"]]
+    receiver_info = user_info[receiver_id]
+    data = {
+        "accept": data["accept"],
+        "sender_sid": sender_sid,
+        "receiver_info": {
+            "user_id": receiver_id,
+            "username": receiver_info["username"],
+            "email": receiver_info["email"]
+        }
+    }
+    emit("friend_request_result", data, to=sender_sid)
+
 
 
 @socketio.on("disconnect")
 def disconnect():
+
+    del user_info[sid_reference[request.sid]]
+    del sid_reference[request.sid]
+
+    print(f'sid_reference after socket event(disconnect) : {sid_reference}')
+    print(f'user_info after socket event(disconnect) : {user_info}')
+
     user_socket_id = request.sid
     username = session.get("username")
     team_id = session.get("team_id")
@@ -168,6 +227,11 @@ def position(position):
         user_coords.append(new_coord)
         print(rooms_info[team_id])
         emit("initPosition", rooms_info[team_id], to=team_id)
+
+
+@socketio.on("alert")
+def alert(data):
+    emit("alert", data, to=data["receiver_sid"])
 
 
 

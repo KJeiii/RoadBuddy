@@ -53,10 +53,11 @@ def Search_new_friend():
 
 @friend_bp.route("/api/friend/add", methods = ["POST"])
 def Add_friend():
+    print(request.json)
     if request.method == "POST": 
         try:
-            user_id = request.json["user_id"]
-            friend_id = request.json["friend_id"]
+            user_id = int(request.json["user_id"])
+            friend_id = int(request.json["friend_id"])
             friendTool.Add_friend(user_id,friend_id)
             response = {
                 "ok": True,
