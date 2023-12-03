@@ -39,8 +39,8 @@ socket.on("friend_request", (data) => {
 })
 
 // if accept request
-let yesBtn = document.querySelector(".yes");
-yesBtn.addEventListener("click", () => {
+let friendYesBtn = document.querySelector(".friend-prmopt .yes");
+friendYesBtn.addEventListener("click", () => {
     console.log("click")
     // recover friend prompt
     let//
@@ -98,8 +98,8 @@ yesBtn.addEventListener("click", () => {
 })
 
 // if reject request
-let noBtn = document.querySelector(".no");
-noBtn.addEventListener("click", () => {
+let friendNoBtn = document.querySelector(".friend-prmopt .no");
+friendNoBtn.addEventListener("click", () => {
     let//
     prompt = document.querySelector(".friend-prompt"),
     content = document.querySelector(".friend-prompt .content"); 
@@ -180,8 +180,8 @@ socket.on("friend_request_result", (data) => {
 
 
 // confirm frined response
-let okBtn = document.querySelector(".friend-response button");
-okBtn.addEventListener("click", ()=>{
+let friendOkBtn = document.querySelector(".friend-response button");
+friendOkBtn.addEventListener("click", ()=>{
 
     // recover response
     let//
