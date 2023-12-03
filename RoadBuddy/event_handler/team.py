@@ -1,4 +1,4 @@
-from flask_socketio import SocketIO, emit, send, join_room, leave_room
+from flask_socketio import SocketIO, emit, send, join_room, leave_room, rooms
 from RoadBuddy import socketio
 from flask import request, session
 from RoadBuddy.event_handler.connect import sid_reference, user_info
@@ -30,13 +30,14 @@ def join_team(data):
 
     if data["accept"]:
         join_room(team_id)
-        print(f'{user_info[receiver_id]} enter team {team_id}')
+        print(f'{user_info[receiver_id]} enter team {rooms()}')
 
 
 @socketio.on("alert")
 def alert(data):
-    print(f'{data["username"]} send {data["msg"]} to team {data["team_id"]}')
     emit("alert", data, to=data["team_id"])
+    print(f'{data["username"]} send {data["msg"]} to team {rooms()}')
+
 
 
 @socketio.on("leave_team")
