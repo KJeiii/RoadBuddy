@@ -1,9 +1,32 @@
+/* ----- general ----- */
 body {
     margin: 0;
     width: 100vw;
-
 }
 
+.setting-on:hover,
+.setting-off:hover,
+.config:hover,
+.logout:hover,
+.leave:hover,
+.nav-menu-friend:hover, 
+.nav-menu-team:hover,
+.nav-toggle-on:hover,
+.nav-toggle-off:hover,
+.nav-add:hover,
+.close:hover,
+.search-icon:hover,
+.teams-list .item:hover,
+.pull-up:hover,
+.drop-down:hover,
+.nav-add-friend:hover,
+.nav-add-team:hover,
+button:hover
+ {
+    cursor: pointer;
+}
+
+/* ----- map ----- */
 .setting {
     position: absolute;
     display: flex;
@@ -13,7 +36,6 @@ body {
     z-index: 1000;
     top: 15px;
     right: 15px; 
-
 }
 
 .setting-on,
@@ -33,7 +55,8 @@ body {
 }
 
 .config,
-.logout {
+.logout,
+.leave {
     display: none;
     margin: 5px 0;
     text-align: end;
@@ -50,6 +73,8 @@ body {
     background-color: grey;
 }
 
+
+/* ------ main pannel -----*/
 .main-pannel {
     position: absolute;
     top: 65vh;
@@ -110,28 +135,6 @@ nav {
     font-size: 15px;
 }
 
-.setting-on:hover,
-.setting-off:hover,
-.config:hover,
-.logout:hover,
-.nav-menu-friend:hover, 
-.nav-menu-team:hover,
-.nav-toggle-on:hover,
-.nav-toggle-off:hover,
-.nav-add:hover,
-.close:hover,
-.search-icon:hover,
-.teams-list .item:hover,
-.pull-up:hover,
-.drop-down:hover,
-.nav-add-friend:hover,
-.nav-add-team:hover,
-button:hover
- {
-    cursor: pointer;
-}
-
-/* ------ main pannel -----*/
 .nav-menu-title {
     text-align: center;
 }
@@ -199,62 +202,14 @@ button:hover
     overflow-y: scroll;    
 }
 
-/* ------ socket friend and team request ------ */
-.friend-prompt,
-.team-prompt
- {
-    display: none;
-    position: absolute;
-    top: 20vh;
-    left: 25vw;
-    z-index: 2000;
-    width: 50vw;
-    background-color: white;
-}
-
-.friend-response,
-.team-response
-{
-    display: none;
-    position: absolute;
-    top: 20vh;
-    left: 25vw;
-    z-index: 2000;
-    width: 50vw;
-    background-color: white;
-}
-
-/* ------ alert test ------*/
-.alert {
-    width: 80%;
-}
-
 .friends-list  {
     display: grid;
     justify-content: center;
-    align-items: center;
+    align-items: start;
     grid-template-columns: 40% 40% 40%;
     gap: 10px;
     margin: 10px 10px;
 }
-
-/* .main-pannel .teams-outer {
-    display: none;
-    justify-content: center;
-    width: 80%;
-    height: 40%;
-    margin: auto;
-    overflow-y: scroll;    
-} */
-
-/* .teams-list {
-    display: grid;
-    justify-content: center;
-    align-items: center;
-    grid-template-columns: 40% 40% 40%;
-    gap: 10px;
-    margin: 10px 10px;
-} */
 
 .main-pannel .item {
     height: 30px;
@@ -447,7 +402,7 @@ label {
     margin-left: 5px;
 }
 
-/* team pannel */
+/* ----- team pannel ----- */
 .teams-pannel .friends-outer {
     display: flex;
     justify-content: center;
@@ -488,5 +443,104 @@ label {
 }
 
 .teams-pannel button.start-trip-btn {
+    display: none;
+}
+
+
+/* ------ socket friend and team request ------ */
+.friend-prompt,
+.team-prompt
+ {
+    display: none;
+    position: absolute;
+    top: 20vh;
+    left: 25vw;
+    z-index: 2000;
+    width: 50vw;
+    background-color: white;
+}
+
+.friend-response,
+.team-response
+{
+    display: none;
+    position: absolute;
+    top: 20vh;
+    left: 25vw;
+    z-index: 2000;
+    width: 50vw;
+    background-color: white;
+}
+
+
+/* ----- tracking pannel ----- */
+.main-pannel {
+    display: none;
+}
+
+.tracking-pannel {
+    position: absolute;
+    top: 65vh;
+    z-index: 1000;
+    width: 100vw;
+    height: 80vh;
+    background-color: white;
+    border-radius: 30px 30px 0 0;
+}
+
+.tracking-pannel .pannel-title {
+    font-size: 30px;
+    font-weight: bold;
+    margin-top: 20px;
+    text-align: center;
+}
+
+.tracking-pannel .partners-outer {
+    display: flex;
+    justify-content: center;
+    width: 80%;
+    height: 40%;
+    margin: auto;
+    overflow-y: scroll;    
+}
+
+.partners-list  {
+    display: grid;
+    justify-content: center;
+    align-items: start;
+    grid-template-columns: 80% 80%;
+    gap: 10px;
+    margin: 10px 10px;
+}
+
+.tracking-pannel .item {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    background-color: rgb(235, 234, 234);
+    height: 30px;
+    width: 80%;
+    border-radius: 10px;
+    padding-left: 10%;
+}
+
+.tracking-pannel .item .icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 10%;
+    background-color: aqua;
+}
+
+.tracking-pannel .username {
+    text-align: center;
+    font-size: 20px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* ------ alert test ------*/
+.alert {
+    width: 80%;
     display: none;
 }

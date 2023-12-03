@@ -4,6 +4,7 @@ settingOn = document.querySelector(".setting-on"),
 settingOff = document.querySelector(".setting-off"),
 config = document.querySelector(".config"),
 logout = document.querySelector(".logout"),
+leave = document.querySelector(".leave"),
 menu = document.querySelector(".nav-menu"),
 menuTitle = document.querySelector(".nav-menu-title"),
 menuList = document.querySelector(".nav-menu-list"),
@@ -231,6 +232,7 @@ if (window.navigator.geolocation) {
 settingOn.addEventListener("click", () => {
     config.style.display = "block";
     logout.style.display = "block";
+    leave.style.display = "block";
     settingOn.style.display = "none";
     settingOff.style.display = "block";
 })
@@ -238,6 +240,7 @@ settingOn.addEventListener("click", () => {
 settingOff.addEventListener("click", () => {
     config.style.display = "none";
     logout.style.display = "none";
+    leave.style.display = "none";
     settingOff.style.display = "none";
     settingOn.style.display = "block";
 })
