@@ -2,7 +2,7 @@ startTripBtn.addEventListener("click", ()=> {
     let//
     checkboxes = document.querySelectorAll(".teams-pannel .item input[type=checkbox]"),
     friendsToAdd = [],
-    teamID = document.querySelector(".teams-pannel .pannel-title").getAttribute("id")*1;
+    teamID = document.querySelector(".teams-pannel .pannel-title").getAttribute("id");
     window.sessionStorage.setItem("team_id", teamID);
 
     for (checkbox of checkboxes) {
@@ -76,7 +76,7 @@ teamNoBtn.addEventListener("click", () => {
     let//
     prompt = document.querySelector(".team-prompt"),
     content = document.querySelector(".team-prompt .content"),
-    teamID = document.querySelector(".teams-pannel .pannel-title").getAttribute("id")*1;
+    teamID = document.querySelector(".teams-pannel .pannel-title").getAttribute("id");
 
     content.textContent = "";
     prompt.style.display = "none";
@@ -120,7 +120,7 @@ teamOkBtn.addEventListener("click", ()=>{
 let leaveTeamBtn = document.querySelector("div.alert button.leave");
 leaveTeamBtn.addEventListener("click", ()=> {
     let data = {
-        team_id: window.sessionStorage.getItem("team_id"),
+        team_id: `${window.sessionStorage.getItem("team_id")}`,
         username: window.sessionStorage.getItem("username"),
         user_id: window.sessionStorage.getItem("user_id"),
         email: window.sessionStorage.getItem("email")
@@ -136,7 +136,7 @@ alertBtn.addEventListener("click", ()=>{
     let//
     msg = document.querySelector("div.alert input").value,
     data = {
-        team_id: window.sessionStorage.getItem("team_id"),
+        team_id: `${window.sessionStorage.getItem("team_id")}`,
         msg: msg,
         user_id: window.sessionStorage.getItem('user_id'),
         username: window.sessionStorage.getItem('username'),
