@@ -200,7 +200,9 @@ button:hover
 }
 
 /* ------ test ------ */
-.prompt {
+.friend-prompt,
+.team-prompt
+ {
     display: none;
     position: absolute;
     top: 20vh;
@@ -210,7 +212,9 @@ button:hover
     background-color: white;
 }
 
-.response {
+.friend-response,
+.team-response
+{
     display: none;
     position: absolute;
     top: 20vh;

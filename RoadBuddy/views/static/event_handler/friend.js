@@ -24,15 +24,15 @@ addFriendBtn.addEventListener("click", () => {
 
 
 // *** as a receiver
-var sender_info_cache;
+var friend_sender_info_cache;
 socket.on("friend_request", (data) => {
     console.log(`Receive request from ${data.username}`);
-    sender_info_cache = data;
+    friend_sender_info_cache = data;
 
     // prompt to ask willness
     let//
-    prompt = document.querySelector(".prompt"),
-    content = document.querySelector(".prompt .content");
+    prompt = document.querySelector(".friend-prompt"),
+    content = document.querySelector(".friend-prompt .content");
 
     content.textContent = `來自 ${data.username} 的好友邀請`;
     prompt.style.display = "block";
@@ -44,13 +44,13 @@ yesBtn.addEventListener("click", () => {
     console.log("click")
     // recover friend prompt
     let//
-    prompt = document.querySelector(".prompt"),
-    content = document.querySelector(".prompt .content");
+    prompt = document.querySelector(".friend-prompt"),
+    content = document.querySelector(".friend-prompt .content");
 
     content.textContent = "";
     prompt.style.display = "none";
 
-    console.log(sender_info_cache);
+    console.log(friend_sender_info_cache);
 
     // receiver fetch api to add friend
     fetch("/api/friend/add", {
@@ -58,7 +58,7 @@ yesBtn.addEventListener("click", () => {
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({
             user_id: window.sessionStorage.getItem("user_id"),
-            friend_id: sender_info_cache.user_id})
+            friend_id: friend_sender_info_cache.user_id})
         })
         .then((response) => {return response.json()})
         .then((result) => {
@@ -77,32 +77,32 @@ yesBtn.addEventListener("click", () => {
         accept: true,
         receiver_sid: socket.id,
         sender_info: {
-            sid: sender_info_cache.sid,
-            user_id: sender_info_cache.user_id,
-            username: sender_info_cache.username,
-            email: sender_info_cache.email
+            sid: friend_sender_info_cache.sid,
+            user_id: friend_sender_info_cache.user_id,
+            username: friend_sender_info_cache.username,
+            email: friend_sender_info_cache.email
         }
     };
 
     socket.emit("friend_request_result", data);
-    console.log(`Accept response sent back to ${sender_info_cache.username}`);
+    console.log(`Accept response sent back to ${friend_sender_info_cache.username}`);
 
     // show response
     let//
-    response = document.querySelector(".response"),
-    responseContent = document.querySelector(".response .content");
+    response = document.querySelector(".friend-response"),
+    responseContent = document.querySelector(".friend-response .content");
 
     response.style.display = "block";
-    responseContent.textContent = `你與 ${sender_info_cache.username} 已結為好友`;
-    sender_info_cache = "";
+    responseContent.textContent = `你與 ${friend_sender_info_cache.username} 已結為好友`;
+    friend_sender_info_cache = "";
 })
 
 // if reject request
 let noBtn = document.querySelector(".no");
 noBtn.addEventListener("click", () => {
     let//
-    prompt = document.querySelector(".prompt"),
-    content = document.querySelector(".prompt .content"); 
+    prompt = document.querySelector(".friend-prompt"),
+    content = document.querySelector(".friend-prompt .content"); 
     content.textContent = "";
     prompt.style.display = "none";
 
@@ -110,20 +110,20 @@ noBtn.addEventListener("click", () => {
     let data = {
         accept: false,
         receiver_sid: socket.id,
-        sender_info: sender_info_cache
+        sender_info: friend_sender_info_cache
     }
     socket.emit("friend_request_result", data)
-    console.log(`Reject reponse sent back to ${sender_info_cache.username}`)
+    console.log(`Reject reponse sent back to ${friend_sender_info_cache.username}`)
 
 
     // show response
     let//
-    response = document.querySelector(".response"),
-    responseContent = document.querySelector(".response .content");
+    response = document.querySelector(".friend-response"),
+    responseContent = document.querySelector(".friend-response .content");
 
     response.style.display = "block";
-    responseContent.textContent = `你已拒絕 ${sender_info_cache.username} 的好友邀請`;    
-    sender_info_cache = "";
+    responseContent.textContent = `你已拒絕 ${friend_sender_info_cache.username} 的好友邀請`;    
+    friend_sender_info_cache = "";
 })
 
 // *** as a sender
@@ -160,8 +160,8 @@ socket.on("friend_request_result", (data) => {
 
             // show response
             let//
-            response = document.querySelector(".response"),
-            responseContent = document.querySelector(".response .content");
+            response = document.querySelector(".friend-response"),
+            responseContent = document.querySelector(".friend-response .content");
         
             response.style.display = "block";
             responseContent.textContent = `${data.receiver_info.username} 接受你的好友邀請`;
@@ -170,8 +170,8 @@ socket.on("friend_request_result", (data) => {
 
     // if request is rejected
     let//
-    response = document.querySelector(".response"),
-    responseContent = document.querySelector(".response .content");
+    response = document.querySelector(".friend-response"),
+    responseContent = document.querySelector(".friend-response .content");
 
     response.style.display = "block";
     responseContent.textContent = `${data.receiver_info.username} 拒絕你的好友邀請`;
@@ -180,13 +180,13 @@ socket.on("friend_request_result", (data) => {
 
 
 // confirm frined response
-let okBtn = document.querySelector(".response button");
+let okBtn = document.querySelector(".friend-response button");
 okBtn.addEventListener("click", ()=>{
 
     // recover response
     let//
-    response = document.querySelector(".response"),
-    responseContent = document.querySelector(".response .content");
+    response = document.querySelector(".friend-response"),
+    responseContent = document.querySelector(".friend-response .content");
 
     response.style.display = "none";
     responseContent.textContent = ``;     

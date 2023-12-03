@@ -19,14 +19,26 @@
 
 </head>
 <body>
-    <div class="prompt">
+    <div class="friend-prompt">
         <div class="from"></div>
-        <div class="content">Do you want to receive?</div>
+        <div class="content"></div>
         <button class="no">No</button>
         <button class="yes">Yes</button>
     </div>
 
-    <div class="response">
+    <div class="friend-response">
+        <div class="content"></div>
+        <button>OK</button>
+    </div>
+
+    <div class="team-prompt">
+        <div class="from"></div>
+        <div class="content"></div>
+        <button class="no">No</button>
+        <button class="yes">Yes</button>
+    </div>
+
+    <div class="team-response">
         <div class="content"></div>
         <button>OK</button>
     </div>
@@ -137,5 +149,6 @@
     <script src="../static/room.js"></script>
     <script src="../static/event_handler/connect.js"></script>
     <script src="../static/event_handler/friend.js"></script>
+    <script src="../static/event_handler/team.js"></script>
 </body>
 </html>
