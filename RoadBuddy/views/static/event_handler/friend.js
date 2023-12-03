@@ -39,7 +39,7 @@ socket.on("friend_request", (data) => {
 })
 
 // if accept request
-let friendYesBtn = document.querySelector(".friend-prmopt .yes");
+let friendYesBtn = document.querySelector(".friend-prompt .yes");
 friendYesBtn.addEventListener("click", () => {
     console.log("click")
     // recover friend prompt
