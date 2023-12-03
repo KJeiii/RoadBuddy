@@ -120,12 +120,13 @@ teamOkBtn.addEventListener("click", ()=>{
 let leaveTeamBtn = document.querySelector("div.alert button.leave");
 leaveTeamBtn.addEventListener("click", ()=> {
     let data = {
-        teamID: team_sender_info_cache.team_id,
+        team_id: window.sessionStorage.getItem("team_id"),
         username: window.sessionStorage.getItem("username"),
         user_id: window.sessionStorage.getItem("user_id"),
         email: window.sessionStorage.getItem("email")
     };
     socket.emit("leave_team", data);
+    window.sessionStorage.removeItem("team_id");
 })
 
 
