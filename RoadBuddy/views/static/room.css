@@ -199,7 +199,7 @@ button:hover
     overflow-y: scroll;    
 }
 
-/* ------ test ------ */
+/* ------ socket friend and team request ------ */
 .friend-prompt,
 .team-prompt
  {
@@ -224,6 +224,7 @@ button:hover
     background-color: white;
 }
 
+/* ------ alert test ------*/
 .alert {
     width: 80%;
 }

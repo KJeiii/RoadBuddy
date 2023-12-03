@@ -429,41 +429,15 @@ searchIcon.addEventListener("click", () => {
 
 
 // ----- start tracking ----- 
-startTripBtn.addEventListener("click", () => {
-    let//
-    team_id = document.querySelector(".teams-pannel .pannel-title").getAttribute("id"),
-    team_name = document.querySelector(".teams-pannel .pannel-title").textContent;
-
-    window.sessionStorage.setItem("team_id", team_id);
-    window.sessionStorage.setItem("team_name", team_name);
-
-    window.location.replace("/tracking");
-
-})
-
-
-// // storage username and roomID on browser session
-// let createBtn = document.querySelector("button[name=create]");
-// createBtn.addEventListener("click", () => {
+// startTripBtn.addEventListener("click", () => {
 //     let//
-//     username = document.querySelector("input[name=username]").value,
-//     roomID = document.querySelector("input[name=roomID]").value;
-//     sessionStorage.setItem("username", username);
-//     sessionStorage.setItem("roomID", roomID);
-// });
+//     team_id = document.querySelector(".teams-pannel .pannel-title").getAttribute("id"),
+//     team_name = document.querySelector(".teams-pannel .pannel-title").textContent;
 
-// let joinBtn = document.querySelector("button[name=join]");
-// joinBtn.addEventListener("click", () => {
-//     let//
-//     username = document.querySelector("input[name=username]").value,
-//     roomID = document.querySelector("input[name=roomID]").value;
-//     sessionStorage.setItem("username", username);
-//     sessionStorage.setItem("roomID", roomID);
-// });
+//     window.sessionStorage.setItem("team_id", team_id);
+//     window.sessionStorage.setItem("team_name", team_name);
 
+//     window.location.replace("/tracking");
 
-// // test user's position by select position from randomPosition
-// let randomCoords = {
-//     latitude: 24.982 + Math.random()*0.006,
-//     longitude: 121.534 + Math.random()*0.006
-// };
+// })
+
