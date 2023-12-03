@@ -1,23 +1,31 @@
-// initial socket.io
-socket = io();
+// ----- declare global variables -----
+var//
+idArray = [],
+markerArray = [],
+initialCoord = [];
+
+// ----- initialize socket.io -----
+let socket = io();
 socket.on("connect", ()=>{
-    console.log(socket.id);
+    idArray.push(socket.id);
+    window.sessionStorage.setItem("sid", socket.id);
+
     let data = {
         user_id: window.sessionStorage.getItem("user_id"),
         username: window.sessionStorage.getItem("username"),
         email: window.sessionStorage.getItem("email")
     }
     socket.emit("store_userinfo", data);
+
     // let//
     // alertDiv = document.querySelector(".alert"),
     // sidDiv = document.createElement("div");
 
     // sidDiv.textContent = socket.id;
     // alertDiv.appendChild(sidDiv);
-
-    window.sessionStorage.setItem("sid", socket.id);
-
 })
+
+
 
 
 

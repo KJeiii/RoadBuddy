@@ -200,17 +200,17 @@ CheckUserStatus()
 
 // create callback funciton for drawing initial position on the map
 function drawMap(position){
-    let initialCoord = {
+    initialCoord = {
         latitude: position.coords.latitude,
         longitude: position.coords.longitude
     };
-
     let map = L.map('map').setView([initialCoord.latitude, initialCoord.longitude], 15);
     const tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         }).addTo(map);
     let marker = L.marker([initialCoord.latitude, initialCoord.longitude]).addTo(map);
+    markerArray.push(marker);
 };
 
 function userCoordError(error) {console.log(`Error in drawing initial map: ${error}`)};
@@ -221,7 +221,6 @@ function userCoordError(error) {console.log(`Error in drawing initial map: ${err
 if (window.navigator.geolocation) {
     try {
         window.navigator.geolocation.getCurrentPosition(drawMap, userCoordError);
-        console.log("check in initialize map")
     }
     catch(error) {console.log(`Error in getting user postion : ${error}`)}
 }
