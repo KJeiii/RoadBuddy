@@ -1,7 +1,7 @@
 from flask_socketio import SocketIO, emit, send, join_room, leave_room, rooms
 from RoadBuddy import socketio
 from flask import request, session
-from RoadBuddy.event_handler.connect import sid_reference, user_info
+from RoadBuddy.event_handler import sid_reference, user_info
 
 @socketio.on("team_request")
 def team_request(data):
