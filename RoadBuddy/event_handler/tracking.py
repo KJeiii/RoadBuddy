@@ -6,28 +6,27 @@ from RoadBuddy.event_handler import rooms_info
 
 
 @socketio.on("position")
-def position(position):
+def position(data):
 
     print(f'rooms_info in socket event (position) : {rooms_info}')
-    user_socket_id = request.sid
-    team_id = session.get("team_id")
-    username = session.get("username")
-    new_coord = position["coord"]
-    user_coords = rooms_info[team_id][user_socket_id]["coords"]
+    sid = data["sid"]
+    team_id = data["team_id"]
+    username = data["username"]
+    new_coord = data["coord"]
+    user_coords = rooms_info[team_id][sid]
 
 
     if len(user_coords) >= 2:
         del user_coords[0]
         user_coords.append(new_coord)
-        print(rooms_info[team_id])
         emit("movingPostion", rooms_info[team_id], to=team_id)
 
     if len(user_coords) == 1 :
         user_coords.append(new_coord)
-        print(rooms_info[team_id])
         emit("initPosition", rooms_info[team_id], to=team_id)
 
     if len(user_coords) == 0 :
         user_coords.append(new_coord)
-        print(rooms_info[team_id])
         emit("initPosition", rooms_info[team_id], to=team_id)
+
+    print(rooms_info[team_id])

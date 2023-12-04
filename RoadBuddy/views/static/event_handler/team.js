@@ -19,13 +19,14 @@ startTripBtn.addEventListener("click", ()=> {
     };
     socket.emit("team_request", invitation);
 
-    let joinTeamData = {
+    let createTeamData = {
         accept: true,
+        enter_type: "create",
         receiver_sid: socket.id,
         sender_info: team_sender_info_cache,
         team_id: teamID
     };
-    socket.emit("join_team", joinTeamData)
+    socket.emit("enter_team", createTeamData)
     console.log(`Send team request from ${window.sessionStorage.getItem("username")}`);
 })
 
@@ -59,13 +60,14 @@ teamYesBtn.addEventListener("click", () => {
     // socket emit join team to server
     let joinTeamData = {
         accept: true,
+        enter_type: "join",
         receiver_sid: socket.id,
         sender_info: team_sender_info_cache,
         team_id: team_sender_info_cache.team_id
     };
 
     window.sessionStorage.setItem("team_id", team_sender_info_cache["team_id"])
-    socket.emit("join_team", joinTeamData);
+    socket.emit("enter_team", joinTeamData);
     console.log(`Accept response emited to server`);
 })
 
@@ -84,12 +86,13 @@ teamNoBtn.addEventListener("click", () => {
     // socket emit join team to server
     let joinTeamData = {
         accept: false,
+        enter_type: "join",
         receiver_sid: socket.id,
         sender_info: team_sender_info_cache,
         team_id: teamID
     };
 
-    socket.emit("join_team", joinTeamData);
+    socket.emit("enter_team", joinTeamData);
     console.log(`Reject response emitted to server`);
 
     // show response
@@ -116,9 +119,32 @@ teamOkBtn.addEventListener("click", ()=>{
     responseContent.textContent = ``;     
 })
 
-// leave team 
-let leaveTeamBtn = document.querySelector("div.alert button.leave");
+
+// leave team for tracking
+let leaveTeamBtn = document.querySelector(".setting div.leave");
 leaveTeamBtn.addEventListener("click", ()=> {
+    let data = {
+        sid: socket.id,
+        team_id: `${window.sessionStorage.getItem("team_id")}`,
+        username: window.sessionStorage.getItem("username"),
+        user_id: window.sessionStorage.getItem("user_id"),
+        email: window.sessionStorage.getItem("email")
+    };
+    socket.emit("leave_team", data);
+    window.sessionStorage.removeItem("team_id");
+})
+
+socket.on("leave_team", (data) => {
+    let sid = data.sid;
+    markerArray.splice(sidArray.indexOf(sid),1);
+    sidArray.splice(sidArray.indexOf(sid),1);
+})
+
+
+// -------- msg test for room -------
+// test leave team for alert message
+let msgleaveTeamBtn = document.querySelector("div.alert button.leave");
+msgleaveTeamBtn.addEventListener("click", ()=> {
     let data = {
         team_id: `${window.sessionStorage.getItem("team_id")}`,
         username: window.sessionStorage.getItem("username"),

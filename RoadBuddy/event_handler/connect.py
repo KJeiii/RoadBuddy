@@ -1,4 +1,4 @@
-from flask_socketio import SocketIO, emit, send, join_room, leave_room
+from flask_socketio import SocketIO, emit, send, join_room, leave_room, rooms
 from RoadBuddy import socketio
 from flask import request, session
 from RoadBuddy.event_handler import rooms_info, sid_reference, user_info
@@ -54,22 +54,23 @@ def store_userinfo(data):
 @socketio.on("disconnect")
 def disconnect():
 
-    del user_info[sid_reference[request.sid]]
-    del sid_reference[request.sid]
-
-    print(f'sid_reference after socket event(disconnect) : {sid_reference}')
-    print(f'user_info after socket event(disconnect) : {user_info}')
-
-    user_socket_id = request.sid
-    username = session.get("username")
-    team_id = session.get("team_id")
-
+    team_id = rooms()
+    data = {
+        "sid": request.sid,
+        "user_id": sid_reference[request.sid],
+        "username": user_info[sid_reference[request.sid]]["username"],
+        "email":  user_info[sid_reference[request.sid]]["email"]
+    }
+    emit("disconnect", data, to=team_id)
     
     leave_room(team_id)
-    del rooms_info[team_id][user_socket_id]
-
     if len(rooms_info[team_id].keys()) == 0 :
         del rooms_info[team_id]
 
-    emit("disconnect", user_socket_id, to=team_id)
-    emit("message", f'partner leaves : {username}\n', to=team_id)
+
+    del user_info[sid_reference[request.sid]]
+    del sid_reference[request.sid]
+    del rooms_info[request.sid]
+
+    print(f'sid_reference after socket event(disconnect) : {sid_reference}')
+    print(f'user_info after socket event(disconnect) : {user_info}')

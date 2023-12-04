@@ -1,6 +1,6 @@
 // ----- declare global variables -----
 var//
-idArray = [],
+sidArray = [],
 markerArray = [],
 initialCoord = [];
 
@@ -8,6 +8,7 @@ initialCoord = [];
 let socket = io();
 socket.on("connect", ()=>{
     idArray.push(socket.id);
+    markerArray.push(marker);
     window.sessionStorage.setItem("sid", socket.id);
 
     let data = {
@@ -26,6 +27,21 @@ socket.on("connect", ()=>{
 })
 
 
+// remove marker when user disconnects
+// Case-1. close brwoser directly
+socket.on("disconnect", (data) => {
+    let sid = data.sid;
+    map.removeLayer(markerArray[sidArray.indexOf(sid)]);
+    markerArray.splice(sidArray.indexOf(sid),1);
+    sidArray.splice(sidArray.indexOf(sid),1);
+});
+
+
+// Case-2. press "leave" button
+let leaveBtn = document.querySelector(".leave");
+leaveBtn.addEventListener("click", () => {
+    window.location.replace("/room");
+});
 
 
 
