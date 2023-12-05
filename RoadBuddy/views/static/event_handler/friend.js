@@ -98,7 +98,7 @@ friendYesBtn.addEventListener("click", () => {
 })
 
 // if reject request
-let friendNoBtn = document.querySelector(".friend-prmopt .no");
+let friendNoBtn = document.querySelector(".friend-prompt .no");
 friendNoBtn.addEventListener("click", () => {
     let//
     prompt = document.querySelector(".friend-prompt"),
