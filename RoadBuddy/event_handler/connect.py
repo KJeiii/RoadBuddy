@@ -54,23 +54,32 @@ def store_userinfo(data):
 @socketio.on("disconnect")
 def disconnect():
 
-    team_id = rooms()
+    user_sid = request.sid
+    user_id = sid_reference.get(user_sid)
+    username = user_info.get(user_id).get("username")
+    email = user_info.get(user_id).get("email")
+    team_id = user_info.get(user_id).get("team_id")
+
     data = {
-        "sid": request.sid,
-        "user_id": sid_reference[request.sid],
-        "username": user_info[sid_reference[request.sid]]["username"],
-        "email":  user_info[sid_reference[request.sid]]["email"]
+        "sid": user_sid,
+        "user_id": user_id,
+        "username": username,
+        "email":  email,
+        "team_id": team_id
     }
     emit("disconnect", data, to=team_id)
-    
-    leave_room(team_id)
-    if len(rooms_info[team_id].keys()) == 0 :
-        del rooms_info[team_id]
 
+    if team_id != None:
+        leave_room(team_id)
+        del rooms_info[team_id][user_sid]
 
-    del user_info[sid_reference[request.sid]]
-    del sid_reference[request.sid]
-    del rooms_info[request.sid]
+        if len(rooms_info[team_id].keys()) <= 0 :
+            del rooms_info[team_id]
+            print(f'team {team_id} is closed bu disconnect \
+                cuz less than 1 pepele in it')
+
+    del user_info[user_id]
+    del sid_reference[user_sid]
 
     # print(f'sid_reference after socket event(disconnect) : {sid_reference}')
     # print(f'user_info after socket event(disconnect) : {user_info}')
