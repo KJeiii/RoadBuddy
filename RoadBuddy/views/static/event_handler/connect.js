@@ -1,13 +1,11 @@
 // ----- declare global variables -----
 var//
 sidArray = [],
-markerArray = [],
-initialCoord = [];
-
+markerArray = [];
 // ----- initialize socket.io -----
 let socket = io();
 socket.on("connect", ()=>{
-    idArray.push(socket.id);
+    sidArray.push(socket.id);
     markerArray.push(marker);
     window.sessionStorage.setItem("sid", socket.id);
 
