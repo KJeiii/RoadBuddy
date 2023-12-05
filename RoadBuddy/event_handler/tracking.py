@@ -12,12 +12,9 @@ def position(data):
     new_coord = data.get("coord")
     team_id = data.get("team_id")
 
-    # print(f'data enter listener "position" on server : {data}')
-    # print(f'rooms_info in listener "position" on server : {rooms_info}')
-    # print(f'coord in listener "position" on server : {new_coord}')
-
     # update position to own map before team up
     if team_id == None:
+        # print(f'new coord from {sid} : {new_coord}')
         if len(own_coords) >= 2:
             del own_coords[0]
             own_coords.append(new_coord)
@@ -37,6 +34,7 @@ def position(data):
 
     # update all partners position
     user_coords = rooms_info.get(team_id).get(sid)
+    print(f'new coord from {sid} : {new_coord}')
     if len(user_coords) >= 2:
         del rooms_info[team_id][sid][0]
         rooms_info[team_id][sid].append(new_coord)
@@ -49,4 +47,6 @@ def position(data):
     if len(user_coords) == 0 :
         rooms_info[team_id][sid].append(new_coord)
         emit("initPosition", rooms_info[team_id], to=team_id)
+    
+    print(rooms_info.get(team_id))
 
