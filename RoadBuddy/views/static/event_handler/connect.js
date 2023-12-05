@@ -1,7 +1,3 @@
-// ----- declare global variables -----
-var//
-sidArray = [],
-markerArray = [];
 // ----- initialize socket.io -----
 let socket = io();
 socket.on("connect", ()=>{
