@@ -10,12 +10,14 @@ own_coords = []
 #   user_id-1 (int) : {
 #       sid: XXX,
 #       username: XXX,
-#       email: XXX
+#       email: XXX,
+#       team_id: XXX (str),
 #   },
 #   user_id-2 (int) : {
 #       sid: XXX,
 #       username: XXX,
-#       email: XXX
+#       email: XXX,
+#       team_id:XXX (str)
 #   }
 # }
 
@@ -28,17 +30,38 @@ own_coords = []
 
 # rooms_info = {
 #   room_id-1: {
-#       sid-1 : {username: XXX,
-#              coords: [old_Postion, new_postion]
-#             },
-#       sid-2 : {username: XXX,
-#              coords: [old_Postion, new_postion]
-#             },
+#       sid-1 : [{
+#                 "latitude": XXX, 
+#                 "longitude": XXX
+#                },
+#                {
+#                 "latitude": XXX, 
+#                 "longitude": XXX
+#                }],
+#       sid-2 : [{
+#                 "latitude": XXX, 
+#                 "longitude": XXX
+#                },
+#                {
+#                 "latitude": XXX, 
+#                 "longitude": XXX
+#                }]
+#       },
 #   room_id-2: {
-#       sid-1 : {username: XXX,
-#              coords: [old_Postion, new_postion]
-#             },
-#       sid-2 : {username: XXX,
-#              coords: [old_Postion, new_postion]
-#             },
-# }
+#       sid-1 : [{
+#                 "latitude": XXX, 
+#                 "longitude": XXX
+#                },
+#                {
+#                 "latitude": XXX, 
+#                 "longitude": XXX
+#                }],
+#       sid-2 : [{
+#                 "latitude": XXX, 
+#                 "longitude": XXX
+#                },
+#                {
+#                 "latitude": XXX, 
+#                 "longitude": XXX
+#                }]
+#       },
