@@ -1,6 +1,7 @@
 user_info = {}
 sid_reference ={}
 rooms_info = {}
+own_coords = []
 
 
 # structure of dictionary
