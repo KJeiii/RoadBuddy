@@ -46,8 +46,8 @@ def store_userinfo(data):
         "email": data["email"]
     }
 
-    print(f'sid_reference after socket event(store_userinfo) : {sid_reference}')
-    print(f'user_info after socket event(store_userinfo) : {user_info}')
+    # print(f'sid_reference after socket event(store_userinfo) : {sid_reference}')
+    # print(f'user_info after socket event(store_userinfo) : {user_info}')
 
 
 
@@ -72,5 +72,5 @@ def disconnect():
     del sid_reference[request.sid]
     del rooms_info[request.sid]
 
-    print(f'sid_reference after socket event(disconnect) : {sid_reference}')
-    print(f'user_info after socket event(disconnect) : {user_info}')
+    # print(f'sid_reference after socket event(disconnect) : {sid_reference}')
+    # print(f'user_info after socket event(disconnect) : {user_info}')
