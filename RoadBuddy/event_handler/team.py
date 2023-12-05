@@ -27,6 +27,8 @@ def enter_team(data):
     print(sid_reference)
     sender_sid = request.sid
     sender_id = sid_reference[sender_sid]
+    user_sid = request.sid
+    user_id = sid_reference[user_sid]
     team_id = data["team_id"]
 
     if data["accept"]:
@@ -36,6 +38,7 @@ def enter_team(data):
                 rooms_info[team_id] = {}
                 rooms_info[team_id][request.sid] = []
                 join_room(team_id)
+                user_info[user_id]["team_id"] = team_id
                 emit("enter_team", to=team_id)
 
             else:
@@ -46,6 +49,7 @@ def enter_team(data):
             if team_id in rooms_info.keys() and request.sid in data["receiver_sid"]:
                 rooms_info[team_id][data["receiver_sid"]] = []
                 join_room(team_id)
+                user_info[user_id]["team_id"] = team_id
                 emit("enter_team", to=team_id)
 
             else:
@@ -56,12 +60,13 @@ def enter_team(data):
 def leave_team(data):
     team_id = data["team_id"]
     sid = data["sid"]
+    user_id = data["user_id"]
 
     print(f'{team_id} ready to leave.')
 
     data = {
-        "sid": data["sid"],
-        "user_id": data["user_id"],
+        "sid": sid,
+        "user_id": user_id,
         "username": data["username"],
         "email": data["email"]
     }
@@ -69,8 +74,9 @@ def leave_team(data):
 
     leave_room(team_id)
     del rooms_info[team_id][sid]
+    del user_info[user_id]["team_id"]
 
-    if len(rooms[team_id].keys()) <= 1:
+    if len(rooms_info[team_id].keys()) <= 0:
         del rooms_info[team_id]
     print(f'team remaining : {rooms_info.keys()}')
     # print(f'after member left, rooms_info = {rooms_info}')
