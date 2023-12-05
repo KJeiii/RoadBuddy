@@ -23,6 +23,7 @@ addTeam = document.querySelector(".nav-add-team"),
 mainPannel = document.querySelector(".main-pannel"),
 friendsPannel = document.querySelector(".friends-pannel"),
 teamsPannel = document.querySelector(".teams-pannel"),
+trackingPannel = document.querySelector(".tracking-pannel"),
 closePannel = document.querySelectorAll(".close"),
 searchList = document.querySelector(".search-list"),
 searchIcon = document.querySelector(".search-icon"),
@@ -197,6 +198,14 @@ CheckUserStatus()
         window.location.replace("/member");
     })
 
+// ----- declare global variables -----
+var//
+marker,
+initialCoord,
+sidArray = [],
+markerArray = [],
+map;
+
 
 // create callback funciton for drawing initial position on the map
 function drawMap(position){
@@ -204,26 +213,37 @@ function drawMap(position){
         latitude: position.coords.latitude,
         longitude: position.coords.longitude
     };
-    let map = L.map('map').setView([initialCoord.latitude, initialCoord.longitude], 15);
+    map = L.map('map').setView([initialCoord.latitude, initialCoord.longitude], 15);
     const tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         }).addTo(map);
-    let marker = L.marker([initialCoord.latitude, initialCoord.longitude]).addTo(map);
+    marker = L.marker([initialCoord.latitude, initialCoord.longitude]).addTo(map);
     markerArray.push(marker);
 };
 
 function userCoordError(error) {console.log(`Error in drawing initial map: ${error}`)};
 
 
+// test user's position by select position from randomPosition
+let testCoords = {
+    latitude: 24.982 + Math.random()*0.006,
+    longitude: 121.534 + Math.random()*0.006
+};
+drawMap({
+    coords: {
+        latitude: testCoords.latitude,
+        longitude: testCoords.longitude
+    }
+});
 
 // ----- draw initial map -----
-if (window.navigator.geolocation) {
-    try {
-        window.navigator.geolocation.getCurrentPosition(drawMap, userCoordError);
-    }
-    catch(error) {console.log(`Error in getting user postion : ${error}`)}
-}
+// if (window.navigator.geolocation) {
+//     try {
+//         window.navigator.geolocation.getCurrentPosition(drawMap, userCoordError);
+//     }
+//     catch(error) {console.log(`Error in getting user postion : ${error}`)}
+// }
 
 
 
@@ -231,7 +251,6 @@ if (window.navigator.geolocation) {
 settingOn.addEventListener("click", () => {
     config.style.display = "block";
     logout.style.display = "block";
-    leave.style.display = "block";
     settingOn.style.display = "none";
     settingOff.style.display = "block";
 })
@@ -239,7 +258,6 @@ settingOn.addEventListener("click", () => {
 settingOff.addEventListener("click", () => {
     config.style.display = "none";
     logout.style.display = "none";
-    leave.style.display = "none";
     settingOff.style.display = "none";
     settingOn.style.display = "block";
 })
