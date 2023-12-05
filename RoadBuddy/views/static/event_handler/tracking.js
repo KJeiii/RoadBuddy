@@ -9,34 +9,27 @@ let randomCoords = {
 
 // ----- receive partners initial postion and show on the map -----
 socket.on("initPosition", (partners) => {
-    let sid = socket.id;
-    console.log(sid);
-    console.log(typeof(Object.keys(partners)[0]));
-    console.log(sid === Object.keys(partners)[0]);
-    console.log(partners);
-    console.log(partners[Object.keys(partners)[0]]);
-    console.log(partners[sid]);
-
-
+    // console.log(markerArray.length);
     for ( sid in partners ) {
         if ( sid !== socket.id && !sidArray.includes(sid)) {
             let markerToAdd = L.marker([partners[sid][0].latitude, partners[sid][0].longitude]).addTo(map);
             sidArray.push(sid);
             markerArray.push(markerToAdd);
-            console.log(`${sid} coords is ${partners[sid][0].latitude}, ${partners[sid][0].longitude}`)
         }
     }
 });
 
 
 // ----- update partners postion when moving -----
-socket.on("movingPostion", (partners) => {    
+socket.on("movingPostion", (partners) => {
     for (sid of sidArray) {
+        // console.log(sidArray);
+        // console.log(markerArray);
         try {
         let//
         oldLatLng = [partners[sid][0].latitude, partners[sid][0].longitude],
         newLatLng = [partners[sid][1].latitude, partners[sid][1].longitude],
-        movingMarker = markerArray[sidArray.indexOf(sid)];
+        movingMarker = markerArray[sidArray.indexOf(sid)+1];
 
         movingMarker.setLatLng(oldLatLng, newLatLng);
         }
@@ -76,32 +69,5 @@ setInterval(()=> {
         }
     };
     socket.emit("position", data);
-    console.log(`new data sent from client ${socket.id} : ${data}`);
-
+    console.log(`new coord from client ${socket.id} : ${randomCoords.latitude}, ${randomCoords.longitude}`);
 }, 2000)
-
-
-// var turnOnTracking = false;
-// while (turnOnTracking) {
-//     setInterval(()=> {
-//         let randomCoords = {
-//             latitude: 24.982 + Math.random()*0.006,
-//             longitude: 121.534 + Math.random()*0.006
-//         };
-
-//         let data = {
-//             sid : sessionStorage.getItem("sid"),
-//             user_id : sessionStorage.getItem("user_id"),
-//             username : sessionStorage.getItem("username"),
-//             email : sessionStorage.getItem("email"),
-//             team_id : sessionStorage.getItem("team_id"),
-//             coord : {
-//                 latitude: randomCoords.latitude,
-//                 longitude: randomCoords.longitude    
-//             }
-//         };
-//         socket.emit("position", data);
-//         console.log(`new data sent from client ${socket.id} : ${data}`);
-
-//     }, 2000)
-// }
