@@ -1,4 +1,19 @@
+// ----- sender emit invitation to listner "team_request" on server  -----
 startTripBtn.addEventListener("click", ()=> {
+    // switch to tracking pannel
+    mainPannel.style.display = "none";
+    friendsPannel.style.display = "none";
+    teamsPannel.style.display = "none";
+    trackingPannel.style.display = "block";
+
+
+    // change elements in setting div
+    config.style.display = "none";
+    logout.style.display = "none";
+    leave.style.display = "block";
+
+
+    // Organize data emitted to listener "enter_team" on server
     let//
     checkboxes = document.querySelectorAll(".teams-pannel .item input[type=checkbox]"),
     friendsToAdd = [],
@@ -22,14 +37,16 @@ startTripBtn.addEventListener("click", ()=> {
     let createTeamData = {
         accept: true,
         enter_type: "create",
-        receiver_sid: socket.id,
-        sender_info: team_sender_info_cache,
+        receiver_sid: friendsToAdd,
+        sender_sid: socket.id,
         team_id: teamID
     };
     socket.emit("enter_team", createTeamData)
     console.log(`Send team request from ${window.sessionStorage.getItem("username")}`);
 })
 
+
+// ----- listener to event "team_request" -----
 var team_sender_info_cache;
 socket.on("team_request", (data) => {
     console.log(`Receive team request from ${data.username}`);
@@ -45,19 +62,32 @@ socket.on("team_request", (data) => {
 })
 
 
-// if accept request
+// ----- receiver response to team invitation -----
+// if accept 
 let teamYesBtn = document.querySelector(".team-prompt .yes");
 teamYesBtn.addEventListener("click", () => {
     console.log("click")
+    // switch to tracking pannel
+    mainPannel.style.display = "none";
+    friendsPannel.style.display = "none";
+    teamsPannel.style.display = "none";
+    trackingPannel.style.display = "block";
+
+
+    // change elements in setting div
+    config.style.display = "none";
+    logout.style.display = "none";
+    leave.style.display = "block";
+
+
     // recover team prompt
     let//
     prompt = document.querySelector(".team-prompt"),
     content = document.querySelector(".team-prompt .content");
-
     content.textContent = "";
     prompt.style.display = "none";
 
-    // socket emit join team to server
+    // Organize data emitted to listener "enter_team" on server
     let joinTeamData = {
         accept: true,
         enter_type: "join",
@@ -71,8 +101,7 @@ teamYesBtn.addEventListener("click", () => {
     console.log(`Accept response emited to server`);
 })
 
-
-// if reject request
+// if reject
 let teamNoBtn = document.querySelector(".team-prompt .no");
 teamNoBtn.addEventListener("click", () => {
     let//
@@ -83,7 +112,7 @@ teamNoBtn.addEventListener("click", () => {
     content.textContent = "";
     prompt.style.display = "none";
 
-    // socket emit join team to server
+    // Organize data emitted to listener "enter_team" on server
     let joinTeamData = {
         accept: false,
         enter_type: "join",
@@ -106,7 +135,7 @@ teamNoBtn.addEventListener("click", () => {
 })
 
 
-// confirm team response
+// ----- confirm team response -----
 let teamOkBtn = document.querySelector(".team-response button");
 teamOkBtn.addEventListener("click", ()=>{
 
@@ -120,12 +149,33 @@ teamOkBtn.addEventListener("click", ()=>{
 })
 
 
-// leave team for tracking
+// ----- listener for receiving "join_team" event from server ----- 
+// ----- and emit user initial position to listener "position" on server -----
+socket.on("enter_team", () => {
+    console.log(`type of team_id in browser session : ${typeof(sessionStorage.getItem("team_id"))}`);
+    let data = {
+        sid : sessionStorage.getItem("sid"),
+        user_id : sessionStorage.getItem("user_id"),
+        username : sessionStorage.getItem("username"),
+        email : sessionStorage.getItem("email"),
+        team_id : sessionStorage.getItem("team_id"),
+        coord : {
+            latitude: initialCoord.latitude,
+            longitude: initialCoord.longitude
+        }
+    };
+
+    console.log(`initialCoord in listener "enter_team on client ${data.coord.latitude}, ${data.coord.longitude}`);
+    socket.emit("position", data);
+})
+
+
+// ----- emit leave team event to listener "leave_team" on server-----
 let leaveTeamBtn = document.querySelector(".setting div.leave");
 leaveTeamBtn.addEventListener("click", ()=> {
     let data = {
         sid: socket.id,
-        team_id: `${window.sessionStorage.getItem("team_id")}`,
+        team_id: window.sessionStorage.getItem("team_id"),
         username: window.sessionStorage.getItem("username"),
         user_id: window.sessionStorage.getItem("user_id"),
         email: window.sessionStorage.getItem("email")
@@ -135,6 +185,7 @@ leaveTeamBtn.addEventListener("click", ()=> {
 })
 
 socket.on("leave_team", (data) => {
+    turnOnTracking = false;
     let sid = data.sid;
     markerArray.splice(sidArray.indexOf(sid),1);
     sidArray.splice(sidArray.indexOf(sid),1);
@@ -145,6 +196,18 @@ socket.on("leave_team", (data) => {
 // test leave team for alert message
 let msgleaveTeamBtn = document.querySelector("div.alert button.leave");
 msgleaveTeamBtn.addEventListener("click", ()=> {
+    // switch to main pannel
+    friendsPannel.style.display = "none";
+    teamsPannel.style.display = "none";
+    trackingPannel.style.display = "none";
+    mainPannel.style.display = "none";
+
+    // change elements in setting div
+    config.style.display = "none";
+    logout.style.display = "none";
+    leave.style.display = "none";
+
+    // organize data for emitted to event listener "leave_team" on server
     let data = {
         team_id: `${window.sessionStorage.getItem("team_id")}`,
         username: window.sessionStorage.getItem("username"),
