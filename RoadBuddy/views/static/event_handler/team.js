@@ -185,7 +185,6 @@ leaveTeamBtn.addEventListener("click", ()=> {
 })
 
 socket.on("leave_team", (data) => {
-    turnOnTracking = false;
     let sid = data.sid;
     markerArray.splice(sidArray.indexOf(sid),1);
     sidArray.splice(sidArray.indexOf(sid),1);
