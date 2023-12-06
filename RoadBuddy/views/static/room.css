@@ -462,10 +462,17 @@ label {
     display: none;
     position: absolute;
     top: 20vh;
-    left: 25vw;
+    left: 15vw;
     z-index: 2000;
-    width: 50vw;
+    width: 65vw;
     background-color: white;
+    border-radius: 10px;
+    box-shadow: 5px 5px 1px grey;
+    padding: 10px;
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+
 }
 
 .friend-response,
@@ -476,10 +483,26 @@ label {
     top: 20vh;
     left: 25vw;
     z-index: 2000;
-    width: 50vw;
+    width: 65vw;
     background-color: white;
+    border-radius: 10px;
+    box-shadow: 5px 5px 1px grey;
+    padding: 10px;
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
 }
 
+.friend-prompt button,
+.team-prompt button,
+.friend-response button,
+.team-response button {
+    border-style: none;
+    font-size: 20px;
+    border-radius: 10px;
+    padding: 5px;
+    margin-top: 5px;
+}
 
 /* ----- tracking pannel ----- */
 /* .main-pannel {
