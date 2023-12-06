@@ -1,7 +1,9 @@
 // ----- elememts -----
 var//
-settingOn = document.querySelector(".setting-on"),
-settingOff = document.querySelector(".setting-off"),
+settingOnMain = document.querySelector(".setting-on-main"),
+settingOffMain = document.querySelector(".setting-off-main"),
+settingOnTracking = document.querySelector(".setting-on-tracking"),
+settingOffTracking = document.querySelector(".setting-off-tracking"),
 config = document.querySelector(".config"),
 logout = document.querySelector(".logout"),
 leave = document.querySelector(".leave"),
@@ -203,7 +205,10 @@ var//
 marker,
 initialCoord,
 sidArray = [],
+sidReference,
 markerArray = [],
+ownColor = `rgb(${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)})`,
+partnersColor = {},
 map;
 
 
@@ -218,7 +223,15 @@ function drawMap(position){
         maxZoom: 19,
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         }).addTo(map);
-    marker = L.marker([initialCoord.latitude, initialCoord.longitude]).addTo(map);
+
+    // marker = L.marker([initialCoord.latitude, initialCoord.longitude], {title: `${window.sessionStorage.getItem("username")}`}).addTo(map);
+    // marker._icon.classList.add("my-marker");
+
+    let markerOption = {
+        color: ownColor,
+    };
+    marker = L.circleMarker([initialCoord.latitude, initialCoord.longitude], markerOption).addTo(map);
+
     markerArray.push(marker);
 };
 
@@ -237,6 +250,8 @@ drawMap({
     }
 });
 
+// document.querySelector(".my-marker").setAttribute("src", "");
+
 // ----- draw initial map -----
 // if (window.navigator.geolocation) {
 //     try {
@@ -248,18 +263,36 @@ drawMap({
 
 
 // ----- toggle down setting  -----
-settingOn.addEventListener("click", () => {
+settingOnMain.addEventListener("click", () => {
     config.style.display = "block";
     logout.style.display = "block";
-    settingOn.style.display = "none";
-    settingOff.style.display = "block";
+    leave.style.display = "none";
+    settingOnMain.style.display = "none";
+    settingOffMain.style.display = "block";
 })
 
-settingOff.addEventListener("click", () => {
+settingOffMain.addEventListener("click", () => {
     config.style.display = "none";
     logout.style.display = "none";
-    settingOff.style.display = "none";
-    settingOn.style.display = "block";
+    leave.style.display = "none";
+    settingOffMain.style.display = "none";
+    settingOnMain.style.display = "block";
+})
+
+settingOnTracking.addEventListener("click", () => {
+    config.style.display = "none";
+    logout.style.display = "none";
+    leave.style.display = "block";
+    settingOnTracking.style.display = "none";
+    settingOffTracking.style.display = "block";
+})
+
+settingOffTracking.addEventListener("click", () => {
+    config.style.display = "none";
+    logout.style.display = "none";
+    leave.style.display = "none";
+    settingOnTracking.style.display = "block";
+    settingOffTracking.style.display = "none";
 })
 
 // ----- logout -----
@@ -445,19 +478,4 @@ searchIcon.addEventListener("click", () => {
     let username = document.querySelector("input[name=search-friend]").value;
     Search_new_friend(username);
 })
-
-
-
-// ----- start tracking ----- 
-// startTripBtn.addEventListener("click", () => {
-//     let//
-//     team_id = document.querySelector(".teams-pannel .pannel-title").getAttribute("id"),
-//     team_name = document.querySelector(".teams-pannel .pannel-title").textContent;
-
-//     window.sessionStorage.setItem("team_id", team_id);
-//     window.sessionStorage.setItem("team_name", team_name);
-
-//     window.location.replace("/tracking");
-
-// })
 
