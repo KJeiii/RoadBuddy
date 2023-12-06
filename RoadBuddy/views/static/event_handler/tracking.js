@@ -127,7 +127,7 @@ setInterval(() => {
     
     socket.emit("position", data);
 
-}, 2000);
+}, 500);
 
 
 
