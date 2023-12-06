@@ -2,7 +2,6 @@
 let socket = io();
 socket.on("connect", ()=>{
     sidArray.push(socket.id);
-    markerArray.push(marker);
     window.sessionStorage.setItem("sid", socket.id);
 
     let data = {
@@ -11,18 +10,10 @@ socket.on("connect", ()=>{
         email: window.sessionStorage.getItem("email")
     }
     socket.emit("store_userinfo", data);
-
-    // let//
-    // alertDiv = document.querySelector(".alert"),
-    // sidDiv = document.createElement("div");
-
-    // sidDiv.textContent = socket.id;
-    // alertDiv.appendChild(sidDiv);
 })
 
 
 // remove marker when user disconnects
-// Case-1. close brwoser directly
 socket.on("disconnect", (data) => {
     let sid = data.sid;
     map.removeLayer(markerArray[sidArray.indexOf(sid)]);
@@ -30,12 +21,6 @@ socket.on("disconnect", (data) => {
     sidArray.splice(sidArray.indexOf(sid),1);
 });
 
-
-// Case-2. press "leave" button
-let leaveBtn = document.querySelector(".leave");
-leaveBtn.addEventListener("click", () => {
-    window.location.replace("/room");
-});
 
 
 
