@@ -21,6 +21,10 @@ socket.on("disconnect", (data) => {
     sidArray.splice(sidArray.indexOf(sid),1);
 });
 
+let leaveBtn = document.querySelector(".leave");
+leaveBtn.addEventListener("click", () => {
+    window.location.replace("/room");
+});
 
 
 
