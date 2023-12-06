@@ -29,7 +29,7 @@ def position(data):
         if len(own_coords) == 0 :
             own_coords.append(new_coord)
             data = {request.sid : own_coords}
-            emit("initPosition", data, to=request.sid)
+            # emit("initPosition", data, to=request.sid)
         return
 
     # update all partners position
@@ -46,7 +46,7 @@ def position(data):
 
     if len(user_coords) == 0 :
         rooms_info[team_id][sid].append(new_coord)
-        emit("initPosition", rooms_info[team_id], to=team_id)
+        # emit("initPosition", rooms_info[team_id], to=team_id)
     
     print(rooms_info.get(team_id))
 
