@@ -248,11 +248,6 @@ leaveTeamBtn.addEventListener("click", ()=> {
     settingOnTracking.style.display = "none";
     settingOffTracking.style.display = "none";
 
-    // switch to main pannel
-    friendsPannel.style.display = "none";
-    teamsPannel.style.display = "none";
-    trackingPannel.style.display = "none";
-    mainPannel.style.display = "block";
 })
 
 socket.on("leave_team", (data) => {
