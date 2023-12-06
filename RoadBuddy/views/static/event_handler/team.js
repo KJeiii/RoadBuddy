@@ -254,6 +254,7 @@ socket.on("leave_team", (data) => {
     let sid = data.sid;
     markerArray.splice(sidArray.indexOf(sid),1);
     sidArray.splice(sidArray.indexOf(sid),1);
+    window.sessionStorage.removeItem("team_id");
 })
 
 
