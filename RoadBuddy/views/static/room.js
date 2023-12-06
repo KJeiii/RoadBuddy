@@ -229,9 +229,16 @@ function drawMap(position){
 
     let markerOption = {
         color: ownColor,
+        fillOpacity: 0.7
     };
     marker = L.circleMarker([initialCoord.latitude, initialCoord.longitude], markerOption).addTo(map);
 
+    // remove all markers in markerArray to initialize
+    if (markerArray.length > 0) {
+        for ( let i = 0; i < markerArray.length; i++) {
+            markerArray.pop();
+        }
+    }
     markerArray.push(marker);
 };
 
@@ -239,26 +246,25 @@ function userCoordError(error) {console.log(`Error in drawing initial map: ${err
 
 
 // test user's position by select position from randomPosition
-let testCoords = {
-    latitude: 24.982 + Math.random()*0.006,
-    longitude: 121.534 + Math.random()*0.006
-};
-drawMap({
-    coords: {
-        latitude: testCoords.latitude,
-        longitude: testCoords.longitude
-    }
-});
+// let testCoords = {
+//     latitude: 24.982 + Math.random()*0.006,
+//     longitude: 121.534 + Math.random()*0.006
+// };
+// drawMap({
+//     coords: {
+//         latitude: testCoords.latitude,
+//         longitude: testCoords.longitude
+//     }
+// });
 
-// document.querySelector(".my-marker").setAttribute("src", "");
 
 // ----- draw initial map -----
-// if (window.navigator.geolocation) {
-//     try {
-//         window.navigator.geolocation.getCurrentPosition(drawMap, userCoordError);
-//     }
-//     catch(error) {console.log(`Error in getting user postion : ${error}`)}
-// }
+if (window.navigator.geolocation) {
+    try {
+        window.navigator.geolocation.getCurrentPosition(drawMap, userCoordError);
+    }
+    catch(error) {console.log(`Error in getting user postion : ${error}`)}
+}
 
 
 
