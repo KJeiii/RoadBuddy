@@ -92,8 +92,8 @@ socket.on("team_request", (data) => {
 
     // prompt to ask willness
     let//
-    prompt = document.querySelector(".team-prompt"),
-    content = document.querySelector(".team-prompt .content");
+    prompt = document.querySelector(".team-invite-prompt"),
+    content = document.querySelector(".team-invite-prompt .content");
 
     content.textContent = `來自 ${data.username} 的隊伍邀請`;
     prompt.style.display = "block";
@@ -102,7 +102,7 @@ socket.on("team_request", (data) => {
 
 // ----- receiver response to team invitation -----
 // if accept 
-let teamYesBtn = document.querySelector(".team-prompt .yes");
+let teamYesBtn = document.querySelector(".team-invite-prompt .yes");
 teamYesBtn.addEventListener("click", () => {
     console.log("click")
     // switch to tracking pannel
@@ -140,8 +140,8 @@ teamYesBtn.addEventListener("click", () => {
 
     // recover team prompt
     let//
-    prompt = document.querySelector(".team-prompt"),
-    content = document.querySelector(".team-prompt .content");
+    prompt = document.querySelector(".team-invite-prompt"),
+    content = document.querySelector(".team-invite-prompt .content");
     content.textContent = "";
     prompt.style.display = "none";
 
@@ -160,11 +160,11 @@ teamYesBtn.addEventListener("click", () => {
 })
 
 // if reject
-let teamNoBtn = document.querySelector(".team-prompt .no");
+let teamNoBtn = document.querySelector(".team-invite-prompt .no");
 teamNoBtn.addEventListener("click", () => {
     let//
-    prompt = document.querySelector(".team-prompt"),
-    content = document.querySelector(".team-prompt .content"),
+    prompt = document.querySelector(".team-invite-prompt"),
+    content = document.querySelector(".team-invite-prompt .content"),
     teamID = document.querySelector(".teams-pannel .pannel-title").getAttribute("id");
 
     content.textContent = "";
@@ -184,8 +184,8 @@ teamNoBtn.addEventListener("click", () => {
 
     // show response
     let//
-    response = document.querySelector(".team-response"),
-    responseContent = document.querySelector(".team-response .content");
+    response = document.querySelector(".team-invite-response"),
+    responseContent = document.querySelector(".team-invite-response .content");
 
     response.style.display = "block";
     responseContent.textContent = `你已拒絕 ${team_sender_info_cache.username} 的隊伍邀請`;    
@@ -194,13 +194,13 @@ teamNoBtn.addEventListener("click", () => {
 
 
 // ----- confirm team response -----
-let teamOkBtn = document.querySelector(".team-response button");
+let teamOkBtn = document.querySelector(".team-invite-response button");
 teamOkBtn.addEventListener("click", ()=>{
 
     // recover response
     let//
-    response = document.querySelector(".team-response"),
-    responseContent = document.querySelector(".team-response .content");
+    response = document.querySelector(".team-invite-response"),
+    responseContent = document.querySelector(".team-invite-response .content");
 
     response.style.display = "none";
     responseContent.textContent = ``;     
