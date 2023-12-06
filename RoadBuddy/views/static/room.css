@@ -4,8 +4,10 @@ body {
     width: 100vw;
 }
 
-.setting-on:hover,
-.setting-off:hover,
+.setting-on-main:hover,
+.setting-off-main:hover,
+.setting-on-tracking:hover,
+.setting-off-tracking:hover,
 .config:hover,
 .logout:hover,
 .leave:hover,
@@ -38,8 +40,11 @@ button:hover
     right: 15px; 
 }
 
-.setting-on,
-.setting-off {
+.setting-on-main,
+.setting-off-main,
+.setting-on-tracking,
+.setting-off-tracking 
+{
     width: 30px;
     height: 30px;
     background-image: url("../static/images/gear.svg");
@@ -50,7 +55,9 @@ button:hover
     border-radius: 10px;
 }
 
-.setting-off {
+.setting-off-main,
+.setting-on-tracking,
+.setting-off-tracking  {
     display: none;
 }
 
@@ -530,7 +537,7 @@ label {
     width: 20px;
     height: 20px;
     margin-right: 10%;
-    background-color: aqua;
+    /* background-color: aqua; */
 }
 
 .tracking-pannel .username {

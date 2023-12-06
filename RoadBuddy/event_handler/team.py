@@ -9,13 +9,14 @@ def team_request(data):
     sender_id = sid_reference[sender_sid]
     print(f'user_info in listener "team_request" : {user_info}')
 
-    for id in data["receiver_id"]:
+    for id in data["receiver_info"]["receiver_id"]:
         sender_info = {
             "sid": sender_sid,
             "user_id": sender_id,
             "username": user_info[sender_id]["username"],
             "email": user_info[sender_id]["email"],
-            "team_id": data["team_id"]
+            "team_id": data["team_id"],
+            "friends_color": data["receiver_info"]["receiver_color"]
         }
         emit("team_request", sender_info, to=user_info[id]["sid"])
         # print(f'{user_info[sender_id]["username"]} sends team request to {user_info[id]["username"]}')
@@ -39,7 +40,7 @@ def enter_team(data):
                 rooms_info[team_id][request.sid] = []
                 join_room(team_id)
                 user_info[user_id]["team_id"] = team_id
-                emit("enter_team", to=team_id)
+                emit("enter_team", sid_reference, to=team_id)
 
             else:
                 print(f'{team_id} is in used')
@@ -50,7 +51,7 @@ def enter_team(data):
                 rooms_info[team_id][data["receiver_sid"]] = []
                 join_room(team_id)
                 user_info[user_id]["team_id"] = team_id
-                emit("enter_team", to=team_id)
+                emit("enter_team", sid_reference, to=team_id)
 
             else:
                 print(f'{team_id} has not created by owner yet')

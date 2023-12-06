@@ -8,10 +8,11 @@ startTripBtn.addEventListener("click", ()=> {
 
 
     // change elements in setting div
-    config.style.display = "none";
-    logout.style.display = "none";
-    leave.style.display = "block";
-
+    settingOnMain.style.display = "none";
+    settingOffMain.style.display = "none";
+    settingOnTracking.style.display = "block";
+    settingOffTracking.style.display = "none";
+    
 
     // Organize data emitted to listener "enter_team" on server
     let//
@@ -22,14 +23,48 @@ startTripBtn.addEventListener("click", ()=> {
 
     for (checkbox of checkboxes) {
         if (checkbox.checked) {
-            friendsToAdd.push(checkbox.getAttribute("id")*1)
+            friendsToAdd.push(checkbox.getAttribute("id")*1);
+            let randomColor = `rgb(${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)})`;
+            partnersColor[checkbox.getAttribute("id")*1] = {
+                username: checkbox.getAttribute("name"),
+                color: randomColor
+            };
         }
     }
+    partnersColor[window.sessionStorage.getItem("user_id")] = {
+        username: window.sessionStorage.getItem("username"),
+        color: ownColor
+    };
+
+
+    // create partner information in partners-list
+    let partnersList = document.querySelector(".tracking-pannel .partners-list");
+    for ( id in partnersColor) {
+        let//
+        item = document.createElement("div"),
+        icon = document.createElement("div"),
+        username = document.createElement("div");
+    
+        item.setAttribute("class", "item");
+        icon.setAttribute("class", "icon");
+        icon.style.backgroundColor = partnersColor[id].color;
+        username.setAttribute("class", "username");
+        username.setAttribute("id", id);
+        username.textContent = partnersColor[id].username;
+
+        item.appendChild(icon);
+        item.appendChild(username);
+        partnersList.appendChild(item);
+    }
+
 
     // send request for joining team
     let invitation = {
         sender_sid: socket.id,
-        receiver_id: friendsToAdd,
+        receiver_info: {
+            receiver_id: friendsToAdd,
+            receiver_color: partnersColor
+        },
         team_id: teamID
     };
     socket.emit("team_request", invitation);
@@ -37,7 +72,10 @@ startTripBtn.addEventListener("click", ()=> {
     let createTeamData = {
         accept: true,
         enter_type: "create",
-        receiver_sid: friendsToAdd,
+        receiver_info: {
+            receiver_id: friendsToAdd,
+            receiver_color: partnersColor
+        },        
         sender_sid: socket.id,
         team_id: teamID
     };
@@ -50,7 +88,7 @@ startTripBtn.addEventListener("click", ()=> {
 var team_sender_info_cache;
 socket.on("team_request", (data) => {
     console.log(`Receive team request from ${data.username}`);
-    team_sender_info_cache = data;
+    team_sender_info_cache = data
 
     // prompt to ask willness
     let//
@@ -72,13 +110,33 @@ teamYesBtn.addEventListener("click", () => {
     friendsPannel.style.display = "none";
     teamsPannel.style.display = "none";
     trackingPannel.style.display = "block";
+    
+    // create partner information in partners-list
+    let partnersList = document.querySelector(".tracking-pannel .partners-list");
+    console.log(team_sender_info_cache.friends_color);
+    for ( id in team_sender_info_cache.friends_color) {
+        let//
+        item = document.createElement("div"),
+        icon = document.createElement("div"),
+        username = document.createElement("div");
+    
+        item.setAttribute("class", "item");
+        icon.setAttribute("class", "icon");
+        icon.style.backgroundColor = team_sender_info_cache.friends_color[id].color;
+        username.setAttribute("class", "username");
+        username.setAttribute("id", id);
+        username.textContent = team_sender_info_cache.friends_color[id].username;
 
+        item.appendChild(icon);
+        item.appendChild(username);
+        partnersList.appendChild(item);
+    }
 
     // change elements in setting div
-    config.style.display = "none";
-    logout.style.display = "none";
-    leave.style.display = "block";
-
+    settingOnMain.style.display = "none";
+    settingOffMain.style.display = "none";
+    settingOnTracking.style.display = "block";
+    settingOffTracking.style.display = "none";
 
     // recover team prompt
     let//
@@ -151,7 +209,8 @@ teamOkBtn.addEventListener("click", ()=>{
 
 // ----- listener for receiving "join_team" event from server ----- 
 // ----- and emit user initial position to listener "position" on server -----
-socket.on("enter_team", () => {
+socket.on("enter_team", (sid_reference) => {
+    sidReference = sid_reference;
     console.log(`type of team_id in browser session : ${typeof(sessionStorage.getItem("team_id"))}`);
     let data = {
         sid : sessionStorage.getItem("sid"),
@@ -182,6 +241,12 @@ leaveTeamBtn.addEventListener("click", ()=> {
     };
     socket.emit("leave_team", data);
     window.sessionStorage.removeItem("team_id");
+
+    // change elements in setting div
+    settingOnMain.style.display = "block";
+    settingOffMain.style.display = "none";
+    settingOnTracking.style.display = "none";
+    settingOffTracking.style.display = "none";
 })
 
 socket.on("leave_team", (data) => {

@@ -9,10 +9,18 @@ let randomCoords = {
 
 // ----- receive partners initial postion and show on the map -----
 socket.on("initPosition", (partners) => {
-    // console.log(markerArray.length);
+    let colorReference = (team_sender_info_cache === undefined) ? partnersColor : team_sender_info_cache.friends_color;
+
     for ( sid in partners ) {
+        let id = sidReference[sid];
         if ( sid !== socket.id && !sidArray.includes(sid)) {
-            let markerToAdd = L.marker([partners[sid][0].latitude, partners[sid][0].longitude]).addTo(map);
+            // add circleMarker
+            let markerOption = {
+                color: colorReference[id].color
+            };
+            let markerToAdd = L.circleMarker([partners[sid][0].latitude, partners[sid][0].longitude], markerOption).addTo(map);
+
+            // register new partner information (sid, circleMaker object)
             sidArray.push(sid);
             markerArray.push(markerToAdd);
         }
