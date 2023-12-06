@@ -19,11 +19,13 @@ socket.on("disconnect", (data) => {
     map.removeLayer(markerArray[sidArray.indexOf(sid)]);
     markerArray.splice(sidArray.indexOf(sid),1);
     sidArray.splice(sidArray.indexOf(sid),1);
+    window.sessionStorage.removeItem("team_id");
 });
 
 let leaveBtn = document.querySelector(".leave");
 leaveBtn.addEventListener("click", () => {
     window.location.replace("/room");
+    window.sessionStorage.removeItem("team_id");
 });
 
 
