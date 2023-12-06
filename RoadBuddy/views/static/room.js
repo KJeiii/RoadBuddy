@@ -4,7 +4,7 @@ settingOnMain = document.querySelector(".setting-on-main"),
 settingOffMain = document.querySelector(".setting-off-main"),
 settingOnTracking = document.querySelector(".setting-on-tracking"),
 settingOffTracking = document.querySelector(".setting-off-tracking"),
-config = document.querySelector(".config"),
+// config = document.querySelector(".config"),
 logout = document.querySelector(".logout"),
 leave = document.querySelector(".leave"),
 menu = document.querySelector(".nav-menu"),
@@ -18,8 +18,10 @@ mainPannelFriendsOuter = document.querySelector(".main-pannel .friends-outer"),
 mainPannelFriendsList = document.querySelector(".main-pannel .friends-list"),
 teamPannelFriendsList = document.querySelector(".teams-pannel .friends-list"),
 teamsOuter = document.querySelector(".teams-outer"),
-pullUp = document.querySelector(".pull-up"),
-dropDown = document.querySelector(".drop-down"),
+pullUpMain = document.querySelector(".main-pannel .pull-up"),
+dropDownMain = document.querySelector(".main-pannel .drop-down"),
+pullUpTracking = document.querySelector(".tracking-pannel .pull-up"),
+dropDownTracking = document.querySelector(".tracking-pannel .drop-down"),
 addFriend = document.querySelector(".nav-add-friend"),
 addTeam = document.querySelector(".nav-add-team"),
 mainPannel = document.querySelector(".main-pannel"),
@@ -139,17 +141,17 @@ async function LoadTeamList(user_id) {
         }
 
         // joined teams as a partner
-        for ( data of result.data.joined_team) {
-            let//
-            item = document.createElement("div"),
-            joinList = document.querySelector(".join-list");
+        // for ( data of result.data.joined_team) {
+        //     let//
+        //     item = document.createElement("div"),
+        //     joinList = document.querySelector(".join-list");
 
-            item.setAttribute("class", "item");
-            item.setAttribute("id", data.team_id);
-            item.textContent = data.team_name;
+        //     item.setAttribute("class", "item");
+        //     item.setAttribute("id", data.team_id);
+        //     item.textContent = data.team_name;
 
-            joinList.appendChild(item);
-        }
+        //     joinList.appendChild(item);
+        // }
 
         // add event to all teams
         let teamItems = document.querySelectorAll(".teams-outer .item");
@@ -187,6 +189,7 @@ CheckUserStatus()
         window.sessionStorage.setItem("username", data.username);
         window.sessionStorage.setItem("user_id", data.user_id);
         window.sessionStorage.setItem("email", data.email);
+        window.sessionStorage.removeItem("team_id");
 
 
         // update friends list
@@ -270,7 +273,7 @@ if (window.navigator.geolocation) {
 
 // ----- toggle down setting  -----
 settingOnMain.addEventListener("click", () => {
-    config.style.display = "block";
+    // config.style.display = "block";
     logout.style.display = "block";
     leave.style.display = "none";
     settingOnMain.style.display = "none";
@@ -278,7 +281,7 @@ settingOnMain.addEventListener("click", () => {
 })
 
 settingOffMain.addEventListener("click", () => {
-    config.style.display = "none";
+    // config.style.display = "none";
     logout.style.display = "none";
     leave.style.display = "none";
     settingOffMain.style.display = "none";
@@ -286,7 +289,7 @@ settingOffMain.addEventListener("click", () => {
 })
 
 settingOnTracking.addEventListener("click", () => {
-    config.style.display = "none";
+    // config.style.display = "none";
     logout.style.display = "none";
     leave.style.display = "block";
     settingOnTracking.style.display = "none";
@@ -294,7 +297,7 @@ settingOnTracking.addEventListener("click", () => {
 })
 
 settingOffTracking.addEventListener("click", () => {
-    config.style.display = "none";
+    // config.style.display = "none";
     logout.style.display = "none";
     leave.style.display = "none";
     settingOnTracking.style.display = "block";
@@ -353,6 +356,8 @@ addFriend.addEventListener("click", () => {
 addTeam.addEventListener("click", () => {
     teamsPannel.style.display = "flex";
     mainPannel.style.display = "none";
+    document.querySelectorAll(".teams-pannel .pannel-title")[1].style.display = "none";
+    document.querySelector(".teams-pannel .friends-outer").style.display = "none";
 })
 
 createTeamBtn.addEventListener("click", () => {
@@ -396,6 +401,8 @@ createTeamBtn.addEventListener("click", () => {
         LoadTeamList(window.sessionStorage.getItem("user_id"));
         teamsPannel.style.display = "none";
         mainPannel.style.display = "block";
+        document.querySelectorAll(".teams-pannel .pannel-title")[1].style.display = "block";;
+        document.querySelector(".teams-pannel .friends-outer").style.display = "block";
     })
     .catch((error) => {console.log(`Error in creating team : ${error}`)})
 })
@@ -408,6 +415,8 @@ for (close of closePannel) {
         friendsPannel.style.display = "none";
         teamsPannel.style.display = "none";
         mainPannel.style.display = "block";
+        document.querySelectorAll(".teams-pannel .pannel-title")[1].style.display = "block";;
+        document.querySelector(".teams-pannel .friends-outer").style.display = "block";
 
         // teams-pannel recover
         document.querySelector(".teams-pannel .pannel-title").textContent = "創建隊伍";
@@ -423,16 +432,30 @@ for (close of closePannel) {
 
 
 // ----- pull up and drop down main pannel ------
-pullUp.addEventListener("click", () => {
-    pullUp.style.display = "none";
-    dropDown.style.display = "block";
+pullUpMain.addEventListener("click", () => {
+    pullUpMain.style.display = "none";
+    dropDownMain.style.display = "block";
     mainPannel.style.top = "20vh";
 })
 
-dropDown.addEventListener("click", () => {
-    dropDown.style.display = "none";
-    pullUp.style.display = "block";
+dropDownMain.addEventListener("click", () => {
+    dropDownMain.style.display = "none";
+    pullUpMain.style.display = "block";
     mainPannel.style.top = "65vh";
+})
+
+
+// ----- pull up and drop down tracking pannel ------
+pullUpTracking.addEventListener("click", () => {
+    pullUpTracking.style.display = "none";
+    dropDownTracking.style.display = "block";
+    trackingPannel.style.top = "20vh";
+})
+
+dropDownTracking.addEventListener("click", () => {
+    dropDownTracking.style.display = "none";
+    pullUpTracking.style.display = "block";
+    trackingPannel.style.top = "65vh";
 })
 
 
