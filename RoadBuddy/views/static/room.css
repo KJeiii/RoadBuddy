@@ -457,7 +457,7 @@ label {
 
 /* ------ socket friend and team request ------ */
 .friend-prompt,
-.team-prompt
+.team-invite-prompt
  {
     display: none;
     position: absolute;
@@ -476,7 +476,8 @@ label {
 }
 
 .friend-response,
-.team-response
+.team-invite-response,
+.team-create-response
 {
     display: none;
     position: absolute;
@@ -494,9 +495,11 @@ label {
 }
 
 .friend-prompt button,
-.team-prompt button,
+.team-invite-prompt button,
 .friend-response button,
-.team-response button {
+.team-invite-response button,
+.team-create-response button
+ {
     border-style: none;
     font-size: 20px;
     border-radius: 10px;
