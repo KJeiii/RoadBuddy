@@ -304,6 +304,8 @@ settingOffTracking.addEventListener("click", () => {
     settingOffTracking.style.display = "none";
 })
 
+
+
 // ----- logout -----
 logout.addEventListener("click", () => {
     window.localStorage.removeItem("token");
@@ -346,11 +348,15 @@ menuTeam.addEventListener("click", ()=>{
     addTeam.style.display = "block";
 })
 
+
+
 // ----- add friend page-----
 addFriend.addEventListener("click", () => {
     friendsPannel.style.display = "flex";
     mainPannel.style.display = "none";
 })
+
+
 
 // ----- add team page-----
 addTeam.addEventListener("click", () => {
@@ -394,17 +400,38 @@ createTeamBtn.addEventListener("click", () => {
             createList.removeChild(createList.lastChild)
         }
 
-        while ( joinList.hasChildNodes() ) {
-            joinList.removeChild(joinList.lastChild)
-        }
+        // while ( joinList.hasChildNodes() ) {
+        //     joinList.removeChild(joinList.lastChild)
+        // }
 
         LoadTeamList(window.sessionStorage.getItem("user_id"));
+
         teamsPannel.style.display = "none";
         mainPannel.style.display = "block";
-        document.querySelectorAll(".teams-pannel .pannel-title")[1].style.display = "block";;
+        document.querySelectorAll(".teams-pannel .pannel-title")[1].style.display = "block";
         document.querySelector(".teams-pannel .friends-outer").style.display = "block";
+
+        // response when creation succeed
+        let//
+        teamCreateResponse = document.querySelector(".team-create-response"),
+        content = document.querySelector(".team-create-response .content");
+        content.textContent = `你已建立隊伍 ${searchInput.value}`;
+        teamCreateResponse.style.display = "block";
+        mainPannel.style.top = "65vh";
+
     })
     .catch((error) => {console.log(`Error in creating team : ${error}`)})
+})
+
+
+// close team-create-response when click ok
+let createOkBtn = document.querySelector(".team-create-response button");
+createOkBtn.addEventListener("click", () => {
+    let//
+    teamCreateResponse = document.querySelector(".team-create-response"),
+    content = document.querySelector(".team-create-response .content");
+    teamCreateResponse.style.display = "none";
+    content.textContent = ``;
 })
 
 
