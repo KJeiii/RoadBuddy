@@ -53,7 +53,6 @@ def Search_new_friend():
 
 @friend_bp.route("/api/friend/add", methods = ["POST"])
 def Add_friend():
-    print(request.json)
     if request.method == "POST": 
         try:
             user_id = int(request.json["user_id"])
