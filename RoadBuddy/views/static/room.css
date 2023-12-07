@@ -476,6 +476,7 @@ label {
 }
 
 .friend-response,
+.friend-request,
 .team-invite-response,
 .team-create-response
 {
@@ -495,6 +496,7 @@ label {
 }
 
 .friend-prompt button,
+.friend-request button,
 .team-invite-prompt button,
 .friend-response button,
 .team-invite-response button,

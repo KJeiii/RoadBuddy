@@ -1,5 +1,3 @@
-
-
 let addFriendBtn = document.querySelector(".friends-pannel button");
 addFriendBtn.addEventListener("click", () => {
     console.log("click");
@@ -7,21 +5,96 @@ addFriendBtn.addEventListener("click", () => {
     checkboxes = document.querySelectorAll(".friends-pannel input[type=checkbox]"),
     friendID = [];
 
-    for ( checkbox of checkboxes) {
-        if ( checkbox.checked ) { friendID.push(checkbox.getAttribute("id")*1)}
-    }
+    fetch("/api/friend", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({user_id: window.sessionStorage.getItem("user_id")})
+    })
+     .then((response) => {return response.json()})
+     .then((result) => {
+        let data = result.data;
 
-    // send request for adding friend
-    let data = {
-        sender_sid: socket.id,
-        receiver_id: friendID
-    }
-    socket.emit("friend_reqeust", data);
+        // find all old friends user_id
+        let oldFriendId = [];
+        for ( datum of data ) {
+            oldFriendId.push(datum["user_id"])
+        }
+
+        // find all new friends user_id
+        for ( checkbox of checkboxes) {
+            if ( checkbox.checked ) { friendID.push(checkbox.getAttribute("id")*1)}
+        }
+
+        //  response if no ckeckbox is checked
+        if ( friendID.length === 0 ) {
+            let//
+            response = document.querySelector(".friend-request"),
+            responseContent = document.querySelector(".friend-request .content");
     
-    console.log(`Send request from ${window.sessionStorage.getItem("sid")}`);
+            response.style.display = "block";
+            responseContent.textContent = "你尚未選擇對象";
+            return
+        }
+
+        // mapping each new friend if it's in oldFriendId
+        let//
+        repeatID = [],
+        uniqueID = [];
+        for ( friend of friendID ) {
+            if ( oldFriendId.includes(friend) ) {
+                repeatID.push(friend)
+                continue
+            }
+            uniqueID.push(friend);
+        }
+
+        // Decide if it is allowed to send friend request
+        let//
+        allowToSend = (repeatID.length > 0) ? false:true,
+        statement = `已發出交友申請`;
+
+
+        // NOT allowed if they have been friend between user and one of selected people
+        if (!allowToSend) {
+            let repeatIDString = "";
+            for ( friend of data) {
+                if ( repeatID.includes(friend.user_id) ) {
+                    repeatIDString += ` ${friend.username} `;
+                }}
+            statement = `你與${repeatIDString}已經是好友關係，請重新選擇對象`;
+        }
+
+        let//
+        response = document.querySelector(".friend-request"),
+        responseContent = document.querySelector(".friend-request .content");
+
+        response.style.display = "block";
+        responseContent.textContent = statement;
+
+
+        // Allowed if friendship has not benn built yet 
+        if ( allowToSend && uniqueID.length !== 0 ) {
+            let sender_data = {
+                sender_sid: socket.id,
+                receiver_id: uniqueID
+            }
+            socket.emit("friend_reqeust", sender_data);
+            console.log(`Send request from ${window.sessionStorage.getItem("sid")}`);
+        }
+     })
 });
 
+// clear response content and disappear
+document.querySelector(".friend-request button").addEventListener("click", ()=>{
+    let//
+    response = document.querySelector(".friend-request"),
+    responseContent = document.querySelector(".friend-request .content");
 
+    response.style.display = "none";
+    responseContent.textContent = "";
+});
 
 // *** as a receiver
 var friend_sender_info_cache;
