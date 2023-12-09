@@ -10,9 +10,7 @@ let randomCoords = {
 // ----- receive partners initial postion and show on the map -----
 socket.on("initPosition", (partners) => {
     let colorReference = (team_sender_info_cache === undefined) ? partnersColor : team_sender_info_cache.friends_color;
-    console.log(markerArray);
-    console.log(partners);
-    console.log(Object.keys(partners).length >= 2);
+
 
     if (Object.keys(partners).length >= 2) {
         // update new own circleMarker with partners information
@@ -74,8 +72,6 @@ socket.on("initPosition", (partners) => {
 // ----- update partners postion when moving -----
 socket.on("movingPostion", (partners) => {
     for (sid of sidArray) {
-        // console.log(sidArray);
-        // console.log(markerArray);
         try {
         let//
         oldLatLng = [partners[sid][0].latitude, partners[sid][0].longitude],
@@ -112,7 +108,6 @@ let watchCoord = window.navigator.geolocation.watchPosition(
 );
 
 setInterval(() => {
-    console.log(coordFromBrowser);
     let data = {
         sid : sessionStorage.getItem("sid"),
         user_id : sessionStorage.getItem("user_id"),
