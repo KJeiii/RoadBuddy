@@ -18,6 +18,7 @@ mainPannelFriendsOuter = document.querySelector(".main-pannel .friends-outer"),
 mainPannelFriendsList = document.querySelector(".main-pannel .friends-list"),
 teamPannelFriendsList = document.querySelector(".teams-pannel .friends-list"),
 teamsOuter = document.querySelector(".teams-outer"),
+colorIntro = document.querySelector(".color-intro"),
 pullUpMain = document.querySelector(".main-pannel .pull-up"),
 dropDownMain = document.querySelector(".main-pannel .drop-down"),
 pullUpTracking = document.querySelector(".tracking-pannel .pull-up"),
@@ -79,30 +80,31 @@ async function LoadFriendList(user_id) {
         });
 
         let result = await response.json();
-
+        let friend_id = [];
         for ( data of result.data) {
             // Load friend list in main pannel
             let mainPannelFriendItem = document.createElement("div");
             mainPannelFriendItem.setAttribute("class", "item");
+            mainPannelFriendItem.setAttribute("id", data["user_id"]);
             mainPannelFriendItem.textContent = data.username;
             mainPannelFriendsList.appendChild(mainPannelFriendItem);
             
             // Load friend list in team pannel
-            let//
-            teamPannelFriendItem = document.createElement("div"),
-            input = document.createElement("input"),
-            label = document.createElement("label");
+            // let//
+            // teamPannelFriendItem = document.createElement("div"),
+            // input = document.createElement("input"),
+            // label = document.createElement("label");
 
-            teamPannelFriendItem.setAttribute("class", "item");
-            input.setAttribute("type", "checkbox");
-            input.setAttribute("id", data.user_id);
-            input.setAttribute("name", data.username);
-            label.setAttribute("for", data.username);
-            label.textContent = data.username;
+            // teamPannelFriendItem.setAttribute("class", "item");
+            // input.setAttribute("type", "checkbox");
+            // input.setAttribute("id", data.user_id);
+            // input.setAttribute("name", data.username);
+            // label.setAttribute("for", data.username);
+            // label.textContent = data.username;
 
-            teamPannelFriendItem.appendChild(input);
-            teamPannelFriendItem.appendChild(label);
-            teamPannelFriendsList.appendChild(teamPannelFriendItem);
+            // teamPannelFriendItem.appendChild(input);
+            // teamPannelFriendItem.appendChild(label);
+            // teamPannelFriendsList.appendChild(teamPannelFriendItem);
         }
         return;
     }
@@ -335,6 +337,7 @@ menuFriends.addEventListener("click", ()=>{
     teamsOuter.style.display = "none";
     addTeam.style.display = "none";
     mainPannelFriendsOuter.style.display = "flex";
+    colorIntro.style.display = "flex";
     addFriend.style.display = "block";
 })
 
@@ -343,7 +346,9 @@ menuTeam.addEventListener("click", ()=>{
     menuList.style.display = "none";
     menu.style.border = "none";
     mainPannelFriendsOuter.style.display = "none";
+    colorIntro.style.display = "none";
     addFriend.style.display = "none";
+
     teamsOuter.style.display = "flex";
     addTeam.style.display = "block";
 })
