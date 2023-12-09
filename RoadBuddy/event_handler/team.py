@@ -3,11 +3,12 @@ from RoadBuddy import socketio
 from flask import request, session
 from RoadBuddy.event_handler import sid_reference, user_info, rooms_info
 
+
+# Listener for receiving event "team request" from server
 @socketio.on("team_request")
 def team_request(data):
     sender_sid = data["sender_sid"]
     sender_id = sid_reference[sender_sid]
-    print(f'user_info in listener "team_request" : {user_info}')
 
     for id in data["receiver_info"]["receiver_id"]:
         sender_info = {
@@ -19,13 +20,12 @@ def team_request(data):
             "friends_color": data["receiver_info"]["receiver_color"]
         }
         emit("team_request", sender_info, to=user_info[id]["sid"])
-        # print(f'{user_info[sender_id]["username"]} sends team request to {user_info[id]["username"]}')
 
 
+
+# Listener for receiving event "enter team" from server
 @socketio.on("enter_team")
 def enter_team(data):
-    print(data)
-    print(sid_reference)
     sender_sid = request.sid
     sender_id = sid_reference[sender_sid]
     user_sid = request.sid
@@ -52,26 +52,28 @@ def enter_team(data):
                 join_room(team_id)
                 user_info[user_id]["team_id"] = team_id
                 emit("enter_team", sid_reference, to=team_id)
+                emit("add_partner", sid_reference[request.sid], to=team_id)
 
             else:
                 print(f'{team_id} has not created by owner yet')
 
 
+
+# Listener for receiving event "leave team" from server
 @socketio.on("leave_team")
 def leave_team(data):
     team_id = data["team_id"]
     sid = data["sid"]
-    user_id = data["user_id"]
+    user_id = int(data["user_id"])
 
-    print(f'{team_id} ready to leave.')
-
-    data = {
+    leaving_partner_data = {
         "sid": sid,
         "user_id": user_id,
         "username": data["username"],
         "email": data["email"]
     }
-    emit("leave_team", data, to=team_id)
+    emit("leave_team", leaving_partner_data, to=team_id)
+    emit("remove_partner", leaving_partner_data, to=team_id)
 
     leave_room(team_id)
     del rooms_info[team_id][sid]
@@ -79,16 +81,13 @@ def leave_team(data):
 
     if len(rooms_info[team_id].keys()) <= 0:
         del rooms_info[team_id]
-    print(f'team remaining : {rooms_info.keys()}')
-    # print(f'after member left, rooms_info = {rooms_info}')
 
 
+
+# Listener for receiving event "alert" from server
 @socketio.on("alert")
 def alert(data):
     emit("alert", data, to=data["team_id"])
-    # print(f'{data["username"]} send {data["msg"]} to team {rooms()}')
-
-
 
 
 
