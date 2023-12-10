@@ -88,20 +88,6 @@ startTripBtn.addEventListener("click", ()=> {
 })
 
 
-// ----- listener for receiving event "team_request" from server -----
-var team_sender_info_cache;
-socket.on("team_request", (data) => {
-    team_sender_info_cache = data
-
-    // prompt to ask willness
-    let//
-    prompt = document.querySelector(".team-invite-prompt"),
-    content = document.querySelector(".team-invite-prompt .content");
-
-    content.textContent = `來自 ${data.username} 的隊伍邀請`;
-    prompt.style.display = "block";
-})
-
 
 // ----- receiver response to team invitation -----
 // if accept 
@@ -229,6 +215,132 @@ teamOkBtn.addEventListener("click", ()=>{
 })
 
 
+
+// ----- emit leave team event to listener "leave_team" on server-----
+let leaveTeamBtn = document.querySelector(".setting div.leave");
+leaveTeamBtn.addEventListener("click", ()=> {
+    let leader_sid = ( team_sender_info_cache === undefined ) ? socket.id : team_sender_info_cache["sid"];
+    let data = {
+        sid: socket.id,
+        username: window.sessionStorage.getItem("username"),
+        user_id: window.sessionStorage.getItem("user_id"),
+        email: window.sessionStorage.getItem("email"),
+        team_id: window.sessionStorage.getItem("team_id"),
+        leader_sid: leader_sid
+    };
+    socket.emit("leave_team", data);
+
+    // change elements in setting div
+    leaveTeamBtn.style.display = "none";
+    invite.style.display = "none";
+    settingOnMain.style.display = "block";
+    settingOffMain.style.display = "none";
+    settingOnTracking.style.display = "none";
+    settingOffTracking.style.display = "none";
+
+    // remove all partner in the tracking pannel
+    let trackingPannelPartnerList = document.querySelector(".tracking-pannel .partners-list");
+    while (trackingPannelPartnerList.hasChildNodes()) {
+        trackingPannelPartnerList.removeChild(trackingPannelPartnerList.lastChild)
+    }
+
+    trackingPannel.style.display = "none";
+    teamsPannel.style.display = "none"
+    mainPannel.style.display = "block"
+})
+
+
+
+// ----- switch to team pannel for inviting other frineds in tracking -----
+let invitaionBtn = document.querySelector(".setting .invite");
+invitaionBtn.addEventListener("click", () => {
+    document.querySelector(".teams-pannel .pannel-title").style.display = "none";
+    document.querySelector(".teams-pannel .search").style.display = "none";
+    invitaionBtn.style.display = "none";
+    leaveTeamBtn.style.display = "none";
+    settingOffTracking.style.display = "none";
+    settingOnTracking.style.display = "block";
+
+    createTeamBtn.style.display = "none";
+    startTripBtn.style.display = "none";
+    inviteTripBtn.style.display = "block";
+    teamsPannel.style.display = "flex";
+
+    let friendItems = document.querySelectorAll(".teams-pannel .friends-list input");
+    for ( item of friendItems ) {
+        item.checked = false
+    }
+})
+
+
+// ----- send invitation while tracking -----
+inviteTripBtn.addEventListener("click", () => {
+    let//
+    friendInputs = document.querySelectorAll(".teams-pannel .friends-list input"),
+    friendToInvite = [];
+
+    for ( input of friendInputs ) {
+        let user_id = input.getAttribute("id");
+        if ( input.checked && !Object.keys(partnersColor).includes(user_id)){
+            friendToInvite.push(user_id*1)
+
+            let randomColor = `rgb(${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)})`;
+            partnersColor[user_id*1] = {
+                username: input.getAttribute("name"),
+                color: randomColor
+            };
+        }
+    }
+
+    // send request for joining team
+    let invitation = {
+        sender_sid: socket.id,
+        receiver_info: {
+            receiver_id: friendToInvite,
+            receiver_color: partnersColor
+        },
+        team_id: window.sessionStorage.getItem("team_id")
+    };
+    socket.emit("team_request", invitation);
+ 
+    
+    // view switch
+    document.querySelector(".teams-pannel .close").style.display = "none";
+    closeInvitationBtn.style.display = "block";
+    mainPannel.style.display = "none";
+    teamsPannel.style.display = "none";
+    settingOffTracking.style.display = "none";
+    settingOnTracking.style.display = "block";
+    invitaionBtn.style.display = "none";
+    leaveTeamBtn.style.display = "none";
+})
+
+
+// close invitation page
+let closeInvitationBtn = document.querySelector(".close-invitation");
+closeInvitationBtn.addEventListener("click", () => {
+    teamsPannel.style.display = "none";
+    mainPannel.style.display = "none";
+    document.querySelector(".teams-pannel .close") = "block";
+    closeInvitationBtn.style.display = "none";
+})
+
+
+// ----- listener for receiving event "team_request" from server -----
+var team_sender_info_cache;
+socket.on("team_request", (data) => {
+    team_sender_info_cache = data
+
+    // prompt to ask willness
+    let//
+    prompt = document.querySelector(".team-invite-prompt"),
+    content = document.querySelector(".team-invite-prompt .content");
+
+    content.textContent = `來自 ${data.username} 的隊伍邀請`;
+    prompt.style.display = "block";
+})
+
+
 // ----- listener for receiving "join_team" event from server ----- 
 // ----- and emit user initial position to listener "position" on server -----
 socket.on("enter_team", (sid_reference) => {
@@ -249,44 +361,67 @@ socket.on("enter_team", (sid_reference) => {
 })
 
 
-// ----- emit leave team event to listener "leave_team" on server-----
-let leaveTeamBtn = document.querySelector(".setting div.leave");
-leaveTeamBtn.addEventListener("click", ()=> {
-    let data = {
-        sid: socket.id,
-        team_id: window.sessionStorage.getItem("team_id"),
-        username: window.sessionStorage.getItem("username"),
-        user_id: window.sessionStorage.getItem("user_id"),
-        email: window.sessionStorage.getItem("email")
-    };
-    socket.emit("leave_team", data);
-
-    // change elements in setting div
-    leaveTeamBtn.style.display = "none";
-    settingOnMain.style.display = "block";
-    settingOffMain.style.display = "none";
-    settingOnTracking.style.display = "none";
-    settingOffTracking.style.display = "none";
-
-    // remove all partner in the tracking pannel
-    let trackingPannelPartnerList = document.querySelector(".tracking-pannel .partners-list");
-    while (trackingPannelPartnerList.hasChildNodes()) {
-        trackingPannelPartnerList.removeChild(trackingPannelPartnerList.lastChild)
-    }
-
-    trackingPannel.style.display = "none";
-    teamsPannel.style.display = "none"
-    mainPannel.style.display = "block"
-})
-
 
 
 socket.on("leave_team", (data) => {
-    let sid = data.sid;
+    let//
+    sid = data.sid,
+    leader_sid = data.leader_sid;
+
+    console.log(socket.id === sid);
+    console.log(team_sender_info_cache === undefined);
+    // leaving partner:
     if ( socket.id === sid ) {
-        markerArray.splice(sidArray.indexOf(sid),1);
-        sidArray.splice(sidArray.indexOf(sid),1);
+        console.log("Your'are a leaving partner");
+
+        // 1. remove team_id in browser session
         window.sessionStorage.removeItem("team_id");
+
+        // 2. remove data in markerArray and sidArray
+        // only leave own marker and sid
+        console.log(markerArray);
+        console.log(sidArray);
+
+        let lengthOfSidArray = sidArray.length;
+        for ( let i = 0; i < lengthOfSidArray; i++ ) {
+            if (sidArray[i] !== socket.id){
+                map.removeLayer(markerArray[i]);
+                markerArray.splice(i,1);
+                sidArray.splice(i,1);
+            }
+        }
+        console.log(markerArray);
+        console.log(sidArray);
+    }
+
+    // team owner
+    if (socket.id === leader_sid && sid !== leader_sid) {
+        console.log("You are a team owner");
+
+        // 1. delete leaving partner in partnersColor
+        delete partnersColor[data["user_id"]*1]
+
+        // 2. remove leaving partner marker on tracking pannel
+        map.removeLayer(markerArray[sidArray.indexOf(sid)]);
+
+        // 3. delete leaving partner in markerArray and sidArray
+        markerArray.slice(sidArray.indexOf(sid), 1);
+        sidArray.slice(sidArray.indexOf(sid), 1);
+    }
+
+    // other partner still in team:
+    if (socket.id !== sid && socket.id !== leader_sid) {
+        console.log("You're still in team");
+
+        // 1. delete leaving partner in friends color in team_sender_info_cache
+        delete team_sender_info_cache["friends_color"][data["user_id"]*1]
+
+        // 2. remove leaving partner marker on tracking pannel
+        map.removeLayer(markerArray[sidArray.indexOf(sid)]);
+
+        // 3. delete leaving partner in markerArray and sidArray
+        markerArray.slice(sidArray.indexOf(sid), 1);
+        sidArray.slice(sidArray.indexOf(sid), 1);
     }
 })
 
