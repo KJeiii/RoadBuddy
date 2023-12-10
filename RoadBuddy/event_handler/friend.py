@@ -83,31 +83,6 @@ def online_friend_status():
         emit("update_friend_status", my_user_info, to=sid)
 
 
-# @socketio.on("offline_friend_status")
-# def offline_friend_status():
-#     print(f'receive {user_info[sid_reference[request.sid]]["username"]} update offline status')
-#     # send "online-status" event to friends on-line
-#     user_id = sid_reference[request.sid]
-#     friend_list = user_info[user_id]["friend_list"]
-#     friend_sid_online = []
-#     for friend in friend_list:
-#         friend_id = int(friend["user_id"])
-#         if friend_id in user_info.keys():
-#             friend_sid = user_info[friend_id]["sid"]
-#             friend_sid_online.append(friend_sid)
-
-#     my_user_info = {
-#         "user_id": user_id,
-#         "username": user_info[user_id]["username"],
-#         "sid": request.sid,
-#         "email": user_info[user_id]["email"]
-#     }
-
-#     for sid in friend_sid_online:
-#         emit("offline_friend_status", my_user_info, to=sid)
-
-
-
 @socketio.on("alert")
 def alert(data):
     emit("alert", data, to=data["receiver_sid"])
