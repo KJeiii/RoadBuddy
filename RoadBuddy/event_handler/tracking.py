@@ -23,7 +23,7 @@ def position(data):
         if len(own_coords) == 1 :
             own_coords.append(new_coord)
             data = {request.sid : own_coords}
-            emit("initPosition", data, to=request.sid)
+            # emit("initPosition", data, to=request.sid)
 
         if len(own_coords) == 0 :
             own_coords.append(new_coord)
