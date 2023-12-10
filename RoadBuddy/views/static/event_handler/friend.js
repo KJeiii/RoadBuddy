@@ -264,3 +264,89 @@ friendOkBtn.addEventListener("click", ()=>{
     response.style.display = "none";
     responseContent.textContent = ``;     
 })
+
+
+
+
+//  Listener for receiving event "initial_status" event from server
+socket.on("update_friend_status", (data) => {
+    // initialize friend list for first loggin in
+    if (data["email"] === undefined) {
+        // update online status (change color) in main pannel friend list
+        let mainPannelFriendItems = document.querySelectorAll(".main-pannel .friends-list .item");
+        for ( item of mainPannelFriendItems ) {
+            if (Object.keys(data).includes(item.getAttribute("id"))) {
+                item.style.backgroundColor = "rgb(182, 232, 176)";
+                item.style.border = "solid 3px rgb(22, 166, 6)";
+                return
+            }
+
+            item.style.backgroundColor = "rgb(235, 234, 234)";
+            item.style.border = "solid 3px rgb(182, 181, 181)";
+            return
+        }
+
+        // update friend list in team pannel
+        // update item.style.display to flex when friend is on-line
+        let teamPannelFriendItems = document.querySelectorAll(".teams-pannel .friends-list .item");
+        for ( item of teamPannelFriendItems ) {
+            if ( Object.keys(data).includes(item.getAttribute("id")*1) ) {
+                item.style.display = "flex";
+            }
+        }
+        return
+    }
+
+    // update friend list when use is online
+    // update online status in main pannel friend list
+    console.log("go through update")
+    let mainPannelFriendItems = document.querySelectorAll(".main-pannel .friends-list .item");
+    for ( item of mainPannelFriendItems ) {
+        if (item.getAttribute("id")*1 === data["user_id"]*1) {
+            item.style.backgroundColor = "rgb(182, 232, 176)";
+            item.style.border = "solid 3px rgb(22, 166, 6)";
+            break
+        }
+    }
+
+
+    // update friend list in team pannel
+    // update item.style.display to flex when friend is on-line
+    let teamPannelFriendItems = document.querySelectorAll(".teams-pannel .friends-list .item");
+    for ( item of teamPannelFriendItems ) {
+        if (item.getAttribute("id")*1 === data["user_id"]*1) {
+            item.style.display = "flex";
+            break
+        }
+    }
+})
+
+
+
+//  Listener for receiving event "offline_status" event from server
+socket.on("offline_friend_status", (data) => {
+    // update friend list when use is online
+    // update online status in main pannel friend list
+    let mainPannelFriendItems = document.querySelectorAll(".main-pannel .friends-list .item");
+    for ( item of mainPannelFriendItems ) {
+        if (item.getAttribute("id")*1 === data["user_id"]*1) {
+            item.style.backgroundColor = "rgb(235, 234, 234)";
+            item.style.border = "solid 3px rgb(182, 181, 181)";
+            break
+        }
+    }
+
+
+    // update friend list in team pannel
+    // update item.style.display to flex when friend is on-line
+    let teamPannelFriendItems = document.querySelectorAll(".teams-pannel .friends-list .item");
+    for ( item of teamPannelFriendItems ) {
+        if (item.getAttribute("id")*1 === data["user_id"]*1) {
+            item.style.display = "none";
+            break
+        }
+    }
+})
+
+
+
