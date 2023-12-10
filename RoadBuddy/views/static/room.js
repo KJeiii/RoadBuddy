@@ -19,7 +19,8 @@ mainPannelFriendsOuter = document.querySelector(".main-pannel .friends-outer"),
 mainPannelFriendsList = document.querySelector(".main-pannel .friends-list"),
 teamPannelFriendsList = document.querySelector(".teams-pannel .friends-list"),
 teamsOuter = document.querySelector(".teams-outer"),
-colorIntro = document.querySelector(".color-intro"),
+friendColorIntro = document.querySelector(".friend-color-intro"),
+teamColorIntro = document.querySelector(".team-color-intro"),
 pullUpMain = document.querySelector(".main-pannel .pull-up"),
 dropDownMain = document.querySelector(".main-pannel .drop-down"),
 pullUpTracking = document.querySelector(".tracking-pannel .pull-up"),
@@ -92,21 +93,23 @@ async function LoadFriendList(user_id) {
             mainPannelFriendsList.appendChild(mainPannelFriendItem);
             
             // Load friend list in team pannel
-            // let//
-            // teamPannelFriendItem = document.createElement("div"),
-            // input = document.createElement("input"),
-            // label = document.createElement("label");
+            let//
+            teamPannelFriendItem = document.createElement("div"),
+            input = document.createElement("input"),
+            label = document.createElement("label");
 
-            // teamPannelFriendItem.setAttribute("class", "item");
-            // input.setAttribute("type", "checkbox");
-            // input.setAttribute("id", data.user_id);
-            // input.setAttribute("name", data.username);
-            // label.setAttribute("for", data.username);
-            // label.textContent = data.username;
+            teamPannelFriendItem.setAttribute("class", "item");
+            teamPannelFriendItem.setAttribute("id", data.user_id);
+            input.setAttribute("type", "checkbox");
+            input.setAttribute("id", data.user_id);
+            input.setAttribute("name", data.username);
+            label.setAttribute("for", data.username);
+            label.textContent = data.username;
 
-            // teamPannelFriendItem.appendChild(input);
-            // teamPannelFriendItem.appendChild(label);
-            // teamPannelFriendsList.appendChild(teamPannelFriendItem);
+            teamPannelFriendItem.appendChild(input);
+            teamPannelFriendItem.appendChild(label);
+            teamPannelFriendItem.style.display = "none";
+            teamPannelFriendsList.appendChild(teamPannelFriendItem);
         }
         return;
     }
@@ -132,6 +135,13 @@ async function LoadTeamList(user_id) {
         let result = await response.json();
 
         // own created teams
+        // 1. remove all
+        let createdTeamList = document.querySelector(".main-pannel .create-list");
+        while (createdTeamList.hasChildNodes()) {
+            createdTeamList.removeChild(createdTeamList.lastChild);
+        }
+
+        // 2. create new list
         for ( data of result.data.created_team) {
             let//
             item = document.createElement("div"),
@@ -145,6 +155,13 @@ async function LoadTeamList(user_id) {
         }
 
         // joined teams as a partner
+        // 1. remove all
+        let joinedTeamList = document.querySelector(".main-pannel .join-list");
+        while (joinedTeamList.hasChildNodes()) {
+            joinedTeamList.removeChild(joinedTeamList.lastChild);
+        }
+
+        // 2. creat new list
         for ( data of result.data.joined_team) {
             let//
             item = document.createElement("div"),
@@ -254,25 +271,25 @@ function userCoordError(error) {console.log(`Error in drawing initial map: ${err
 
 
 // test user's position by select position from randomPosition
-// let testCoords = {
-//     latitude: 24.982 + Math.random()*0.006,
-//     longitude: 121.534 + Math.random()*0.006
-// };
-// drawMap({
-//     coords: {
-//         latitude: testCoords.latitude,
-//         longitude: testCoords.longitude
-//     }
-// });
+let testCoords = {
+    latitude: 24.982 + Math.random()*0.006,
+    longitude: 121.534 + Math.random()*0.006
+};
+drawMap({
+    coords: {
+        latitude: testCoords.latitude,
+        longitude: testCoords.longitude
+    }
+});
 
 
 // ----- draw initial map -----
-if (window.navigator.geolocation) {
-    try {
-        window.navigator.geolocation.getCurrentPosition(drawMap, userCoordError);
-    }
-    catch(error) {console.log(`Error in getting user postion : ${error}`)}
-}
+// if (window.navigator.geolocation) {
+//     try {
+//         window.navigator.geolocation.getCurrentPosition(drawMap, userCoordError);
+//     }
+//     catch(error) {console.log(`Error in getting user postion : ${error}`)}
+// }
 
 
 
@@ -348,7 +365,8 @@ menuFriends.addEventListener("click", ()=>{
     teamsOuter.style.display = "none";
     addTeam.style.display = "none";
     mainPannelFriendsOuter.style.display = "flex";
-    colorIntro.style.display = "flex";
+    friendColorIntro.style.display = "flex";
+    teamColorIntro.style.display = "none";
     addFriend.style.display = "block";
 })
 
@@ -357,7 +375,8 @@ menuTeam.addEventListener("click", ()=>{
     menuList.style.display = "none";
     menu.style.border = "none";
     mainPannelFriendsOuter.style.display = "none";
-    colorIntro.style.display = "none";
+    friendColorIntro.style.display = "none";
+    teamColorIntro.style.display = "flex";
     addFriend.style.display = "none";
 
     teamsOuter.style.display = "flex";
