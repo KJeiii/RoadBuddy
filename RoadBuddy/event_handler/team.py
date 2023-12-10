@@ -76,6 +76,29 @@ def leave_team(data):
 
     if len(rooms_info[team_id].keys()) <= 0:
         del rooms_info[team_id]
+        team_online_list = list(rooms_info.keys())
+        emit("update_team_status", team_online_list, broadcast=True)
+
+
+# update team using status when user login
+@socketio.on("initial_team_status")
+def initial_team_status():
+    team_online_list = list(rooms_info.keys())
+    emit("update_team_status", team_online_list, to=request.sid)
+
+
+# update team using status when other user start team
+@socketio.on("update_team_status")
+def update_team_status():
+    team_online_list = list(rooms_info.keys())
+    user_id = sid_reference[request.sid]
+    friend_list = user_info[user_id]["friend_list"]
+
+    for friend in friend_list:
+        friend_id = int(friend["user_id"])
+        if friend_id in user_info.keys():
+            sid = user_info[friend_id]["sid"]
+            emit("update_team_status", team_online_list, to=sid)
 
 
 
