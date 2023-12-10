@@ -60,8 +60,6 @@ startTripBtn.addEventListener("click", ()=> {
         }
     }
 
-
-
     // send request for joining team
     let invitation = {
         sender_sid: socket.id,
@@ -83,8 +81,12 @@ startTripBtn.addEventListener("click", ()=> {
         sender_sid: socket.id,
         team_id: teamID
     };
-    socket.emit("enter_team", createTeamData)
+    socket.emit("enter_team", createTeamData);
     console.log(`Send team request from ${window.sessionStorage.getItem("username")}`);
+
+    // update team using status to other uses
+    socket.emit("update_team_status");
+    console.log("send team update status event");
 })
 
 
@@ -166,6 +168,28 @@ teamYesBtn.addEventListener("click", () => {
     window.sessionStorage.setItem("team_id", team_sender_info_cache["team_id"])
     socket.emit("enter_team", joinTeamData);
     console.log(`Accept response emited to server`);
+
+    // Create partner record in partner table in database
+    let payload = {
+        team_id: team_sender_info_cache.team_id,
+        user_id: window.sessionStorage.getItem("user_id")
+    };
+
+    fetch("/api/team", {
+        method: "PATCH",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+    })
+    .then((response) => {return response.json()})
+    .then((result) => {
+        if (result.ok) {
+            // update teams list
+            LoadTeamList(window.sessionStorage.getItem("user_id"))
+        }
+    })
+    .catch((error) => {console.log(`Error in accept team request : ${error}`)})
 })
 
 // if reject
@@ -362,7 +386,7 @@ socket.on("enter_team", (sid_reference) => {
 
 
 
-
+// listener for receiving event "leave_team" from server
 socket.on("leave_team", (data) => {
     let//
     sid = data.sid,
@@ -492,6 +516,33 @@ socket.on("remove_partner", (leaving_partner_data) => {
         }
     }
 })
+
+
+//  Listener for receiving event "update_team_status" event from server
+socket.on("update_team_status", (team_online_list) => {
+    console.log(team_online_list);
+
+    // update join team list when friend gets online
+    // update friend list in main pannel : grey as off-line and green as on-line
+    let joinTeamitems = document.querySelectorAll(".main-pannel .join-list .item");
+    for ( item of joinTeamitems) {
+        if (team_online_list.includes(item.getAttribute("id"))) {
+            item.style.backgroundColor = "rgb(182, 232, 176)";
+            item.style.border = "solid 3px rgb(22, 166, 6)";
+        }
+        else{
+            item.style.backgroundColor = "rgb(235, 234, 234)";
+            item.style.border = "solid 3px rgb(182, 181, 181)";
+        }
+    }
+})
+
+
+
+
+
+
+
 
 
 // -------- msg test for room -------
