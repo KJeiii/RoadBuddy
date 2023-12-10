@@ -213,7 +213,8 @@ nav {
     overflow-y: scroll;    
 }
 
-.color-intro {
+.friend-color-intro,
+.team-color-intro {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -223,7 +224,11 @@ nav {
     padding-bottom:10px;
 }
 
-.color-intro .online {
+.team-color-intro {
+    display: none;
+}
+
+.online {
     height: 30px;
     width: 65px;
     text-align: center;
@@ -238,7 +243,7 @@ nav {
     border: solid 3px rgb(22, 166, 6);
 }
 
-.color-intro .offline {
+.offline {
     height: 30px;
     width: 65px;
     text-align: center;
