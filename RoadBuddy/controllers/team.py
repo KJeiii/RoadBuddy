@@ -8,8 +8,9 @@ team_bp = Blueprint("team_bp",
                       static_folder="static")
 
 # Load team list
-@team_bp.route("/api/team", methods = ["POST", "PUT"])
+@team_bp.route("/api/team", methods = ["POST", "PUT", "PATCH"])
 def Team():
+    # PUT method: search team that use created and joined
     if request.method == "PUT":
         try:
             user_id = request.json["user_id"]
@@ -31,7 +32,8 @@ def Team():
                 "message": "伺服器內部錯誤"
             }
             return jsonify(response), 500
-    
+        
+    # POST method: create a new team
     if request.method == "POST":
         try:
             team_name = request.json["team_name"]
@@ -60,3 +62,28 @@ def Team():
                 "message": "伺服器內部錯誤"
             }
             return jsonify(response), 500
+    
+    # PATCH method : add new partner in team created already
+    if request.method == "PATCH":
+        try:
+            team_id = request.json["team_id"]
+            partner_id = request.json["user_id"]
+
+            teamTool.Add_partner(
+                team_id = team_id,
+                partner_id = partner_id
+            )
+
+            response = {
+                "ok": True,
+                "message": "success"
+            }
+            return jsonify(response), 200
+        
+        except Exception as error:
+            print(f'Error in controller(team) - Team(PATCH method) : {error}')
+            response = {
+                "error": True,
+                "message": "伺服器內部錯誤"
+            }
+            return jsonify(response), 500            
