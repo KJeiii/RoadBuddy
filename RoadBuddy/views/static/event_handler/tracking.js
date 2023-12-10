@@ -11,7 +11,7 @@ let randomCoords = {
 socket.on("initPosition", (partners) => {
     let colorReference = (team_sender_info_cache === undefined) ? partnersColor : team_sender_info_cache.friends_color;
 
-
+    console.log(partners);
     if (Object.keys(partners).length >= 2) {
         // update new own circleMarker with partners information
         console.log(markerArray);
@@ -51,21 +51,16 @@ socket.on("initPosition", (partners) => {
     console.log(`markerArray after add new partner : ${markerArray}`);
 
     // stay on room page, not joining team
-    // for ( sid in partners ) {
-    //     let id = sidReference[sid];
-    //     if ( sid !== socket.id && !sidArray.includes(sid)) {
-    //         // add circleMarker
-    //         let markerOption = {
-    //             color: colorReference[id].color,
-    //             fillOpacity: 0.7
-    //         };
-    //         let markerToAdd = L.circleMarker([partners[sid][0].latitude, partners[sid][0].longitude], markerOption).addTo(map);
-
-    //         // register new partner information (sid, circleMaker object)
-    //         sidArray.push(sid);
-    //         markerArray.push(markerToAdd);
-    //     }
-    // }
+    // let ownCoords = partners[socket.id];
+    //     // add circleMarker
+    //     let markerOption = {
+    //         color: colorReference[id].color,
+    //         fillOpacity: 0.7
+    //     };
+    //     let markerToAdd = L.circleMarker(ownCoords[0].latitude, ownCoords[0].longitude, markerOption).addTo(map);
+    //     // register new partner information (sid, circleMaker object)
+    //     sidArray.push(sid);
+    //     markerArray.push(markerToAdd);
 });
 
 
@@ -80,7 +75,7 @@ socket.on("movingPostion", (partners) => {
 
         movingMarker.setLatLng(oldLatLng, newLatLng);
         }
-        catch(error) {console.log(`Error from user (${partners[sid]["username"]} : ${error})`)};
+        catch(error) {error};
     }
 
 });
@@ -107,32 +102,7 @@ let watchCoord = window.navigator.geolocation.watchPosition(
     }
 );
 
-setInterval(() => {
-    let data = {
-        sid : sessionStorage.getItem("sid"),
-        user_id : sessionStorage.getItem("user_id"),
-        username : sessionStorage.getItem("username"),
-        email : sessionStorage.getItem("email"),
-        team_id : sessionStorage.getItem("team_id"),
-        coord : {
-            latitude: coordFromBrowser.latitude,
-            longitude: coordFromBrowser.longitude    
-        }
-    };
-    
-    socket.emit("position", data);
-
-}, 500);
-
-
-
-// ----- change postion randomly -----
-// setInterval(()=> {
-//     let randomCoords = {
-//         latitude: 24.982 + Math.random()*0.006,
-//         longitude: 121.534 + Math.random()*0.006
-//     };
-
+// setInterval(() => {
 //     let data = {
 //         sid : sessionStorage.getItem("sid"),
 //         user_id : sessionStorage.getItem("user_id"),
@@ -140,9 +110,34 @@ setInterval(() => {
 //         email : sessionStorage.getItem("email"),
 //         team_id : sessionStorage.getItem("team_id"),
 //         coord : {
-//             latitude: randomCoords.latitude,
-//             longitude: randomCoords.longitude    
+//             latitude: coordFromBrowser.latitude,
+//             longitude: coordFromBrowser.longitude    
 //         }
 //     };
+    
 //     socket.emit("position", data);
-// }, 2000)
+
+// }, 500);
+
+
+
+// ----- change postion randomly -----
+setInterval(()=> {
+    let randomCoords = {
+        latitude: 24.982 + Math.random()*0.006,
+        longitude: 121.534 + Math.random()*0.006
+    };
+
+    let data = {
+        sid : sessionStorage.getItem("sid"),
+        user_id : sessionStorage.getItem("user_id"),
+        username : sessionStorage.getItem("username"),
+        email : sessionStorage.getItem("email"),
+        team_id : sessionStorage.getItem("team_id"),
+        coord : {
+            latitude: randomCoords.latitude,
+            longitude: randomCoords.longitude    
+        }
+    };
+    socket.emit("position", data);
+}, 2000)
