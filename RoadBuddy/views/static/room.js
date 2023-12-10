@@ -6,6 +6,7 @@ settingOnTracking = document.querySelector(".setting-on-tracking"),
 settingOffTracking = document.querySelector(".setting-off-tracking"),
 // config = document.querySelector(".config"),
 logout = document.querySelector(".logout"),
+invite = document.querySelector(".invite"),
 leave = document.querySelector(".leave"),
 menu = document.querySelector(".nav-menu"),
 menuTitle = document.querySelector(".nav-menu-title"),
@@ -33,7 +34,8 @@ closePannel = document.querySelectorAll(".close"),
 searchList = document.querySelector(".search-list"),
 searchIcon = document.querySelector(".search-icon"),
 createTeamBtn = document.querySelector(".create-team-btn"),
-startTripBtn = document.querySelector(".start-trip-btn");
+startTripBtn = document.querySelector(".start-trip-btn"),
+inviteTripBtn = document.querySelector(".invite-trip-btn");
 
 
 
@@ -143,17 +145,17 @@ async function LoadTeamList(user_id) {
         }
 
         // joined teams as a partner
-        // for ( data of result.data.joined_team) {
-        //     let//
-        //     item = document.createElement("div"),
-        //     joinList = document.querySelector(".join-list");
+        for ( data of result.data.joined_team) {
+            let//
+            item = document.createElement("div"),
+            joinList = document.querySelector(".join-list");
 
-        //     item.setAttribute("class", "item");
-        //     item.setAttribute("id", data.team_id);
-        //     item.textContent = data.team_name;
+            item.setAttribute("class", "item");
+            item.setAttribute("id", data.team_id);
+            item.textContent = data.team_name;
 
-        //     joinList.appendChild(item);
-        // }
+            joinList.appendChild(item);
+        }
 
         // add event to all teams
         let teamItems = document.querySelectorAll(".teams-outer .item");
@@ -165,6 +167,7 @@ async function LoadTeamList(user_id) {
                 document.querySelector(".friends-outer").style.height = "55%";
                 createTeamBtn.style.display = "none";
                 startTripBtn.style.display = "block";
+                inviteTripBtn.style.display = "none";
                 mainPannel.style.display = "none";
                 teamsPannel.style.display = "flex";
             })
@@ -277,6 +280,7 @@ if (window.navigator.geolocation) {
 settingOnMain.addEventListener("click", () => {
     // config.style.display = "block";
     logout.style.display = "block";
+    invite.style.display = "none";
     leave.style.display = "none";
     settingOnMain.style.display = "none";
     settingOffMain.style.display = "block";
@@ -285,6 +289,7 @@ settingOnMain.addEventListener("click", () => {
 settingOffMain.addEventListener("click", () => {
     // config.style.display = "none";
     logout.style.display = "none";
+    invite.style.display = "none";
     leave.style.display = "none";
     settingOffMain.style.display = "none";
     settingOnMain.style.display = "block";
@@ -293,14 +298,20 @@ settingOffMain.addEventListener("click", () => {
 settingOnTracking.addEventListener("click", () => {
     // config.style.display = "none";
     logout.style.display = "none";
+    invite.style.display = "none";
     leave.style.display = "block";
     settingOnTracking.style.display = "none";
     settingOffTracking.style.display = "block";
+
+    if ( team_sender_info_cache === undefined  ) {
+        invite.style.display = "block";
+    }
 })
 
 settingOffTracking.addEventListener("click", () => {
     // config.style.display = "none";
     logout.style.display = "none";
+    invite.style.display = "none";
     leave.style.display = "none";
     settingOnTracking.style.display = "block";
     settingOffTracking.style.display = "none";

@@ -10,6 +10,7 @@ body {
 .setting-off-tracking:hover,
 .config:hover,
 .logout:hover,
+.invite:hover,
 .leave:hover,
 .nav-menu-friend:hover, 
 .nav-menu-team:hover,
@@ -17,6 +18,7 @@ body {
 .nav-toggle-off:hover,
 .nav-add:hover,
 .close:hover,
+.close-invitation:hover,
 .search-icon:hover,
 .teams-list .item:hover,
 .pull-up:hover,
@@ -63,6 +65,7 @@ button:hover
 
 .config,
 .logout,
+.invite,
 .leave {
     display: none;
     margin: 5px 0;
@@ -360,15 +363,20 @@ nav {
     height: 40px;
 }
 
-.close {
+.close,
+.close-invitation {
     position: relative;
-    top: -7%;
+    top: 7%;
     left: 42%;
     background-image: url("../static/images/close-icon.svg");
     background-position: center;
     background-size: cover;
     width: 20px;
     height: 20px;
+}
+
+.close-invitation{
+    display: none;
 }
 
 .search-icon {
@@ -437,6 +445,8 @@ input[name=create-team]
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    text-align: center;
+    margin-left: 5px;
 }
 
 
@@ -448,9 +458,14 @@ input[name=create-team]
     border-style: none;
 }
 
-label {
+
+.teams-pannel .friends-list label {
+    background-color: rgb(182, 232, 176);
+    border-radius: 10px;
+    border: solid 3px rgb(22, 166, 6);
     text-align: center;
     margin-left: 5px;
+    padding: 0px 10px;
 }
 
 /* ----- team pannel ----- */
@@ -493,7 +508,9 @@ label {
     margin-top: 10px;
 }
 
-.teams-pannel button.start-trip-btn {
+.teams-pannel button.start-trip-btn,
+.teams-pannel button.invite-trip-btn
+ {
     display: none;
 }
 
