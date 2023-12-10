@@ -66,14 +66,9 @@ def leave_team(data):
     sid = data["sid"]
     user_id = int(data["user_id"])
 
-    leaving_partner_data = {
-        "sid": sid,
-        "user_id": user_id,
-        "username": data["username"],
-        "email": data["email"]
-    }
-    emit("leave_team", leaving_partner_data, to=team_id)
-    emit("remove_partner", leaving_partner_data, to=team_id)
+
+    emit("leave_team", data, to=team_id)
+    emit("remove_partner", data, to=team_id)
 
     leave_room(team_id)
     del rooms_info[team_id][sid]
