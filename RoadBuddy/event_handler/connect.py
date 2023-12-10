@@ -24,44 +24,6 @@ def store_userinfo(data):
         "email": data["email"],
         "friend_list": data["friend_list"]
     }
-
-    # send "online-status" event to friends on-line
-    friend_list = data["friend_list"]
-    friend_id_list = []
-    friend_id_online = []
-    for friend in friend_list:
-        friend_id = int(friend["user_id"])
-        friend_id_list.append(friend_id)
-        if friend_id in user_info.keys():
-            friend_id_online.append(friend_id)
-
-    my_user_info = {
-        "initializing": False,
-        "user_id": user_id,
-        "username": data["username"],
-        "sid": request.sid,
-        "email": data["email"]
-    }
-
-    for id in friend_id_online:
-        friend_sid = user_info[id]["sid"]
-        print(f'{data["username"]} sends online event to {user_info[id]["username"]}')
-        emit("online_status", my_user_info, to=friend_sid)
-
-    # send online friends data for user own when first time login
-    initial_my_online_friend_id = []
-    for sid in sid_reference:
-        if sid_reference[sid] in friend_id_list:
-            initial_my_online_friend_id.append(sid_reference[sid])
-
-    initializing_info = {}
-    for friend in friend_list:
-        friend_id = int(friend["user_id"])
-        if friend_id in initial_my_online_friend_id:
-            initializing_info[friend_id] = friend["username"]
-    print(initializing_info)
-
-    emit("initial_status", initializing_info, to=request.sid)
     print(f'after store {sid_reference}') 
 
 
@@ -86,17 +48,26 @@ def disconnect():
     }
     emit("disconnect", data, to=team_id)
 
-    # send event "offline_status" to update friend list in main page and team page
+    # send "offline-status" event to friends on-line
+    user_id = sid_reference[request.sid]
     friend_list = user_info[user_id]["friend_list"]
-    friend_id_list = []
+    friend_sid_online = []
     for friend in friend_list:
         friend_id = int(friend["user_id"])
-        friend_id_list.append(friend_id)
+        if friend_id in user_info.keys():
+            friend_sid = user_info[friend_id]["sid"]
+            friend_sid_online.append(friend_sid)
 
-    for sid in sid_reference:
-        online_user_id = sid_reference[sid]
-        if online_user_id in friend_id_list:
-            emit("offline_status", data, to=sid)
+    my_user_info = {
+        "user_id": user_id,
+        "username": user_info[user_id]["username"],
+        "sid": request.sid,
+        "email": user_info[user_id]["email"]
+    }
+
+    for sid in friend_sid_online:
+        emit("offline_friend_status", my_user_info, to=sid)
+
 
     if team_id != None:
         leave_room(team_id)
@@ -111,7 +82,3 @@ def disconnect():
     del sid_reference[user_sid]
 
 
-# Listener for receiver event "disconnect" from client
-@socketio.on("check_status")
-def check_status(data):
-    pass
