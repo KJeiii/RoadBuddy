@@ -25,9 +25,16 @@ body {
 .drop-down:hover,
 .nav-add-friend:hover,
 .nav-add-team:hover,
+.create-list .item:hover,
+.join-list .item:hover,
 button:hover
  {
     cursor: pointer;
+}
+
+.create-list .item:hover,
+.join-list .item:hover {
+    background-color: white;
 }
 
 /* ----- map ----- */
@@ -514,7 +521,8 @@ input[name=create-team]
 }
 
 .teams-pannel button.start-trip-btn,
-.teams-pannel button.invite-trip-btn
+.teams-pannel button.invite-trip-btn,
+.teams-pannel button.join-trip-btn
  {
     display: none;
 }
@@ -543,7 +551,8 @@ input[name=create-team]
 .friend-response,
 .friend-request,
 .team-invite-response,
-.team-create-response
+.team-create-response,
+.team-join-response
 {
     display: none;
     position: absolute;
@@ -565,6 +574,7 @@ input[name=create-team]
 .team-invite-prompt button,
 .friend-response button,
 .team-invite-response button,
+.team-join-response button,
 .team-create-response button
  {
     border-style: none;

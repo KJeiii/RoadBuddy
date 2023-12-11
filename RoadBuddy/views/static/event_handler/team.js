@@ -529,20 +529,62 @@ socket.on("update_team_status", (team_online_list) => {
     let joinTeamitems = document.querySelectorAll(".main-pannel .join-list .item");
     for ( item of joinTeamitems) {
         if (team_online_list.includes(item.getAttribute("id"))) {
+            // 1. change color to  green
             item.style.backgroundColor = "rgb(182, 232, 176)";
             item.style.border = "solid 3px rgb(22, 166, 6)";
+
+            // 2. add event to teams they are in use
+            // click event
+            item.addEventListener("click", function() {
+                document.querySelector(".teams-pannel .pannel-title").textContent = this.textContent;
+                document.querySelector(".teams-pannel .pannel-title").setAttribute("id", this.getAttribute("id"));
+                document.querySelectorAll(".teams-pannel .pannel-title")[1].style.display = "none";
+                document.querySelector(".teams-pannel .search").style.display = "none";
+                document.querySelector(".teams-pannel .friends-outer").style.display = "none";
+                teamsPannel.style.top = "65vh";
+                createTeamBtn.style.display = "none";
+                startTripBtn.style.display = "block";
+                inviteTripBtn.style.display = "none";
+                mainPannel.style.display = "none";
+                teamsPannel.style.display = "flex";
+                dropDownMain.style.display = "block";
+                pullUpMain.style.display = "none";
+                createTeamBtn.style.display = "none";
+                startTripBtn.style.display = "none";
+                inviteTripBtn.style.display = "none";
+                joinTripBtn.style.display = "block";
+            })
         }
         else{
+            // 1. change color to  grey
             item.style.backgroundColor = "rgb(235, 234, 234)";
             item.style.border = "solid 3px rgb(182, 181, 181)";
+
+            // 2. add event to teams they are in use
+            // click event
+            item.addEventListener("click", function() {
+                let//
+                teamCreateResponse = document.querySelector(".team-join-response"),
+                content = document.querySelector(".team-join-response .content");
+                content.textContent = `${this.textContent}的擁有者，尚未啟程`;
+                teamCreateResponse.style.display = "block";
+                mainPannel.style.top = "65vh";
+                dropDownMain.style.display = "none";
+                pullUpMain.style.display = "block";
+            })
         }
     }
 })
 
-
-
-
-
+// close team-join-response when click ok
+let joinOkBtn = document.querySelector(".team-join-response button");
+joinOkBtn.addEventListener("click", () => {
+    let//
+    teamCreateResponse = document.querySelector(".team-join-response"),
+    content = document.querySelector(".team-join-response .content");
+    teamCreateResponse.style.display = "none";
+    content.textContent = ``;
+})
 
 
 
