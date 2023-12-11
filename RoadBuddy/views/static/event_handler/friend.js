@@ -135,13 +135,42 @@ friendYesBtn.addEventListener("click", () => {
         })
         .then((response) => {return response.json()})
         .then((result) => {
+
+            // update latest friend list
+            // 1. remove old list
             while ( mainPannelFriendsList.hasChildNodes() ) {
                 mainPannelFriendsList.removeChild(mainPannelFriendsList.lastChild)
             }
 
-            LoadFriendList(window.sessionStorage.getItem("user_id"));
-            friendsPannel.style.display = "none";
-            mainPannel.style.display = "block";
+            // 2. create new list
+            LoadFriendList(window.sessionStorage.getItem("user_id"))
+            // friendsPannel.style.display = "none";
+            // mainPannel.style.display = "block";
+             .then(() => {
+                friendsPannel.style.display = "none";
+                mainPannel.style.display = "block";
+
+                // update server friend_list in user_info dict
+                let//
+                friend_list = [],
+                friend_items = document.querySelectorAll(".main-pannel .friends-list .item");
+                for ( item of friend_items ) {
+                    let friend_info = {
+                        user_id: item.getAttribute("id"),
+                        username: item.textContent
+                    };
+                    friend_list.push(friend_info);
+                };
+
+                let data = {
+                    user_id: window.sessionStorage.getItem("user_id"),
+                    username: window.sessionStorage.getItem("username"),
+                    email: window.sessionStorage.getItem("email"),
+                    friend_list: friend_list
+                };
+                socket.emit("store_userinfo", data);
+             })
+             .catch((error) => {console.log(error)})
         })
         .catch((error) => {console.log(`Error in add new friend : ${error}`)})
         
@@ -229,6 +258,28 @@ socket.on("friend_request_result", (data) => {
 
 
             })
+            .then(() => {
+                // update server friend_list in user_info dict
+
+                let//
+                friend_list = [],
+                friend_items = document.querySelectorAll(".main-pannel .friends-list .item");
+                for ( item of friend_items ) {
+                    let friend_info = {
+                        user_id: item.getAttribute("id"),
+                        username: item.textContent
+                    };
+                    friend_list.push(friend_info);
+                };
+                
+                let data = {
+                    user_id: window.sessionStorage.getItem("user_id"),
+                    username: window.sessionStorage.getItem("username"),
+                    email: window.sessionStorage.getItem("email"),
+                    friend_list: friend_list
+                };
+                socket.emit("store_userinfo", data);
+            })
             .catch((error) => {console.log(`Error in add new friend : ${error}`)})
 
             // show response
@@ -240,7 +291,6 @@ socket.on("friend_request_result", (data) => {
             responseContent.textContent = `${data.receiver_info.username} 接受你的好友邀請`;
             return
     }
-
     // if request is rejected
     let//
     response = document.querySelector(".friend-response"),
