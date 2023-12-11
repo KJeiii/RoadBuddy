@@ -15,7 +15,6 @@ def connect():
 # Listener for receiver event "store_userinfo" from client
 @socketio.on("store_userinfo")
 def store_userinfo(data):
-    print(f'before store {sid_reference}') 
     user_id = int(data["user_id"])
     sid_reference[request.sid] = user_id
     user_info[user_id] = {
@@ -24,7 +23,9 @@ def store_userinfo(data):
         "email": data["email"],
         "friend_list": data["friend_list"]
     }
-    print(f'after store {sid_reference}') 
+
+    # initialize friend list at first time login
+    emit("initialization", to=request.sid)
 
 
 

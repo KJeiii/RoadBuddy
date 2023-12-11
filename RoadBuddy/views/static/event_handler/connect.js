@@ -23,14 +23,16 @@ socket.on("connect", ()=>{
         friend_list: friend_list
     };
     socket.emit("store_userinfo", data);
-    socket.emit("initial_friend_status");
-    socket.emit("online_friend_status");
     socket.emit("initial_team_status");
     console.log(`${window.sessionStorage.getItem("username")} send online status`)
 })
 
+socket.on("initialization", () => {
+    socket.emit("initial_friend_status");
+    socket.emit("online_friend_status");
+})
 
-//  Listener for receiving event "disconnect" event from server
+//  Listener for receiving event "disconnect" event from server  
 socket.on("disconnect", (data) => {
     let sid = data.sid;
 
