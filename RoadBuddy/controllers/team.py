@@ -69,16 +69,25 @@ def Team():
             team_id = request.json["team_id"]
             partner_id = request.json["user_id"]
 
-            teamTool.Add_partner(
-                team_id = team_id,
-                partner_id = partner_id
-            )
+            not_join_yet = True if len(teamTool.Search_joined_team(partner_id)) < 1 else False
 
+            if not_join_yet:
+                teamTool.Add_partner(
+                    team_id = team_id,
+                    partner_id = partner_id
+                )
+
+                response = {
+                    "ok": True,
+                    "message": "success"
+                }
+                return jsonify(response), 200
+            
             response = {
-                "ok": True,
-                "message": "success"
+                "error": True,
+                "message": "曾經已是隊員"
             }
-            return jsonify(response), 200
+            return jsonify(response), 400
         
         except Exception as error:
             print(f'Error in controller(team) - Team(PATCH method) : {error}')

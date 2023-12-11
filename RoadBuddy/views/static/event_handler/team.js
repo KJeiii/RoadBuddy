@@ -187,7 +187,9 @@ teamYesBtn.addEventListener("click", () => {
         if (result.ok) {
             // update teams list
             LoadTeamList(window.sessionStorage.getItem("user_id"))
+            return
         }
+        console.log(result.message);
     })
     .catch((error) => {console.log(`Error in accept team request : ${error}`)})
 })
