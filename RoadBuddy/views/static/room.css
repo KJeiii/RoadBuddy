@@ -32,10 +32,6 @@ button:hover
     cursor: pointer;
 }
 
-.create-list .item:hover,
-.join-list .item:hover {
-    background-color: white;
-}
 
 /* ----- map ----- */
 .setting {
