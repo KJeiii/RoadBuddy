@@ -142,7 +142,7 @@ async function LoadTeamList(user_id) {
             createdTeamList.removeChild(createdTeamList.lastChild);
         }
 
-        // 2. create new list
+        // 2. create new list and event to all teams in create-list
         for ( data of result.data.created_team) {
             let//
             item = document.createElement("div"),
@@ -153,11 +153,7 @@ async function LoadTeamList(user_id) {
             item.textContent = data.team_name;
 
             createList.appendChild(item);
-        }
 
-        // 3. add event to all teams in create-list
-        let teamItems = document.querySelectorAll(".create-list .item");
-        for ( item of teamItems ) {
             // click event
             item.addEventListener("click", function() {
                 document.querySelector(".teams-pannel .pannel-title").textContent = this.textContent;
@@ -173,14 +169,13 @@ async function LoadTeamList(user_id) {
 
             // onmouseover and on mouseout event
             item.addEventListener("mouseover", () => {
-                console.log("mouse in");
-                item.style.backgroundColor = "white"
+                item.style.backgroundColor = "rgb(186, 185, 185)"
             })
             item.addEventListener("mouseout", () => {
-                console.log("mouse out");
                 item.style.backgroundColor = "rgb(235, 234, 234)"
             })
         }
+
 
         // joined teams list
         // 1. remove all
@@ -203,14 +198,12 @@ async function LoadTeamList(user_id) {
 
             // onmouseover and on mouseout event
             item.addEventListener("mouseover", () => {
-                item.style.backgroundColor = "white"
+                let overBackgroundColor = (item.style.border === "3px solid rgb(182, 181, 181)") ? "rgb(186, 185, 185)" : "rgb(22, 166, 6)";
+                item.style.backgroundColor = overBackgroundColor;
             })
             item.addEventListener("mouseout", () => {
-                console.log(item.style.border);
-                console.log(typeof(item.style.border));
-                console.log(item.style.border === "3px solid rgb(182, 181, 181)");
-                let recoverColor = (item.style.border === "3px solid rgb(182, 181, 181)") ? "rgb(235, 234, 234)" : "rgb(182, 232, 176)";
-                item.style.backgroundColor = recoverColor;
+                let outBackgroundColor = (item.style.border === "3px solid rgb(182, 181, 181)") ? "rgb(235, 234, 234)" : "rgb(182, 232, 176)";
+                item.style.backgroundColor = outBackgroundColor;
             })
         }
         return;
