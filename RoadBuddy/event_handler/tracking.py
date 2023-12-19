@@ -34,19 +34,19 @@ def position(data):
     # update all partners position
     # print(team_id)
     # print(rooms_info.get(team_id))
-    user_coords = rooms_info.get(team_id).get(sid)
+    user_coords = rooms_info.get(team_id)["partner"].get(sid)
 
     if len(user_coords) >= 2:
-        del rooms_info[team_id][sid][0]
-        rooms_info[team_id][sid].append(new_coord)
-        emit("movingPostion", rooms_info[team_id], to=team_id)
+        del rooms_info[team_id]["partner"][sid][0]
+        rooms_info[team_id]["partner"][sid].append(new_coord)
+        emit("movingPostion", rooms_info[team_id]["partner"], to=team_id)
 
     if len(user_coords) == 1 :
-        rooms_info[team_id][sid].append(new_coord)
-        emit("initPosition", rooms_info[team_id], to=team_id)
+        rooms_info[team_id]["partner"][sid].append(new_coord)
+        emit("initPosition", rooms_info[team_id]["partner"], to=team_id)
 
     if len(user_coords) == 0 :
-        rooms_info[team_id][sid].append(new_coord)
+        rooms_info[team_id]["partner"][sid].append(new_coord)
         # emit("initPosition", rooms_info[team_id], to=team_id)
     
 

@@ -72,9 +72,9 @@ def disconnect():
 
     if team_id != None:
         leave_room(team_id)
-        del rooms_info[team_id][user_sid]
+        del rooms_info[team_id]["partner"][user_sid]
 
-        if len(rooms_info[team_id].keys()) <= 0 :
+        if len(rooms_info[team_id]["partner"].keys()) <= 0 :
             del rooms_info[team_id]
             print(f'team {team_id} is closed bu disconnect \
                 cuz less than 1 pepele in it')

@@ -36,8 +36,14 @@ def enter_team(data):
         # team owner create team
         if data["enter_type"] == "create":
             if team_id not in rooms_info.keys():
-                rooms_info[team_id] = {}
-                rooms_info[team_id][request.sid] = []
+                # rooms_info[team_id] = {}
+                # rooms_info[team_id][request.sid] = []
+
+                rooms_info[team_id] = {
+                    "owner_sid": request.sid,
+                    "partner": {}
+                }
+
                 join_room(team_id)
                 user_info[user_id]["team_id"] = team_id
                 emit("enter_team", sid_reference, to=team_id)
@@ -99,6 +105,15 @@ def update_team_status():
         if friend_id in user_info.keys():
             sid = user_info[friend_id]["sid"]
             emit("update_team_status", team_online_list, to=sid)
+
+
+
+# Event listener for receiving event "join_team_request" from frontend
+@socketio.on("join_team_request")
+def join_team_request(data):
+    if data["team_id_to_join"] in rooms_info.keys():
+        
+
 
 
 
