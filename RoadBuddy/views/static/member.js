@@ -29,7 +29,11 @@ async function CheckUserStatus() {
 }
 
 CheckUserStatus()
-    .then((result) => {window.location.replace("/room")})
+    .then((result) => {
+        if (result.ok) {
+            window.location.replace("/room");
+        }
+    })
     .catch((error) => {console.log(`Error from CheckUserStatus in member page : ${error}`)})
 
     
