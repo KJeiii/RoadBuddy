@@ -99,7 +99,6 @@ document.querySelector(".friend-request button").addEventListener("click", ()=>{
 // *** as a receiver
 var friend_sender_info_cache;
 socket.on("friend_request", (data) => {
-    console.log(`Receive request from ${data.username}`);
     friend_sender_info_cache = data;
 
     // prompt to ask willness
@@ -114,7 +113,6 @@ socket.on("friend_request", (data) => {
 // if accept request
 let friendYesBtn = document.querySelector(".friend-prompt .yes");
 friendYesBtn.addEventListener("click", () => {
-    console.log("click")
     // recover friend prompt
     let//
     prompt = document.querySelector(".friend-prompt"),
@@ -123,7 +121,6 @@ friendYesBtn.addEventListener("click", () => {
     content.textContent = "";
     prompt.style.display = "none";
 
-    console.log(friend_sender_info_cache);
 
     // receiver fetch api to add friend
     fetch("/api/friend/add", {
@@ -187,7 +184,6 @@ friendYesBtn.addEventListener("click", () => {
     };
 
     socket.emit("friend_request_result", data);
-    console.log(`Accept response sent back to ${friend_sender_info_cache.username}`);
 
     // show response
     let//
@@ -215,7 +211,6 @@ friendNoBtn.addEventListener("click", () => {
         sender_info: friend_sender_info_cache
     }
     socket.emit("friend_request_result", data)
-    console.log(`Reject reponse sent back to ${friend_sender_info_cache.username}`)
 
 
     // show response
@@ -230,8 +225,6 @@ friendNoBtn.addEventListener("click", () => {
 
 // *** as a sender
 socket.on("friend_request_result", (data) => {
-    console.log(data);
-    console.log(`Receive response from ${data.receiver_info.username}`);
 
     // if request is accepted
     if (data.accept) {
@@ -349,7 +342,6 @@ socket.on("update_friend_status", (data) => {
 
     // update friend list when use is online
     // update online status in main pannel friend list
-    console.log("go through update")
     let mainPannelFriendItems = document.querySelectorAll(".main-pannel .friends-list .item");
     for ( item of mainPannelFriendItems ) {
         if (item.getAttribute("id")*1 === data["user_id"]*1) {

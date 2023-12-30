@@ -7,7 +7,6 @@ socket.on("connect", ()=>{
     let//
     friend_list = [],
     friend_items = document.querySelectorAll(".main-pannel .friends-list .item");
-    console.log(friend_items);
     for ( item of friend_items ) {
         let friend_info = {
             user_id: item.getAttribute("id"),
