@@ -527,7 +527,7 @@ input[name=create-team]
 /* ------ socket friend and team request ------ */
 .friend-prompt,
 .team-invite-prompt
- {
+{
     display: none;
     position: absolute;
     top: 20vh;
@@ -548,7 +548,8 @@ input[name=create-team]
 .friend-request,
 .team-invite-response,
 .team-create-response,
-.team-join-response
+.team-join-response,
+.team-join-request
 {
     display: none;
     position: absolute;
@@ -571,7 +572,8 @@ input[name=create-team]
 .friend-response button,
 .team-invite-response button,
 .team-join-response button,
-.team-create-response button
+.team-create-response button,
+.team-join-request button
  {
     border-style: none;
     font-size: 20px;
