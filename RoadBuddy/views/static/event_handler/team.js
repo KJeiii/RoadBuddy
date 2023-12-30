@@ -638,7 +638,6 @@ socket.on("accept_team_request", (data) => {
             appendPartner(partnersList, team_sender_info_cache["partners_color"]);
         }
     }
-
 })
 
 

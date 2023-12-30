@@ -48,7 +48,6 @@ socket.on("initPosition", (partners) => {
                 // 2. register new partner information (sid, circleMaker object)
                 sidArray.push(sid);
                 markerArray.push(markerToAdd);
-                console.log("new marker created!");
             }
         }
         return
