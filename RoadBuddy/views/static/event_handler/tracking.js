@@ -9,47 +9,52 @@ let randomCoords = {
 
 // ----- receive partners initial postion and show on the map -----
 socket.on("initPosition", (partners) => {
-    let colorReference = (team_sender_info_cache === undefined) ? partnersColor : team_sender_info_cache.friends_color;
-
-    console.log(partners);
+    let colorReference = (team_sender_info_cache === undefined) ? partnersColor : team_sender_info_cache.partners_color;
     if (Object.keys(partners).length >= 2) {
-        // update new own circleMarker with partners information
-        console.log(markerArray);
 
-        for ( let i = 0; i < markerArray.length; i++) {
-            map.removeLayer(markerArray[i]);
-            markerArray.pop();
+        // Create new collection of markers
+        // If partner get in team at the first time
+        let oldMarker = document.querySelector(".leaflet-interactive");
+        if (oldMarker.getAttribute("fill") !== colorReference[sidReference[socket.id]]["color"]) {
+            // 1. delete original marker
+            for ( let i = 0; i < markerArray.length; i++) {
+                map.removeLayer(markerArray[i]);
+                markerArray.pop();
+            }
+            
+            // 2. create a new marker with specified color refering to colorReference
+            let//
+            id = sidReference[socket.id],
+            markerOption = {
+                color: colorReference[id].color,
+                fillOpacity: 0.7
+            },
+            markerToAdd = L.circleMarker([partners[socket.id][0].latitude, partners[socket.id][0].longitude], markerOption).addTo(map);
+            markerArray.push(markerToAdd);
         }
-        
-        let//
-        id = sidReference[socket.id],
-        markerOption = {
-            color: colorReference[id].color,
-            fillOpacity: 0.7
-        },
-        markerToAdd = L.circleMarker([partners[socket.id][0].latitude, partners[socket.id][0].longitude], markerOption).addTo(map);
-        markerArray.push(markerToAdd);
 
-        // update other partners circleMarker
+
+        // Create other partners marker
         for ( sid in partners ) {
             let id = sidReference[sid];
             if ( sid !== socket.id && !sidArray.includes(sid)) {
-                // add circleMarker
+                // 1. add circleMarker
                 let markerOption = {
                     color: colorReference[id].color,
                     fillOpacity: 0.7
                 };
                 let markerToAdd = L.circleMarker([partners[sid][0].latitude, partners[sid][0].longitude], markerOption).addTo(map);
     
-                // register new partner information (sid, circleMaker object)
+                // 2. register new partner information (sid, circleMaker object)
                 sidArray.push(sid);
                 markerArray.push(markerToAdd);
+                console.log("new marker created!");
             }
         }
         return
     }
-    console.log(`markerArray after add new partner : ${markerArray}`);
 
+    // -> When user logins, room.js create it's own marker; no need to create again
     // stay on room page, not joining team
     // let ownCoords = partners[socket.id];
     //     // add circleMarker
