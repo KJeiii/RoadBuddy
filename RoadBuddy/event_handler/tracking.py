@@ -1,19 +1,19 @@
 from flask_socketio import SocketIO, emit, send, join_room, leave_room
 from RoadBuddy import socketio
 from flask import request, session
-from RoadBuddy.event_handler import rooms_info, own_coords
+from RoadBuddy.event_handler import rooms_info, own_coords, user_info, sid_reference
 
 
 
 @socketio.on("position")
 def position(data):
     sid = data.get("sid")
-    username = data.get("username")
     new_coord = data.get("coord")
     team_id = data.get("team_id")
 
-    # update position to own map before team up
+    # If not in team, update position to own map
     if team_id == None:
+        print(f'{user_info[sid_reference[request.sid]]["username"]} in loneliness')
         if len(own_coords) >= 2:
             del own_coords[0]
             own_coords.append(new_coord)
@@ -31,9 +31,7 @@ def position(data):
             # emit("initPosition", data, to=request.sid)
         return
 
-    # update all partners position
-    # print(team_id)
-    # print(rooms_info.get(team_id))
+    # If in a team, update all partners position
     user_coords = rooms_info.get(team_id)["partner"].get(sid)
 
     if len(user_coords) >= 2:
