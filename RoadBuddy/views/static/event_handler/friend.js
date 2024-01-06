@@ -314,7 +314,6 @@ friendOkBtn.addEventListener("click", ()=>{
 //  Listener for receiving event "initial_status" event from server
 socket.on("update_friend_status", (data) => {
     // initialize friend list for first loggin in
-    console.log(data);
     if (data["email"] === undefined) {
 
         // update online status (change color) in main pannel friend list
@@ -323,7 +322,7 @@ socket.on("update_friend_status", (data) => {
             if (Object.keys(data).includes(`${item.getAttribute("id")}`)) {
                 item.style.backgroundColor = "rgb(182, 232, 176)";
                 item.style.border = "solid 3px rgb(22, 166, 6)";
-                return
+                continue;
             }
 
             item.style.backgroundColor = "rgb(235, 234, 234)";
@@ -333,13 +332,11 @@ socket.on("update_friend_status", (data) => {
         // update friend list in team pannel
         // update item.style.display to flex when friend is on-line
         let teamPannelFriendItems = document.querySelectorAll(".teams-pannel .friends-list .item");
-        console.log(Object.keys(data));
         for ( item of teamPannelFriendItems ) {
-            console.log(`${item.getAttribute("id")}`);
-            console.log(Object.keys(data).includes(`${item.getAttribute("id")}`));
             if ( Object.keys(data).includes(`${item.getAttribute("id")}`) ) {
                 item.style.display = "flex";
-                return
+                console.log("test2");
+                continue;
             }
             item.style.display = "none";
         }

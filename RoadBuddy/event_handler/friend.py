@@ -7,8 +7,6 @@ from RoadBuddy.event_handler import sid_reference, user_info
 
 @socketio.on("friend_reqeust")
 def friend_request(data):
-    print(data)
-
     sender_sid = data["sender_sid"]
     sender_id = sid_reference[sender_sid]
 
@@ -25,9 +23,7 @@ def friend_request(data):
 
 @socketio.on("friend_request_result")
 def friend_request_result(data):
-    print(data)
-
-    # 回寄給sender
+    # organize data and emit event "friend_request_result" to client (sender)
     sender_sid = data["sender_info"]["sid"]
     receiver_id = sid_reference[data["receiver_sid"]]
     receiver_info = user_info[receiver_id]
@@ -45,7 +41,6 @@ def friend_request_result(data):
 
 @socketio.on("initial_friend_status")
 def initial_friend_status():
-    print(f'receive {user_info[sid_reference[request.sid]]["username"]} initial online status')
     # get online friends data for user first time login
     user_id = sid_reference[request.sid]
     friend_list = user_info[user_id]["friend_list"]
@@ -61,17 +56,18 @@ def initial_friend_status():
 
 @socketio.on("online_friend_status")
 def online_friend_status():
-    print(f'receive {user_info[sid_reference[request.sid]]["username"]} update online status')
-    # send "online-status" event to friends on-line
+    # send "online_friend_status" event to friends on-line
+    # 1. collect all friends online
     user_id = sid_reference[request.sid]
     friend_list = user_info[user_id]["friend_list"]
     friend_sid_online = []
     for friend in friend_list:
         friend_id = int(friend["user_id"])
-        if friend_id in user_info.keys():
+        if friend_id in user_info.keys() and friend_id != user_id:
             friend_sid = user_info[friend_id]["sid"]
             friend_sid_online.append(friend_sid)
 
+    # 2. build own info for friends to update their friend pannel
     my_user_info = {
         "user_id": user_id,
         "username": user_info[user_id]["username"],
