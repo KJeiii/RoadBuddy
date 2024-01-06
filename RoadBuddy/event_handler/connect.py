@@ -9,7 +9,7 @@ friendTool = friend.FriendTool()
 # Listener for receiver event "connect" from client
 @socketio.on("connect")
 def connect():
-    pass
+    emit("connect", to=request.sid)
 
 
 # Listener for receiver event "store_userinfo" from client
@@ -34,6 +34,8 @@ def store_userinfo(data):
 @socketio.on("disconnect")
 def disconnect():
 
+    # send event "disconnect" to team partners for removing marker
+    # 這邊應該要改成建立專屬的team event handler
     user_sid = request.sid
     user_id = sid_reference.get(user_sid)
     username = user_info.get(user_id).get("username")
@@ -49,8 +51,7 @@ def disconnect():
     }
     emit("disconnect", data, to=team_id)
 
-    # send "offline-status" event to friends on-line
-    user_id = sid_reference[request.sid]
+    # send event "offline_friend_status" to friends 
     friend_list = user_info[user_id]["friend_list"]
     friend_sid_online = []
     for friend in friend_list:
@@ -76,8 +77,6 @@ def disconnect():
 
         if len(rooms_info[team_id]["partner"].keys()) <= 0 :
             del rooms_info[team_id]
-            print(f'team {team_id} is closed bu disconnect \
-                cuz less than 1 pepele in it')
 
     del user_info[user_id]
     del sid_reference[user_sid]

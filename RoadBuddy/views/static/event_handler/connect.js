@@ -23,13 +23,14 @@ socket.on("connect", ()=>{
     };
     socket.emit("store_userinfo", data);
     socket.emit("initial_team_status");
-    console.log(`${window.sessionStorage.getItem("username")} send online status`)
 })
 
 socket.on("initialization", () => {
     socket.emit("initial_friend_status");
     socket.emit("online_friend_status");
 })
+
+
 
 //  Listener for receiving event "disconnect" event from server  
 socket.on("disconnect", (data) => {
@@ -41,16 +42,11 @@ socket.on("disconnect", (data) => {
     // clear user cache
     markerArray.splice(sidArray.indexOf(sid),1);
     sidArray.splice(sidArray.indexOf(sid),1);
+
+    // 這邊有點怪怪的，如果是朋友離線，也會造成在線的人刪除自己的team_id
     window.sessionStorage.removeItem("team_id");
 });
 
-// let leaveBtn = document.querySelector(".leave");
-// leaveBtn.addEventListener("click", () => {
-//     // window.location.replace("/room");
-//     window.sessionStorage.removeItem("team_id");
-
-
-// });
 
 
 
