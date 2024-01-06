@@ -13,7 +13,6 @@ def position(data):
 
     # If not in team, update position to own map
     if team_id == None:
-        print(f'{user_info[sid_reference[request.sid]]["username"]} in loneliness')
         if len(own_coords) >= 2:
             del own_coords[0]
             own_coords.append(new_coord)
