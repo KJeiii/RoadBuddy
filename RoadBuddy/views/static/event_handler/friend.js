@@ -335,7 +335,6 @@ socket.on("update_friend_status", (data) => {
         for ( item of teamPannelFriendItems ) {
             if ( Object.keys(data).includes(`${item.getAttribute("id")}`) ) {
                 item.style.display = "flex";
-                console.log("test2");
                 continue;
             }
             item.style.display = "none";
