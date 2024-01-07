@@ -32,6 +32,20 @@ function appendPartner (container, reference) {
     container.appendChild(item);
 };
 
+function removePartner(user_id) {
+    // let user_id = leaving_partner_data["user_id"]*1;
+
+    let//
+    partnersList = document.querySelector(".tracking-pannel .partners-list");
+    partnerItems = document.querySelectorAll(".tracking-pannel .partners-list .item");
+
+    for ( item of partnerItems ) {
+        if ( item.getAttribute("id")*1 === user_id*1 ) {
+            partnersList.removeChild(item);
+        }
+    }
+}
+
 // ----- sender emit invitation to listner "team_invite" on server  -----
 startTripBtn.addEventListener("click", ()=> {
     // switch to tracking pannel
@@ -378,17 +392,18 @@ socket.on("leave_team", (data) => {
 // 感覺可以跟leave_team合併
 // remove partners when they leave
 socket.on("remove_partner", (leaving_partner_data) => {
-    let user_id = leaving_partner_data["user_id"]*1;
+    removePartner(leaving_partner_data["user_id"])
+    // let user_id = leaving_partner_data["user_id"]*1;
 
-    let//
-    partnersList = document.querySelector(".tracking-pannel .partners-list");
-    partnerItems = document.querySelectorAll(".tracking-pannel .partners-list .item");
+    // let//
+    // partnersList = document.querySelector(".tracking-pannel .partners-list");
+    // partnerItems = document.querySelectorAll(".tracking-pannel .partners-list .item");
 
-    for ( item of partnerItems ) {
-        if ( item.getAttribute("id")*1 === user_id ) {
-            partnersList.removeChild(item);
-        }
-    }
+    // for ( item of partnerItems ) {
+    //     if ( item.getAttribute("id")*1 === user_id ) {
+    //         partnersList.removeChild(item);
+    //     }
+    // }
 })
 
 
