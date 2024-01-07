@@ -43,8 +43,11 @@ socket.on("disconnect", (data) => {
     markerArray.splice(sidArray.indexOf(sid),1);
     sidArray.splice(sidArray.indexOf(sid),1);
 
-    // 這邊有點怪怪的，如果是朋友離線，也會造成在線的人刪除自己的team_id
-    window.sessionStorage.removeItem("team_id");
+    // clear team_id when partner disconnects
+    if (data["user_id"]*1 === window.sessionStorage.getItem("user_id")*1) {
+        window.sessionStorage.removeItem("team_id");
+    }
+    
 });
 
 
