@@ -336,12 +336,10 @@ leaveTeamBtn.addEventListener("click", ()=> {
 
 // ----- Listener for receiving event "leave_team" from server -----
 socket.on("leave_team", (data) => {
-    let//
-    sid = data.sid,
-    leader_sid = data.leader_sid;
-
+    let leavingPartnerSid = data.sid;
+    
     // as a leaving partner:
-    if ( socket.id === sid ) {
+    if ( socket.id === leavingPartnerSid ) {
 
         // 1. remove team_id in browser session
         window.sessionStorage.removeItem("team_id");
@@ -356,37 +354,20 @@ socket.on("leave_team", (data) => {
                 sidArray.splice(i,1);
             }
         }
+        return
     }
 
-    // as a team owner
-    if (socket.id === leader_sid && sid !== leader_sid) {
-        console.log("You are a team owner");
+    // as a team owner or partners stay in team
+    let partnersColorReference = (team_sender_info_cache === undefined) ? partnersColor : team_sender_info_cache["partners_color"]
+    // 1. delete leaving partner in partnersColor
+    delete partnersColorReference[data["user_id"]*1]
 
-        // 1. delete leaving partner in partnersColor
-        delete partnersColor[data["user_id"]*1]
+    // 2. remove leaving partner marker on tracking pannel
+    map.removeLayer(markerArray[sidArray.indexOf(leavingPartnerSid)]);
 
-        // 2. remove leaving partner marker on tracking pannel
-        map.removeLayer(markerArray[sidArray.indexOf(sid)]);
-
-        // 3. delete leaving partner in markerArray and sidArray
-        markerArray.slice(sidArray.indexOf(sid), 1);
-        sidArray.slice(sidArray.indexOf(sid), 1);
-    }
-
-    // as a partner still in team:
-    if (socket.id !== sid && socket.id !== leader_sid) {
-        console.log("You're still in team");
-
-        // 1. delete leaving partner in friends color in team_sender_info_cache
-        delete team_sender_info_cache["partners_color"][data["user_id"]*1]
-
-        // 2. remove leaving partner marker on tracking pannel
-        map.removeLayer(markerArray[sidArray.indexOf(sid)]);
-
-        // 3. delete leaving partner in markerArray and sidArray
-        markerArray.slice(sidArray.indexOf(sid), 1);
-        sidArray.slice(sidArray.indexOf(sid), 1);
-    }
+    // 3. delete leaving partner in markerArray and sidArray
+    markerArray.slice(sidArray.indexOf(leavingPartnerSid), 1);
+    sidArray.slice(sidArray.indexOf(leavingPartnerSid), 1);
 })
 
 // 感覺可以跟leave_team合併
