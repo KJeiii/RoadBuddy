@@ -96,9 +96,7 @@ def leave_team(data):
     sid = data["sid"]
     user_id = int(data["user_id"])
 
-
     emit("leave_team", data, to=team_id)
-    emit("remove_partner", data, to=team_id)
 
     leave_room(team_id)
     del rooms_info[team_id]["partner"][sid]
