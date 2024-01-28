@@ -33,7 +33,6 @@ function appendPartner (container, reference) {
 };
 
 function removePartner(user_id) {
-    // let user_id = leaving_partner_data["user_id"]*1;
 
     let//
     partnersList = document.querySelector(".tracking-pannel .partners-list");
@@ -368,24 +367,28 @@ socket.on("leave_team", (data) => {
     // 3. delete leaving partner in markerArray and sidArray
     markerArray.slice(sidArray.indexOf(leavingPartnerSid), 1);
     sidArray.slice(sidArray.indexOf(leavingPartnerSid), 1);
+
+    // 4. remove partner in tracking pannel
+    removePartner(data["user_id"])
+
 })
 
 // 感覺可以跟leave_team合併
 // remove partners when they leave
-socket.on("remove_partner", (leaving_partner_data) => {
-    removePartner(leaving_partner_data["user_id"])
-    // let user_id = leaving_partner_data["user_id"]*1;
+// socket.on("remove_partner", (leaving_partner_data) => {
+//     removePartner(leaving_partner_data["user_id"])
+//     // let user_id = leaving_partner_data["user_id"]*1;
 
-    // let//
-    // partnersList = document.querySelector(".tracking-pannel .partners-list");
-    // partnerItems = document.querySelectorAll(".tracking-pannel .partners-list .item");
+//     // let//
+//     // partnersList = document.querySelector(".tracking-pannel .partners-list");
+//     // partnerItems = document.querySelectorAll(".tracking-pannel .partners-list .item");
 
-    // for ( item of partnerItems ) {
-    //     if ( item.getAttribute("id")*1 === user_id ) {
-    //         partnersList.removeChild(item);
-    //     }
-    // }
-})
+//     // for ( item of partnerItems ) {
+//     //     if ( item.getAttribute("id")*1 === user_id ) {
+//     //         partnersList.removeChild(item);
+//     //     }
+//     // }
+// })
 
 
 
