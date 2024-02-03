@@ -13,19 +13,19 @@ function switchToTrackingPannel () {
     settingOffTracking.style.display = "none";
 };
 
-function appendPartner (container, reference) {
+function appendPartner (user_id, container, reference) {
     let//
     item = document.createElement("div"),
     icon = document.createElement("div"),
     username = document.createElement("div");
 
     item.setAttribute("class", "item");
-    item.setAttribute("id", id);
+    item.setAttribute("id", user_id);
     icon.setAttribute("class", "icon");
-    icon.style.backgroundColor = reference[id].color;
+    icon.style.backgroundColor = reference[user_id].color;
     username.setAttribute("class", "username");
-    username.setAttribute("id", id);
-    username.textContent = reference[id].username;
+    username.setAttribute("id", user_id);
+    username.textContent = reference[user_id].username;
 
     item.appendChild(icon);
     item.appendChild(username);
@@ -73,11 +73,12 @@ startTripBtn.addEventListener("click", ()=> {
     };
 
 
-    // create partner information in partners-list
+    // create owner information in partners-list;
+    // others will be created when they join in
     let partnersList = document.querySelector(".tracking-pannel .partners-list");
     for ( id in partnersColor) {
         if (id*1 === window.sessionStorage.getItem("user_id")*1) {
-            appendPartner(partnersList, partnersColor);
+            appendPartner(id, partnersList, partnersColor);
         }
     }
 
@@ -138,11 +139,11 @@ teamYesBtn.addEventListener("click", () => {
     let partnersList = document.querySelector(".tracking-pannel .partners-list");
     for ( id in team_sender_info_cache["partners_color"] ) {
         if ( id*1 === team_sender_info_cache["user_id"]*1 ) {
-            appendPartner(partnersList, team_sender_info_cache["partners_color"]);
+            appendPartner(id, partnersList, team_sender_info_cache["partners_color"]);
         }
 
         if ( id*1 === window.sessionStorage.getItem("user_id")*1 ) {
-            appendPartner(partnersList, team_sender_info_cache["partners_color"]);
+            appendPartner(id, partnersList, team_sender_info_cache["partners_color"]);
         }
     }
 
@@ -164,7 +165,6 @@ teamYesBtn.addEventListener("click", () => {
 
     window.sessionStorage.setItem("team_id", team_sender_info_cache["team_id"])
     socket.emit("enter_team", joinTeamData);
-    console.log(`Accept response emited to server`);
 
     // Create partner record in partner table in database
     let payload = {
@@ -266,7 +266,7 @@ socket.on("add_partner", (user_id) => {
     if ( team_sender_info_cache === undefined ) {
         for ( id in partnersColor) {
             if ( id*1 === user_id*1 ) {
-                appendPartner(partnersList, partnersColor);
+                appendPartner(id, partnersList, partnersColor);
             }
         }
         return
@@ -275,7 +275,7 @@ socket.on("add_partner", (user_id) => {
     // Partners in team update their partner list
     for ( id in team_sender_info_cache.partners_color) {
         if ( id*1 === user_id*1 && id*1 !== team_sender_info_cache.user_id*1 && id*1 !== window.sessionStorage.getItem("user_id")*1) {
-            appendPartner(partnersList, team_sender_info_cache["partners_color"]);
+            appendPartner(id, partnersList, team_sender_info_cache["partners_color"]);
         }
     }
 })
@@ -353,42 +353,36 @@ socket.on("leave_team", (data) => {
                 sidArray.splice(i,1);
             }
         }
+
+        // 3. clear team_sender_info_cache
+        team_sender_info_cache = undefined;
         return
     }
 
     // as a team owner or partners stay in team
-    let partnersColorReference = (team_sender_info_cache === undefined) ? partnersColor : team_sender_info_cache["partners_color"]
     // 1. delete leaving partner in partnersColor
-    delete partnersColorReference[data["user_id"]*1]
+    if (socket.id === data["leader_sid"]) {
+        delete partnersColor[data["user_id"]*1]
+    }
+
+    if (socket.id !== data["leader_sid"] && socket.id !== leavingPartnerSid) {
+        delete team_sender_info_cache["partners_color"][data["user_id"]*1]
+    }
+
 
     // 2. remove leaving partner marker on tracking pannel
     map.removeLayer(markerArray[sidArray.indexOf(leavingPartnerSid)]);
 
     // 3. delete leaving partner in markerArray and sidArray
-    markerArray.slice(sidArray.indexOf(leavingPartnerSid), 1);
-    sidArray.slice(sidArray.indexOf(leavingPartnerSid), 1);
+    markerArray.splice(sidArray.indexOf(leavingPartnerSid), 1);
+    sidArray.splice(sidArray.indexOf(leavingPartnerSid), 1);
 
     // 4. remove partner in tracking pannel
     removePartner(data["user_id"])
 
 })
 
-// 感覺可以跟leave_team合併
-// remove partners when they leave
-// socket.on("remove_partner", (leaving_partner_data) => {
-//     removePartner(leaving_partner_data["user_id"])
-//     // let user_id = leaving_partner_data["user_id"]*1;
 
-//     // let//
-//     // partnersList = document.querySelector(".tracking-pannel .partners-list");
-//     // partnerItems = document.querySelectorAll(".tracking-pannel .partners-list .item");
-
-//     // for ( item of partnerItems ) {
-//     //     if ( item.getAttribute("id")*1 === user_id ) {
-//     //         partnersList.removeChild(item);
-//     //     }
-//     // }
-// })
 
 
 
@@ -542,9 +536,7 @@ joinRequestBtn.addEventListener("click", () => {
         "user_sid": window.sessionStorage.getItem("sid"),
         "user_id": window.sessionStorage.getItem("user_id"),
         "username": window.sessionStorage.getItem("username"),
-        "email": window.sessionStorage.getItem("email"),
-        "team_id": team_id,
-        "initial_coord": initialCoord
+        "team_id": team_id
     };
     socket.emit("join_team_request", requesterData);
 })
@@ -556,53 +548,68 @@ socket.on("join_team_request", (data) => {
     // show prompt of the request for joining team
     let//
     team_join_request = document.querySelector(".team-join-request"),
+    from = document.querySelector(".team-join-request .from"),
     content = document.querySelector(".team-join-request .content");
 
+    content.setAttribute("id", data["user_id"]);
+    from.setAttribute("id", data["user_sid"]);
+    from.textContent = data["username"];
     content.textContent = `來自 ${data.username} 的入隊申請`;
     team_join_request.style.display = "block";
+})
 
 
-    // Yes or No response to join team requeset
-    // if yes
-    let requestYesBtn = document.querySelector(".team-join-request .yes");
-    requestYesBtn.addEventListener("click", () => {
+// Yes or No response to join team requeset
+// if yes
+let requestYesBtn = document.querySelector(".team-join-request .yes");
+requestYesBtn.addEventListener("click", () => {
+    // create a new marker color for new partner
+    let//
+    requester_id = document.querySelector(".team-join-request .content").getAttribute("id"),
+    requester_name = document.querySelector(".team-join-request .from").textContent,
+    requester_sid = document.querySelector(".team-join-request .from").getAttribute("id"),
+    randomColor = `rgb(${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)})`;
 
-        // create a new marker color for new partner
-        let randomColor = `rgb(${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)})`;
-        partnersColor[data["user_id"]] = {
-            username: data["username"],
-            color: randomColor
-        };
-        
-        // emit event "enter_team" to server to initialize 
-        let acceptRequestData = {
-            accept: true,
-            requester_info: data,
-            partners_color: partnersColor
-        };
-        socket.emit("accept_team_request", acceptRequestData);
+    partnersColor[requester_id] = {
+        username: requester_name,
+        color: randomColor
+    };
+    
+    // emit event "enter_team" to server to initialize 
+    let acceptRequestData = {
+        accept: true,
+        requester_sid: requester_sid,
+        partners_color: partnersColor
+    };
+    socket.emit("accept_team_request", acceptRequestData);
 
-        // recover team prompt
-        let//
-        prompt = document.querySelector(".team-join-request"),
-        content = document.querySelector(".team-join-request .content");
-        content.textContent = "";
-        prompt.style.display = "none";
+    // recover team prompt
+    let//
+    prompt = document.querySelector(".team-join-request"),
+    content = document.querySelector(".team-join-request .content"),
+    from = document.querySelector(".team-join-request .from");
 
+    content.textContent = "";
+    content.setAttribute("id","");
+    from.textContent = "";
+    from.setAttribute("id","");
+    prompt.style.display = "none";
+})
 
-    })
+// if no
+let requesetNoBtn = document.querySelector(".team-join-request .no");
+requesetNoBtn.addEventListener("click", () => {
+    // recover team prompt
+    let//
+    prompt = document.querySelector(".team-join-request"),
+    content = document.querySelector(".team-join-request .content"),
+    from = document.querySelector(".team-join-request .from");
 
-    // if no
-    let requesetNoBtn = document.querySelector(".team-join-request .no");
-    requesetNoBtn.addEventListener("click", () => {
-        // recover team prompt
-        let//
-        prompt = document.querySelector(".team-join-request"),
-        content = document.querySelector(".team-join-request .content");
-        content.textContent = "";
-        prompt.style.display = "none";
-    })
-
+    content.textContent = "";
+    content.setAttribute("id","");
+    from.textContent = "";
+    from.setAttribute("id","");
+    prompt.style.display = "none";
 })
 
 
@@ -615,10 +622,10 @@ socket.on("accept_team_request", (data) => {
     let joinTeamData = {
         accept: true,
         enter_type: "join",
-        team_id: team_sender_info_cache["team_id"]
+        team_id: data["team_id"]
     };
 
-    window.sessionStorage.setItem("team_id", team_sender_info_cache["team_id"])
+    window.sessionStorage.setItem("team_id", data["team_id"])
     socket.emit("enter_team", joinTeamData);
 
     // switch to tracking pannel
@@ -629,12 +636,15 @@ socket.on("accept_team_request", (data) => {
     // 2. update other partners when they join in
     let partnersList = document.querySelector(".tracking-pannel .partners-list");
     for ( id in team_sender_info_cache["partners_color"] ) {
+
+        // create leader item first
         if ( id*1 === team_sender_info_cache["user_id"]*1 ) {
-            appendPartner(partnersList, team_sender_info_cache["partners_color"]);
+            appendPartner(id, partnersList, team_sender_info_cache["partners_color"]);
         }
 
+        // then, create partner self 
         if ( id*1 === window.sessionStorage.getItem("user_id")*1 ) {
-            appendPartner(partnersList, team_sender_info_cache["partners_color"]);
+            appendPartner(id, partnersList, team_sender_info_cache["partners_color"]);
         }
     }
 })
