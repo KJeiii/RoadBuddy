@@ -37,6 +37,7 @@ socket.on("initPosition", (partners) => {
         // Create other partners marker
         for ( sid in partners ) {
             let id = sidReference[sid];
+
             if ( sid !== socket.id && !sidArray.includes(sid)) {
                 // 1. add circleMarker
                 let markerOption = {
@@ -96,16 +97,6 @@ socket.on("message", (msg) => {
 
 
 // ----- tracking user device position changing-----
-let coordFromBrowser = {};
-let watchCoord = window.navigator.geolocation.watchPosition(
-    (position) => {
-        coordFromBrowser = {
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude
-        }
-    }
-);
-
 // setInterval(() => {
 //     let data = {
 //         sid : sessionStorage.getItem("sid"),
