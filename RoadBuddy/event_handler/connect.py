@@ -9,8 +9,7 @@ friendTool = friend.FriendTool()
 # Listener for receiver event "connect" from client
 @socketio.on("connect")
 def connect():
-    emit("connect", to=request.sid)
-
+    pass
 
 # Listener for receiver event "store_userinfo" from client
 @socketio.on("store_userinfo")
