@@ -158,8 +158,6 @@ teamYesBtn.addEventListener("click", () => {
     let joinTeamData = {
         accept: true,
         enter_type: "join",
-        // receiver_sid: socket.id,   -> seems useless
-        // sender_info: team_sender_info_cache,  -> seems useless
         team_id: team_sender_info_cache.team_id
     };
 
@@ -466,7 +464,6 @@ closeInvitationBtn.addEventListener("click", () => {
 socket.on("update_team_status", (team_online_list) => {
 
     // update join team list when friend gets online
-    // update friend list in main pannel : grey as off-line and green as on-line
     let joinTeamitems = document.querySelectorAll(".main-pannel .join-list .item");
     for ( item of joinTeamitems) {
         if (team_online_list.includes(item.getAttribute("id"))) {
