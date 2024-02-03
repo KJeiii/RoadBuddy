@@ -142,7 +142,7 @@ def join_team_request(data):
 @socketio.on("accept_team_request")
 def accept_team_request(data):
     if data["accept"]:
-        requester_sid = data["requester_info"]["user_sid"]
+        requester_sid = data["requester_sid"]
         sender_info = {
             "sid": request.sid,
             "user_id": sid_reference[request.sid],
