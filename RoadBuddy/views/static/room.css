@@ -649,6 +649,10 @@ input[name=create-team]
     white-space: nowrap;
 }
 
+.from {
+    display: none;
+}
+
 /* ------ alert test ------*/
 .alert {
     width: 80%;
