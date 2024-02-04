@@ -13,6 +13,43 @@ function switchToTrackingPannel () {
     settingOffTracking.style.display = "none";
 };
 
+function switchPannel(toPannel, ...turnOnSettingBtn) {
+    let//
+    pannels = [
+        mainPannel, 
+        friendsPannel, 
+        teamsPannel,
+        trackingPannel
+    ],
+    settingBtns = [
+        settingOnMain, 
+        settingOffMain, 
+        settingOnTracking, 
+        settingOffTracking, 
+        logout,
+        invite,
+        leave   
+    ];
+
+    // turn on specified pannel; others would be turned off
+    for (pannel of pannels) {
+        if (pannel === toPannel) {
+            pannel.style.display = "block"
+            continue
+        }
+        pannel.style.display = "none"
+    }
+
+    // turn on specified button; others would be turned off
+    for (btn of settingBtns) {
+        if (turnOnSettingBtn.includes(btn)) {
+            btn.style.display = "block"
+            continue
+        }
+        btn.style.display = "none"
+    }
+}
+
 function appendPartner (user_id, container, reference) {
     let//
     item = document.createElement("div"),
@@ -48,7 +85,7 @@ function removePartner(user_id) {
 // ----- sender emit invitation to listner "team_invite" on server  -----
 startTripBtn.addEventListener("click", ()=> {
     // switch to tracking pannel
-    switchToTrackingPannel();
+    switchPannel(trackingPannel, settingOnTracking);
 
     // Organize data emitted to listener "enter_team" on server
     let//
@@ -130,8 +167,7 @@ socket.on("team_invite", (data) => {
 let teamYesBtn = document.querySelector(".team-invite-prompt .yes");
 teamYesBtn.addEventListener("click", () => {
     // switch to tracking pannel
-    switchToTrackingPannel();
-
+    switchPannel(trackingPannel, settingOnTracking);
     
     // create partner information in partners-list
     // 1. only show team owner and partner it self
@@ -285,6 +321,7 @@ socket.on("add_partner", (user_id) => {
 let teamOkBtn = document.querySelector(".team-invite-response button");
 teamOkBtn.addEventListener("click", ()=>{
 
+    // *************************
     // recover response
     let//
     response = document.querySelector(".team-invite-response"),
@@ -310,6 +347,8 @@ leaveTeamBtn.addEventListener("click", ()=> {
     };
     socket.emit("leave_team", data);
 
+    // *************************
+    // switch to mainPannel
     // change elements in setting div
     leaveTeamBtn.style.display = "none";
     invite.style.display = "none";
@@ -318,15 +357,15 @@ leaveTeamBtn.addEventListener("click", ()=> {
     settingOnTracking.style.display = "none";
     settingOffTracking.style.display = "none";
 
+    trackingPannel.style.display = "none";
+    teamsPannel.style.display = "none"
+    mainPannel.style.display = "block"
+
     // remove all partner in the tracking pannel
     let trackingPannelPartnerList = document.querySelector(".tracking-pannel .partners-list");
     while (trackingPannelPartnerList.hasChildNodes()) {
         trackingPannelPartnerList.removeChild(trackingPannelPartnerList.lastChild)
     }
-
-    trackingPannel.style.display = "none";
-    teamsPannel.style.display = "none"
-    mainPannel.style.display = "block"
 })
 
 
@@ -386,11 +425,13 @@ socket.on("leave_team", (data) => {
 
 // ----- While tracking, invite other frineds -----
 // open team pannel
-let invitaionBtn = document.querySelector(".setting .invite");
-invitaionBtn.addEventListener("click", () => {
+let invitationBtn = document.querySelector(".setting .invite");
+invitationBtn.addEventListener("click", () => {
+
+    // *************************
     document.querySelector(".teams-pannel .pannel-title").style.display = "none";
     document.querySelector(".teams-pannel .search").style.display = "none";
-    invitaionBtn.style.display = "none";
+    invitationBtn.style.display = "none";
     leaveTeamBtn.style.display = "none";
     settingOffTracking.style.display = "none";
     settingOnTracking.style.display = "block";
@@ -436,7 +477,7 @@ inviteTripBtn.addEventListener("click", () => {
     };
     socket.emit("team_invite", invitation);
  
-    
+    // *************************
     // close team pannel and go back to tracking pannel
     document.querySelector(".teams-pannel .close").style.display = "none";
     closeInvitationBtn.style.display = "block";
@@ -444,7 +485,7 @@ inviteTripBtn.addEventListener("click", () => {
     teamsPannel.style.display = "none";
     settingOffTracking.style.display = "none";
     settingOnTracking.style.display = "block";
-    invitaionBtn.style.display = "none";
+    invitationBtn.style.display = "none";
     leaveTeamBtn.style.display = "none";
 })
 
@@ -452,6 +493,8 @@ inviteTripBtn.addEventListener("click", () => {
 // close invitation page
 let closeInvitationBtn = document.querySelector(".close-invitation");
 closeInvitationBtn.addEventListener("click", () => {
+
+    // *************************
     teamsPannel.style.display = "none";
     mainPannel.style.display = "none";
     document.querySelector(".teams-pannel .close") = "block";
@@ -580,6 +623,7 @@ requestYesBtn.addEventListener("click", () => {
     };
     socket.emit("accept_team_request", acceptRequestData);
 
+    // *************************
     // recover team prompt
     let//
     prompt = document.querySelector(".team-join-request"),
@@ -596,6 +640,8 @@ requestYesBtn.addEventListener("click", () => {
 // if no
 let requesetNoBtn = document.querySelector(".team-join-request .no");
 requesetNoBtn.addEventListener("click", () => {
+
+    // *************************
     // recover team prompt
     let//
     prompt = document.querySelector(".team-join-request"),
@@ -626,7 +672,7 @@ socket.on("accept_team_request", (data) => {
     socket.emit("enter_team", joinTeamData);
 
     // switch to tracking pannel
-    switchToTrackingPannel();
+    switchPannel(trackingPannel, settingOnTracking);
 
     // create partner information in partners-list
     // 1. only show team owner and partner it self
