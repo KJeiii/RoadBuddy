@@ -19,12 +19,15 @@ mainPannelFriendsOuter = document.querySelector(".main-pannel .friends-outer"),
 mainPannelFriendsList = document.querySelector(".main-pannel .friends-list"),
 teamPannelFriendsList = document.querySelector(".teams-pannel .friends-list"),
 teamsOuter = document.querySelector(".teams-outer"),
+partnersOuter = document.querySelector(".partners-outer"),
 friendColorIntro = document.querySelector(".friend-color-intro"),
 teamColorIntro = document.querySelector(".team-color-intro"),
-pullUpMain = document.querySelector(".main-pannel .pull-up"),
-dropDownMain = document.querySelector(".main-pannel .drop-down"),
-pullUpTracking = document.querySelector(".tracking-pannel .pull-up"),
-dropDownTracking = document.querySelector(".tracking-pannel .drop-down"),
+pullUpFriend = document.querySelector(".main-pannel .pull-up-friend"),
+dropDownFriend = document.querySelector(".main-pannel .drop-down-friend"),
+pullUpTeam = document.querySelector(".main-pannel .pull-up-team"),
+dropDownTeam = document.querySelector(".main-pannel .drop-down-team"),
+pullUpTracking = document.querySelector(".pull-up-tracking"),
+dropDownTracking = document.querySelector(".drop-down-tracking"),
 addFriend = document.querySelector(".nav-add-friend"),
 addTeam = document.querySelector(".nav-add-team"),
 mainPannel = document.querySelector(".main-pannel"),
@@ -379,11 +382,22 @@ menuFriends.addEventListener("click", ()=>{
     menuTitle.textContent = menuFriends.textContent;
     menuList.style.display = "none";
     menu.style.border = "none";
+
+    let isPulledUp = (mainPannel.style.top === "20vh") ? true : false;
+    // switch content
     teamsOuter.style.display = "none";
-    addTeam.style.display = "none";
-    mainPannelFriendsOuter.style.display = "flex";
-    friendColorIntro.style.display = "flex";
     teamColorIntro.style.display = "none";
+    mainPannelFriendsOuter.style.display = (isPulledUp) ? "flex" : "none";
+    friendColorIntro.style.display = (isPulledUp) ? "flex" : "none";
+
+    // switch pullup and dropdown button
+    pullUpTeam.style.display = "none";
+    dropDownTeam.style.display = "none";
+    pullUpFriend.style.display = (isPulledUp) ? "none" : "block";
+    dropDownFriend.style.display = (isPulledUp) ? "block" : "none";
+
+    // switch add button
+    addTeam.style.display = "none";
     addFriend.style.display = "block";
 })
 
@@ -391,13 +405,25 @@ menuTeam.addEventListener("click", ()=>{
     menuTitle.textContent = menuTeam.textContent;
     menuList.style.display = "none";
     menu.style.border = "none";
+
+    let isPulledUp = (mainPannel.style.top === "20vh") ? true : false;
+    // switch content
+
     mainPannelFriendsOuter.style.display = "none";
     friendColorIntro.style.display = "none";
-    teamColorIntro.style.display = "flex";
+    teamsOuter.style.display = (isPulledUp) ? "flex" : "none";
+    teamColorIntro.style.display = (isPulledUp) ? "flex" : "none";
+
+    // switch pullup and dropdown button
+    pullUpFriend.style.display = "none";
+    dropDownFriend.style.display = "none";
+    pullUpTeam.style.display = (isPulledUp) ? "none" : "block";
+    dropDownTeam.style.display = (isPulledUp) ? "block" : "none";
+
+    // switch add button
+    addTeam.style.display = "block";
     addFriend.style.display = "none";
 
-    teamsOuter.style.display = "flex";
-    addTeam.style.display = "block";
 })
 
 
@@ -510,17 +536,41 @@ for (close of closePannel) {
 };
 
 
-// ----- pull up and drop down main pannel ------
-pullUpMain.addEventListener("click", () => {
-    pullUpMain.style.display = "none";
-    dropDownMain.style.display = "block";
+// ----- pull up and drop down main pannel and tracking pannel ------
+pullUpFriend.addEventListener("click", () => {
+    pullUpFriend.style.display = "none";
+    dropDownFriend.style.display = "block";
     mainPannel.style.top = "20vh";
+    mainPannel.style.height = "80vh";
+    friendColorIntro.style.display = "flex";
+    mainPannelFriendsOuter.style.display = "flex";
 })
 
-dropDownMain.addEventListener("click", () => {
-    dropDownMain.style.display = "none";
-    pullUpMain.style.display = "block";
-    mainPannel.style.top = "65vh";
+dropDownFriend.addEventListener("click", () => {
+    dropDownFriend.style.display = "none";
+    pullUpFriend.style.display = "block";
+    mainPannel.style.top = "70vh";
+    mainPannel.style.height = "30vh";
+    friendColorIntro.style.display = "none";
+    mainPannelFriendsOuter.style.display = "none";
+})
+
+pullUpTeam.addEventListener("click", () => {
+    pullUpTeam.style.display = "none";
+    dropDownTeam.style.display = "block";
+    mainPannel.style.top = "20vh";
+    mainPannel.style.height = "80vh";
+    teamColorIntro.style.display = "flex";
+    teamsOuter.style.display = "flex";
+})
+
+dropDownTeam.addEventListener("click", () => {
+    dropDownTeam.style.display = "none";
+    pullUpTeam.style.display = "block";
+    mainPannel.style.top = "70vh";
+    mainPannel.style.height = "30vh";
+    teamColorIntro.style.display = "none";
+    teamsOuter.style.display = "none";
 })
 
 
@@ -529,12 +579,14 @@ pullUpTracking.addEventListener("click", () => {
     pullUpTracking.style.display = "none";
     dropDownTracking.style.display = "block";
     trackingPannel.style.top = "20vh";
+    trackingPannel.style.height = "80vh";
 })
 
 dropDownTracking.addEventListener("click", () => {
     dropDownTracking.style.display = "none";
     pullUpTracking.style.display = "block";
-    trackingPannel.style.top = "65vh";
+    trackingPannel.style.top = "70vh";
+    trackingPannel.style.height = "30vh";
 })
 
 
