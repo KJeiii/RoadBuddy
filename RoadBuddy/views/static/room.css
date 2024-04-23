@@ -21,8 +21,12 @@ body {
 .close-invitation:hover,
 .search-icon:hover,
 .teams-list .item:hover,
-.pull-up:hover,
-.drop-down:hover,
+.pull-up-friend:hover,
+.drop-down-friend:hover,
+.pull-up-team:hover,
+.drop-down-team:hover,
+.pull-up-tracking:hover,
+.drop-down-tracking:hover,
 .nav-add-friend:hover,
 .nav-add-team:hover,
 .create-list .item:hover,
@@ -91,15 +95,17 @@ button:hover
 /* ------ main pannel -----*/
 .main-pannel {
     position: absolute;
-    top: 65vh;
+    top: 70vh;
     z-index: 1000;
     width: 100vw;
-    height: 80vh;
+    height: 30vh;
     background-color: white;
     border-radius: 30px 30px 0 0;
 }
 
-.pull-up {
+.pull-up-friend,
+.pull-up-team,
+.pull-up-tracking {
     width: 15px;
     height: 15px;
     background-image: url("../static/images/double-angles-up.svg");
@@ -109,7 +115,14 @@ button:hover
     margin-top: 10px;
 }
 
-.drop-down {
+.pull-up-team,
+.pull-up-tracking {
+    display: none;
+}
+
+.drop-down-friend,
+.drop-down-team,
+.drop-down-tracking {
     display: none;
     width: 15px;
     height: 15px;
@@ -208,7 +221,7 @@ nav {
 }
 
 .main-pannel .friends-outer {
-    display: flex;
+    display: none;
     justify-content: center;
     width: 80%;
     height: 40%;
@@ -218,17 +231,13 @@ nav {
 
 .friend-color-intro,
 .team-color-intro {
-    display: flex;
+    display: none;
     align-items: center;
     justify-content: center;
     width: 80vw;
     margin: 10px auto;
     border-bottom: 2px solid rgb(182, 181, 181);
     padding-bottom:10px;
-}
-
-.team-color-intro {
-    display: none;
 }
 
 .online {
@@ -478,7 +487,7 @@ input[name=create-team]
 
 /* ----- team pannel ----- */
 .teams-pannel .friends-outer {
-    display: flex;
+    display: none;
     justify-content: center;
     width: 80%;
     height: 40%;
@@ -590,10 +599,10 @@ input[name=create-team]
 .tracking-pannel {
     display: none;
     position: absolute;
-    top: 65vh;
+    top: 70vh;
     z-index: 1000;
     width: 100vw;
-    height: 80vh;
+    height: 30vh;
     background-color: white;
     border-radius: 30px 30px 0 0;
 }
