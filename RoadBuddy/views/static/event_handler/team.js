@@ -13,7 +13,7 @@ function switchToTrackingPannel () {
     settingOffTracking.style.display = "none";
 };
 
-function switchPannel(toPannel, ...turnOnSettingBtn) {
+function switchPannel(toPannel, ...turnOnBtns) {
     let//
     pannels = [
         mainPannel, 
@@ -21,14 +21,20 @@ function switchPannel(toPannel, ...turnOnSettingBtn) {
         teamsPannel,
         trackingPannel
     ],
-    settingBtns = [
+    btns = [
         settingOnMain, 
         settingOffMain, 
         settingOnTracking, 
         settingOffTracking, 
         logout,
         invite,
-        leave   
+        leave,
+        pullUpFriend,
+        pullUpTeam,
+        pullUpTracking,
+        dropDownFriend,
+        dropDownTeam,
+        dropDownTracking   
     ];
 
     // turn on specified pannel; others would be turned off
@@ -41,8 +47,8 @@ function switchPannel(toPannel, ...turnOnSettingBtn) {
     }
 
     // turn on specified button; others would be turned off
-    for (btn of settingBtns) {
-        if (turnOnSettingBtn.includes(btn)) {
+    for (btn of btns) {
+        if (turnOnBtns.includes(btn)) {
             btn.style.display = "block"
             continue
         }
@@ -85,7 +91,7 @@ function removePartner(user_id) {
 // ----- sender emit invitation to listner "team_invite" on server  -----
 startTripBtn.addEventListener("click", ()=> {
     // switch to tracking pannel
-    switchPannel(trackingPannel, settingOnTracking);
+    switchPannel(trackingPannel, settingOnTracking, pullUpTracking);
 
     // Organize data emitted to listener "enter_team" on server
     let//
