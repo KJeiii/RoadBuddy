@@ -66,15 +66,19 @@ def Team():
     # PATCH method : add new partner in team created already
     if request.method == "PATCH":
         try:
-            team_id = request.json["team_id"]
-            partner_id = request.json["user_id"]
-
-            not_join_yet = True if len(teamTool.Search_joined_team(partner_id)) < 1 else False
+            team_id = int(request.json["team_id"])
+            partner_id = int(request.json["user_id"])
+            joined_teams = teamTool.Search_joined_team(partner_id)
+            
+            not_join_yet = True
+            for team in joined_teams:
+                if team["team_id"] == team_id:
+                    not_join_yet = False
 
             if not_join_yet:
                 teamTool.Add_partner(
                     team_id = team_id,
-                    partner_id = partner_id
+                    partner_id = [partner_id]
                 )
 
                 response = {
