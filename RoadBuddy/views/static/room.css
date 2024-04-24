@@ -630,6 +630,7 @@ input[name=create-team]
     grid-template-columns: 80% 80%;
     gap: 10px;
     margin: 10px 10px;
+    width: 50%;
 }
 
 .tracking-pannel .item {
@@ -647,7 +648,6 @@ input[name=create-team]
     width: 20px;
     height: 20px;
     margin-right: 10%;
-    /* background-color: aqua; */
 }
 
 .tracking-pannel .username {
