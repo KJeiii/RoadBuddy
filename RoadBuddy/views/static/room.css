@@ -279,6 +279,7 @@ nav {
     grid-template-columns: 40% 40% 40%;
     gap: 10px;
     margin: 10px 10px;
+    width: 60%;
 }
 
 .main-pannel .item {
