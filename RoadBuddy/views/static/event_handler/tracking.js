@@ -1,3 +1,4 @@
+import * as DOMElements from "../Utils/DOMElements.js";
 
 // test user's position by select position from randomPosition
 let randomCoords = {
@@ -44,7 +45,7 @@ socket.on("initPosition", (partners) => {
                     color: colorReference[id].color,
                     fillOpacity: 0.7
                 };
-                let markerToAdd = L.circleMarker([partners[sid][0].latitude, partners[sid][0].longitude], markerOption).addTo(map);
+                let markerToAdd = L.circleMarker([partners[sid][0].latitude, partners[sid][0].longitude], markerOption).addTo(DOMElements.map);
     
                 // 2. register new partner information (sid, circleMaker object)
                 sidArray.push(sid);
@@ -71,7 +72,7 @@ socket.on("initPosition", (partners) => {
 
 // ----- update partners postion when moving -----
 socket.on("movingPostion", (partners) => {
-    for (sid of sidArray) {
+    for (let sid of sidArray) {
         try {
         let//
         oldLatLng = [partners[sid][0].latitude, partners[sid][0].longitude],
