@@ -1,5 +1,4 @@
 // ----- initialize socket.io -----
-let socket = io();
 socket.on("connect", ()=>{
     sidArray.push(socket.id);
     window.sessionStorage.setItem("sid", socket.id);
@@ -7,7 +6,7 @@ socket.on("connect", ()=>{
     let//
     friend_list = [],
     friend_items = document.querySelectorAll(".main-pannel .friends-list .item");
-    for ( item of friend_items ) {
+    for ( let item of friend_items ) {
         let friend_info = {
             user_id: item.getAttribute("id"),
             username: item.textContent
