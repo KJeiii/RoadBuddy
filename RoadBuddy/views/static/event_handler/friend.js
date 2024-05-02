@@ -1,6 +1,8 @@
+import * as DOMElements from "../Utils/DOMElements.js";
+import {LoadFriendList} from "../Utils/LoadFriendList.js";
+
 let addFriendBtn = document.querySelector(".friends-pannel button");
 addFriendBtn.addEventListener("click", () => {
-    console.log("click");
     let//
     checkboxes = document.querySelectorAll(".friends-pannel input[type=checkbox]"),
     friendID = [];
@@ -18,12 +20,12 @@ addFriendBtn.addEventListener("click", () => {
 
         // find all old friends user_id
         let oldFriendId = [];
-        for ( datum of data ) {
+        for ( let datum of data ) {
             oldFriendId.push(datum["user_id"])
         }
 
         // find all new friends user_id
-        for ( checkbox of checkboxes) {
+        for ( let checkbox of checkboxes) {
             if ( checkbox.checked ) { friendID.push(checkbox.getAttribute("id")*1)}
         }
 
@@ -42,7 +44,7 @@ addFriendBtn.addEventListener("click", () => {
         let//
         repeatID = [],
         uniqueID = [];
-        for ( friend of friendID ) {
+        for ( let friend of friendID ) {
             if ( oldFriendId.includes(friend) ) {
                 repeatID.push(friend)
                 continue
@@ -59,7 +61,7 @@ addFriendBtn.addEventListener("click", () => {
         // NOT allowed if they have been friend between user and one of selected people
         if (!allowToSend) {
             let repeatIDString = "";
-            for ( friend of data) {
+            for ( let friend of data) {
                 if ( repeatID.includes(friend.user_id) ) {
                     repeatIDString += ` ${friend.username} `;
                 }}
@@ -97,7 +99,6 @@ document.querySelector(".friend-request button").addEventListener("click", ()=>{
 });
 
 // *** as a receiver
-var friend_sender_info_cache;
 socket.on("friend_request", (data) => {
     friend_sender_info_cache = data;
 
@@ -135,8 +136,8 @@ friendYesBtn.addEventListener("click", () => {
 
             // update latest friend list
             // 1. remove old list
-            while ( mainPannelFriendsList.hasChildNodes() ) {
-                mainPannelFriendsList.removeChild(mainPannelFriendsList.lastChild)
+            while ( DOMElements.mainPannelFriendsList.hasChildNodes() ) {
+                DOMElements.mainPannelFriendsList.removeChild(mainPannelFriendsList.lastChild)
             }
 
             // 2. create new list
@@ -144,8 +145,8 @@ friendYesBtn.addEventListener("click", () => {
             // friendsPannel.style.display = "none";
             // mainPannel.style.display = "block";
              .then(() => {
-                friendsPannel.style.display = "none";
-                mainPannel.style.display = "block";
+                DOMElements.friendsPannel.style.display = "none";
+                DOMElements.mainPannel.style.display = "block";
 
                 // update server friend_list in user_info dict
                 let//
@@ -239,13 +240,13 @@ socket.on("friend_request_result", (data) => {
             })
             .then((response) => {return response.json()})
             .then((result) => {
-                while ( mainPannelFriendsList.hasChildNodes() ) {
-                    mainPannelFriendsList.removeChild(mainPannelFriendsList.lastChild)
+                while ( DOMElements.mainPannelFriendsList.hasChildNodes() ) {
+                    DOMElements.mainPannelFriendsList.removeChild(DOMElements.mainPannelFriendsList.lastChild)
                 }
 
                 LoadFriendList(window.sessionStorage.getItem("user_id"));
-                friendsPannel.style.display = "none";
-                mainPannel.style.display = "block";
+                DOMElements.friendsPannel.style.display = "none";
+                DOMElements.mainPannel.style.display = "block";
 
                 console.log(`${window.sessionStorage.getItem("username")} add ${data.receiver_info.username}`);
 
@@ -318,7 +319,7 @@ socket.on("update_friend_status", (data) => {
 
         // update online status (change color) in main pannel friend list
         let mainPannelFriendItems = document.querySelectorAll(".main-pannel .friends-list .item");
-        for ( item of mainPannelFriendItems ) {
+        for ( let item of mainPannelFriendItems ) {
             if (Object.keys(data).includes(`${item.getAttribute("id")}`)) {
                 item.style.backgroundColor = "rgb(182, 232, 176)";
                 item.style.border = "solid 3px rgb(22, 166, 6)";
@@ -332,7 +333,7 @@ socket.on("update_friend_status", (data) => {
         // update friend list in team pannel
         // update item.style.display to flex when friend is on-line
         let teamPannelFriendItems = document.querySelectorAll(".teams-pannel .friends-list .item");
-        for ( item of teamPannelFriendItems ) {
+        for ( let item of teamPannelFriendItems ) {
             if ( Object.keys(data).includes(`${item.getAttribute("id")}`) ) {
                 item.style.display = "flex";
                 continue;
@@ -345,7 +346,7 @@ socket.on("update_friend_status", (data) => {
     // update friend list when user is online
     // update online status in main pannel friend list
     let mainPannelFriendItems = document.querySelectorAll(".main-pannel .friends-list .item");
-    for ( item of mainPannelFriendItems ) {
+    for ( let item of mainPannelFriendItems ) {
         if (item.getAttribute("id")*1 === data["user_id"]*1) {
             item.style.backgroundColor = "rgb(182, 232, 176)";
             item.style.border = "solid 3px rgb(22, 166, 6)";
@@ -357,7 +358,7 @@ socket.on("update_friend_status", (data) => {
     // update friend list in team pannel
     // update item.style.display to flex when friend is on-line
     let teamPannelFriendItems = document.querySelectorAll(".teams-pannel .friends-list .item");
-    for ( item of teamPannelFriendItems ) {
+    for ( let item of teamPannelFriendItems ) {
         if (item.getAttribute("id")*1 === data["user_id"]*1) {
             item.style.display = "flex";
             break
@@ -372,7 +373,7 @@ socket.on("offline_friend_status", (data) => {
     // update friend list when user is online
     // 1. update online status in main pannel friend list (color switches to "grey")
     let mainPannelFriendItems = document.querySelectorAll(".main-pannel .friends-list .item");
-    for ( item of mainPannelFriendItems ) {
+    for ( let item of mainPannelFriendItems ) {
         if (item.getAttribute("id")*1 === data["user_id"]*1) {
             item.style.backgroundColor = "rgb(235, 234, 234)";
             item.style.border = "solid 3px rgb(182, 181, 181)";
@@ -383,7 +384,7 @@ socket.on("offline_friend_status", (data) => {
 
     // 2. update friend list in team pannel (display switches to "none")
     let teamPannelFriendItems = document.querySelectorAll(".teams-pannel .friends-list .item");
-    for ( item of teamPannelFriendItems ) {
+    for ( let item of teamPannelFriendItems ) {
         if (item.getAttribute("id")*1 === data["user_id"]*1) {
             item.style.display = "none";
             break
