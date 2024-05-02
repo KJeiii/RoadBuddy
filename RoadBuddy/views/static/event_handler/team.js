@@ -1,97 +1,11 @@
-function switchToTrackingPannel () {
-    // switch to tracking pannel
-    mainPannel.style.display = "none";
-    friendsPannel.style.display = "none";
-    teamsPannel.style.display = "none";
-    trackingPannel.style.display = "block";
-
-
-    // change elements in setting div
-    settingOnMain.style.display = "none";
-    settingOffMain.style.display = "none";
-    settingOnTracking.style.display = "block";
-    settingOffTracking.style.display = "none";
-};
-
-function switchPannel(toPannel, ...turnOnBtns) {
-    let//
-    pannels = [
-        mainPannel, 
-        friendsPannel, 
-        teamsPannel,
-        trackingPannel
-    ],
-    btns = [
-        settingOnMain, 
-        settingOffMain, 
-        settingOnTracking, 
-        settingOffTracking, 
-        logout,
-        invite,
-        leave,
-        pullUpFriend,
-        pullUpTeam,
-        pullUpTracking,
-        dropDownFriend,
-        dropDownTeam,
-        dropDownTracking   
-    ];
-
-    // turn on specified pannel; others would be turned off
-    for (pannel of pannels) {
-        if (pannel === toPannel) {
-            pannel.style.display = "block"
-            continue
-        }
-        pannel.style.display = "none"
-    }
-
-    // turn on specified button; others would be turned off
-    for (btn of btns) {
-        if (turnOnBtns.includes(btn)) {
-            btn.style.display = "block"
-            continue
-        }
-        btn.style.display = "none"
-    }
-}
-
-function appendPartner (user_id, container, reference) {
-    let//
-    item = document.createElement("div"),
-    icon = document.createElement("div"),
-    username = document.createElement("div");
-
-    item.setAttribute("class", "item");
-    item.setAttribute("id", user_id);
-    icon.setAttribute("class", "icon");
-    icon.style.backgroundColor = reference[user_id].color;
-    username.setAttribute("class", "username");
-    username.setAttribute("id", user_id);
-    username.textContent = reference[user_id].username;
-
-    item.appendChild(icon);
-    item.appendChild(username);
-    container.appendChild(item);
-};
-
-function removePartner(user_id) {
-
-    let//
-    partnersList = document.querySelector(".tracking-pannel .partners-list");
-    partnerItems = document.querySelectorAll(".tracking-pannel .partners-list .item");
-
-    for ( item of partnerItems ) {
-        if ( item.getAttribute("id")*1 === user_id*1 ) {
-            partnersList.removeChild(item);
-        }
-    }
-}
+import { switchPannel, switchToTrackingPannel } from "../Utils/SwitchPannel.js";
+import { appendPartner, removePartner } from "../Utils/ManagePartners.js";
+import * as DOMElements from "../Utils/DOMElements.js";
 
 // ----- sender emit invitation to listner "team_invite" on server  -----
-startTripBtn.addEventListener("click", ()=> {
+DOMElements.startTripBtn.addEventListener("click", ()=> {
     // switch to tracking pannel
-    switchPannel(trackingPannel, settingOnTracking, pullUpTracking);
+    switchPannel(DOMElements.trackingPannel, DOMElements.settingOnTracking, DOMElements.pullUpTracking);
 
     // Organize data emitted to listener "enter_team" on server
     let//
@@ -100,7 +14,7 @@ startTripBtn.addEventListener("click", ()=> {
     teamID = document.querySelector(".teams-pannel .pannel-title").getAttribute("id");
     window.sessionStorage.setItem("team_id", teamID);
 
-    for (checkbox of checkboxes) {
+    for (let checkbox of checkboxes) {
         if (checkbox.checked) {
             friendsToAdd.push(checkbox.getAttribute("id")*1);
             let randomColor = `rgb(${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)})`;
@@ -119,7 +33,7 @@ startTripBtn.addEventListener("click", ()=> {
     // create owner information in partners-list;
     // others will be created when they join in
     let partnersList = document.querySelector(".tracking-pannel .partners-list");
-    for ( id in partnersColor) {
+    for ( let id in partnersColor) {
         if (id*1 === window.sessionStorage.getItem("user_id")*1) {
             appendPartner(id, partnersList, partnersColor);
         }
@@ -154,7 +68,6 @@ startTripBtn.addEventListener("click", ()=> {
 
 
 // ----- listener for receiving event "team_invite" from server -----
-var team_sender_info_cache;
 socket.on("team_invite", (data) => {
     team_sender_info_cache = data
 
@@ -173,13 +86,13 @@ socket.on("team_invite", (data) => {
 let teamYesBtn = document.querySelector(".team-invite-prompt .yes");
 teamYesBtn.addEventListener("click", () => {
     // switch to tracking pannel
-    switchPannel(trackingPannel, settingOnTracking);
+    switchPannel(DOMElements.trackingPannel, DOMElements.settingOnTracking);
     
     // create partner information in partners-list
     // 1. only show team owner and partner it self
     // 2. update other partners when they join in
     let partnersList = document.querySelector(".tracking-pannel .partners-list");
-    for ( id in team_sender_info_cache["partners_color"] ) {
+    for ( let id in team_sender_info_cache["partners_color"] ) {
         if ( id*1 === team_sender_info_cache["user_id"]*1 ) {
             appendPartner(id, partnersList, team_sender_info_cache["partners_color"]);
         }
@@ -304,7 +217,7 @@ socket.on("add_partner", (user_id) => {
 
     // Team owner updates it's partner list
     if ( team_sender_info_cache === undefined ) {
-        for ( id in partnersColor) {
+        for ( let id in partnersColor) {
             if ( id*1 === user_id*1 ) {
                 appendPartner(id, partnersList, partnersColor);
             }
@@ -356,16 +269,16 @@ leaveTeamBtn.addEventListener("click", ()=> {
     // *************************
     // switch to mainPannel
     // change elements in setting div
-    leaveTeamBtn.style.display = "none";
-    invite.style.display = "none";
-    settingOnMain.style.display = "block";
-    settingOffMain.style.display = "none";
-    settingOnTracking.style.display = "none";
-    settingOffTracking.style.display = "none";
+    DOMElements.leaveTeamBtn.style.display = "none";
+    DOMElements.invite.style.display = "none";
+    DOMElements.settingOnMain.style.display = "block";
+    DOMElements.settingOffMain.style.display = "none";
+    DOMElements.settingOnTracking.style.display = "none";
+    DOMElements.settingOffTracking.style.display = "none";
 
-    trackingPannel.style.display = "none";
-    teamsPannel.style.display = "none"
-    mainPannel.style.display = "block"
+    DOMElements.trackingPannel.style.display = "none";
+    DOMElements.teamsPannel.style.display = "none"
+    DOMElements.mainPannel.style.display = "block"
 
     // remove all partner in the tracking pannel
     let trackingPannelPartnerList = document.querySelector(".tracking-pannel .partners-list");
@@ -437,30 +350,30 @@ invitationBtn.addEventListener("click", () => {
     // *************************
     document.querySelector(".teams-pannel .pannel-title").style.display = "none";
     document.querySelector(".teams-pannel .search").style.display = "none";
-    invitationBtn.style.display = "none";
-    leaveTeamBtn.style.display = "none";
-    settingOffTracking.style.display = "none";
-    settingOnTracking.style.display = "block";
+    DOMElements.invitationBtn.style.display = "none";
+    DOMElements.leaveTeamBtn.style.display = "none";
+    DOMElements.settingOffTracking.style.display = "none";
+    DOMElements.settingOnTracking.style.display = "block";
 
-    createTeamBtn.style.display = "none";
-    startTripBtn.style.display = "none";
-    inviteTripBtn.style.display = "block";
-    teamsPannel.style.display = "flex";
+    DOMElements.createTeamBtn.style.display = "none";
+    DOMElements.startTripBtn.style.display = "none";
+    DOMElements.inviteTripBtn.style.display = "block";
+    DOMElements.teamsPannel.style.display = "flex";
 
     let friendItems = document.querySelectorAll(".teams-pannel .friends-list input");
-    for ( item of friendItems ) {
+    for ( let item of friendItems ) {
         item.checked = false
     }
 })
 
 
 // send invitation
-inviteTripBtn.addEventListener("click", () => {
+DOMElements.inviteTripBtn.addEventListener("click", () => {
     let//
     friendInputs = document.querySelectorAll(".teams-pannel .friends-list input"),
     friendToInvite = [];
 
-    for ( input of friendInputs ) {
+    for ( let input of friendInputs ) {
         let user_id = input.getAttribute("id");
         if ( input.checked && !Object.keys(partnersColor).includes(user_id)){
             friendToInvite.push(user_id*1)
@@ -486,13 +399,13 @@ inviteTripBtn.addEventListener("click", () => {
     // *************************
     // close team pannel and go back to tracking pannel
     document.querySelector(".teams-pannel .close").style.display = "none";
-    closeInvitationBtn.style.display = "block";
-    mainPannel.style.display = "none";
-    teamsPannel.style.display = "none";
-    settingOffTracking.style.display = "none";
-    settingOnTracking.style.display = "block";
-    invitationBtn.style.display = "none";
-    leaveTeamBtn.style.display = "none";
+    DOMElements.closeInvitationBtn.style.display = "block";
+    DOMElements.mainPannel.style.display = "none";
+    DOMElements.teamsPannel.style.display = "none";
+    DOMElements.settingOffTracking.style.display = "none";
+    DOMElements.settingOnTracking.style.display = "block";
+    DOMElements.invitationBtn.style.display = "none";
+    DOMElements.leaveTeamBtn.style.display = "none";
 })
 
 
@@ -501,20 +414,53 @@ let closeInvitationBtn = document.querySelector(".close-invitation");
 closeInvitationBtn.addEventListener("click", () => {
 
     // *************************
-    teamsPannel.style.display = "none";
-    mainPannel.style.display = "none";
+    DOMElements.teamsPannel.style.display = "none";
+    DOMElements.mainPannel.style.display = "none";
     document.querySelector(".teams-pannel .close") = "block";
-    closeInvitationBtn.style.display = "none";
+    DOMElements.closeInvitationBtn.style.display = "none";
 })
 
 
 
 //  Listener for receiving event "update_team_status" event from server
+// const teamOnline = () => {
+//     document.querySelector(".teams-pannel .pannel-title").textContent = this.textContent;
+//     document.querySelector(".teams-pannel .pannel-title").setAttribute("id", this.getAttribute("id"));
+//     document.querySelectorAll(".teams-pannel .pannel-title")[1].style.display = "none";
+//     document.querySelector(".teams-pannel .search").style.display = "none";
+//     document.querySelector(".teams-pannel .friends-outer").style.display = "none";
+//     teamsPannel.style.top = "65vh";
+//     createTeamBtn.style.display = "none";
+//     startTripBtn.style.display = "block";
+//     inviteTripBtn.style.display = "none";
+//     mainPannel.style.display = "none";
+//     teamsPannel.style.display = "flex";
+//     dropDownMain.style.display = "block";
+//     pullUpMain.style.display = "none";
+//     createTeamBtn.style.display = "none";
+//     startTripBtn.style.display = "none";
+//     inviteTripBtn.style.display = "none";
+//     joinTripBtn.style.display = "block";
+// };
+
+// const teamOffline = () => {
+//     let//
+//     teamCreateResponse = document.querySelector(".team-join-response"),
+//     content = document.querySelector(".team-join-response .content");
+//     content.textContent = `${this.textContent}的擁有者，尚未啟程`;
+//     teamCreateResponse.style.display = "block";
+//     mainPannel.style.top = "vh";
+//     dropDownMain.style.display = "none";
+//     pullUpMain.style.display = "block";
+// };
+
 socket.on("update_team_status", (team_online_list) => {
 
     // update join team list when friend gets online
     let joinTeamitems = document.querySelectorAll(".main-pannel .join-list .item");
-    for ( item of joinTeamitems) {
+    for ( let item of joinTeamitems) {
+        // removing all click event as resetting
+
         if (team_online_list.includes(item.getAttribute("id"))) {
             // 1. change color to  green
             item.style.backgroundColor = "rgb(182, 232, 176)";
@@ -528,18 +474,18 @@ socket.on("update_team_status", (team_online_list) => {
                 document.querySelectorAll(".teams-pannel .pannel-title")[1].style.display = "none";
                 document.querySelector(".teams-pannel .search").style.display = "none";
                 document.querySelector(".teams-pannel .friends-outer").style.display = "none";
-                teamsPannel.style.top = "65vh";
-                createTeamBtn.style.display = "none";
-                startTripBtn.style.display = "block";
-                inviteTripBtn.style.display = "none";
-                mainPannel.style.display = "none";
-                teamsPannel.style.display = "flex";
-                dropDownMain.style.display = "block";
-                pullUpMain.style.display = "none";
-                createTeamBtn.style.display = "none";
-                startTripBtn.style.display = "none";
-                inviteTripBtn.style.display = "none";
-                joinTripBtn.style.display = "block";
+                DOMElements.teamsPannel.style.top = "65vh";
+                DOMElements.createTeamBtn.style.display = "none";
+                DOMElements.startTripBtn.style.display = "block";
+                DOMElements.inviteTripBtn.style.display = "none";
+                DOMElements.mainPannel.style.display = "none";
+                DOMElements.teamsPannel.style.display = "flex";
+                DOMElements.dropDownMain.style.display = "block";
+                DOMElements.pullUpMain.style.display = "none";
+                DOMElements.createTeamBtn.style.display = "none";
+                DOMElements.startTripBtn.style.display = "none";
+                DOMElements.inviteTripBtn.style.display = "none";
+                DOMElements.joinTripBtn.style.display = "block";
             })
         }
         else{
@@ -555,9 +501,9 @@ socket.on("update_team_status", (team_online_list) => {
                 content = document.querySelector(".team-join-response .content");
                 content.textContent = `${this.textContent}的擁有者，尚未啟程`;
                 teamCreateResponse.style.display = "block";
-                mainPannel.style.top = "65vh";
-                dropDownMain.style.display = "none";
-                pullUpMain.style.display = "block";
+                DOMElements.mainPannel.style.top = "65vh";
+                DOMElements.dropDownMain.style.display = "none";
+                DOMElements.pullUpMain.style.display = "block";
             })
         }
     }
@@ -678,13 +624,13 @@ socket.on("accept_team_request", (data) => {
     socket.emit("enter_team", joinTeamData);
 
     // switch to tracking pannel
-    switchPannel(trackingPannel, settingOnTracking);
+    switchPannel(DOMElements.trackingPannel, DOMElements.settingOnTracking);
 
     // create partner information in partners-list
     // 1. only show team owner and partner it self
     // 2. update other partners when they join in
     let partnersList = document.querySelector(".tracking-pannel .partners-list");
-    for ( id in team_sender_info_cache["partners_color"] ) {
+    for ( let id in team_sender_info_cache["partners_color"] ) {
 
         // create leader item first
         if ( id*1 === team_sender_info_cache["user_id"]*1 ) {
