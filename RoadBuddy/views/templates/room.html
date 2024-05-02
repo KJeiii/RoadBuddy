@@ -198,11 +198,27 @@
         <button class="alert">send</button>
         <button class="leave">leave</button>
     </div>
-        
-    <script src="../static/room.js"></script>
-    <script src="../static/event_handler/connect.js"></script>
-    <script src="../static/event_handler/friend.js"></script>
-    <script src="../static/event_handler/team.js"></script>
-    <script src="../static/event_handler/tracking.js"></script>
+    <script>
+        // build global variables
+        let//
+        marker,
+        initialCoord,
+        sidArray = [],
+        sidReference,
+        markerArray = [],
+        ownColor = `rgb(${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)})`,
+        partnersColor = {},
+        map,
+        team_sender_info_cache,
+        friend_sender_info_cache;
+
+        //initialize socket.io
+        let socket = io();
+    </script>
+    <script type="module" src="../static/room.js"></script>
+    <script type="module" src="../static/event_handler/connect.js"></script>
+    <script type="module" src="../static/event_handler/friend.js"></script>
+    <script type="module" src="../static/event_handler/team.js"></script>
+    <script type="module" src="../static/event_handler/tracking.js"></script>
 </body>
 </html>
