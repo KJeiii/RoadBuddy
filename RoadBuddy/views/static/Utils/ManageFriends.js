@@ -1,3 +1,5 @@
+import * as DOMElements from "./DOMElements.js";
+
 // ----- build function for searching new friend -----
 export async function SearchNewFriends(username) {
     let response = await fetch("/api/friend/search", {
@@ -45,7 +47,7 @@ export async function SearchOldFriends(){
         body: JSON.stringify({user_id: window.sessionStorage.getItem("user_id")})
     });
 
-    if (!response.ol) {throw new Error("Searching old friends failed (ManageFriends.js)")}
+    if (!response.ok) {throw new Error("Searching old friends failed (ManageFriends.js)")}
     let//
     result = await response.json(),
     oldFriendsList = result.data;
@@ -90,40 +92,17 @@ export function CheckRelationship(oldFriendsList){
         uniqueID.push(friend);
     }
 
-    // Decide if it is allowed to send friend request
     let result = {
-        notYetMet: (repeatID.length > 0) ? false:true,
+        repetitionIDs: repeatID,
         newFriendIDs: uniqueID
     }
-
     return result
 }
 
-export function ShowFriendRequest(notYetMet, oldFriendsList){
-    let statement = `已發出交友申請`;
-    // NOT allowed if they have been friend between user and one of selected people
-    if (!notYetMet){
-        let repeatIDString = "";
-        for ( let friend of oldFriendsList) {
-            if ( repeatID.includes(friend.user_id) ) {
-                repeatIDString += ` ${friend.username} `;
-            }}
-        statement = `你與${repeatIDString}已經是好友關係，請重新選擇對象`;
-    }
 
-    let//
-    alert = document.querySelector(".friend-request"),
-    alertContent = document.querySelector(".friend-request .content");
-
-    alert.style.display = "block";
-    alertContent.textContent = statement;
-    return
-}
-
-
-export function SendFriendRequest(notYetMet, newFriendIDs){
-    // Allowed if friendship has not benn built yet 
-    if ( notYetMet && newFriendIDs.length !== 0 ) {
+export function SendFriendRequest(repetitionIDs, newFriendIDs){
+    // Allowed if friendship has not been built yet 
+    if ( repetitionIDs.length == 0 && newFriendIDs.length !== 0 ) {
         let sender_data = {
             sender_sid: socket.id,
             receiver_id: newFriendIDs
@@ -166,17 +145,3 @@ export function SendFriendResponse(isAccept, mySocketID, newFriendSocketID, newF
     socket.emit("friend_request_result", data);
 }
 
-export function ControlFriendResponse(toShow, isAccept, newFriendName){
-    let//
-    alert = document.querySelector(".friend-response"),
-    alertContent = document.querySelector(".friend-response .content");
-
-    alertContent.textContent = (isAccept) ? `你與 ${newFriendName} 已結為好友` : `你已拒絕 ${newFriendName} 的好友邀請`;
-    alertContent.textContent = (toShow) ? alertContent.textContent : "";
-    alert.style.display = (toShow) ? "block" : "none";
-    friend_sender_info_cache = "";
-}
-
-export function ControlFriendPromt(toShow, ){
-
-}
