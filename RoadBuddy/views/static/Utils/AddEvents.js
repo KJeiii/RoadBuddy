@@ -1,18 +1,20 @@
 import * as DOMElements from "./DOMElements.js";
 import { LoadTeamList } from "./LoadTeamList.js";
-import { 
-    SearchNewFriends, RenderSearchResult, SearchOldFriends, 
-    CheckRelationship, ShowFriendAlert, SendFriendRequest,
+import { LoadFriendList } from "./LoadFriendList.js"
+import {
+    SearchNewFriends, RenderSearchResult, SearchOldFriends,
+    CheckRelationship, ShowFriendRequest, SendFriendRequest,
     MakeNewFriend, SendFriendResponse, ControlFriendResponse
- } 
+}
     from "./ManageFriends.js";
+import { ControlMsgBox } from "./GeneralControl.js";
 
 export const AllEvents = [
     AddEventsToSetting, AddEventsToSwitchPannel, AddEventsToFriend,
     AddEventsToTeam, AddEventsToPullAndDrop, AddEventsToClose, AddEventsToLogout
 ]
 
-export function AddEventsToSetting(){
+export function AddEventsToSetting() {
     // ----- toggle down setting  -----
     DOMElements.settingOnMain.addEventListener("click", () => {
         // config.style.display = "block";
@@ -40,7 +42,7 @@ export function AddEventsToSetting(){
         DOMElements.settingOnTracking.style.display = "none";
         DOMElements.settingOffTracking.style.display = "block";
 
-        if ( GlobalVars.team_sender_info_cache === undefined  ) {
+        if (GlobalVars.team_sender_info_cache === undefined) {
             DOMElements.invite.style.display = "block";
         }
     })
@@ -55,23 +57,23 @@ export function AddEventsToSetting(){
     })
 }
 
-export function AddEventsToSwitchPannel(){
+export function AddEventsToSwitchPannel() {
     // ----- switch menu -----
-    DOMElements.toggleOn.addEventListener("click", ()=>{
+    DOMElements.toggleOn.addEventListener("click", () => {
         DOMElements.menu.style.border = "0.5px solid rgb(151, 150, 150)";
         DOMElements.menuList.style.display = "block";
         DOMElements.toggleOn.style.display = "none";
         DOMElements.toggleOff.style.display = "block";
     })
 
-    DOMElements.toggleOff.addEventListener("click", ()=>{
+    DOMElements.toggleOff.addEventListener("click", () => {
         DOMElements.menu.style.border = "none";
         DOMElements.menuList.style.display = "none";
         DOMElements.toggleOff.style.display = "none";
         DOMElements.toggleOn.style.display = "block";
     })
 
-    DOMElements.menuFriends.addEventListener("click", ()=>{
+    DOMElements.menuFriends.addEventListener("click", () => {
         DOMElements.menuTitle.textContent = DOMElements.menuFriends.textContent;
         DOMElements.menuList.style.display = "none";
         DOMElements.menu.style.border = "none";
@@ -94,7 +96,7 @@ export function AddEventsToSwitchPannel(){
         DOMElements.addFriend.style.display = "block";
     })
 
-    DOMElements.menuTeam.addEventListener("click", ()=>{
+    DOMElements.menuTeam.addEventListener("click", () => {
         DOMElements.menuTitle.textContent = DOMElements.menuTeam.textContent;
         DOMElements.menuList.style.display = "none";
         DOMElements.menu.style.border = "none";
@@ -120,7 +122,7 @@ export function AddEventsToSwitchPannel(){
     })
 }
 
-export function AddEventsToFriend(){
+export function AddEventsToFriend() {
     // ----- switch to add friend page-----
     DOMElements.addFriend.addEventListener("click", () => {
         DOMElements.friendsPannel.style.display = "flex";
@@ -136,31 +138,39 @@ export function AddEventsToFriend(){
             DOMElements.searchList.removeChild(DOMElements.searchList.lastChild)
         }
 
-        if ( searchInput.value === "" ) {
+        if (searchInput.value === "") {
             searchInput.setAttribute("placeholder", "請填入姓名");
             return
         }
 
-        let//
-        username = document.querySelector("input[name=search-friend]").value,
-        newfriendsList = SearchNewFriends(username);
-        RenderSearchResult(newfriendsList);
+        let username = document.querySelector("input[name=search-friend]").value;
+        SearchNewFriends(username)
+            .then(newfriendsList => RenderSearchResult(newfriendsList))
+            .catch(error => console.log(error))
     });
 
     // --- send add friend request ---
     DOMElements.addFriendBtn.addEventListener("click", () => {
-        let//
-        oldFriendsList = SearchOldFriends(),
-        {notYetMet, newFriendIDs} = CheckRelationship(oldFriendsList);
-        ShowFriendAlert(notYetMet, oldFriendsList);
-        SendFriendRequest(notYetMet, newFriendIDs);
-        });
+        SearchOldFriends()
+            .then((oldFriendsList) => {
+                let { repetitionIDs, newFriendIDs } = CheckRelationship(oldFriendsList);
+                SendFriendRequest(repetitionIDs, newFriendIDs);
+
+                ControlMsgBox("friend-request", "block",
+                    {
+                        repetitionIDs: repetitionIDs,
+                        oldFriendsList: oldFriendsList
+                    })
+                //ShowFriendRequest(repetitionIDs, oldFriendsList);
+            })
+            .catch(error => console.log(error))
+    });
 
     // --- clear response content and disappear ---
-    DOMElements.friendRequestBtn.addEventListener("click", ()=>{
+    DOMElements.friendRequestBtn.addEventListener("click", () => {
         let//
-        response = document.querySelector(".friend-request"),
-        responseContent = document.querySelector(".friend-request .content");
+            response = document.querySelector(".friend-request"),
+            responseContent = document.querySelector(".friend-request .content");
 
         response.style.display = "none";
         responseContent.textContent = "";
@@ -169,38 +179,39 @@ export function AddEventsToFriend(){
     // --- Acceptance of friend request ---
     DOMElements.friendYesBtn.addEventListener("click", () => {
         // recover friend prompt
-        let//
-        prompt = document.querySelector(".friend-prompt"),
-        content = document.querySelector(".friend-prompt .content");
+        ControlMsgBox("friend-prompt", "none")
+        // let//
+        // prompt = document.querySelector(".friend-prompt"),
+        // content = document.querySelector(".friend-prompt .content");
 
-        content.textContent = "";
-        prompt.style.display = "none";
+        // content.textContent = "";
+        // prompt.style.display = "none";
 
         // receiver fetch api to add friend
         MakeNewFriend(window.sessionStorage.getItem("user_id"), friend_sender_info_cache.user_id)
-            .then(()=>{
+            .then(() => {
                 // update latest friend list
                 // 1. remove old list
-                while ( DOMElements.mainPannelFriendsList.hasChildNodes() ) {
+                while (DOMElements.mainPannelFriendsList.hasChildNodes()) {
                     DOMElements.mainPannelFriendsList.removeChild(DOMElements.mainPannelFriendsList.lastChild)
                 }
             })
-            .then(()=>{
+            .then(() => {
                 // 2. create new list
                 LoadFriendList(window.sessionStorage.getItem("user_id"))
-                    .then(()=>{
+                    .then(() => {
                         // switch to main pannel
                         DOMElements.friendsPannel.style.display = "none";
                         DOMElements.mainPannel.style.display = "block";
                     })
-                    .catch((error)=>{console.log(error)})
+                    .catch((error) => { console.log(error) })
             })
             .then(() => {
                 // update server friend_list in user_info dict
                 let//
-                friend_list = [],
-                friend_items = document.querySelectorAll(".main-pannel .friends-list .item");
-                for ( item of friend_items ) {
+                    friend_list = [],
+                    friend_items = document.querySelectorAll(".main-pannel .friends-list .item");
+                for (item of friend_items) {
                     let friend_info = {
                         user_id: item.getAttribute("id"),
                         username: item.textContent
@@ -216,25 +227,35 @@ export function AddEventsToFriend(){
                 };
                 socket.emit("store_userinfo", data);
             })
-            .then(()=>{
+            .then(() => {
                 // feedback result to sender
                 SendFriendResponse(true, socket.id, friend_sender_info_cache.sid, friend_sender_info_cache.user_id)
             })
-            .then(()=>{
+            .then(() => {
                 // show response
-                ControlFriendResponse(true, true, friend_sender_info_cache.username)
+                ControlMsgBox("friend-response", "block",
+                    {
+                        accept: true,
+                        senderID: friend_sender_info_cache.user_id,
+                        senderUsername: friend_sender_info_cache.username,
+                        receiverID: window.sessionStorage.getItem("user_id"),
+                        receiverUsername: window.sessionStorage.getItem("username"),
+                    }
+                )
+                //ControlFriendResponse(true, true, friend_sender_info_cache.username)
             })
-            .catch((error) => {console.log(error)})
+            .catch((error) => { console.log(error) })
     })
 
     // if reject request
     let friendNoBtn = document.querySelector(".friend-prompt .no");
     friendNoBtn.addEventListener("click", () => {
-        let//
-        prompt = document.querySelector(".friend-prompt"),
-        content = document.querySelector(".friend-prompt .content"); 
-        content.textContent = "";
-        prompt.style.display = "none";
+        ControlMsgBox("friend-prompt", "none")
+        // let//
+        // prompt = document.querySelector(".friend-prompt"),
+        // content = document.querySelector(".friend-prompt .content"); 
+        // content.textContent = "";
+        // prompt.style.display = "none";
 
         // feedback result to sender
         SendFriendResponse(false, socket.id, friend_sender_info_cache.sid, friend_sender_info_cache.user_id)
@@ -244,7 +265,7 @@ export function AddEventsToFriend(){
     })
 }
 
-export function AddEventsToTeam(){
+export function AddEventsToTeam() {
     // ----- add team page-----
     DOMElements.addTeam.addEventListener("click", () => {
         DOMElements.teamsPannel.style.display = "flex";
@@ -257,70 +278,70 @@ export function AddEventsToTeam(){
         let searchInput = document.querySelector("input[name=create-team]");
         searchInput.setAttribute("placeholder", "請輸入隊伍名稱");
 
-        if (searchInput.value === "" ) {
+        if (searchInput.value === "") {
             searchInput.setAttribute("placeholder", "請輸入隊伍名稱");
             return
         }
 
         fetch("/api/team", {
             method: "POST",
-            headers: {"Content-Type": "application/json"},
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                 team_name: searchInput.value,
                 user_id: window.sessionStorage.getItem("user_id")
             })
         })
-        .then((response) => {return response.json()})
-        .then((result) => {
+            .then((response) => { return response.json() })
+            .then((result) => {
 
-            if ( result.error ) {
-                searchInput.value = "";
-                searchInput.setAttribute("placeholder", "隊伍名稱已被使用，請輸入其他名稱");
-                return
-            }
+                if (result.error) {
+                    searchInput.value = "";
+                    searchInput.setAttribute("placeholder", "隊伍名稱已被使用，請輸入其他名稱");
+                    return
+                }
 
-            let//
-            createList = document.querySelector(".create-list"),
-            joinList = document.querySelector(".join-list");
+                let//
+                    createList = document.querySelector(".create-list"),
+                    joinList = document.querySelector(".join-list");
 
-            while ( createList.hasChildNodes() ) {
-                createList.removeChild(createList.lastChild)
-            }
+                while (createList.hasChildNodes()) {
+                    createList.removeChild(createList.lastChild)
+                }
 
-            // while ( joinList.hasChildNodes() ) {
-            //     joinList.removeChild(joinList.lastChild)
-            // }
+                // while ( joinList.hasChildNodes() ) {
+                //     joinList.removeChild(joinList.lastChild)
+                // }
 
-            LoadTeamList(window.sessionStorage.getItem("user_id"));
+                LoadTeamList(window.sessionStorage.getItem("user_id"));
 
-            DOMElements.teamsPannel.style.display = "none";
-            DOMElements.mainPannel.style.display = "block";
-            document.querySelectorAll(".teams-pannel .pannel-title")[1].style.display = "block";
-            document.querySelector(".teams-pannel .friends-outer").style.display = "block";
+                DOMElements.teamsPannel.style.display = "none";
+                DOMElements.mainPannel.style.display = "block";
+                document.querySelectorAll(".teams-pannel .pannel-title")[1].style.display = "block";
+                document.querySelector(".teams-pannel .friends-outer").style.display = "block";
 
-            // response when creation succeed
-            let//
-            teamCreateResponse = document.querySelector(".team-create-response"),
-            content = document.querySelector(".team-create-response .content");
-            content.textContent = `你已建立隊伍 ${searchInput.value}`;
-            teamCreateResponse.style.display = "block";
-            DOMElements.mainPannel.style.top = "65vh";
+                // response when creation succeed
+                let//
+                    teamCreateResponse = document.querySelector(".team-create-response"),
+                    content = document.querySelector(".team-create-response .content");
+                content.textContent = `你已建立隊伍 ${searchInput.value}`;
+                teamCreateResponse.style.display = "block";
+                DOMElements.mainPannel.style.top = "65vh";
 
-        })
-        .catch((error) => {console.log(`Error in creating team : ${error}`)})
+            })
+            .catch((error) => { console.log(`Error in creating team : ${error}`) })
     });
 
     // close team-create-response when click ok
     DOMElements.createOkBtn.addEventListener("click", () => {
         let//
-        teamCreateResponse = document.querySelector(".team-create-response"),
-        content = document.querySelector(".team-create-response .content");
+            teamCreateResponse = document.querySelector(".team-create-response"),
+            content = document.querySelector(".team-create-response .content");
         teamCreateResponse.style.display = "none";
         content.textContent = ``;
     });
 }
 
-export function AddEventsToPullAndDrop(){
+export function AddEventsToPullAndDrop() {
     // ----- pull up and drop down main pannel and tracking pannel ------
     DOMElements.pullUpFriend.addEventListener("click", () => {
         DOMElements.pullUpFriend.style.display = "none";
@@ -375,7 +396,7 @@ export function AddEventsToPullAndDrop(){
     })
 }
 
-export function AddEventsToClose(){
+export function AddEventsToClose() {
     // ----- close pannel ----
     for (close of DOMElements.closePannel) {
         close.addEventListener("click", () => {
@@ -396,10 +417,10 @@ export function AddEventsToClose(){
                 DOMElements.searchList.removeChild(DOMElements.searchList.lastChild)
             }
         })
-    };    
+    };
 }
 
-export function AddEventsToLogout(){
+export function AddEventsToLogout() {
     // ----- logout -----
     DOMElements.logout.addEventListener("click", () => {
         window.localStorage.removeItem("token");
