@@ -1,17 +1,13 @@
 import * as DOMElements from "../Utils/DOMElements.js";
 import {LoadFriendList} from "../Utils/LoadFriendList.js";
+import { ControlMsgBox } from "../Utils/GeneralControl.js";
 
 // *** as a receiver
 socket.on("friend_request", (data) => {
     friend_sender_info_cache = data;
 
     // prompt to ask willness
-    let//
-    prompt = document.querySelector(".friend-prompt"),
-    content = document.querySelector(".friend-prompt .content");
-
-    content.textContent = `來自 ${data.username} 的好友邀請`;
-    prompt.style.display = "block";
+    ControlMsgBox("friend-prompt", "block", {friendName: data.username})
 })
 
 // *** as a sender
@@ -65,24 +61,17 @@ socket.on("friend_request_result", (data) => {
                 socket.emit("store_userinfo", data);
             })
             .catch((error) => {console.log(`Error in add new friend : ${error}`)})
-
-            // show response
-            let//
-            response = document.querySelector(".friend-response"),
-            responseContent = document.querySelector(".friend-response .content");
-        
-            response.style.display = "block";
-            responseContent.textContent = `${data.receiver_info.username} 接受你的好友邀請`;
-            return
     }
-    // if request is rejected
-    let//
-    response = document.querySelector(".friend-response"),
-    responseContent = document.querySelector(".friend-response .content");
 
-    response.style.display = "block";
-    responseContent.textContent = `${data.receiver_info.username} 拒絕你的好友邀請`;
-
+    // show response
+    ControlMsgBox("friend-response", "block",
+        {
+            accept: data.accept,
+            senderID: window.sessionStorage.getItem("user_id"),
+            senderUsername: window.sessionStorage.getItem("username"),
+            receiverID: data.receiver_info.user_id,
+            receiverUsername: data.receiver_info.username
+        })
 })
 
 
