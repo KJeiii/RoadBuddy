@@ -1,4 +1,4 @@
-import { switchPannel, switchToTrackingPannel } from "../Utils/SwitchPannel.js";
+import { switchPannel, switchToTrackingPannel } from "../Utils/GeneralControl.js";
 import { appendPartner, removePartner } from "../Utils/ManagePartners.js";
 import * as DOMElements from "../Utils/DOMElements.js";
 
