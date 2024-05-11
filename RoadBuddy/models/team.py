@@ -69,7 +69,7 @@ class TeamTool(pooling.MySQLConnectionPool):
         return result
     
 
-    def Search_team_by_userid(self, owner_id:int) -> list:
+    def Search_created_team(self, owner_id:int) -> list:
         connection = self.get_connection()
         cursor = connection.cursor(dictionary=True)
 
