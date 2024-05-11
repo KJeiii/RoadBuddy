@@ -14,8 +14,12 @@ def Team():
     if request.method == "PUT":
         try:
             user_id = request.json["user_id"]
-            created_team_list = teamTool.Search_team_by_userid(user_id)
-            joined_team_list = teamTool.Search_joined_team(user_id)
+            if request.json["team_type"] == "created":
+                created_team_list = teamTool.Search_created_team(user_id)
+            
+            if request.json["team_type"] == "joined":
+                joined_team_list = teamTool.Search_joined_team(user_id)
+
             response = {
                 "ok": True,
                 "data": {
@@ -24,6 +28,7 @@ def Team():
                 }
             }
             return jsonify(response), 200
+
         
         except Exception as error:
             print(f'Error in controller(team) - Team(PUT method) : {error}')
