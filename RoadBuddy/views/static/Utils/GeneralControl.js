@@ -117,3 +117,21 @@ export function ControlMsgBox(boxType, display, ...rest){
         return
     }
 }
+
+export function ClearList(cssSelector){
+    let list = document.querySelector(cssSelector); //".main-pannel .create-list"
+    while (list.hasChildNodes()) {
+        list.removeChild(list.lastChild);
+    }    
+}
+
+export function RenderList(cssSelector, listItemArray){
+    let list = document.querySelector(cssSelector); //".create-list"
+    for ( let data of listItemArray) {
+        let item = document.createElement("div");
+        item.setAttribute("class", "item");
+        item.setAttribute("id", data.team_id);
+        item.textContent = data.team_name;
+        list.appendChild(item);
+    }    
+}
