@@ -1,0 +1,28 @@
+// seperate to 3 parts:
+// 1. search created team 
+// 2. search joined team
+// 3. render team list >> move to GeneralControl.js
+
+export async function SearchTeams(userID, teamType){
+    try {
+        let response = await fetch("/api/team", {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({user_id: userID, team_type: teamType})
+        });
+        
+        let result = await response.json();
+        return {
+            createdTeamList: result.data.created_team_list,
+            joinedTeamList: result.data.joined_team_list
+        }
+    }
+    catch(error){
+        console.log(error);
+        throw(new Error(`Search created teams failed (ManageTeams.js): ${error}`))
+    }
+}
+
+
