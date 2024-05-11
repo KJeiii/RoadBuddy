@@ -3,10 +3,8 @@ import { LoadTeamList } from "./LoadTeamList.js";
 import { LoadFriendList } from "./LoadFriendList.js"
 import {
     SearchNewFriends, RenderSearchResult, SearchOldFriends,
-    CheckRelationship, ShowFriendRequest, SendFriendRequest,
-    MakeNewFriend, SendFriendResponse, ControlFriendResponse
-}
-    from "./ManageFriends.js";
+    CheckRelationship, SendFriendRequest, MakeNewFriend, SendFriendResponse
+} from "./ManageFriends.js";
 import { ControlMsgBox } from "./GeneralControl.js";
 
 export const AllEvents = [
@@ -242,7 +240,6 @@ export function AddEventsToFriend() {
                         receiverUsername: window.sessionStorage.getItem("username"),
                     }
                 )
-                //ControlFriendResponse(true, true, friend_sender_info_cache.username)
             })
             .catch((error) => { console.log(error) })
     })
@@ -251,17 +248,20 @@ export function AddEventsToFriend() {
     let friendNoBtn = document.querySelector(".friend-prompt .no");
     friendNoBtn.addEventListener("click", () => {
         ControlMsgBox("friend-prompt", "none")
-        // let//
-        // prompt = document.querySelector(".friend-prompt"),
-        // content = document.querySelector(".friend-prompt .content"); 
-        // content.textContent = "";
-        // prompt.style.display = "none";
 
         // feedback result to sender
         SendFriendResponse(false, socket.id, friend_sender_info_cache.sid, friend_sender_info_cache.user_id)
 
-        // show response
-        ControlFriendResponse(true, false, friend_sender_info_cache.username)
+        // show response > no need to show response
+        // ControlMsgBox("friend-response", "block",
+        // {
+        //     accept: false,
+        //     senderID: friend_sender_info_cache.user_id,
+        //     senderUsername: friend_sender_info_cache.username,
+        //     receiverID: window.sessionStorage.getItem("user_id"),
+        //     receiverUsername: window.sessionStorage.getItem("username"),
+        // }
+        // )
     })
 }
 
@@ -339,6 +339,49 @@ export function AddEventsToTeam() {
         teamCreateResponse.style.display = "none";
         content.textContent = ``;
     });
+}
+
+export function AddEventsToTeamItems(teamType) {
+    if (teamType === "created") {
+        let createdTeamList = document.querySelectorAll(".create-list .item");
+
+        // click event
+        for (let item of createdTeamList){
+            item.addEventListener("click", function () {
+                document.querySelector(".teams-pannel .pannel-title").textContent = this.textContent;
+                document.querySelector(".teams-pannel .pannel-title").setAttribute("id", this.getAttribute("id"));
+                document.querySelector(".teams-pannel .search").style.display = "none";
+                document.querySelector(".friends-outer").style.height = "55%";
+                DOMElements.createTeamBtn.style.display = "none";
+                DOMElements.startTripBtn.style.display = "block";
+                DOMElements.inviteTripBtn.style.display = "none";
+                DOMElements.mainPannel.style.display = "none";
+                DOMElements.teamsPannel.style.display = "flex";
+            });
+
+            // mouseover and mouseout event
+            item.addEventListener("mouseover", () => {
+                item.style.backgroundColor = "rgb(186, 185, 185)"
+            })
+            item.addEventListener("mouseout", () => {
+                item.style.backgroundColor = "rgb(235, 234, 234)"
+            })
+        }
+   }
+   if (teamType === "joined") {
+        let joinedTeamList = document.querySelectorAll(".join-list .item");
+        for (let item of joinedTeamList) {
+            // onmouseover and on mouseout event
+            item.addEventListener("mouseover", () => {
+                let overBackgroundColor = (item.style.border === "3px solid rgb(182, 181, 181)") ? "rgb(186, 185, 185)" : "rgb(22, 166, 6)";
+                item.style.backgroundColor = overBackgroundColor;
+            })
+            item.addEventListener("mouseout", () => {
+                let outBackgroundColor = (item.style.border === "3px solid rgb(182, 181, 181)") ? "rgb(235, 234, 234)" : "rgb(182, 232, 176)";
+                item.style.backgroundColor = outBackgroundColor;
+            })
+        }
+   }
 }
 
 export function AddEventsToPullAndDrop() {
