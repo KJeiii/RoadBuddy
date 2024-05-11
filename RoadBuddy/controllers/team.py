@@ -16,18 +16,27 @@ def Team():
             user_id = request.json["user_id"]
             if request.json["team_type"] == "created":
                 created_team_list = teamTool.Search_created_team(user_id)
+                joined_team_list = []
+                response = {
+                    "ok": True,
+                    "data": {
+                        "created_team_list": created_team_list,
+                        "joined_team_list": joined_team_list
+                    }
+                }
+                return jsonify(response), 200
             
             if request.json["team_type"] == "joined":
+                created_team_list = []
                 joined_team_list = teamTool.Search_joined_team(user_id)
-
-            response = {
-                "ok": True,
-                "data": {
-                    "created_team": created_team_list,
-                    "joined_team": joined_team_list
+                response = {
+                    "ok": True,
+                    "data": {
+                        "created_team_list": created_team_list,
+                        "joined_team_list": joined_team_list
+                    }
                 }
-            }
-            return jsonify(response), 200
+                return jsonify(response), 200
 
         
         except Exception as error:
