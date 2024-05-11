@@ -1,6 +1,8 @@
 import { CheckUserStatus } from "./Utils/CheckUseStatus.js";
 import { LoadFriendList } from "./Utils/LoadFriendList.js";
 import { LoadTeamList } from "./Utils/LoadTeamList.js";
+import { SearchTeams } from "./Utils/ManageTeams.js";
+import { ClearList, RenderList } from "./Utils/GeneralControl.js";
 import { DrawMap, UserCoordError } from "./Utils/DrawMap.js";
 import * as AddEvents from "./Utils/AddEvents.js";
 
@@ -21,9 +23,30 @@ CheckUserStatus()
         // update friends list
         LoadFriendList(data.user_id);
 
-        // update team list
-        LoadTeamList(data.user_id);
-        })
+        // render team list
+        // 1. created team list
+        // LoadTeamList(data.user_id);
+        SearchTeams(data.user_id, "created")
+            .then((result) => {
+                ClearList(".main-pannel .create-list");
+                RenderList(".create-list", result.createdTeamList);
+                AddEvents.AddEventsToTeamItems("created");
+            })
+            .catch((error) => console.log(
+                `Error in render created team list (ManageTeams.js):${error}`
+            ))
+
+        // 2. joined team list 
+        SearchTeams(data.user_id, "joined")
+            .then((result) => {
+                ClearList(".main-pannel .join-list");
+                RenderList(".join-list", result.joinedTeamList);
+                AddEvents.AddEventsToTeamItems("joined");
+            })
+            .catch((error) => console.log(
+                `Error in render joined team list (ManageTeams.js):${error}`
+            ))        
+    })
     .catch((error) => {
         console.log(error);
         window.location.replace("/member");
@@ -52,6 +75,7 @@ DrawMap({
 // }
 
 for (let event of AddEvents.AllEvents) {
+    if (event === AddEvents.AddEventsToTeamItems){continue}
     event()
 }
 
