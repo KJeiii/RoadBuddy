@@ -1,8 +1,7 @@
 import * as DOMElements from "./DOMElements.js";
-import { LoadTeamList } from "./LoadTeamList.js";
 import { LoadFriendList } from "./LoadFriendList.js"
 import {
-    SearchNewFriends, RenderSearchResult, SearchOldFriends,
+    SearchNewFriends, RenderSearchResult, SearchOldFriends, FetchSelectedItemIDs,
     CheckRelationship, SendFriendRequest, MakeNewFriend, SendFriendResponse
 } from "./ManageFriends.js";
 import { ControlMsgBox } from "./GeneralControl.js";
@@ -149,41 +148,41 @@ export function AddEventsToFriend() {
 
     // --- send add friend request ---
     DOMElements.addFriendBtn.addEventListener("click", () => {
-        SearchOldFriends()
-            .then((oldFriendsList) => {
-                let { repetitionIDs, newFriendIDs } = CheckRelationship(oldFriendsList);
-                SendFriendRequest(repetitionIDs, newFriendIDs);
+        let selectedFriendIDs = FetchSelectedItemIDs(".friends-pannel");
+        //  response if no ckeckbox is checked
+        if (selectedFriendIDs.length === 0) {
+            ControlMsgBox(".friend-request", "block",
+                {
+                    selectedFriendIDs: selectedFriendIDs,
+                    repetitionIDs: [],
+                    oldFriendsList: []
+                })
+            return
+        }
 
+        SearchOldFriends(window.sessionStorage.getItem("user_id"))
+            .then((oldFriendsList) => {
+                let { repetitionIDs, newFriendIDs } = CheckRelationship(selectedFriendIDs, oldFriendsList);
+                SendFriendRequest(repetitionIDs, newFriendIDs);
                 ControlMsgBox("friend-request", "block",
                     {
+                        selectedFriendIDs: selectedFriendIDs,
                         repetitionIDs: repetitionIDs,
                         oldFriendsList: oldFriendsList
                     })
-                //ShowFriendRequest(repetitionIDs, oldFriendsList);
             })
             .catch(error => console.log(error))
     });
 
     // --- clear response content and disappear ---
     DOMElements.friendRequestBtn.addEventListener("click", () => {
-        let//
-            response = document.querySelector(".friend-request"),
-            responseContent = document.querySelector(".friend-request .content");
-
-        response.style.display = "none";
-        responseContent.textContent = "";
+        ControlMsgBox(".friend-request", "none")
     });
 
     // --- Acceptance of friend request ---
     DOMElements.friendYesBtn.addEventListener("click", () => {
         // recover friend prompt
         ControlMsgBox("friend-prompt", "none")
-        // let//
-        // prompt = document.querySelector(".friend-prompt"),
-        // content = document.querySelector(".friend-prompt .content");
-
-        // content.textContent = "";
-        // prompt.style.display = "none";
 
         // receiver fetch api to add friend
         MakeNewFriend(window.sessionStorage.getItem("user_id"), friend_sender_info_cache.user_id)
@@ -346,7 +345,7 @@ export function AddEventsToTeamItems(teamType) {
         let createdTeamList = document.querySelectorAll(".create-list .item");
 
         // click event
-        for (let item of createdTeamList){
+        for (let item of createdTeamList) {
             item.addEventListener("click", function () {
                 document.querySelector(".teams-pannel .pannel-title").textContent = this.textContent;
                 document.querySelector(".teams-pannel .pannel-title").setAttribute("id", this.getAttribute("id"));
@@ -367,8 +366,8 @@ export function AddEventsToTeamItems(teamType) {
                 item.style.backgroundColor = "rgb(235, 234, 234)"
             })
         }
-   }
-   if (teamType === "joined") {
+    }
+    if (teamType === "joined") {
         let joinedTeamList = document.querySelectorAll(".join-list .item");
         for (let item of joinedTeamList) {
             // onmouseover and on mouseout event
@@ -381,7 +380,7 @@ export function AddEventsToTeamItems(teamType) {
                 item.style.backgroundColor = outBackgroundColor;
             })
         }
-   }
+    }
 }
 
 export function AddEventsToPullAndDrop() {
