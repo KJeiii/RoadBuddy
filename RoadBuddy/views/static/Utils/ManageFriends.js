@@ -38,53 +38,52 @@ export function RenderSearchResult(friendsList){
     }
 }
 
-export async function SearchOldFriends(){
-    let response = await fetch("/api/friend", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({user_id: window.sessionStorage.getItem("user_id")})
-    });
+export async function SearchOldFriends(userID){ //window.sessionStorage.getItem("user_id")
+    try {
+        let response = await fetch("/api/friend", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({user_id: userID})
+        });
 
-    if (!response.ok) {throw new Error("Searching old friends failed (ManageFriends.js)")}
-    let//
-    result = await response.json(),
-    oldFriendsList = result.data;
-    return oldFriendsList
+        let//
+        result = await response.json(),
+        oldFriendList = result.data;
+        return oldFriendList
+    }
+    catch(error){
+        console.log(error)
+        throw new Error(`Search old friends falied (ManageFriends.js): ${error}`)
+    }
 }
 
-export function CheckRelationship(oldFriendsList){
-    // find all old friends user_id
-    let oldFriendId = [];
-    for ( let friend of oldFriendsList ) {
-        oldFriendId.push(friend["user_id"])
-    }
 
+
+export function FetchSelectedItemIDs(pannelCssSelector){
     // find all new friends user_id
     let//
-    checkboxes = document.querySelectorAll(".friends-pannel input[type=checkbox]"),
-    friendID = [];
-    for ( let checkbox of checkboxes) {
-        if ( checkbox.checked ) { friendID.push(checkbox.getAttribute("id")*1)}
+    selectedCheckboxes = document.querySelectorAll(`${pannelCssSelector} input[type=checkbox]`), //.friends-pannel
+    itemIDs = [];
+    for ( let checkbox of selectedCheckboxes) {
+        if ( checkbox.checked ) { itemIDs.push(checkbox.getAttribute("id")*1)}
     }
+    return itemIDs
+}
 
-    //  response if no ckeckbox is checked
-    if ( friendID.length === 0 ) {
-        let//
-        alert = document.querySelector(".friend-request"),
-        alertContent = document.querySelector(".friend-request .content");
-
-        alert.style.display = "block";
-        alertContent.textContent = "你尚未選擇對象";
-        return
+export function CheckRelationship(selectedFriendIDs, oldFriendList){
+    // find all old friends user_id
+    let oldFriendId = [];
+    for ( let friend of oldFriendList ) {
+        oldFriendId.push(friend["user_id"])
     }
 
     // mapping each new friend if it's in oldFriendId
     let//
     repeatID = [],
     uniqueID = [];
-    for ( let friend of friendID ) {
+    for ( let friend of selectedFriendIDs ) {
         if ( oldFriendId.includes(friend) ) {
             repeatID.push(friend)
             continue
@@ -95,7 +94,7 @@ export function CheckRelationship(oldFriendsList){
     let result = {
         repetitionIDs: repeatID,
         newFriendIDs: uniqueID
-    }
+    };
     return result
 }
 
