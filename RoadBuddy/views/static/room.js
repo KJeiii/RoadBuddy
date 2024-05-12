@@ -1,7 +1,7 @@
 import { CheckUserStatus } from "./Utils/CheckUseStatus.js";
-import { LoadFriendList } from "./Utils/LoadFriendList.js";
-import { LoadTeamList } from "./Utils/LoadTeamList.js";
+// import { LoadFriendList } from "./Utils/LoadFriendList.js";
 import { SearchTeams } from "./Utils/ManageTeams.js";
+import { SearchOldFriends } from "./Utils/ManageFriends.js";
 import { ClearList, RenderList } from "./Utils/GeneralControl.js";
 import { DrawMap, UserCoordError } from "./Utils/DrawMap.js";
 import * as AddEvents from "./Utils/AddEvents.js";
@@ -21,11 +21,20 @@ CheckUserStatus()
         window.sessionStorage.removeItem("team_id");
 
         // update friends list
-        LoadFriendList(data.user_id);
+        // LoadFriendList(data.user_id);
+        SearchOldFriends(window.sessionStorage.getItem("user_id"))
+            .then((oldFriendList) => {
+                ClearList(".main-pannel .friends-list");
+                RenderList(".main-pannel .friends-list", oldFriendList);
+
+                ClearList(".teams-pannel .friends-list");
+                RenderList(".teams-pannel .friends-list", oldFriendList);
+            })
+            .catch((error)=>{console.log(error)})
+         
 
         // render team list
         // 1. created team list
-        // LoadTeamList(data.user_id);
         SearchTeams(data.user_id, "created")
             .then((result) => {
                 ClearList(".main-pannel .create-list");
@@ -33,7 +42,7 @@ CheckUserStatus()
                 AddEvents.AddEventsToTeamItems("created");
             })
             .catch((error) => console.log(
-                `Error in render created team list (ManageTeams.js):${error}`
+                `Error in render created team list (room.js):${error}`
             ))
 
         // 2. joined team list 
@@ -44,7 +53,7 @@ CheckUserStatus()
                 AddEvents.AddEventsToTeamItems("joined");
             })
             .catch((error) => console.log(
-                `Error in render joined team list (ManageTeams.js):${error}`
+                `Error in render joined team list (room.js):${error}`
             ))        
     })
     .catch((error) => {
