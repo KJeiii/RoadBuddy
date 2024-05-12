@@ -1,10 +1,9 @@
 import * as DOMElements from "./DOMElements.js";
-import { LoadFriendList } from "./LoadFriendList.js"
 import {
     SearchNewFriends, RenderSearchResult, SearchOldFriends, FetchSelectedItemIDs,
     CheckRelationship, SendFriendRequest, MakeNewFriend, SendFriendResponse
 } from "./ManageFriends.js";
-import { ControlMsgBox } from "./GeneralControl.js";
+import { ControlMsgBox, ClearList, RenderList } from "./GeneralControl.js";
 
 export const AllEvents = [
     AddEventsToSetting, AddEventsToSwitchPannel, AddEventsToFriend,
@@ -164,7 +163,7 @@ export function AddEventsToFriend() {
             .then((oldFriendsList) => {
                 let { repetitionIDs, newFriendIDs } = CheckRelationship(selectedFriendIDs, oldFriendsList);
                 SendFriendRequest(repetitionIDs, newFriendIDs);
-                ControlMsgBox("friend-request", "block",
+                ControlMsgBox(".friend-request", "block",
                     {
                         selectedFriendIDs: selectedFriendIDs,
                         repetitionIDs: repetitionIDs,
@@ -182,26 +181,23 @@ export function AddEventsToFriend() {
     // --- Acceptance of friend request ---
     DOMElements.friendYesBtn.addEventListener("click", () => {
         // recover friend prompt
-        ControlMsgBox("friend-prompt", "none")
+        ControlMsgBox(".friend-prompt", "none")
 
         // receiver fetch api to add friend
         MakeNewFriend(window.sessionStorage.getItem("user_id"), friend_sender_info_cache.user_id)
             .then(() => {
-                // update latest friend list
-                // 1. remove old list
-                while (DOMElements.mainPannelFriendsList.hasChildNodes()) {
-                    DOMElements.mainPannelFriendsList.removeChild(DOMElements.mainPannelFriendsList.lastChild)
-                }
-            })
-            .then(() => {
-                // 2. create new list
-                LoadFriendList(window.sessionStorage.getItem("user_id"))
-                    .then(() => {
-                        // switch to main pannel
+                SearchOldFriends(window.sessionStorage.getItem("user_id"))
+                    .then((oldFriendList) => {
+                        ClearList(".main-pannel .friends-list");
+                        RenderList(".main-pannel .friends-list", oldFriendList);
+        
+                        ClearList(".teams-pannel .friends-list");
+                        RenderList(".teams-pannel .friends-list", oldFriendList);
+
                         DOMElements.friendsPannel.style.display = "none";
                         DOMElements.mainPannel.style.display = "block";
                     })
-                    .catch((error) => { console.log(error) })
+                    .catch((error)=>{console.log(error)})
             })
             .then(() => {
                 // update server friend_list in user_info dict
@@ -226,11 +222,15 @@ export function AddEventsToFriend() {
             })
             .then(() => {
                 // feedback result to sender
-                SendFriendResponse(true, socket.id, friend_sender_info_cache.sid, friend_sender_info_cache.user_id)
+                SendFriendResponse(
+                    true, 
+                    socket.id, 
+                    friend_sender_info_cache.sid, 
+                    friend_sender_info_cache.user_id)
             })
             .then(() => {
                 // show response
-                ControlMsgBox("friend-response", "block",
+                ControlMsgBox(".friend-response", "block",
                     {
                         accept: true,
                         senderID: friend_sender_info_cache.user_id,
@@ -246,21 +246,14 @@ export function AddEventsToFriend() {
     // if reject request
     let friendNoBtn = document.querySelector(".friend-prompt .no");
     friendNoBtn.addEventListener("click", () => {
-        ControlMsgBox("friend-prompt", "none")
+        ControlMsgBox(".friend-prompt", "none")
 
         // feedback result to sender
-        SendFriendResponse(false, socket.id, friend_sender_info_cache.sid, friend_sender_info_cache.user_id)
-
-        // show response > no need to show response
-        // ControlMsgBox("friend-response", "block",
-        // {
-        //     accept: false,
-        //     senderID: friend_sender_info_cache.user_id,
-        //     senderUsername: friend_sender_info_cache.username,
-        //     receiverID: window.sessionStorage.getItem("user_id"),
-        //     receiverUsername: window.sessionStorage.getItem("username"),
-        // }
-        // )
+        SendFriendResponse(
+            false, 
+            socket.id, 
+            friend_sender_info_cache.sid, 
+            friend_sender_info_cache.user_id)
     })
 }
 
@@ -338,6 +331,12 @@ export function AddEventsToTeam() {
         teamCreateResponse.style.display = "none";
         content.textContent = ``;
     });
+
+    // confirm frined response
+    let friendOkBtn = document.querySelector(".friend-response button");
+    friendOkBtn.addEventListener("click", ()=>{
+        ControlMsgBox(".friend-response", "none") 
+    })
 }
 
 export function AddEventsToTeamItems(teamType) {
