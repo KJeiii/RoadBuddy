@@ -33,17 +33,16 @@ socket.on("friend_request_result", (data) => {
                     })
                     .catch((error)=>{console.log(error)})
                 console.log(`${window.sessionStorage.getItem("username")} add ${data.receiver_info.username}`);
+                return oldFriendList
             })
-            .then(() => {
+            .then((oldFriendList) => {
                 // update server friend_list in user_info dict
 
-                let//
-                friend_list = [],
-                friend_items = document.querySelectorAll(".main-pannel .friends-list .item");
-                for ( item of friend_items ) {
+                let friend_list = [];
+                for ( friend of oldFriendList ) {
                     let friend_info = {
-                        user_id: item.getAttribute("id"),
-                        username: item.textContent
+                        user_id: friend.user_id,
+                        username: friend.username
                     };
                     friend_list.push(friend_info);
                 };
