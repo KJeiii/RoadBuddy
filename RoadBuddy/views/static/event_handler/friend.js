@@ -1,5 +1,5 @@
 import * as DOMElements from "../Utils/DOMElements.js";
-import { SearchOldFriends } from "../Utils/ManageFriends.js";
+import { SearchOldFriends, MakeNewFriend } from "../Utils/ManageFriends.js";
 import { ControlMsgBox, ClearList, RenderList } from "../Utils/GeneralControl.js";
 
 // *** as a receiver
@@ -17,20 +17,9 @@ socket.on("friend_request_result", (data) => {
     if (data.accept) {
 
     // sender fetch api to add friend
-        fetch("/api/friend/add", {
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({
-                user_id: window.sessionStorage.getItem("user_id"),
-                friend_id: data.receiver_info.user_id})
-            })
+        MakeNewFriend(window.sessionStorage.getItem("user_id"), data.receiver_info.user_id)
             .then((response) => {return response.json()})
-            .then((result) => {
-                while ( DOMElements.mainPannelFriendsList.hasChildNodes() ) {
-                    DOMElements.mainPannelFriendsList.removeChild(DOMElements.mainPannelFriendsList.lastChild)
-                }
-
-                // LoadFriendList(window.sessionStorage.getItem("user_id"));
+            .then(() => {
                 SearchOldFriends(window.sessionStorage.getItem("user_id"))
                     .then((oldFriendList) => {
                         ClearList(".main-pannel .friends-list");
@@ -44,8 +33,6 @@ socket.on("friend_request_result", (data) => {
                     })
                     .catch((error)=>{console.log(error)})
                 console.log(`${window.sessionStorage.getItem("username")} add ${data.receiver_info.username}`);
-
-
             })
             .then(() => {
                 // update server friend_list in user_info dict
