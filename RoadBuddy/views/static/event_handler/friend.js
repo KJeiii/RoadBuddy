@@ -1,13 +1,13 @@
 import * as DOMElements from "../Utils/DOMElements.js";
-import {LoadFriendList} from "../Utils/LoadFriendList.js";
-import { ControlMsgBox } from "../Utils/GeneralControl.js";
+import { SearchOldFriends } from "../Utils/ManageFriends.js";
+import { ControlMsgBox, ClearList, RenderList } from "../Utils/GeneralControl.js";
 
 // *** as a receiver
 socket.on("friend_request", (data) => {
     friend_sender_info_cache = data;
 
     // prompt to ask willness
-    ControlMsgBox("friend-prompt", "block", {friendName: data.username})
+    ControlMsgBox(".friend-prompt", "block", {friendName: data.username})
 })
 
 // *** as a sender
@@ -30,10 +30,19 @@ socket.on("friend_request_result", (data) => {
                     DOMElements.mainPannelFriendsList.removeChild(DOMElements.mainPannelFriendsList.lastChild)
                 }
 
-                LoadFriendList(window.sessionStorage.getItem("user_id"));
-                DOMElements.friendsPannel.style.display = "none";
-                DOMElements.mainPannel.style.display = "block";
+                // LoadFriendList(window.sessionStorage.getItem("user_id"));
+                SearchOldFriends(window.sessionStorage.getItem("user_id"))
+                    .then((oldFriendList) => {
+                        ClearList(".main-pannel .friends-list");
+                        RenderList(".main-pannel .friends-list", oldFriendList);
+        
+                        ClearList(".teams-pannel .friends-list");
+                        RenderList(".teams-pannel .friends-list", oldFriendList);
 
+                        DOMElements.friendsPannel.style.display = "none";
+                        DOMElements.mainPannel.style.display = "block";
+                    })
+                    .catch((error)=>{console.log(error)})
                 console.log(`${window.sessionStorage.getItem("username")} add ${data.receiver_info.username}`);
 
 
@@ -64,7 +73,7 @@ socket.on("friend_request_result", (data) => {
     }
 
     // show response
-    ControlMsgBox("friend-response", "block",
+    ControlMsgBox(".friend-response", "block",
         {
             accept: data.accept,
             senderID: window.sessionStorage.getItem("user_id"),
@@ -73,22 +82,6 @@ socket.on("friend_request_result", (data) => {
             receiverUsername: data.receiver_info.username
         })
 })
-
-
-// confirm frined response
-let friendOkBtn = document.querySelector(".friend-response button");
-friendOkBtn.addEventListener("click", ()=>{
-
-    // recover response
-    let//
-    response = document.querySelector(".friend-response"),
-    responseContent = document.querySelector(".friend-response .content");
-
-    response.style.display = "none";
-    responseContent.textContent = ``;     
-})
-
-
 
 
 //  Listener for receiving event "initial_status" event from server
