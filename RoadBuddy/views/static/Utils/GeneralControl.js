@@ -84,7 +84,11 @@ export function ControlMsgBox(boxType, display, ...rest){
         msgBoxContent = document.querySelector(`.${boxType} .content`),
         statement = `已發出交友申請`;
 
-        // NOT allowed if they have been friend between user and one of selected people
+        // Not allowed if no one is selected
+        if (rest[0].selectedFriendIDs.length === 0) {statement = `你尚未選擇對象`}
+
+        // NOT allowed if they are already in friendship 
+        // between sender and some of the selected guys
         if (rest[0].repetitionIDs.length !== 0){
             let repeatIDString = "";
             for ( let friend of rest[0].oldFriendsList) {
@@ -125,13 +129,55 @@ export function ClearList(cssSelector){
     }    
 }
 
-export function RenderList(cssSelector, listItemArray){
-    let list = document.querySelector(cssSelector); //".create-list"
-    for ( let data of listItemArray) {
-        let item = document.createElement("div");
-        item.setAttribute("class", "item");
-        item.setAttribute("id", data.team_id);
-        item.textContent = data.team_name;
-        list.appendChild(item);
-    }    
+export function RenderList(listCssSelector, listItemArray){
+    let//
+    teamListClass = [".create-list", "join-list"];
+
+    if (teamListClass.includes(listCssSelector)) {
+        let list = document.querySelector(listCssSelector); //".create-list"
+        for ( let item of listItemArray) {
+            let team = document.createElement("div");
+            team.setAttribute("class", "item");
+            team.setAttribute("id", item.team_id);
+            team.textContent = item.team_name;
+            list.appendChild(team);
+        }
+        return  
+    }
+
+    if (listCssSelector === ".main-pannel .friends-list"){
+        // Load friend list in main pannel
+        for ( let item of listItemArray) {
+            let friend = document.createElement("div");
+            friend.setAttribute("class", "item");
+            friend.setAttribute("id", item["user_id"]);
+            friend.textContent = item.username;
+            DOMElements.mainPannelFriendsList.appendChild(friend);
+        }
+        return
+    }
+
+    if (listCssSelector === ".teams-pannel .friends-list"){
+        // Load friend list in team pannel
+        for ( let item of listItemArray) {
+        let//
+        friend = document.createElement("div"),
+        input = document.createElement("input"),
+        label = document.createElement("label");
+
+        friend.setAttribute("class", "item");
+        friend.setAttribute("id", item.user_id);
+        input.setAttribute("type", "checkbox");
+        input.setAttribute("id", item.user_id);
+        input.setAttribute("name", item.username);
+        label.setAttribute("for", item.username);
+        label.textContent = item.username;
+
+        friend.appendChild(input);
+        friend.appendChild(label);
+        friend.style.display = "none"; //switch to block when friend is online
+        DOMElements.teamPannelFriendsList.appendChild(friend);
+        }
+        return
+    }
 }
