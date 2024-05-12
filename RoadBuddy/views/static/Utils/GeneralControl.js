@@ -58,30 +58,30 @@ export function switchPannel(toPannel, ...turnOnBtns) {
     }
 }
 
-export function ControlMsgBox(boxType, display, ...rest){
+export function ControlMsgBox(msgCssSelector, display, ...rest){
     if (display === "none") {
         let//
-        msgBox = document.querySelector(`.${boxType}`),
-        msgBoxContent = document.querySelector(`.${boxType} .content`);
+        msgBox = document.querySelector(msgCssSelector),
+        msgBoxContent = document.querySelector(`${msgCssSelector} .content`);
 
         msgBoxContent.textContent = "";
         msgBox.style.display = display;
         return
     }
 
-    if (boxType === "friend-prompt" && display === "block"){
+    if (msgCssSelector === ".friend-prompt" && display === "block"){
         let//
-        msgBox = document.querySelector(`.${boxType}`),
-        msgBoxContent = document.querySelector(`.${boxType} .content`);
+        msgBox = document.querySelector(msgCssSelector),
+        msgBoxContent = document.querySelector(`${msgCssSelector} .content`);
         msgBoxContent.textContent = `來自 ${rest[0].friendName} 的好友邀請`;
         msgBox.style.display = display;
         return
     }
 
-    if (boxType === "friend-request" && display === "block"){
+    if (msgCssSelector === ".friend-request" && display === "block"){
         let//
-        msgBox = document.querySelector(`.${boxType}`),
-        msgBoxContent = document.querySelector(`.${boxType} .content`),
+        msgBox = document.querySelector(msgCssSelector),
+        msgBoxContent = document.querySelector(`${msgCssSelector} .content`),
         statement = `已發出交友申請`;
 
         // Not allowed if no one is selected
@@ -92,7 +92,7 @@ export function ControlMsgBox(boxType, display, ...rest){
         if (rest[0].repetitionIDs.length !== 0){
             let repeatIDString = "";
             for ( let friend of rest[0].oldFriendsList) {
-                if (repetitionIDs.includes(friend.user_id) ) {
+                if (rest[0].repetitionIDs.includes(friend.user_id) ) {
                     repeatIDString += ` ${friend.username} `;
                 }}
             statement = `你與${repeatIDString}已經是好友關係，請重新選擇對象`;
@@ -103,11 +103,11 @@ export function ControlMsgBox(boxType, display, ...rest){
         return
     }
 
-    if (boxType === "friend-response" && display === "block"){
+    if (msgCssSelector === ".friend-response" && display === "block"){
         // response
         let//
-        msgBox = document.querySelector(`.${boxType}`),
-        msgBoxContent = document.querySelector(`.${boxType} .content`);
+        msgBox = document.querySelector(msgCssSelector),
+        msgBoxContent = document.querySelector(`${msgCssSelector} .content`);
 
         if (window.sessionStorage.getItem("user_id")*1 === rest[0].senderID*1){
             msgBoxContent.textContent = (rest[0].accept) ? `${rest[0].receiverUsername} 接受你的好友邀請` : `${rest[0].rest[0].receiverUsername} 拒絕你的好友邀請`;
