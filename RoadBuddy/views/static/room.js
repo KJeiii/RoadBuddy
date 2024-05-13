@@ -1,5 +1,4 @@
 import { CheckUserStatus } from "./Utils/CheckUseStatus.js";
-// import { LoadFriendList } from "./Utils/LoadFriendList.js";
 import { SearchTeams } from "./Utils/ManageTeams.js";
 import { SearchOldFriends } from "./Utils/ManageFriends.js";
 import { ClearList, RenderList } from "./Utils/GeneralControl.js";
@@ -21,7 +20,6 @@ CheckUserStatus()
         window.sessionStorage.removeItem("team_id");
 
         // update friends list
-        // LoadFriendList(data.user_id);
         SearchOldFriends(window.sessionStorage.getItem("user_id"))
             .then((oldFriendList) => {
                 ClearList(".main-pannel .friends-list");
