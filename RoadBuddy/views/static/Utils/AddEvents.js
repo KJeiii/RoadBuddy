@@ -1,7 +1,7 @@
 import * as DOMElements from "./DOMElements.js";
 import {
     SearchNewFriends, RenderSearchResult, SearchOldFriends, FetchSelectedItemIDs,
-    CheckRelationship, SendFriendRequest, MakeNewFriend, SendFriendResponse
+    CheckRelationship, SendFriendRequest, MakeNewFriend, ReplyToSender
 } from "./ManageFriends.js";
 import { ControlMsgBox, ClearList, RenderList } from "./GeneralControl.js";
 
@@ -222,7 +222,7 @@ export function AddEventsToFriend() {
             })
             .then(() => {
                 // feedback result to sender
-                SendFriendResponse(
+                ReplyToSender(
                     true, 
                     socket.id, 
                     friend_sender_info_cache.sid, 
@@ -249,7 +249,7 @@ export function AddEventsToFriend() {
         ControlMsgBox(".friend-prompt", "none")
 
         // feedback result to sender
-        SendFriendResponse(
+        ReplyToSender(
             false, 
             socket.id, 
             friend_sender_info_cache.sid, 

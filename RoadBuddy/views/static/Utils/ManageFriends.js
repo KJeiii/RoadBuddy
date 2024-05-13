@@ -131,7 +131,7 @@ export async function MakeNewFriend(myID, newFriendID){
     }
 }
 
-export function SendFriendResponse(isAccept, mySocketID, newFriendSocketID, newFriendID){
+export function ReplyToSender(isAccept, mySocketID, newFriendSocketID, newFriendID){ //SendFriendResponse
     // feedback result to sender
     let data = {
         accept: isAccept,
