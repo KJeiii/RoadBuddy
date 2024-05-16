@@ -72,39 +72,18 @@ socket.on("friend_request_result", (data) => {
 
 //  Listener for receiving event "initial_status" event from server
 socket.on("update_friend_status", (data) => {
-    console.log("socket on update_friend_status receives data");
-    console.log(data);
-    onlineFriendArray = data;
-    console.log(`update global var onlineFriendArray: ${onlineFriendArray}`)
+    if (data["update-type"] === "online"){
+        onlineFriendArray.push(...data["online_friend_list"])
+    }
+
+    if (data["update-type"] === "offline"){
+        onlineFriendArray.splice(onlineFriendArray.indexOf(data["offline_friend_id"]),1)
+    }
+
     RenderOnlineStatus(".teams-pannel .friends-list .item", onlineFriendArray);
     RenderOnlineStatus(".main-pannel .friends-list .item", onlineFriendArray);
 })
 
-
-
-//  Listener for receiving event "offline_status" event from server
-socket.on("offline_friend_status", (data) => {
-    // update friend list when user is online
-    // 1. update online status in main pannel friend list (color switches to "grey")
-    let mainPannelFriendItems = document.querySelectorAll(".main-pannel .friends-list .item");
-    for ( let item of mainPannelFriendItems ) {
-        if (item.getAttribute("id")*1 === data["user_id"]*1) {
-            item.style.backgroundColor = "rgb(235, 234, 234)";
-            item.style.border = "solid 3px rgb(182, 181, 181)";
-            break
-        }
-    }
-
-
-    // 2. update friend list in team pannel (display switches to "none")
-    let teamPannelFriendItems = document.querySelectorAll(".teams-pannel .friends-list .item");
-    for ( let item of teamPannelFriendItems ) {
-        if (item.getAttribute("id")*1 === data["user_id"]*1) {
-            item.style.display = "none";
-            break
-        }
-    }
-})
 
 
 
