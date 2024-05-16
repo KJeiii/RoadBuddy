@@ -1,7 +1,6 @@
 // build function for checking user status
 async function CheckUserStatus() {
     let jwt = window.localStorage.getItem("token");
-    console.log(jwt);
 
     try{
         if ( jwt === null) {throw {"ok":false, "data": null}}
