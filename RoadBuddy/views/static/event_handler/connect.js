@@ -1,28 +1,28 @@
 // ----- initialize socket.io -----
-socket.on("connect", ()=>{
-    sidArray.push(socket.id);
-    window.sessionStorage.setItem("sid", socket.id);
+// socket.on("connect", ()=>{
+//     sidArray.push(socket.id);
+//     window.sessionStorage.setItem("sid", socket.id);
 
-    let//
-    friend_list = [],
-    friend_items = document.querySelectorAll(".main-pannel .friends-list .item");
-    for ( let item of friend_items ) {
-        let friend_info = {
-            user_id: item.getAttribute("id"),
-            username: item.textContent
-        };
-        friend_list.push(friend_info);
-    };
+//     let//
+//     friend_list = [],
+//     friend_items = document.querySelectorAll(".main-pannel .friends-list .item");
+//     for ( let item of friend_items ) {
+//         let friend_info = {
+//             user_id: item.getAttribute("id"),
+//             username: item.textContent
+//         };
+//         friend_list.push(friend_info);
+//     };
 
-    let data = {
-        user_id: window.sessionStorage.getItem("user_id"),
-        username: window.sessionStorage.getItem("username"),
-        email: window.sessionStorage.getItem("email"),
-        friend_list: friend_list
-    };
-    socket.emit("store_userinfo", data);
-    socket.emit("initial_team_status");
-})
+//     let data = {
+//         user_id: window.sessionStorage.getItem("user_id"),
+//         username: window.sessionStorage.getItem("username"),
+//         email: window.sessionStorage.getItem("email"),
+//         friend_list: JSON.parse(window.sessionStorage.getItem("friendList"))
+//     };
+//     socket.emit("store_userinfo", data);
+//     socket.emit("initial_team_status");
+// })
 
 socket.on("initialization", () => {
     socket.emit("initial_friend_status");
