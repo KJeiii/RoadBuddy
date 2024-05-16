@@ -1,31 +1,4 @@
-// build function for checking user status
-async function CheckUserStatus() {
-    let jwt = window.localStorage.getItem("token");
-
-    try{
-        if ( jwt === null) {throw {"ok":false, "data": null}}
-
-        let//
-        response = await fetch("/api/member/auth", {
-            method: "GET",
-            headers: {"authorization": `Bearer ${jwt}`}
-        }),
-        result = await response.json();
-
-        if (result.data === null) {return {"ok": false, "data": null}}
-
-        let data = {
-            user_id: result.user_id,
-            username: result.username,
-            email: result.email
-        }
-        return {"ok": true, "data": data}
-    }
-    catch(error) {
-        console.log(`Error in CheckUserStatus : ${error}`)
-        throw error
-    }
-}
+import { CheckUserStatus } from "./Utils/ManageUser.js";
 
 CheckUserStatus()
     .then((result) => {
@@ -98,7 +71,7 @@ signupBtn.addEventListener("click", async() => {
     }
 
     // feedback error message when one of the inputs is empty
-    for ( input of [emailInput, usernameInput, passwordInput, confirmInput] ) {
+    for ( let input of [emailInput, usernameInput, passwordInput, confirmInput] ) {
         if  (input.value === "") {
             input.setAttribute("placeholder", "此欄位不可空白");
             input.style.border = "2px solid rgb(255, 197, 197)";
@@ -177,7 +150,7 @@ loginBtn.addEventListener("click", async() => {
     }
     
     // feedback error message when one of the inputs is empty
-    for ( input of [emailInput, passwordInput] ) {
+    for ( let input of [emailInput, passwordInput] ) {
         if  (input.value === "") {
             input.setAttribute("placeholder", "此欄位不可空白");
             input.style.border = "2px solid rgb(255, 197, 197)";
