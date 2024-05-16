@@ -11,7 +11,7 @@ socket.on("friend_request", (data) => {
 })
 
 // *** as a sender
-socket.on("friend_request_result", (data) => {
+socket.on("friend_request_result", (data) => { 
 
     // if request is accepted
     if (data.accept) {
@@ -32,7 +32,6 @@ socket.on("friend_request_result", (data) => {
                         DOMElements.mainPannel.style.display = "block";
                     })
                     .catch((error)=>{console.log(error)})
-                console.log(`${window.sessionStorage.getItem("username")} add ${data.receiver_info.username}`);
                 return oldFriendList
             })
             .then((oldFriendList) => {
