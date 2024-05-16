@@ -1,7 +1,7 @@
 import { CheckUserStatus } from "./Utils/CheckUseStatus.js";
 import { SearchTeams } from "./Utils/ManageTeams.js";
 import { SearchOldFriends } from "./Utils/ManageFriends.js";
-import { ClearList, RenderList } from "./Utils/GeneralControl.js";
+import { ClearList, RenderList, RenderOnlineStatus } from "./Utils/GeneralControl.js";
 import { DrawMap, UserCoordError } from "./Utils/DrawMap.js";
 import * as AddEvents from "./Utils/AddEvents.js";
 import { ManipulateSessionStorage } from "./Utils/ManageUser.js";
@@ -32,9 +32,12 @@ socket.on("connect", ()=>{
                     // window.sessionStorage.setItem("friendList", JSON.stringify(oldFriendList))
                     ClearList(".main-pannel .friends-list");
                     RenderList(".main-pannel .friends-list", oldFriendList);
+                    RenderOnlineStatus(".main-pannel .friends-list .item", oldFriendList);
                     
                     ClearList(".teams-pannel .friends-list");
                     RenderList(".teams-pannel .friends-list", oldFriendList);
+                    RenderOnlineStatus(".teams-pannel .friends-list .item", oldFriendList);
+
                 })
                 .catch((error)=>{console.log(error)})
             
