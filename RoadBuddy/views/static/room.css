@@ -488,7 +488,6 @@ input[name=create-team]
 
 /* ----- team pannel ----- */
 .teams-pannel .friends-outer {
-    display: none;
     justify-content: center;
     width: 80%;
     height: 40%;
