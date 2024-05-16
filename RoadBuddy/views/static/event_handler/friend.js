@@ -1,6 +1,6 @@
 import * as DOMElements from "../Utils/DOMElements.js";
 import { SearchOldFriends, MakeNewFriend } from "../Utils/ManageFriends.js";
-import { ControlMsgBox, ClearList, RenderList } from "../Utils/GeneralControl.js";
+import { ControlMsgBox, ClearList, RenderList, RenderOnlineStatus } from "../Utils/GeneralControl.js";
 
 // *** as a receiver
 socket.on("friend_request", (data) => {
@@ -72,56 +72,12 @@ socket.on("friend_request_result", (data) => {
 
 //  Listener for receiving event "initial_status" event from server
 socket.on("update_friend_status", (data) => {
-    // initialize friend list for first loggin in
-    if (data["email"] === undefined) {
-
-        // update online status (change color) in main pannel friend list
-        let mainPannelFriendItems = document.querySelectorAll(".main-pannel .friends-list .item");
-        for ( let item of mainPannelFriendItems ) {
-            if (Object.keys(data).includes(`${item.getAttribute("id")}`)) {
-                item.style.backgroundColor = "rgb(182, 232, 176)";
-                item.style.border = "solid 3px rgb(22, 166, 6)";
-                continue;
-            }
-
-            item.style.backgroundColor = "rgb(235, 234, 234)";
-            item.style.border = "solid 3px rgb(182, 181, 181)";
-        }
-
-        // update friend list in team pannel
-        // update item.style.display to flex when friend is on-line
-        let teamPannelFriendItems = document.querySelectorAll(".teams-pannel .friends-list .item");
-        for ( let item of teamPannelFriendItems ) {
-            if ( Object.keys(data).includes(`${item.getAttribute("id")}`) ) {
-                item.style.display = "flex";
-                continue;
-            }
-            item.style.display = "none";
-        }
-        return
-    }
-
-    // update friend list when user is online
-    // update online status in main pannel friend list
-    let mainPannelFriendItems = document.querySelectorAll(".main-pannel .friends-list .item");
-    for ( let item of mainPannelFriendItems ) {
-        if (item.getAttribute("id")*1 === data["user_id"]*1) {
-            item.style.backgroundColor = "rgb(182, 232, 176)";
-            item.style.border = "solid 3px rgb(22, 166, 6)";
-            break
-        }
-    }
-
-
-    // update friend list in team pannel
-    // update item.style.display to flex when friend is on-line
-    let teamPannelFriendItems = document.querySelectorAll(".teams-pannel .friends-list .item");
-    for ( let item of teamPannelFriendItems ) {
-        if (item.getAttribute("id")*1 === data["user_id"]*1) {
-            item.style.display = "flex";
-            break
-        }
-    }
+    console.log("socket on update_friend_status receives data");
+    console.log(data);
+    onlineFriendArray = data;
+    console.log(`update global var onlineFriendArray: ${onlineFriendArray}`)
+    RenderOnlineStatus(".teams-pannel .friends-list .item", onlineFriendArray);
+    RenderOnlineStatus(".main-pannel .friends-list .item", onlineFriendArray);
 })
 
 
