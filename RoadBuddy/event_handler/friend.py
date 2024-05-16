@@ -69,14 +69,7 @@ def online_friend_status():
             friend_sid = user_info[friend_id]["sid"]
             friend_sid_online.append(friend_sid)
 
-    # 2. build own info for friends to update their friend pannel
-    # my_user_info = {
-    #     "user_id": user_id,
-    #     "username": user_info[user_id]["username"],
-    #     "sid": request.sid,
-    #     "email": user_info[user_id]["email"]
-    # }
-
+    # 2. emit socket event to update_friend_status
     for sid in friend_sid_online:
         emit("update_friend_status",
              {"update-type" : "online", "online_friend_list": [user_id]},  
