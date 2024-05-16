@@ -1,4 +1,4 @@
-import { CheckUserStatus } from "./Utils/CheckUseStatus.js";
+import { CheckUserStatus } from "./Utils/ManageUser.js";
 import { SearchTeams } from "./Utils/ManageTeams.js";
 import { SearchOldFriends } from "./Utils/ManageFriends.js";
 import { ClearList, RenderList, RenderOnlineStatus } from "./Utils/GeneralControl.js";
