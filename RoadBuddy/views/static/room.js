@@ -1,6 +1,6 @@
 import { CheckUserStatus } from "./Utils/ManageUser.js";
 import { SearchTeams } from "./Utils/ManageTeams.js";
-import { SearchOldFriends } from "./Utils/ManageFriends.js";
+import { SearchOldFriends } from "./Utils/ManageFriend.js";
 import { ClearList, RenderList, RenderOnlineStatus } from "./Utils/GeneralControl.js";
 import { DrawMap, UserCoordError } from "./Utils/DrawMap.js";
 import * as AddEvents from "./Utils/AddEvents.js";

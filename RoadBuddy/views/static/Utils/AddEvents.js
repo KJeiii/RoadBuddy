@@ -2,7 +2,7 @@ import * as DOMElements from "./DOMElements.js";
 import {
     SearchNewFriends, RenderSearchResult, SearchOldFriends, FetchSelectedItemIDs,
     CheckRelationship, SendFriendRequest, MakeNewFriend, ReplyToSender
-} from "./ManageFriends.js";
+} from "./ManageFriend.js";
 import { ControlMsgBox, ClearList, RenderList } from "./GeneralControl.js";
 
 export const AllEvents = [
