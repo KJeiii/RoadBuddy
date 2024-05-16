@@ -44,14 +44,16 @@ def initial_friend_status():
     # get online friends data for user first time login
     user_id = sid_reference[request.sid]
     friend_list = user_info[user_id]["friend_list"]
-    online_friend_info = {}
+    online_friend_list = []
     
     for friend in friend_list:
         friend_id = int(friend["user_id"])
         if friend_id in user_info.keys():
-            online_friend_info[friend_id] = friend["username"]
+            online_friend_list.append(friend_id)
 
-    emit("update_friend_status", online_friend_info, to=request.sid)
+    emit("update_friend_status", 
+         {"update-type" : "online", "online_friend_list": online_friend_list}, 
+         to=request.sid)
 
 
 @socketio.on("online_friend_status")
@@ -68,15 +70,17 @@ def online_friend_status():
             friend_sid_online.append(friend_sid)
 
     # 2. build own info for friends to update their friend pannel
-    my_user_info = {
-        "user_id": user_id,
-        "username": user_info[user_id]["username"],
-        "sid": request.sid,
-        "email": user_info[user_id]["email"]
-    }
+    # my_user_info = {
+    #     "user_id": user_id,
+    #     "username": user_info[user_id]["username"],
+    #     "sid": request.sid,
+    #     "email": user_info[user_id]["email"]
+    # }
 
     for sid in friend_sid_online:
-        emit("update_friend_status", my_user_info, to=sid)
+        emit("update_friend_status",
+             {"update-type" : "online", "online_friend_list": [user_id]},  
+             to=sid)
 
 
 @socketio.on("alert")
