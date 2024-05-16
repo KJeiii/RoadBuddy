@@ -181,3 +181,36 @@ export function RenderList(listCssSelector, listItemArray){
         return
     }
 }
+
+export function RenderOnlineStatus(itemCssSelector, onlineFriendArray){
+    let// 
+        items = document.querySelectorAll(itemCssSelector), //".main-pannel .friends-list .item"
+        onlineStyle = {backgroundColor: "rgb(182, 232, 176)", border: "solid 3px rgb(22, 166, 6)"},
+        offlineStyle = {backgroundColor: "rgb(235, 234, 234)", border: "solid 3px rgb(182, 181, 181)"};
+
+    if (itemCssSelector === ".main-pannel .friends-list .item") {
+        for ( let item of items ) {
+            if (onlineFriendArray.includes(item.getAttribute("id")*1)) {
+                item.style.backgroundColor = onlineStyle.backgroundColor;
+                item.style.border = onlineStyle.border;
+                continue;
+            }
+
+            item.style.backgroundColor = offlineStyle.backgroundColor;
+            item.style.border = offlineStyle.border;
+        }
+        return
+    }
+
+    if (itemCssSelector === ".teams-pannel .friends-list .item") {
+        for ( let item of items ) {
+            if (onlineFriendArray.includes(item.getAttribute("id")*1)) {
+                item.style.display = "flex";
+                continue;
+            }
+            item.style.display = "none";
+        }
+        return
+    }
+
+}
