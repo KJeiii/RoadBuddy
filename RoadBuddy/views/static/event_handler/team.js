@@ -1,6 +1,7 @@
-import { switchPannel, switchToTrackingPannel } from "../Utils/GeneralControl.js";
-import { appendPartner, removePartner } from "../Utils/ManagePartners.js";
+import { switchPannel, switchToTrackingPannel, ClearList, RenderList, RenderOnlineStatus } from "../Utils/GeneralControl.js";
+import { appendPartner, removePartner } from "../Utils/ManagePartner.js";
 import * as DOMElements from "../Utils/DOMElements.js";
+import { AddTeamClickEvent, AddTeamHoverEvent } from "../Utils/TeamEvent.js";
 
 // ----- sender emit invitation to listner "team_invite" on server  -----
 DOMElements.startTripBtn.addEventListener("click", ()=> {
@@ -454,59 +455,19 @@ closeInvitationBtn.addEventListener("click", () => {
 //     pullUpMain.style.display = "block";
 // };
 
-socket.on("update_team_status", (team_online_list) => {
+socket.on("update_team_status", (teamArray) => {
+    // update global var
+    console.log(onlineTeamArray);
+    onlineTeamArray.push(...teamArray)
+    console.log(onlineTeamArray);
 
-    // update join team list when friend gets online
-    let joinTeamitems = document.querySelectorAll(".main-pannel .join-list .item");
-    for ( let item of joinTeamitems) {
-        // removing all click event as resetting
+    ClearList(".join-list");
+    RenderList(".join-list", joinedTeamArray);
+    RenderOnlineStatus(".join-list .item", onlineTeamArray);
+    AddTeamClickEvent(".join-list .item", onlineTeamArray);
+    AddTeamHoverEvent(".join-list .item");
 
-        if (team_online_list.includes(item.getAttribute("id"))) {
-            // 1. change color to  green
-            item.style.backgroundColor = "rgb(182, 232, 176)";
-            item.style.border = "solid 3px rgb(22, 166, 6)";
-
-            // 2. add event to teams they are in use
-            // click event
-            item.addEventListener("click", function() {
-                document.querySelector(".teams-pannel .pannel-title").textContent = this.textContent;
-                document.querySelector(".teams-pannel .pannel-title").setAttribute("id", this.getAttribute("id"));
-                document.querySelectorAll(".teams-pannel .pannel-title")[1].style.display = "none";
-                document.querySelector(".teams-pannel .search").style.display = "none";
-                document.querySelector(".teams-pannel .friends-outer").style.display = "none";
-                DOMElements.teamsPannel.style.top = "65vh";
-                DOMElements.createTeamBtn.style.display = "none";
-                DOMElements.startTripBtn.style.display = "block";
-                DOMElements.inviteTripBtn.style.display = "none";
-                DOMElements.mainPannel.style.display = "none";
-                DOMElements.teamsPannel.style.display = "flex";
-                DOMElements.dropDownMain.style.display = "block";
-                DOMElements.pullUpMain.style.display = "none";
-                DOMElements.createTeamBtn.style.display = "none";
-                DOMElements.startTripBtn.style.display = "none";
-                DOMElements.inviteTripBtn.style.display = "none";
-                DOMElements.joinTripBtn.style.display = "block";
-            })
-        }
-        else{
-            // 1. change color to  grey
-            item.style.backgroundColor = "rgb(235, 234, 234)";
-            item.style.border = "solid 3px rgb(182, 181, 181)";
-
-            // 2. add event to teams they are in use
-            // click event
-            item.addEventListener("click", function() {
-                let//
-                teamCreateResponse = document.querySelector(".team-join-response"),
-                content = document.querySelector(".team-join-response .content");
-                content.textContent = `${this.textContent}的擁有者，尚未啟程`;
-                teamCreateResponse.style.display = "block";
-                DOMElements.mainPannel.style.top = "65vh";
-                DOMElements.dropDownMain.style.display = "none";
-                DOMElements.pullUpMain.style.display = "block";
-            })
-        }
-    }
+    // 還有隊伍關閉的更新要整合進來
 })
 
 // Close team-join-response when click ok
