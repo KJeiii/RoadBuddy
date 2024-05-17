@@ -38,7 +38,7 @@ export function AddEventsToSetting() {
         DOMElements.settingOnTracking.style.display = "none";
         DOMElements.settingOffTracking.style.display = "block";
 
-        if (GlobalVars.team_sender_info_cache === undefined) {
+        if (team_sender_info_cache === undefined) {
             DOMElements.invite.style.display = "block";
         }
     })
@@ -339,48 +339,7 @@ export function AddEventsToTeam() {
     })
 }
 
-export function AddEventsToTeamItems(teamType) {
-    if (teamType === "created") {
-        let createdTeamList = document.querySelectorAll(".create-list .item");
 
-        // click event
-        for (let item of createdTeamList) {
-            item.addEventListener("click", function () {
-                document.querySelector(".teams-pannel .pannel-title").textContent = this.textContent;
-                document.querySelector(".teams-pannel .pannel-title").setAttribute("id", this.getAttribute("id"));
-                document.querySelector(".teams-pannel .search").style.display = "none";
-                document.querySelector(".friends-outer").style.height = "55%";
-                DOMElements.createTeamBtn.style.display = "none";
-                DOMElements.startTripBtn.style.display = "block";
-                DOMElements.inviteTripBtn.style.display = "none";
-                DOMElements.mainPannel.style.display = "none";
-                DOMElements.teamsPannel.style.display = "flex";
-            });
-
-            // mouseover and mouseout event
-            item.addEventListener("mouseover", () => {
-                item.style.backgroundColor = "rgb(186, 185, 185)"
-            })
-            item.addEventListener("mouseout", () => {
-                item.style.backgroundColor = "rgb(235, 234, 234)"
-            })
-        }
-    }
-    if (teamType === "joined") {
-        let joinedTeamList = document.querySelectorAll(".join-list .item");
-        for (let item of joinedTeamList) {
-            // onmouseover and on mouseout event
-            item.addEventListener("mouseover", () => {
-                let overBackgroundColor = (item.style.border === "3px solid rgb(182, 181, 181)") ? "rgb(186, 185, 185)" : "rgb(22, 166, 6)";
-                item.style.backgroundColor = overBackgroundColor;
-            })
-            item.addEventListener("mouseout", () => {
-                let outBackgroundColor = (item.style.border === "3px solid rgb(182, 181, 181)") ? "rgb(235, 234, 234)" : "rgb(182, 232, 176)";
-                item.style.backgroundColor = outBackgroundColor;
-            })
-        }
-    }
-}
 
 export function AddEventsToPullAndDrop() {
     // ----- pull up and drop down main pannel and tracking pannel ------
