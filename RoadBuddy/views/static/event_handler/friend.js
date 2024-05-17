@@ -1,5 +1,5 @@
 import * as DOMElements from "../Utils/DOMElements.js";
-import { SearchOldFriends, MakeNewFriend } from "../Utils/ManageFriends.js";
+import { SearchOldFriends, MakeNewFriend } from "../Utils/ManageFriend.js";
 import { ControlMsgBox, ClearList, RenderList, RenderOnlineStatus } from "../Utils/GeneralControl.js";
 
 // *** as a receiver
