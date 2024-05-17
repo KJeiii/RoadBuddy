@@ -132,7 +132,7 @@ export function ClearList(cssSelector) {
 
 export function RenderList(listCssSelector, listItemArray) {
     let//
-        teamListClass = [".create-list", "join-list"];
+        teamListClass = [".create-list", ".join-list"];
 
     if (teamListClass.includes(listCssSelector)) {
         let list = document.querySelector(listCssSelector); //".create-list"
