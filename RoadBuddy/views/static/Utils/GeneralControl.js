@@ -183,15 +183,20 @@ export function RenderList(listCssSelector, listItemArray) {
     }
 }
 
-export function RenderOnlineStatus(itemCssSelector, onlineFriendArray) {
+export function RenderOnlineStatus(itemCssSelector, onlineItemArray) {
     let// 
         items = document.querySelectorAll(itemCssSelector), //".main-pannel .friends-list .item"
         onlineStyle = { backgroundColor: "rgb(182, 232, 176)", border: "solid 3px rgb(22, 166, 6)" },
         offlineStyle = { backgroundColor: "rgb(235, 234, 234)", border: "solid 3px rgb(182, 181, 181)" };
 
-    if (itemCssSelector === ".main-pannel .friends-list .item") {
+    if (itemCssSelector === ".main-pannel .friends-list .item" ||
+        itemCssSelector === ".join-list .item") 
+    {   
         for (let item of items) {
-            if (onlineFriendArray.includes(item.getAttribute("id") * 1)) {
+            const itemIsOnline = (itemCssSelector === ".main-pannel .friends-list .item") ?
+                                onlineItemArray.includes(item.getAttribute("id") * 1) :
+                                onlineItemArray.includes(item.getAttribute("id")) ;
+            if (itemIsOnline) {
                 item.style.backgroundColor = onlineStyle.backgroundColor;
                 item.style.border = onlineStyle.border;
                 continue;
@@ -205,7 +210,8 @@ export function RenderOnlineStatus(itemCssSelector, onlineFriendArray) {
 
     if (itemCssSelector === ".teams-pannel .friends-list .item") {
         for (let item of items) {
-            if (onlineFriendArray.includes(item.getAttribute("id") * 1)) {
+            const friendIsOnline = onlineItemArray.includes(item.getAttribute("id") * 1);
+            if (friendIsOnline) {
                 item.style.display = "flex";
                 continue;
             }
