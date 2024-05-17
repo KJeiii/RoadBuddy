@@ -252,10 +252,8 @@ teamOkBtn.addEventListener("click", ()=>{
 })
 
 
-
 // ----- emit leave team event to listener "leave_team" on server-----
-let leaveTeamBtn = document.querySelector(".setting div.leave");
-leaveTeamBtn.addEventListener("click", ()=> {
+DOMElements.leaveTeamBtn.addEventListener("click", ()=> {
     let leader_sid = ( team_sender_info_cache === undefined ) ? socket.id : team_sender_info_cache["sid"];
     let data = {
         sid: socket.id,
@@ -422,52 +420,15 @@ closeInvitationBtn.addEventListener("click", () => {
 })
 
 
-
-//  Listener for receiving event "update_team_status" event from server
-// const teamOnline = () => {
-//     document.querySelector(".teams-pannel .pannel-title").textContent = this.textContent;
-//     document.querySelector(".teams-pannel .pannel-title").setAttribute("id", this.getAttribute("id"));
-//     document.querySelectorAll(".teams-pannel .pannel-title")[1].style.display = "none";
-//     document.querySelector(".teams-pannel .search").style.display = "none";
-//     document.querySelector(".teams-pannel .friends-outer").style.display = "none";
-//     teamsPannel.style.top = "65vh";
-//     createTeamBtn.style.display = "none";
-//     startTripBtn.style.display = "block";
-//     inviteTripBtn.style.display = "none";
-//     mainPannel.style.display = "none";
-//     teamsPannel.style.display = "flex";
-//     dropDownMain.style.display = "block";
-//     pullUpMain.style.display = "none";
-//     createTeamBtn.style.display = "none";
-//     startTripBtn.style.display = "none";
-//     inviteTripBtn.style.display = "none";
-//     joinTripBtn.style.display = "block";
-// };
-
-// const teamOffline = () => {
-//     let//
-//     teamCreateResponse = document.querySelector(".team-join-response"),
-//     content = document.querySelector(".team-join-response .content");
-//     content.textContent = `${this.textContent}的擁有者，尚未啟程`;
-//     teamCreateResponse.style.display = "block";
-//     mainPannel.style.top = "vh";
-//     dropDownMain.style.display = "none";
-//     pullUpMain.style.display = "block";
-// };
-
 socket.on("update_team_status", (teamArray) => {
     // update global var
-    console.log(onlineTeamArray);
-    onlineTeamArray.push(...teamArray)
-    console.log(onlineTeamArray);
+    onlineTeamArray = teamArray;
 
     ClearList(".join-list");
     RenderList(".join-list", joinedTeamArray);
     RenderOnlineStatus(".join-list .item", onlineTeamArray);
     AddTeamClickEvent(".join-list .item", onlineTeamArray);
     AddTeamHoverEvent(".join-list .item");
-
-    // 還有隊伍關閉的更新要整合進來
 })
 
 // Close team-join-response when click ok
