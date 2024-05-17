@@ -1,10 +1,12 @@
 import { CheckUserStatus } from "./Utils/ManageUser.js";
-import { SearchTeams } from "./Utils/ManageTeams.js";
+import { SearchTeams } from "./Utils/ManageTeam.js";
 import { SearchOldFriends } from "./Utils/ManageFriend.js";
 import { ClearList, RenderList, RenderOnlineStatus } from "./Utils/GeneralControl.js";
 import { DrawMap, UserCoordError } from "./Utils/DrawMap.js";
-import * as AddEvents from "./Utils/AddEvents.js";
+import * as GeneralEvents from "./Utils/GeneralEvent.js";
 import { ManipulateSessionStorage } from "./Utils/ManageUser.js";
+// import { AddEventsToTeamItems } from "./Utils/TeamEvent.js";
+import { AddTeamClickEvent, AddTeamHoverEvent } from "./Utils/TeamEvent.js";
 
 // ----- initialize socket.io -----
 socket.on("connect", ()=>{
@@ -46,9 +48,10 @@ socket.on("connect", ()=>{
             // 1. created team list
             SearchTeams(data.user_id, "created")
                 .then((result) => {
-                    ClearList(".main-pannel .create-list");
+                    ClearList(".create-list");
                     RenderList(".create-list", result.createdTeamList);
-                    AddEvents.AddEventsToTeamItems("created");
+                    AddTeamClickEvent(".create-list .item");
+                    AddTeamHoverEvent(".create-list .item");
                 })
                 .catch((error) => console.log(
                     `Error in render created team list (room.js):${error}`
@@ -57,9 +60,12 @@ socket.on("connect", ()=>{
                 // 2. joined team list 
                 SearchTeams(data.user_id, "joined")
                 .then((result) => {
-                    ClearList(".main-pannel .join-list");
+                    joinedTeamArray.push(...result.joinedTeamList);
+                    ClearList(".join-list");
                     RenderList(".join-list", result.joinedTeamList);
-                    AddEvents.AddEventsToTeamItems("joined");
+                    RenderOnlineStatus(".join-list .item", onlineTeamArray);
+                    AddTeamClickEvent(".join-list .item", onlineTeamArray);
+                    AddTeamHoverEvent(".join-list .item");
                 })
                 .catch((error) => console.log(
                     `Error in render joined team list (room.js):${error}`
@@ -118,7 +124,7 @@ socket.on("connect", ()=>{
 //             .then((result) => {
 //                 ClearList(".main-pannel .create-list");
 //                 RenderList(".create-list", result.createdTeamList);
-//                 AddEvents.AddEventsToTeamItems("created");
+//                 AddEventsToTeamItems("created");
 //             })
 //             .catch((error) => console.log(
 //                 `Error in render created team list (room.js):${error}`
@@ -129,7 +135,7 @@ socket.on("connect", ()=>{
 //             .then((result) => {
 //                 ClearList(".main-pannel .join-list");
 //                 RenderList(".join-list", result.joinedTeamList);
-//                 AddEvents.AddEventsToTeamItems("joined");
+//                 AddEventsToTeamItems("joined");
 //             })
 //             .catch((error) => console.log(
 //                 `Error in render joined team list (room.js):${error}`
@@ -162,8 +168,7 @@ socket.on("connect", ()=>{
 //     catch(error) {console.log(`Error in getting user postion : ${error}`)}
 // }
 
-for (let event of AddEvents.AllEvents) {
-    if (event === AddEvents.AddEventsToTeamItems){continue}
+for (let event of GeneralEvents.AllEvents) {
     event()
 }
 
