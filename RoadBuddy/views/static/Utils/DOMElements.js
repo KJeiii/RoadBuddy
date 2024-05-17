@@ -6,7 +6,7 @@ export {
     pullUpTeam, dropDownTeam, pullUpTracking, dropDownTracking, addFriend, addTeam,
     mainPannel, friendsPannel, teamsPannel, trackingPannel, closePannel, searchList,
     searchIcon, createTeamBtn, startTripBtn, inviteTripBtn, joinTripBtn, createOkBtn,
-    addFriendBtn, friendRequestBtn, friendYesBtn
+    addFriendBtn, friendRequestBtn, friendYesBtn, leaveTeamBtn
 }
 
 // ----- elememts -----
@@ -55,6 +55,7 @@ joinTripBtn = document.querySelector(".join-trip-btn"),
 createOkBtn = document.querySelector(".team-create-response button"),
 addFriendBtn = document.querySelector(".friends-pannel button"),
 friendRequestBtn = document.querySelector(".friend-request button"),
-friendYesBtn = document.querySelector(".friend-prompt .yes");
+friendYesBtn = document.querySelector(".friend-prompt .yes"),
+leaveTeamBtn = document.querySelector(".setting div.leave");
 
 
