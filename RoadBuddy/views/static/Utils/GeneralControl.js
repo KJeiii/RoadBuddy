@@ -42,8 +42,26 @@ export function SwitchPullAndDropBtn(pullUpOrDropDown){
     }
 }
 
-export function SwitchSettingBtn(expandOrClose){
+export function SwitchSettingBtn(){
+    const//
+        btnsForMainPannel = [DOMElements.config, DOMElements.logout],
+        btnsForTrackingPannel = [DOMElements.invite, DOMElements.leave];
+    
+    const onMainPannel = (DOMElements.mainPannel.style.display === "block");
+    // on main pannel
+    if (onMainPannel) {
+        btnsForMainPannel.forEach((btn) => {
+            btn.style.display = (btn.style.display === "none") ? "block" : "none";
+        })
+        btnsForTrackingPannel.forEach((btn) => {btn.style.display === "none"})
+        return
+    }
 
+    // on tracking pannel
+    btnsForTrackingPannel.forEach((btn)=>{
+        btn.style.display = (btn.style.display === "none") ? "block" : "none";
+    })
+    btnsForMainPannel.forEach((btn) => {btn.style.display === "none"})
 }
 
 export function switchToTrackingPannel() {
