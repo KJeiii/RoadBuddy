@@ -1,5 +1,51 @@
 import * as DOMElements from "./DOMElements.js";
 
+// export function SwitchPullAndDropBtnSet(pannelType){
+//     const//
+//         dropDownBtns = document.querySelectorAll("div[class^=drop-down-]"),
+//         pullUpBtns = document.querySelectorAll("div[class^=pull-up-]");
+
+//     // 1. Show pullUpBtn on the pannel; others disappear.
+//     for (let btn of pullUpBtns) {
+//         const onPannel = (btn.getAttribute("class").split("-")[2] === pannelType);
+//         if (onPannel){
+//             btn.style.display = "block";
+//             continue
+//         }
+//         btn.style.display = "none";
+//     }
+//     // 2. All dropDownBtns disappear.
+//     for (let btn of dropDownBtns){
+//         btn.style.display = "none";
+//     }
+// }
+
+
+export function SwitchPullAndDropBtn(pullUpOrDropDown){
+    //1. switch pullup and dropdown btn
+    const//
+        pullUpBtn = document.querySelector(".pull-up"),
+        dropDown = document.querySelector(".drop-down");
+    pullUpBtn.style.display = (pullUpOrDropDown === "pullUp") ? "none" : "block";
+    dropDown.style.display = (pullUpOrDropDown === "pullUp") ? "block" : "none";
+
+    //2. adjust main pannel top and heigth (70vh top + 30vh height or 20vh top + 80vh height)
+    DOMElements.mainPannel.style.top = (pullUpOrDropDown === "pullUp") ? "20vh" : "70vh";
+    DOMElements.mainPannel.style.height = (pullUpOrDropDown === "pullUp") ? "80vh" : "30vh"; 
+
+    //3. adjust color-intro (flex or none), outer(flex or none)
+    const elementsOnMainPannel = [
+        DOMElements.friendColorIntro, DOMElements.teamColorIntro, 
+        DOMElements.mainPannelFriendsOuter, DOMElements.teamsOuter];
+    for ( let element of elementsOnMainPannel){
+        element.style.display = (pullUpOrDropDown === "pullUp") ? "flex" : "none";
+    }
+}
+
+export function SwitchSettingBtn(expandOrClose){
+
+}
+
 export function switchToTrackingPannel() {
     // switch to tracking pannel
     DOMElements.mainPannel.style.display = "none";
@@ -14,6 +60,19 @@ export function switchToTrackingPannel() {
     DOMElements.settingOnTracking.style.display = "block";
     DOMElements.settingOffTracking.style.display = "none";
 };
+
+export function SwitchPannel(toPannelType){
+    // 1. switch pannel
+    const pannels = document.querySelectorAll("")
+
+    // 2. switch pannel title content
+
+    // 3. switch pull and drop btns
+
+    // 4. switch setting btns
+
+    // 5. switch add friend or add team btns
+}
 
 export function switchPannel(toPannel, ...turnOnBtns) {
     let//
