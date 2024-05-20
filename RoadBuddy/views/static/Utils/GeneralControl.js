@@ -64,23 +64,26 @@ export function SwitchSettingBtn(){
     btnsForMainPannel.forEach((btn) => {btn.style.display === "none"})
 }
 
-export function SwitchMainPannelContent(){
-    const// 
-        friendContent = [DOMElements.friendColorIntro, DOMElements.mainPannelFriendsOuter],
-        teamContent = [DOMElements.teamColorIntro, DOMElements.teamsOuter];
-    const//
-        selectFriend = (DOMElements.menuTitle.textContent === DOMElements.menuFriends.textContent),
-        isPulledUp = (DOMElements.mainPannel.style.top === "20vh");
-    // select friend list
-    if (selectFriend){
-        friendContent.forEach((content) => {content.style.display = (isPulledUp) ? "flex" : "none";})
-        teamContent.forEach((content) => {content.style.display = "none";})
-    }
-    
-    //select team list
-    teamContent.forEach((content) => {content.style.display = (isPulledUp) ? "flex" : "none";})
-    friendContent.forEach((content) => {content.style.display = "none";})
+export function isMainPannelPulledUp(){
+    return DOMElements.mainPannel.style.top === "20vh";
 }
+
+export function SwitchMainPannelContent(toWhichContent){
+    const elementsOnPannel = [
+            ...document.querySelectorAll(".main-pannel div[class$='outer']"), 
+            ...document.querySelectorAll(".main-pannel div[class$='intro']")
+        ];
+    const isPulledUp = isMainPannelPulledUp();
+
+    elementsOnPannel.forEach((element)=>{
+        const typeOfElement = element.getAttribute("class").split("-")[0];
+        if (typeOfElement === toWhichContent){
+            element.style.display = (isPulledUp) ? "flex" : "none";
+        }
+        element.style.display = "none";
+    })
+}
+
 
 export function SwitchPannel(toPannelType){
     // 1. switch pannel
