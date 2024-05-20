@@ -64,6 +64,37 @@ export function SwitchSettingBtn(){
     btnsForMainPannel.forEach((btn) => {btn.style.display === "none"})
 }
 
+export function SwitchMainPannelContent(){
+    const// 
+        friendContent = [DOMElements.friendColorIntro, DOMElements.mainPannelFriendsOuter],
+        teamContent = [DOMElements.teamColorIntro, DOMElements.teamsOuter];
+    const//
+        selectFriend = (DOMElements.menuTitle.textContent === DOMElements.menuFriends.textContent),
+        isPulledUp = (DOMElements.mainPannel.style.top === "20vh");
+    // select friend list
+    if (selectFriend){
+        friendContent.forEach((content) => {content.style.display = (isPulledUp) ? "flex" : "none";})
+        teamContent.forEach((content) => {content.style.display = "none";})
+    }
+    
+    //select team list
+    teamContent.forEach((content) => {content.style.display = (isPulledUp) ? "flex" : "none";})
+    friendContent.forEach((content) => {content.style.display = "none";})
+}
+
+export function SwitchPannel(toPannelType){
+    // 1. switch pannel
+    const pannels = document.querySelectorAll("")
+
+    // 2. switch pannel title content
+
+    // 3. switch pull and drop btns
+
+    // 4. switch setting btns
+
+    // 5. switch add friend or add team btns
+}
+
 export function switchToTrackingPannel() {
     // switch to tracking pannel
     DOMElements.mainPannel.style.display = "none";
@@ -78,19 +109,6 @@ export function switchToTrackingPannel() {
     DOMElements.settingOnTracking.style.display = "block";
     DOMElements.settingOffTracking.style.display = "none";
 };
-
-export function SwitchPannel(toPannelType){
-    // 1. switch pannel
-    const pannels = document.querySelectorAll("")
-
-    // 2. switch pannel title content
-
-    // 3. switch pull and drop btns
-
-    // 4. switch setting btns
-
-    // 5. switch add friend or add team btns
-}
 
 export function switchPannel(toPannel, ...turnOnBtns) {
     let//
