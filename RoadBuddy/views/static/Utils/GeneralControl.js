@@ -1,26 +1,5 @@
 import * as DOMElements from "./DOMElements.js";
 
-// export function SwitchPullAndDropBtnSet(pannelType){
-//     const//
-//         dropDownBtns = document.querySelectorAll("div[class^=drop-down-]"),
-//         pullUpBtns = document.querySelectorAll("div[class^=pull-up-]");
-
-//     // 1. Show pullUpBtn on the pannel; others disappear.
-//     for (let btn of pullUpBtns) {
-//         const onPannel = (btn.getAttribute("class").split("-")[2] === pannelType);
-//         if (onPannel){
-//             btn.style.display = "block";
-//             continue
-//         }
-//         btn.style.display = "none";
-//     }
-//     // 2. All dropDownBtns disappear.
-//     for (let btn of dropDownBtns){
-//         btn.style.display = "none";
-//     }
-// }
-
-
 export function SwitchPullAndDropBtn(pullUpOrDropDown){
     //1. switch pullup and dropdown btn
     const//
@@ -44,23 +23,18 @@ export function SwitchPullAndDropBtn(pullUpOrDropDown){
 
 export function SwitchSettingBtn(){
     const//
-        btnsForMainPannel = [DOMElements.config, DOMElements.logout],
+        btnsForMainPannel = [DOMElements.logout], //DOMElements.config
         btnsForTrackingPannel = [DOMElements.invite, DOMElements.leave];
     
-    const onMainPannel = (DOMElements.mainPannel.style.display === "block");
+    const onMainPannel = (DOMElements.mainPannel.style.display !== "none");
     // on main pannel
     if (onMainPannel) {
-        btnsForMainPannel.forEach((btn) => {
-            btn.style.display = (btn.style.display === "none") ? "block" : "none";
-        })
+        btnsForMainPannel.forEach((btn) => {btn.style.display = (btn.style.display !== "block") ? "block" : "none";})
         btnsForTrackingPannel.forEach((btn) => {btn.style.display === "none"})
         return
     }
-
     // on tracking pannel
-    btnsForTrackingPannel.forEach((btn)=>{
-        btn.style.display = (btn.style.display === "none") ? "block" : "none";
-    })
+    btnsForTrackingPannel.forEach((btn)=>{btn.style.display = (btn.style.display !== "block") ? "block" : "none";})
     btnsForMainPannel.forEach((btn) => {btn.style.display === "none"})
 }
 
