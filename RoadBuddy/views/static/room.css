@@ -4,10 +4,7 @@ body {
     width: 100vw;
 }
 
-.setting-on-main:hover,
-.setting-off-main:hover,
-.setting-on-tracking:hover,
-.setting-off-tracking:hover,
+.setting-btn:hover,
 .config:hover,
 .logout:hover,
 .invite:hover,
@@ -49,10 +46,7 @@ button:hover
     right: 15px; 
 }
 
-.setting-on-main,
-.setting-off-main,
-.setting-on-tracking,
-.setting-off-tracking 
+.setting-btn
 {
     width: 30px;
     height: 30px;
@@ -62,12 +56,6 @@ button:hover
     background-size: 60%;
     background-repeat: no-repeat;
     border-radius: 10px;
-}
-
-.setting-off-main,
-.setting-on-tracking,
-.setting-off-tracking  {
-    display: none;
 }
 
 .config,
@@ -94,6 +82,7 @@ button:hover
 
 /* ------ main pannel -----*/
 .main-pannel {
+    display: block;
     position: absolute;
     top: 70vh;
     z-index: 1000;
