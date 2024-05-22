@@ -1,20 +1,6 @@
-export {
-    settingOnMain, settingOffMain, settingOnTracking, settingOffTracking, config,
-    logout, invite, leave, menu, menuTitle, menuList, toggleOn, toggleOff, menuFriends,
-    menuTeam, mainPannelFriendsOuter, mainPannelFriendsList, teamPannelFriendsList,
-    teamsOuter, partnersOuter, friendColorIntro, teamColorIntro, pullUpFriend, dropDownFriend,
-    pullUpTeam, dropDownTeam, pullUpTracking, dropDownTracking, addFriend, addTeam,
-    mainPannel, friendsPannel, teamsPannel, trackingPannel, closePannel, searchList,
-    searchIcon, createTeamBtn, startTripBtn, inviteTripBtn, joinTripBtn, createOkBtn,
-    addFriendBtn, friendRequestBtn, friendYesBtn, leaveTeamBtn
-}
-
 // ----- elememts -----
-let//
-settingOnMain = document.querySelector(".setting-on-main"),
-settingOffMain = document.querySelector(".setting-off-main"),
-settingOnTracking = document.querySelector(".setting-on-tracking"),
-settingOffTracking = document.querySelector(".setting-off-tracking"),
+export let//
+settingBtn = document.querySelector(".setting-btn"),
 config = document.querySelector(".config"),
 logout = document.querySelector(".logout"),
 invite = document.querySelector(".invite"),
