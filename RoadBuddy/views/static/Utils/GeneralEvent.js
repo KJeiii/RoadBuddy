@@ -3,7 +3,7 @@ import {
     SearchNewFriends, RenderSearchResult, SearchOldFriends, FetchSelectedItemIDs,
     CheckRelationship, SendFriendRequest, MakeNewFriend, ReplyToSender
 } from "./ManageFriend.js";
-import { ControlMsgBox, ClearList, RenderList } from "./GeneralControl.js";
+import { ControlMsgBox, ClearList, RenderList, SwitchSettingBtn } from "./GeneralControl.js";
 
 export const AllEvents = [
     AddEventsToSetting, AddEventsToSwitchPannel, AddEventsToFriend,
@@ -12,45 +12,7 @@ export const AllEvents = [
 
 export function AddEventsToSetting() {
     // ----- toggle down setting  -----
-    DOMElements.settingOnMain.addEventListener("click", () => {
-        // config.style.display = "block";
-        DOMElements.logout.style.display = "block";
-        DOMElements.invite.style.display = "none";
-        DOMElements.leave.style.display = "none";
-        DOMElements.settingOnMain.style.display = "none";
-        DOMElements.settingOffMain.style.display = "block";
-    })
-
-    DOMElements.settingOffMain.addEventListener("click", () => {
-        // config.style.display = "none";
-        DOMElements.logout.style.display = "none";
-        DOMElements.invite.style.display = "none";
-        DOMElements.leave.style.display = "none";
-        DOMElements.settingOffMain.style.display = "none";
-        DOMElements.settingOnMain.style.display = "block";
-    })
-
-    DOMElements.settingOnTracking.addEventListener("click", () => {
-        // config.style.display = "none";
-        DOMElements.logout.style.display = "none";
-        DOMElements.invite.style.display = "none";
-        DOMElements.leave.style.display = "block";
-        DOMElements.settingOnTracking.style.display = "none";
-        DOMElements.settingOffTracking.style.display = "block";
-
-        if (team_sender_info_cache === undefined) {
-            DOMElements.invite.style.display = "block";
-        }
-    })
-
-    DOMElements.settingOffTracking.addEventListener("click", () => {
-        // config.style.display = "none";
-        DOMElements.logout.style.display = "none";
-        DOMElements.invite.style.display = "none";
-        DOMElements.leave.style.display = "none";
-        DOMElements.settingOnTracking.style.display = "block";
-        DOMElements.settingOffTracking.style.display = "none";
-    })
+    DOMElements.settingBtn.addEventListener("click", SwitchSettingBtn)
 }
 
 export function AddEventsToSwitchPannel() {
