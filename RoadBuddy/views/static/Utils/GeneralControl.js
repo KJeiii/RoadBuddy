@@ -1,24 +1,43 @@
 import * as DOMElements from "./DOMElements.js";
 
-export function SwitchPullAndDropBtn(pullUpOrDropDown){
+export function isMainPannelPulledUp(){
+    return DOMElements.mainPannel.style.top === "20vh";
+}
+
+export function onWhichContentType(){
+    let //
+        contentType,
+        menuTitle = document.querySelector(".nav-menu-title").textContent,
+        friendOption = document.querySelector(".nav-menu-friend").textContent,
+        teamOption = document.querySelector(".nav-menu-team").textContent;
+
+    (menuTitle === friendOption) && (contentType = "friend");
+    (menuTitle === teamOption) && (contentType = "team");
+    return contentType
+}
+
+export function SwitchPullAndDropBtn(){
     //1. switch pullup and dropdown btn
     const//
         pullUpBtn = document.querySelector(".pull-up"),
         dropDown = document.querySelector(".drop-down");
-    pullUpBtn.style.display = (pullUpOrDropDown === "pullUp") ? "none" : "block";
-    dropDown.style.display = (pullUpOrDropDown === "pullUp") ? "block" : "none";
+    const isPulledUp = isMainPannelPulledUp();
+    pullUpBtn.style.display = (isPulledUp) ? "block" : "none";
+    dropDown.style.display = (isPulledUp) ? "none" : "block";
 
     //2. adjust main pannel top and heigth (70vh top + 30vh height or 20vh top + 80vh height)
-    DOMElements.mainPannel.style.top = (pullUpOrDropDown === "pullUp") ? "20vh" : "70vh";
-    DOMElements.mainPannel.style.height = (pullUpOrDropDown === "pullUp") ? "80vh" : "30vh"; 
+    DOMElements.mainPannel.style.top = (isPulledUp) ? "70vh" : "20vh";
+    DOMElements.mainPannel.style.height = (isPulledUp) ? "30vh" : "80vh"; 
 
     //3. adjust color-intro (flex or none), outer(flex or none)
-    const elementsOnMainPannel = [
-        DOMElements.friendColorIntro, DOMElements.teamColorIntro, 
-        DOMElements.mainPannelFriendsOuter, DOMElements.teamsOuter];
-    for ( let element of elementsOnMainPannel){
-        element.style.display = (pullUpOrDropDown === "pullUp") ? "flex" : "none";
-    }
+    const contentType = onWhichContentType();
+    const//
+        friendContents = [DOMElements.friendColorIntro, DOMElements.mainPannelFriendsOuter],
+        teamContents = [DOMElements.teamColorIntro, DOMElements.teamsOuter];
+
+    friendContents.forEach((content)=>content.style.display = (contentType === "friend") ? "flex" : "none");
+    teamContents.forEach((content)=>content.style.display = (contentType === "team") ? "flex" : "none");
+
 }
 
 export function SwitchSettingBtn(){
@@ -38,9 +57,6 @@ export function SwitchSettingBtn(){
     btnsForMainPannel.forEach((btn) => {btn.style.display === "none"})
 }
 
-export function isMainPannelPulledUp(){
-    return DOMElements.mainPannel.style.top === "20vh";
-}
 
 export function SwitchMainPannelContent(toWhichContent){
     const elementsOnPannel = [
