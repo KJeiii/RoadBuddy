@@ -32,13 +32,13 @@ socket.on("connect", ()=>{
                     socket.emit("initial_team_status");
                     ManipulateSessionStorage("store", {friendList: JSON.stringify(oldFriendList)})
                     // window.sessionStorage.setItem("friendList", JSON.stringify(oldFriendList))
-                    ClearList(".main-pannel .friends-list");
-                    RenderList(".main-pannel .friends-list", oldFriendList);
-                    RenderOnlineStatus(".main-pannel .friends-list .item", oldFriendList);
+                    ClearList(".main-pannel .friend-list");
+                    RenderList(".main-pannel .friend-list", oldFriendList);
+                    RenderOnlineStatus(".main-pannel .friend-list .item", oldFriendList);
                     
-                    ClearList(".teams-pannel .friends-list");
-                    RenderList(".teams-pannel .friends-list", oldFriendList);
-                    RenderOnlineStatus(".teams-pannel .friends-list .item", oldFriendList);
+                    ClearList(".teams-pannel .friend-list");
+                    RenderList(".teams-pannel .friend-list", oldFriendList);
+                    RenderOnlineStatus(".teams-pannel .friend-list .item", oldFriendList);
 
                 })
                 .catch((error)=>{console.log(error)})
