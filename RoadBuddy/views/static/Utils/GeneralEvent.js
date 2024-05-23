@@ -5,7 +5,7 @@ import {
 } from "./ManageFriend.js";
 import { 
     ControlMsgBox, ClearList, RenderList, SwitchSettingBtn,
-    SwitchPullAndDropBtn
+    SwitchPullAndDropBtn, SwitchMainPannelContent, SwitchMenuToggle
 } from "./GeneralControl.js";
 
 export const AllEvents = [
@@ -42,54 +42,29 @@ export function AddEventsToPullAndDrop() {
 
 export function AddEventsToSwitchPannel() {
     // ----- switch menu -----
-    DOMElements.toggleOn.addEventListener("click", () => {
-        DOMElements.menu.style.border = "0.5px solid rgb(151, 150, 150)";
-        DOMElements.menuList.style.display = "block";
-        DOMElements.toggleOn.style.display = "none";
-        DOMElements.toggleOff.style.display = "block";
-    })
+    DOMElements.toggle.addEventListener("click", SwitchMenuToggle)
 
-    DOMElements.toggleOff.addEventListener("click", () => {
-        DOMElements.menu.style.border = "none";
-        DOMElements.menuList.style.display = "none";
-        DOMElements.toggleOff.style.display = "none";
-        DOMElements.toggleOn.style.display = "block";
-    })
-
-    DOMElements.menuFriends.addEventListener("click", () => {
-        DOMElements.menuTitle.textContent = DOMElements.menuFriends.textContent;
-        DOMElements.menuList.style.display = "none";
-        DOMElements.menu.style.border = "none";
-
-        let isPulledUp = (DOMElements.mainPannel.style.top === "20vh") ? true : false;
-        // switch content
-        DOMElements.teamsOuter.style.display = "none";
-        DOMElements.teamColorIntro.style.display = "none";
-        DOMElements.mainPannelFriendsOuter.style.display = (isPulledUp) ? "flex" : "none";
-        DOMElements.friendColorIntro.style.display = (isPulledUp) ? "flex" : "none";
-
+    // ----- switch content ----
+    DOMElements.menuFriends.addEventListener("click", function(){
+        SwitchMainPannelContent(this.getAttribute("class").split("-")[2]);   
         // switch add button
         DOMElements.addTeam.style.display = "none";
         DOMElements.addFriend.style.display = "block";
-    })
 
-    DOMElements.menuTeam.addEventListener("click", () => {
-        DOMElements.menuTitle.textContent = DOMElements.menuTeam.textContent;
+        // turn off menu
         DOMElements.menuList.style.display = "none";
         DOMElements.menu.style.border = "none";
+    })
 
-        let isPulledUp = (DOMElements.mainPannel.style.top === "20vh") ? true : false;
-        // switch content
-
-        DOMElements.mainPannelFriendsOuter.style.display = "none";
-        DOMElements.friendColorIntro.style.display = "none";
-        DOMElements.teamsOuter.style.display = (isPulledUp) ? "flex" : "none";
-        DOMElements.teamColorIntro.style.display = (isPulledUp) ? "flex" : "none";
-
+    DOMElements.menuTeam.addEventListener("click", function(){
+        SwitchMainPannelContent(this.getAttribute("class").split("-")[2]);   
         // switch add button
         DOMElements.addTeam.style.display = "block";
-        DOMElements.addFriend.style.display = "none";
+        DOMElements.addFriend.style.display = "none";  
 
+        // turn off menu
+        DOMElements.menuList.style.display = "none";
+        DOMElements.menu.style.border = "none";
     })
 }
 
