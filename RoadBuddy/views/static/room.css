@@ -18,12 +18,11 @@ body {
 .close-invitation:hover,
 .search-icon:hover,
 .teams-list .item:hover,
-.pull-up-friend:hover,
-.drop-down-friend:hover,
-.pull-up-team:hover,
-.drop-down-team:hover,
+.pull-up:hover,
+.drop-down:hover,
+/* 
 .pull-up-tracking:hover,
-.drop-down-tracking:hover,
+.drop-down-tracking:hover, */
 .nav-add-friend:hover,
 .nav-add-team:hover,
 .create-list .item:hover,
@@ -92,9 +91,7 @@ button:hover
     border-radius: 30px 30px 0 0;
 }
 
-.pull-up-friend,
-.pull-up-team,
-.pull-up-tracking {
+.pull-up {
     width: 15px;
     height: 15px;
     background-image: url("../static/images/double-angles-up.svg");
@@ -104,14 +101,12 @@ button:hover
     margin-top: 10px;
 }
 
-.pull-up-team,
+/* .pull-up-team,
 .pull-up-tracking {
     display: none;
-}
+} */
 
-.drop-down-friend,
-.drop-down-team,
-.drop-down-tracking {
+.drop-down {
     display: none;
     width: 15px;
     height: 15px;
