@@ -8,7 +8,7 @@ export function AddTeamClickEvent(teamItemCssSelector, ...onlineTeamArray){
                 document.querySelector(".teams-pannel .pannel-title").textContent = this.textContent;
                 document.querySelector(".teams-pannel .pannel-title").setAttribute("id", this.getAttribute("id"));
                 document.querySelector(".teams-pannel .search").style.display = "none";
-                document.querySelector(".friends-outer").style.height = "55%";
+                document.querySelector(".friend-outer").style.height = "55%";
                 DOMElements.createTeamBtn.style.display = "none";
                 DOMElements.startTripBtn.style.display = "block";
                 DOMElements.inviteTripBtn.style.display = "none";
@@ -31,7 +31,7 @@ export function AddTeamClickEvent(teamItemCssSelector, ...onlineTeamArray){
                     document.querySelector(".teams-pannel .pannel-title").setAttribute("id", this.getAttribute("id"));
                     document.querySelectorAll(".teams-pannel .pannel-title")[1].style.display = "none";
                     document.querySelector(".teams-pannel .search").style.display = "none";
-                    document.querySelector(".teams-pannel .friends-outer").style.display = "none";
+                    document.querySelector(".teams-pannel .friend-outer").style.display = "none";
                     DOMElements.teamsPannel.style.top = "65vh";
                     DOMElements.createTeamBtn.style.display = "none";
                     DOMElements.startTripBtn.style.display = "block";
@@ -100,7 +100,7 @@ export function AddTeamHoverEvent(teamItemCssSelector){
 //                 document.querySelector(".teams-pannel .pannel-title").textContent = this.textContent;
 //                 document.querySelector(".teams-pannel .pannel-title").setAttribute("id", this.getAttribute("id"));
 //                 document.querySelector(".teams-pannel .search").style.display = "none";
-//                 document.querySelector(".friends-outer").style.height = "55%";
+//                 document.querySelector(".friend-outer").style.height = "55%";
 //                 DOMElements.createTeamBtn.style.display = "none";
 //                 DOMElements.startTripBtn.style.display = "block";
 //                 DOMElements.inviteTripBtn.style.display = "none";
