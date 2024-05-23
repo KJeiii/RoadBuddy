@@ -45,7 +45,7 @@ export function AddEventsToSwitchPannel() {
     DOMElements.toggle.addEventListener("click", SwitchMenuToggle)
 
     // ----- switch content ----
-    DOMElements.menuFriends.addEventListener("click", function(){
+    DOMElements.menuFriend.addEventListener("click", function(){
         SwitchMainPannelContent(this.getAttribute("class").split("-")[2]);   
         // switch add button
         DOMElements.addTeam.style.display = "none";
@@ -71,7 +71,7 @@ export function AddEventsToSwitchPannel() {
 export function AddEventsToFriend() {
     // ----- switch to add friend page-----
     DOMElements.addFriend.addEventListener("click", () => {
-        DOMElements.friendsPannel.style.display = "flex";
+        DOMElements.friendPannel.style.display = "flex";
         DOMElements.mainPannel.style.display = "none";
     });
 
@@ -91,13 +91,13 @@ export function AddEventsToFriend() {
 
         let username = document.querySelector("input[name=search-friend]").value;
         SearchNewFriends(username)
-            .then(newfriendsList => RenderSearchResult(newfriendsList))
+            .then(newfriendList => RenderSearchResult(newfriendList))
             .catch(error => console.log(error))
     });
 
     // --- send add friend request ---
     DOMElements.addFriendBtn.addEventListener("click", () => {
-        let selectedFriendIDs = FetchSelectedItemIDs(".friends-pannel");
+        let selectedFriendIDs = FetchSelectedItemIDs(".friend-pannel");
         //  response if no ckeckbox is checked
         if (selectedFriendIDs.length === 0) {
             ControlMsgBox(".friend-request", "block",
@@ -138,13 +138,13 @@ export function AddEventsToFriend() {
             .then(() => {
                 SearchOldFriends(window.sessionStorage.getItem("user_id"))
                     .then((oldFriendList) => {
-                        ClearList(".main-pannel .friends-list");
-                        RenderList(".main-pannel .friends-list", oldFriendList);
+                        ClearList(".main-pannel .friend-list");
+                        RenderList(".main-pannel .friend-list", oldFriendList);
         
-                        ClearList(".teams-pannel .friends-list");
-                        RenderList(".teams-pannel .friends-list", oldFriendList);
+                        ClearList(".team-pannel .friend-list");
+                        RenderList(".team-pannel .friend-list", oldFriendList);
 
-                        DOMElements.friendsPannel.style.display = "none";
+                        DOMElements.friendPannel.style.display = "none";
                         DOMElements.mainPannel.style.display = "block";
                     })
                     .catch((error)=>{console.log(error)})
@@ -153,7 +153,7 @@ export function AddEventsToFriend() {
                 // update server friend_list in user_info dict
                 let//
                     friend_list = [],
-                    friend_items = document.querySelectorAll(".main-pannel .friends-list .item");
+                    friend_items = document.querySelectorAll(".main-pannel .friend-list .item");
                 for (item of friend_items) {
                     let friend_info = {
                         user_id: item.getAttribute("id"),
@@ -210,10 +210,10 @@ export function AddEventsToFriend() {
 export function AddEventsToTeam() {
     // ----- add team page-----
     DOMElements.addTeam.addEventListener("click", () => {
-        DOMElements.teamsPannel.style.display = "flex";
+        DOMElements.teamPannel.style.display = "flex";
         DOMElements.mainPannel.style.display = "none";
-        document.querySelectorAll(".teams-pannel .pannel-title")[1].style.display = "none";
-        document.querySelector(".teams-pannel .friends-outer").style.display = "none";
+        document.querySelectorAll(".team-pannel .pannel-title")[1].style.display = "none";
+        document.querySelector(".team-pannel .friend-outer").style.display = "none";
     });
 
     DOMElements.createTeamBtn.addEventListener("click", () => {
@@ -256,10 +256,10 @@ export function AddEventsToTeam() {
 
                 LoadTeamList(window.sessionStorage.getItem("user_id"));
 
-                DOMElements.teamsPannel.style.display = "none";
+                DOMElements.teamPannel.style.display = "none";
                 DOMElements.mainPannel.style.display = "block";
-                document.querySelectorAll(".teams-pannel .pannel-title")[1].style.display = "block";
-                document.querySelector(".teams-pannel .friends-outer").style.display = "block";
+                document.querySelectorAll(".team-pannel .pannel-title")[1].style.display = "block";
+                document.querySelector(".team-pannel .friend-outer").style.display = "block";
 
                 // response when creation succeed
                 let//
@@ -298,16 +298,16 @@ export function AddEventsToClose() {
     for (close of DOMElements.closePannel) {
         close.addEventListener("click", () => {
             // back to main pannel
-            DOMElements.friendsPannel.style.display = "none";
-            DOMElements.teamsPannel.style.display = "none";
+            DOMElements.friendPannel.style.display = "none";
+            DOMElements.teamPannel.style.display = "none";
             DOMElements.mainPannel.style.display = "block";
-            document.querySelectorAll(".teams-pannel .pannel-title")[1].style.display = "block";;
-            document.querySelector(".teams-pannel .friends-outer").style.display = "block";
+            document.querySelectorAll(".team-pannel .pannel-title")[1].style.display = "block";;
+            document.querySelector(".team-pannel .friend-outer").style.display = "block";
 
-            // teams-pannel recover
-            document.querySelector(".teams-pannel .pannel-title").textContent = "創建隊伍";
-            document.querySelector(".friends-outer").style.height = "40%";
-            document.querySelector(".teams-pannel .search").style.display = "flex";
+            // team-pannel recover
+            document.querySelector(".team-pannel .pannel-title").textContent = "創建隊伍";
+            document.querySelector(".friend-outer").style.height = "40%";
+            document.querySelector(".team-pannel .search").style.display = "flex";
             DOMElements.createTeamBtn.style.display = "block";
             DOMElements.startTripBtn.style.display = "none";
             while (DOMElements.searchList.hasChildNodes()) {

@@ -36,9 +36,9 @@ socket.on("connect", ()=>{
                     RenderList(".main-pannel .friend-list", oldFriendList);
                     RenderOnlineStatus(".main-pannel .friend-list .item", oldFriendList);
                     
-                    ClearList(".teams-pannel .friend-list");
-                    RenderList(".teams-pannel .friend-list", oldFriendList);
-                    RenderOnlineStatus(".teams-pannel .friend-list .item", oldFriendList);
+                    ClearList(".team-pannel .friend-list");
+                    RenderList(".team-pannel .friend-list", oldFriendList);
+                    RenderOnlineStatus(".team-pannel .friend-list .item", oldFriendList);
 
                 })
                 .catch((error)=>{console.log(error)})

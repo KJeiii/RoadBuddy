@@ -5,15 +5,15 @@ export function AddTeamClickEvent(teamItemCssSelector, ...onlineTeamArray){
     if (teamItemCssSelector === ".create-list .item"){
         for (let item of teamList) {
             item.addEventListener("click", function () {
-                document.querySelector(".teams-pannel .pannel-title").textContent = this.textContent;
-                document.querySelector(".teams-pannel .pannel-title").setAttribute("id", this.getAttribute("id"));
-                document.querySelector(".teams-pannel .search").style.display = "none";
+                document.querySelector(".team-pannel .pannel-title").textContent = this.textContent;
+                document.querySelector(".team-pannel .pannel-title").setAttribute("id", this.getAttribute("id"));
+                document.querySelector(".team-pannel .search").style.display = "none";
                 document.querySelector(".friend-outer").style.height = "55%";
                 DOMElements.createTeamBtn.style.display = "none";
                 DOMElements.startTripBtn.style.display = "block";
                 DOMElements.inviteTripBtn.style.display = "none";
                 DOMElements.mainPannel.style.display = "none";
-                DOMElements.teamsPannel.style.display = "flex";
+                DOMElements.teamPannel.style.display = "flex";
             });
         }
     }
@@ -27,17 +27,17 @@ export function AddTeamClickEvent(teamItemCssSelector, ...onlineTeamArray){
 
             if (teamIsInUse) {
                 item.addEventListener("click", function() {
-                    document.querySelector(".teams-pannel .pannel-title").textContent = this.textContent;
-                    document.querySelector(".teams-pannel .pannel-title").setAttribute("id", this.getAttribute("id"));
-                    document.querySelectorAll(".teams-pannel .pannel-title")[1].style.display = "none";
-                    document.querySelector(".teams-pannel .search").style.display = "none";
-                    document.querySelector(".teams-pannel .friend-outer").style.display = "none";
-                    DOMElements.teamsPannel.style.top = "65vh";
+                    document.querySelector(".team-pannel .pannel-title").textContent = this.textContent;
+                    document.querySelector(".team-pannel .pannel-title").setAttribute("id", this.getAttribute("id"));
+                    document.querySelectorAll(".team-pannel .pannel-title")[1].style.display = "none";
+                    document.querySelector(".team-pannel .search").style.display = "none";
+                    document.querySelector(".team-pannel .friend-outer").style.display = "none";
+                    DOMElements.teamPannel.style.top = "65vh";
                     DOMElements.createTeamBtn.style.display = "none";
                     DOMElements.startTripBtn.style.display = "block";
                     DOMElements.inviteTripBtn.style.display = "none";
                     DOMElements.mainPannel.style.display = "none";
-                    DOMElements.teamsPannel.style.display = "flex";
+                    DOMElements.teamPannel.style.display = "flex";
                     DOMElements.dropDownMain.style.display = "block";
                     DOMElements.pullUpMain.style.display = "none";
                     DOMElements.createTeamBtn.style.display = "none";

@@ -317,9 +317,9 @@ nav {
 }
 
 
-/* ------ friends and teams pannel -----*/
-.friends-pannel,
-.teams-pannel {
+/* ------ friend and team pannel -----*/
+.friend-pannel,
+.team-pannel {
     display: none;
     flex: none;
     flex-direction: column;
@@ -334,11 +334,11 @@ nav {
     border-radius: 30px 30px 0 0;
 }
 
-/* .teams-pannel {
+/* .team-pannel {
     display: flex;
 } */
 
-/* .friends-pannel {
+/* .friend-pannel {
     display: flex;
 } */
 
@@ -425,7 +425,7 @@ input[name=create-team]
     margin: 10px 50px;
 }
 
-.friends-pannel .item {
+.friend-pannel .item {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -433,7 +433,7 @@ input[name=create-team]
     height: 20px;
 }
 
-.friends-pannel label {
+.friend-pannel label {
     width: 65px;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -443,8 +443,8 @@ input[name=create-team]
 }
 
 
-.friends-pannel input[type=checkbox],
-.teams-pannel input[type=checkbox] {
+.friend-pannel input[type=checkbox],
+.team-pannel input[type=checkbox] {
     width: 20px;
     height: 20px;
     background-color: lightblue;
@@ -452,7 +452,7 @@ input[name=create-team]
 }
 
 
-.teams-pannel .friend-list label {
+.team-pannel .friend-list label {
     background-color: rgb(182, 232, 176);
     border-radius: 10px;
     border: solid 3px rgb(22, 166, 6);
@@ -462,7 +462,7 @@ input[name=create-team]
 }
 
 /* ----- team pannel ----- */
-.teams-pannel .friend-outer {
+.team-pannel .friend-outer {
     justify-content: center;
     width: 80%;
     height: 40%;
@@ -471,7 +471,7 @@ input[name=create-team]
 }
 
 
-.teams-pannel .friend-list {
+.team-pannel .friend-list {
     display: grid;
     justify-content: center;
     grid-template-columns: 70% 70%;
@@ -479,7 +479,7 @@ input[name=create-team]
     margin: 20px 50px 10px 50px;
 }
 
-.teams-pannel .item {
+.team-pannel .item {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -488,8 +488,8 @@ input[name=create-team]
 }
 
 
-.friends-pannel button,
-.teams-pannel button{
+.friend-pannel button,
+.team-pannel button{
     width: 30%;
     height: 40px;
     border-radius: 20px;
@@ -500,9 +500,9 @@ input[name=create-team]
     margin-top: 10px;
 }
 
-.teams-pannel button.start-trip-btn,
-.teams-pannel button.invite-trip-btn,
-.teams-pannel button.join-trip-btn
+.team-pannel button.start-trip-btn,
+.team-pannel button.invite-trip-btn,
+.team-pannel button.join-trip-btn
  {
     display: none;
 }

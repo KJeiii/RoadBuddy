@@ -32,8 +32,8 @@ export function SwitchPullAndDropBtn(){
     //3. adjust color-intro (flex or none), outer(flex or none)
     const contentType = onWhichContentType();
     const//
-        friendContents = [DOMElements.friendColorIntro, DOMElements.mainPannelFriendsOuter],
-        teamContents = [DOMElements.teamColorIntro, DOMElements.teamsOuter];
+        friendContents = [DOMElements.friendColorIntro, DOMElements.mainPannelFriendOuter],
+        teamContents = [DOMElements.teamColorIntro, DOMElements.teamOuter];
     if (isPulledUp){
         [...friendContents, ...teamContents].forEach((content)=>{content.style.display = "none"});
     }
@@ -112,8 +112,8 @@ export function SwitchPannel(toPannelType){
 export function switchToTrackingPannel() {
     // switch to tracking pannel
     DOMElements.mainPannel.style.display = "none";
-    DOMElements.friendsPannel.style.display = "none";
-    DOMElements.teamsPannel.style.display = "none";
+    DOMElements.friendPannel.style.display = "none";
+    DOMElements.teamPannel.style.display = "none";
     DOMElements.trackingPannel.style.display = "block";
 
 
@@ -128,8 +128,8 @@ export function switchPannel(toPannel, ...turnOnBtns) {
     let//
         pannels = [
             DOMElements.mainPannel,
-            DOMElements.friendsPannel,
-            DOMElements.teamsPannel,
+            DOMElements.friendPannel,
+            DOMElements.teamPannel,
             DOMElements.trackingPannel
         ],
         btns = [
@@ -262,12 +262,12 @@ export function RenderList(listCssSelector, listItemArray) {
             friend.setAttribute("class", "item");
             friend.setAttribute("id", item["user_id"]);
             friend.textContent = item.username;
-            DOMElements.mainPannelFriendsList.appendChild(friend);
+            DOMElements.mainPannelFriendList.appendChild(friend);
         }
         return
     }
 
-    if (listCssSelector === ".teams-pannel .friend-list") {
+    if (listCssSelector === ".team-pannel .friend-list") {
         // Load friend list in team pannel
         for (let item of listItemArray) {
             let//
@@ -286,7 +286,7 @@ export function RenderList(listCssSelector, listItemArray) {
             friend.appendChild(input);
             friend.appendChild(label);
             friend.style.display = "none"; //switch to block when friend is online
-            DOMElements.teamPannelFriendsList.appendChild(friend);
+            DOMElements.teamPannelFriendList.appendChild(friend);
         }
         return
     }
@@ -294,7 +294,7 @@ export function RenderList(listCssSelector, listItemArray) {
 
 export function RenderOnlineStatus(itemCssSelector, onlineItemArray) {
     let// 
-        items = document.querySelectorAll(itemCssSelector), //".main-pannel .friends-list .item"
+        items = document.querySelectorAll(itemCssSelector), //".main-pannel .friend-list .item"
         onlineStyle = { backgroundColor: "rgb(182, 232, 176)", border: "solid 3px rgb(22, 166, 6)" },
         offlineStyle = { backgroundColor: "rgb(235, 234, 234)", border: "solid 3px rgb(182, 181, 181)" };
 
@@ -317,7 +317,7 @@ export function RenderOnlineStatus(itemCssSelector, onlineItemArray) {
         return
     }
 
-    if (itemCssSelector === ".teams-pannel .friend-list .item") {
+    if (itemCssSelector === ".team-pannel .friend-list .item") {
         for (let item of items) {
             const friendIsOnline = onlineItemArray.includes(item.getAttribute("id") * 1);
             if (friendIsOnline) {
