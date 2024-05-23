@@ -3,7 +3,10 @@ import {
     SearchNewFriends, RenderSearchResult, SearchOldFriends, FetchSelectedItemIDs,
     CheckRelationship, SendFriendRequest, MakeNewFriend, ReplyToSender
 } from "./ManageFriend.js";
-import { ControlMsgBox, ClearList, RenderList, SwitchSettingBtn } from "./GeneralControl.js";
+import { 
+    ControlMsgBox, ClearList, RenderList, SwitchSettingBtn,
+    SwitchPullAndDropBtn
+} from "./GeneralControl.js";
 
 export const AllEvents = [
     AddEventsToSetting, AddEventsToSwitchPannel, AddEventsToFriend,
@@ -13,6 +16,28 @@ export const AllEvents = [
 export function AddEventsToSetting() {
     // ----- toggle down setting  -----
     DOMElements.settingBtn.addEventListener("click", SwitchSettingBtn)
+}
+
+export function AddEventsToPullAndDrop() {
+    // ----- pull up and drop down main pannel and tracking pannel ------
+    DOMElements.pullUp.addEventListener("click", SwitchPullAndDropBtn)
+    DOMElements.dropDown.addEventListener("click", SwitchPullAndDropBtn)
+
+
+    // // ----- pull up and drop down tracking pannel ------
+    // DOMElements.pullUpTracking.addEventListener("click", () => {
+    //     DOMElements.pullUpTracking.style.display = "none";
+    //     DOMElements.dropDownTracking.style.display = "block";
+    //     DOMElements.trackingPannel.style.top = "20vh";
+    //     DOMElements.trackingPannel.style.height = "80vh";
+    // })
+
+    // DOMElements.dropDownTracking.addEventListener("click", () => {
+    //     DOMElements.dropDownTracking.style.display = "none";
+    //     DOMElements.pullUpTracking.style.display = "block";
+    //     DOMElements.trackingPannel.style.top = "70vh";
+    //     DOMElements.trackingPannel.style.height = "30vh";
+    // })
 }
 
 export function AddEventsToSwitchPannel() {
@@ -43,12 +68,6 @@ export function AddEventsToSwitchPannel() {
         DOMElements.mainPannelFriendsOuter.style.display = (isPulledUp) ? "flex" : "none";
         DOMElements.friendColorIntro.style.display = (isPulledUp) ? "flex" : "none";
 
-        // switch pullup and dropdown button
-        DOMElements.pullUpTeam.style.display = "none";
-        DOMElements.dropDownTeam.style.display = "none";
-        DOMElements.pullUpFriend.style.display = (isPulledUp) ? "none" : "block";
-        DOMElements.dropDownFriend.style.display = (isPulledUp) ? "block" : "none";
-
         // switch add button
         DOMElements.addTeam.style.display = "none";
         DOMElements.addFriend.style.display = "block";
@@ -66,12 +85,6 @@ export function AddEventsToSwitchPannel() {
         DOMElements.friendColorIntro.style.display = "none";
         DOMElements.teamsOuter.style.display = (isPulledUp) ? "flex" : "none";
         DOMElements.teamColorIntro.style.display = (isPulledUp) ? "flex" : "none";
-
-        // switch pullup and dropdown button
-        DOMElements.pullUpFriend.style.display = "none";
-        DOMElements.dropDownFriend.style.display = "none";
-        DOMElements.pullUpTeam.style.display = (isPulledUp) ? "none" : "block";
-        DOMElements.dropDownTeam.style.display = (isPulledUp) ? "block" : "none";
 
         // switch add button
         DOMElements.addTeam.style.display = "block";
@@ -303,60 +316,7 @@ export function AddEventsToTeam() {
 
 
 
-export function AddEventsToPullAndDrop() {
-    // ----- pull up and drop down main pannel and tracking pannel ------
-    DOMElements.pullUpFriend.addEventListener("click", () => {
-        DOMElements.pullUpFriend.style.display = "none";
-        DOMElements.dropDownFriend.style.display = "block";
-        DOMElements.mainPannel.style.top = "20vh";
-        DOMElements.mainPannel.style.height = "80vh";
-        DOMElements.friendColorIntro.style.display = "flex";
-        DOMElements.mainPannelFriendsOuter.style.display = "flex";
-    })
 
-    DOMElements.dropDownFriend.addEventListener("click", () => {
-        DOMElements.dropDownFriend.style.display = "none";
-        DOMElements.pullUpFriend.style.display = "block";
-        DOMElements.mainPannel.style.top = "70vh";
-        DOMElements.mainPannel.style.height = "30vh";
-        DOMElements.friendColorIntro.style.display = "none";
-        DOMElements.mainPannelFriendsOuter.style.display = "none";
-    })
-
-    DOMElements.pullUpTeam.addEventListener("click", () => {
-        DOMElements.pullUpTeam.style.display = "none";
-        DOMElements.dropDownTeam.style.display = "block";
-        DOMElements.mainPannel.style.top = "20vh";
-        DOMElements.mainPannel.style.height = "80vh";
-        DOMElements.teamColorIntro.style.display = "flex";
-        DOMElements.teamsOuter.style.display = "flex";
-    })
-
-    DOMElements.dropDownTeam.addEventListener("click", () => {
-        DOMElements.dropDownTeam.style.display = "none";
-        DOMElements.pullUpTeam.style.display = "block";
-        DOMElements.mainPannel.style.top = "70vh";
-        DOMElements.mainPannel.style.height = "30vh";
-        DOMElements.teamColorIntro.style.display = "none";
-        DOMElements.teamsOuter.style.display = "none";
-    })
-
-
-    // ----- pull up and drop down tracking pannel ------
-    DOMElements.pullUpTracking.addEventListener("click", () => {
-        DOMElements.pullUpTracking.style.display = "none";
-        DOMElements.dropDownTracking.style.display = "block";
-        DOMElements.trackingPannel.style.top = "20vh";
-        DOMElements.trackingPannel.style.height = "80vh";
-    })
-
-    DOMElements.dropDownTracking.addEventListener("click", () => {
-        DOMElements.dropDownTracking.style.display = "none";
-        DOMElements.pullUpTracking.style.display = "block";
-        DOMElements.trackingPannel.style.top = "70vh";
-        DOMElements.trackingPannel.style.height = "30vh";
-    })
-}
 
 export function AddEventsToClose() {
     // ----- close pannel ----
