@@ -34,10 +34,13 @@ export function SwitchPullAndDropBtn(){
     const//
         friendContents = [DOMElements.friendColorIntro, DOMElements.mainPannelFriendsOuter],
         teamContents = [DOMElements.teamColorIntro, DOMElements.teamsOuter];
-
-    friendContents.forEach((content)=>{content.style.display = (contentType === "friend") ? "flex" : "none"});
-    teamContents.forEach((content)=>{content.style.display = (contentType === "team") ? "flex" : "none"});
-
+    if (isPulledUp){
+        [...friendContents, ...teamContents].forEach((content)=>{content.style.display = "none"});
+    }
+    else{
+        friendContents.forEach((content)=>{content.style.display = (contentType === "friend") ? "flex" : "none"});
+        teamContents.forEach((content)=>{content.style.display = (contentType === "team") ? "flex" : "none"});
+    }
 }
 
 export function SwitchSettingBtn(){
@@ -81,6 +84,15 @@ export function SwitchMainPannelContent(toWhichContent){
             element.style.display = "none";
         }
     })
+}
+
+export function SwitchMenuToggle(){
+    const//
+        menuList = document.querySelector(".nav-menu-list"),
+        isMenuListShown = document.querySelector(".nav-menu-list").style.display === "block";
+
+    menuList.style.display = (isMenuListShown) ? "none" : "block";
+    DOMElements.menu.style.border = (isMenuListShown) ? "none" : "0.5px solid rgb(151, 150, 150)";
 }
 
 
