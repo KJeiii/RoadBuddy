@@ -35,8 +35,8 @@ export function SwitchPullAndDropBtn(){
         friendContents = [DOMElements.friendColorIntro, DOMElements.mainPannelFriendsOuter],
         teamContents = [DOMElements.teamColorIntro, DOMElements.teamsOuter];
 
-    friendContents.forEach((content)=>content.style.display = (contentType === "friend") ? "flex" : "none");
-    teamContents.forEach((content)=>content.style.display = (contentType === "team") ? "flex" : "none");
+    friendContents.forEach((content)=>{content.style.display = (contentType === "friend") ? "flex" : "none"});
+    teamContents.forEach((content)=>{content.style.display = (contentType === "team") ? "flex" : "none"});
 
 }
 
@@ -59,6 +59,13 @@ export function SwitchSettingBtn(){
 
 
 export function SwitchMainPannelContent(toWhichContent){
+    //1. change menu title
+    const//
+        menuTitle = document.querySelector(".nav-menu-title"),
+        selectedContent = document.querySelector(`.nav-menu-${toWhichContent}`);
+    menuTitle.textContent = selectedContent.textContent;
+
+    //2. change contents
     const elementsOnPannel = [
             ...document.querySelectorAll(".main-pannel div[class$='outer']"), 
             ...document.querySelectorAll(".main-pannel div[class$='intro']")
@@ -70,7 +77,9 @@ export function SwitchMainPannelContent(toWhichContent){
         if (typeOfElement === toWhichContent){
             element.style.display = (isPulledUp) ? "flex" : "none";
         }
-        element.style.display = "none";
+        else{
+            element.style.display = "none";
+        }
     })
 }
 
@@ -234,7 +243,7 @@ export function RenderList(listCssSelector, listItemArray) {
         return
     }
 
-    if (listCssSelector === ".main-pannel .friends-list") {
+    if (listCssSelector === ".main-pannel .friend-list") {
         // Load friend list in main pannel
         for (let item of listItemArray) {
             let friend = document.createElement("div");
@@ -246,7 +255,7 @@ export function RenderList(listCssSelector, listItemArray) {
         return
     }
 
-    if (listCssSelector === ".teams-pannel .friends-list") {
+    if (listCssSelector === ".teams-pannel .friend-list") {
         // Load friend list in team pannel
         for (let item of listItemArray) {
             let//
@@ -277,11 +286,11 @@ export function RenderOnlineStatus(itemCssSelector, onlineItemArray) {
         onlineStyle = { backgroundColor: "rgb(182, 232, 176)", border: "solid 3px rgb(22, 166, 6)" },
         offlineStyle = { backgroundColor: "rgb(235, 234, 234)", border: "solid 3px rgb(182, 181, 181)" };
 
-    if (itemCssSelector === ".main-pannel .friends-list .item" ||
+    if (itemCssSelector === ".main-pannel .friend-list .item" ||
         itemCssSelector === ".join-list .item") 
     {   
         for (let item of items) {
-            const itemIsOnline = (itemCssSelector === ".main-pannel .friends-list .item") ?
+            const itemIsOnline = (itemCssSelector === ".main-pannel .friend-list .item") ?
                                 onlineItemArray.includes(item.getAttribute("id") * 1) :
                                 onlineItemArray.includes(item.getAttribute("id")) ;
             if (itemIsOnline) {
@@ -296,7 +305,7 @@ export function RenderOnlineStatus(itemCssSelector, onlineItemArray) {
         return
     }
 
-    if (itemCssSelector === ".teams-pannel .friends-list .item") {
+    if (itemCssSelector === ".teams-pannel .friend-list .item") {
         for (let item of items) {
             const friendIsOnline = onlineItemArray.includes(item.getAttribute("id") * 1);
             if (friendIsOnline) {
