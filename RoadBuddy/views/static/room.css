@@ -11,8 +11,7 @@ body {
 .leave:hover,
 .nav-menu-friend:hover, 
 .nav-menu-team:hover,
-.nav-toggle-on:hover,
-.nav-toggle-off:hover,
+.nav-toggle:hover,
 .nav-add:hover,
 .close:hover,
 .close-invitation:hover,
@@ -101,10 +100,6 @@ button:hover
     margin-top: 10px;
 }
 
-/* .pull-up-team,
-.pull-up-tracking {
-    display: none;
-} */
 
 .drop-down {
     display: none;
@@ -150,17 +145,13 @@ nav {
     text-align: center;
 }
 
-.nav-toggle-on,
-.nav-toggle-off {
+.nav-toggle {
     width: 20px;
     height: 20px;
     margin-left: 5px;
     background-image: url("../static/images/angle-down.svg");
 }
 
-.nav-toggle-off {
-    display: none;
-}
 
 .nav-add-friend,
 .nav-add-team 
