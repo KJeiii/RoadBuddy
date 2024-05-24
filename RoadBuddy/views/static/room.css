@@ -589,7 +589,7 @@ input[name=create-team]
     text-align: center;
 }
 
-.tracking-pannel .partners-outer {
+.tracking-pannel .partner-outer {
     display: flex;
     justify-content: center;
     width: 80%;
@@ -598,7 +598,7 @@ input[name=create-team]
     overflow-y: scroll;    
 }
 
-.partners-list  {
+.partner-list  {
     display: grid;
     justify-content: center;
     align-items: start;

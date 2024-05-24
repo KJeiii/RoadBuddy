@@ -1,4 +1,7 @@
-import { switchPannel, switchToTrackingPannel, ClearList, RenderList, RenderOnlineStatus } from "../Utils/GeneralControl.js";
+import { 
+    switchPannel, switchToTrackingPannel, ClearList, RenderList, 
+    RenderOnlineStatus, SwitchPannel } 
+    from "../Utils/GeneralControl.js";
 import { appendPartner, removePartner } from "../Utils/ManagePartner.js";
 import * as DOMElements from "../Utils/DOMElements.js";
 import { AddTeamClickEvent, AddTeamHoverEvent } from "../Utils/TeamEvent.js";
@@ -6,13 +9,14 @@ import { AddTeamClickEvent, AddTeamHoverEvent } from "../Utils/TeamEvent.js";
 // ----- sender emit invitation to listner "team_invite" on server  -----
 DOMElements.startTripBtn.addEventListener("click", ()=> {
     // switch to tracking pannel
-    switchPannel(DOMElements.trackingPannel, DOMElements.settingOnTracking, DOMElements.pullUpTracking);
+    SwitchPannel("tracking");
+    // switchPannel(DOMElements.trackingPannel, DOMElements.settingOnTracking, DOMElements.pullUpTracking);
 
     // Organize data emitted to listener "enter_team" on server
     let//
-    checkboxes = document.querySelectorAll(".teams-pannel .item input[type=checkbox]"),
+    checkboxes = document.querySelectorAll(".team-pannel .item input[type=checkbox]"),
     friendsToAdd = [],
-    teamID = document.querySelector(".teams-pannel .pannel-title").getAttribute("id");
+    teamID = document.querySelector(".team-pannel .pannel-title").getAttribute("id");
     window.sessionStorage.setItem("team_id", teamID);
 
     for (let checkbox of checkboxes) {
@@ -31,9 +35,9 @@ DOMElements.startTripBtn.addEventListener("click", ()=> {
     };
 
 
-    // create owner information in partners-list;
+    // create owner information in partner-list;
     // others will be created when they join in
-    let partnersList = document.querySelector(".tracking-pannel .partners-list");
+    let partnersList = document.querySelector(".tracking-pannel .partner-list");
     for ( let id in partnersColor) {
         if (id*1 === window.sessionStorage.getItem("user_id")*1) {
             appendPartner(id, partnersList, partnersColor);
@@ -89,10 +93,10 @@ teamYesBtn.addEventListener("click", () => {
     // switch to tracking pannel
     switchPannel(DOMElements.trackingPannel, DOMElements.settingOnTracking);
     
-    // create partner information in partners-list
+    // create partner information in partner-list
     // 1. only show team owner and partner it self
     // 2. update other partners when they join in
-    let partnersList = document.querySelector(".tracking-pannel .partners-list");
+    let partnersList = document.querySelector(".tracking-pannel .partner-list");
     for ( let id in team_sender_info_cache["partners_color"] ) {
         if ( id*1 === team_sender_info_cache["user_id"]*1 ) {
             appendPartner(id, partnersList, team_sender_info_cache["partners_color"]);
@@ -151,7 +155,7 @@ teamNoBtn.addEventListener("click", () => {
     let//
     prompt = document.querySelector(".team-invite-prompt"),
     content = document.querySelector(".team-invite-prompt .content"),
-    teamID = document.querySelector(".teams-pannel .pannel-title").getAttribute("id");
+    teamID = document.querySelector(".team-pannel .pannel-title").getAttribute("id");
 
     content.textContent = "";
     prompt.style.display = "none";
@@ -214,7 +218,7 @@ socket.on("enter_team", (data) => {
 
 //  ----- add new partners if they join -----
 socket.on("add_partner", (user_id) => {
-    let partnersList = document.querySelector(".tracking-pannel .partners-list");
+    let partnersList = document.querySelector(".tracking-pannel .partner-list");
 
     // Team owner updates it's partner list
     if ( team_sender_info_cache === undefined ) {
@@ -254,6 +258,7 @@ teamOkBtn.addEventListener("click", ()=>{
 
 // ----- emit leave team event to listener "leave_team" on server-----
 DOMElements.leaveTeamBtn.addEventListener("click", ()=> {
+    // emit socket event "leave_team"
     let leader_sid = ( team_sender_info_cache === undefined ) ? socket.id : team_sender_info_cache["sid"];
     let data = {
         sid: socket.id,
@@ -265,25 +270,13 @@ DOMElements.leaveTeamBtn.addEventListener("click", ()=> {
     };
     socket.emit("leave_team", data);
 
-    // *************************
     // switch to mainPannel
-    // change elements in setting div
     DOMElements.leaveTeamBtn.style.display = "none";
     DOMElements.invite.style.display = "none";
-    DOMElements.settingOnMain.style.display = "block";
-    DOMElements.settingOffMain.style.display = "none";
-    DOMElements.settingOnTracking.style.display = "none";
-    DOMElements.settingOffTracking.style.display = "none";
-
-    DOMElements.trackingPannel.style.display = "none";
-    DOMElements.teamsPannel.style.display = "none"
-    DOMElements.mainPannel.style.display = "block"
+    SwitchPannel("main");
 
     // remove all partner in the tracking pannel
-    let trackingPannelPartnerList = document.querySelector(".tracking-pannel .partners-list");
-    while (trackingPannelPartnerList.hasChildNodes()) {
-        trackingPannelPartnerList.removeChild(trackingPannelPartnerList.lastChild)
-    }
+    ClearList(".tracking-pannel .partner-list");
 })
 
 
@@ -347,19 +340,19 @@ let invitationBtn = document.querySelector(".setting .invite");
 invitationBtn.addEventListener("click", () => {
 
     // *************************
-    document.querySelector(".teams-pannel .pannel-title").style.display = "none";
-    document.querySelector(".teams-pannel .search").style.display = "none";
-    DOMElements.invitationBtn.style.display = "none";
+    document.querySelector(".team-pannel .pannel-title").style.display = "none";
+    document.querySelector(".team-pannel .search").style.display = "none";
+    invitationBtn.style.display = "none";
     DOMElements.leaveTeamBtn.style.display = "none";
-    DOMElements.settingOffTracking.style.display = "none";
-    DOMElements.settingOnTracking.style.display = "block";
+    // DOMElements.settingOffTracking.style.display = "none";
+    // DOMElements.settingOnTracking.style.display = "block";
 
     DOMElements.createTeamBtn.style.display = "none";
     DOMElements.startTripBtn.style.display = "none";
     DOMElements.inviteTripBtn.style.display = "block";
-    DOMElements.teamsPannel.style.display = "flex";
+    DOMElements.teamPannel.style.display = "flex";
 
-    let friendItems = document.querySelectorAll(".teams-pannel .friends-list input");
+    let friendItems = document.querySelectorAll(".team-pannel .friend-list input");
     for ( let item of friendItems ) {
         item.checked = false
     }
@@ -369,7 +362,7 @@ invitationBtn.addEventListener("click", () => {
 // send invitation
 DOMElements.inviteTripBtn.addEventListener("click", () => {
     let//
-    friendInputs = document.querySelectorAll(".teams-pannel .friends-list input"),
+    friendInputs = document.querySelectorAll(".team-pannel .friend-list input"),
     friendToInvite = [];
 
     for ( let input of friendInputs ) {
@@ -397,10 +390,10 @@ DOMElements.inviteTripBtn.addEventListener("click", () => {
  
     // *************************
     // close team pannel and go back to tracking pannel
-    document.querySelector(".teams-pannel .close").style.display = "none";
+    document.querySelector(".team-pannel .close").style.display = "none";
     DOMElements.closeInvitationBtn.style.display = "block";
     DOMElements.mainPannel.style.display = "none";
-    DOMElements.teamsPannel.style.display = "none";
+    DOMElements.teamPannel.style.display = "none";
     DOMElements.settingOffTracking.style.display = "none";
     DOMElements.settingOnTracking.style.display = "block";
     DOMElements.invitationBtn.style.display = "none";
@@ -413,9 +406,9 @@ let closeInvitationBtn = document.querySelector(".close-invitation");
 closeInvitationBtn.addEventListener("click", () => {
 
     // *************************
-    DOMElements.teamsPannel.style.display = "none";
+    DOMElements.teamPannel.style.display = "none";
     DOMElements.mainPannel.style.display = "none";
-    document.querySelector(".teams-pannel .close") = "block";
+    document.querySelector(".team-pannel .close") = "block";
     DOMElements.closeInvitationBtn.style.display = "none";
 })
 
@@ -445,7 +438,7 @@ joinOkBtn.addEventListener("click", () => {
 // Emit event "join_team_request" to server
 let joinRequestBtn = document.querySelector(".join-trip-btn");
 joinRequestBtn.addEventListener("click", () => {
-    let team_id = document.querySelector(".teams-pannel .pannel-title").getAttribute("id");
+    let team_id = document.querySelector(".team-pannel .pannel-title").getAttribute("id");
     let requesterData = {
         "user_sid": window.sessionStorage.getItem("sid"),
         "user_id": window.sessionStorage.getItem("user_id"),
@@ -548,10 +541,10 @@ socket.on("accept_team_request", (data) => {
     // switch to tracking pannel
     switchPannel(DOMElements.trackingPannel, DOMElements.settingOnTracking);
 
-    // create partner information in partners-list
+    // create partner information in partner-list
     // 1. only show team owner and partner it self
     // 2. update other partners when they join in
-    let partnersList = document.querySelector(".tracking-pannel .partners-list");
+    let partnersList = document.querySelector(".tracking-pannel .partner-list");
     for ( let id in team_sender_info_cache["partners_color"] ) {
 
         // create leader item first
