@@ -22,13 +22,13 @@ socket.on("friend_request_result", (data) => {
             .then(() => {
                 SearchOldFriends(window.sessionStorage.getItem("user_id"))
                     .then((oldFriendList) => {
-                        ClearList(".main-pannel .friends-list");
-                        RenderList(".main-pannel .friends-list", oldFriendList);
+                        ClearList(".main-pannel .friend-list");
+                        RenderList(".main-pannel .friend-list", oldFriendList);
         
-                        ClearList(".teams-pannel .friends-list");
-                        RenderList(".teams-pannel .friends-list", oldFriendList);
+                        ClearList(".team-pannel .friend-list");
+                        RenderList(".team-pannel .friend-list", oldFriendList);
 
-                        DOMElements.friendsPannel.style.display = "none";
+                        DOMElements.friendPannel.style.display = "none";
                         DOMElements.mainPannel.style.display = "block";
                     })
                     .catch((error)=>{console.log(error)})
@@ -79,8 +79,8 @@ socket.on("update_friend_status", (data) => {
         onlineFriendArray.splice(onlineFriendArray.indexOf(data["offline_friend_id"]),1)
     }
 
-    RenderOnlineStatus(".teams-pannel .friends-list .item", onlineFriendArray);
-    RenderOnlineStatus(".main-pannel .friends-list .item", onlineFriendArray);
+    RenderOnlineStatus(".team-pannel .friend-list .item", onlineFriendArray);
+    RenderOnlineStatus(".main-pannel .friend-list .item", onlineFriendArray);
 })
 
 
