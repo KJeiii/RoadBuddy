@@ -5,42 +5,38 @@ import {
 } from "./ManageFriend.js";
 import { 
     ControlMsgBox, ClearList, RenderList, SwitchSettingBtn,
-    SwitchPullAndDropBtn, SwitchMainPannelContent, SwitchMenuToggle
+    SwitchPullAndDropBtn, SwitchMainPannelContent, SwitchMenuToggle,
+    SwitchPannel
 } from "./GeneralControl.js";
 
+
 export const AllEvents = [
-    AddEventsToSetting, AddEventsToSwitchPannel, AddEventsToFriend,
+    AddEventsToSetting, AddEventsToSwitchPannelContent, AddEventsToFriend,
     AddEventsToTeam, AddEventsToPullAndDrop, AddEventsToClose, AddEventsToLogout
 ]
+
 
 export function AddEventsToSetting() {
     // ----- toggle down setting  -----
     DOMElements.settingBtn.addEventListener("click", SwitchSettingBtn)
 }
 
+
 export function AddEventsToPullAndDrop() {
     // ----- pull up and drop down main pannel and tracking pannel ------
-    DOMElements.pullUp.addEventListener("click", SwitchPullAndDropBtn)
-    DOMElements.dropDown.addEventListener("click", SwitchPullAndDropBtn)
+    const btns = [
+        ...document.querySelectorAll(".pull-up"), 
+        ...document.querySelectorAll(".drop-down")];
 
-
-    // // ----- pull up and drop down tracking pannel ------
-    // DOMElements.pullUpTracking.addEventListener("click", () => {
-    //     DOMElements.pullUpTracking.style.display = "none";
-    //     DOMElements.dropDownTracking.style.display = "block";
-    //     DOMElements.trackingPannel.style.top = "20vh";
-    //     DOMElements.trackingPannel.style.height = "80vh";
-    // })
-
-    // DOMElements.dropDownTracking.addEventListener("click", () => {
-    //     DOMElements.dropDownTracking.style.display = "none";
-    //     DOMElements.pullUpTracking.style.display = "block";
-    //     DOMElements.trackingPannel.style.top = "70vh";
-    //     DOMElements.trackingPannel.style.height = "30vh";
-    // })
+    btns.forEach((btn)=>{
+        btn.addEventListener("click", function(){
+            const parentPannelCssSelector = this.parentElement.getAttribute("class");
+            SwitchPullAndDropBtn(`.${parentPannelCssSelector}`);
+        })}
+    );
 }
 
-export function AddEventsToSwitchPannel() {
+export function AddEventsToSwitchPannelContent() {
     // ----- switch menu -----
     DOMElements.toggle.addEventListener("click", SwitchMenuToggle)
 
@@ -70,10 +66,7 @@ export function AddEventsToSwitchPannel() {
 
 export function AddEventsToFriend() {
     // ----- switch to add friend page-----
-    DOMElements.addFriend.addEventListener("click", () => {
-        DOMElements.friendPannel.style.display = "flex";
-        DOMElements.mainPannel.style.display = "none";
-    });
+    DOMElements.addFriend.addEventListener("click", () => {SwitchPannel("friend")});
 
     // ----- search username-----
     DOMElements.searchIcon.addEventListener("click", () => {
@@ -124,9 +117,7 @@ export function AddEventsToFriend() {
     });
 
     // --- clear response content and disappear ---
-    DOMElements.friendRequestBtn.addEventListener("click", () => {
-        ControlMsgBox(".friend-request", "none")
-    });
+    DOMElements.friendRequestBtn.addEventListener("click", () => {ControlMsgBox(".friend-request", "none")});
 
     // --- Acceptance of friend request ---
     DOMElements.friendYesBtn.addEventListener("click", () => {
@@ -208,14 +199,10 @@ export function AddEventsToFriend() {
 }
 
 export function AddEventsToTeam() {
-    // ----- add team page-----
-    DOMElements.addTeam.addEventListener("click", () => {
-        DOMElements.teamPannel.style.display = "flex";
-        DOMElements.mainPannel.style.display = "none";
-        document.querySelectorAll(".team-pannel .pannel-title")[1].style.display = "none";
-        document.querySelector(".team-pannel .friend-outer").style.display = "none";
-    });
+    // ----- move to add team page-----
+    DOMElements.addTeam.addEventListener("click", ()=>{SwitchPannel("team")});
 
+    // ----- create a new team -----
     DOMElements.createTeamBtn.addEventListener("click", () => {
         let searchInput = document.querySelector("input[name=create-team]");
         searchInput.setAttribute("placeholder", "請輸入隊伍名稱");
@@ -284,41 +271,19 @@ export function AddEventsToTeam() {
 
     // confirm frined response
     let friendOkBtn = document.querySelector(".friend-response button");
-    friendOkBtn.addEventListener("click", ()=>{
-        ControlMsgBox(".friend-response", "none") 
-    })
+    friendOkBtn.addEventListener("click", ()=>{ControlMsgBox(".friend-response", "none")})
 }
 
-
-
-
-
 export function AddEventsToClose() {
-    // ----- close pannel ----
-    for (close of DOMElements.closePannel) {
-        close.addEventListener("click", () => {
-            // back to main pannel
-            DOMElements.friendPannel.style.display = "none";
-            DOMElements.teamPannel.style.display = "none";
-            DOMElements.mainPannel.style.display = "block";
-            document.querySelectorAll(".team-pannel .pannel-title")[1].style.display = "block";;
-            document.querySelector(".team-pannel .friend-outer").style.display = "block";
-
-            // team-pannel recover
-            document.querySelector(".team-pannel .pannel-title").textContent = "創建隊伍";
-            document.querySelector(".friend-outer").style.height = "40%";
-            document.querySelector(".team-pannel .search").style.display = "flex";
-            DOMElements.createTeamBtn.style.display = "block";
-            DOMElements.startTripBtn.style.display = "none";
-            while (DOMElements.searchList.hasChildNodes()) {
-                DOMElements.searchList.removeChild(DOMElements.searchList.lastChild)
-            }
+    for (let closeBtn of DOMElements.closePannel) {
+        closeBtn.addEventListener("click", () => {
+            SwitchPannel("main");
+            ClearList(".team-pannel .friend-list");
         })
     };
 }
 
 export function AddEventsToLogout() {
-    // ----- logout -----
     DOMElements.logout.addEventListener("click", () => {
         window.localStorage.removeItem("token");
         window.location.replace("/member");
