@@ -1,12 +1,12 @@
 import { CheckUserStatus } from "./Utils/ManageUser.js";
 import { SearchTeams } from "./Utils/ManageTeam.js";
 import { SearchOldFriends } from "./Utils/ManageFriend.js";
-import { ClearList, RenderList, RenderOnlineStatus } from "./Utils/GeneralControl.js";
+import { ClearList, RenderList, RenderOnlineStatus, InitializeAllPannelsTagAttributes } from "./Utils/GeneralControl.js";
 import { DrawMap, UserCoordError } from "./Utils/DrawMap.js";
 import * as GeneralEvents from "./Utils/GeneralEvent.js";
 import { ManipulateSessionStorage } from "./Utils/ManageUser.js";
-// import { AddEventsToTeamItems } from "./Utils/TeamEvent.js";
 import { AddTeamClickEvent, AddTeamHoverEvent } from "./Utils/TeamEvent.js";
+import * as DOMElements from "./Utils/DOMElements.js";
 
 // ----- initialize socket.io -----
 socket.on("connect", ()=>{
@@ -66,6 +66,9 @@ socket.on("connect", ()=>{
                     RenderOnlineStatus(".join-list .item", onlineTeamArray);
                     AddTeamClickEvent(".join-list .item", onlineTeamArray);
                     AddTeamHoverEvent(".join-list .item");
+
+                // 3. initialize four pannels style.display in tag attribute
+                InitializeAllPannelsTagAttributes()
                 })
                 .catch((error) => console.log(
                     `Error in render joined team list (room.js):${error}`
