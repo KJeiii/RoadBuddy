@@ -1,13 +1,15 @@
 import * as DOMElements from "../Utils/DOMElements.js";
 import { SearchOldFriends, MakeNewFriend } from "../Utils/ManageFriend.js";
-import { ControlMsgBox, ClearList, RenderList, RenderOnlineStatus } from "../Utils/GeneralControl.js";
+import { 
+    ControlFriendMsgBox, ClearList, RenderList, 
+    SwitchPannel, RenderOnlineStatus } from "../Utils/GeneralControl.js";
 
 // *** as a receiver
 socket.on("friend_request", (data) => {
     friend_sender_info_cache = data;
 
     // prompt to ask willness
-    ControlMsgBox(".friend-prompt", "block", {friendName: data.username})
+    ControlFriendMsgBox(".friend-prompt", "block", {friendName: data.username})
 })
 
 // *** as a sender
@@ -28,8 +30,9 @@ socket.on("friend_request_result", (data) => {
                         ClearList(".team-pannel .friend-list");
                         RenderList(".team-pannel .friend-list", oldFriendList);
 
-                        DOMElements.friendPannel.style.display = "none";
-                        DOMElements.mainPannel.style.display = "block";
+                        SwitchPannel("main");
+                        // DOMElements.friendPannel.style.display = "none";
+                        // DOMElements.mainPannel.style.display = "block";
                     })
                     .catch((error)=>{console.log(error)})
                 return oldFriendList
@@ -58,7 +61,7 @@ socket.on("friend_request_result", (data) => {
     }
 
     // show response
-    ControlMsgBox(".friend-response", "block",
+    ControlFriendMsgBox(".friend-response", "block",
         {
             accept: data.accept,
             senderID: window.sessionStorage.getItem("user_id"),
