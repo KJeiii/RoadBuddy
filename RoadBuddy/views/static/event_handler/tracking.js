@@ -36,7 +36,7 @@ socket.on("initPosition", (partners) => {
 
 
         // Create other partners marker
-        for ( sid in partners ) {
+        for ( let sid in partners ) {
             let id = sidReference[sid];
 
             if ( sid !== socket.id && !sidArray.includes(sid)) {
@@ -45,7 +45,7 @@ socket.on("initPosition", (partners) => {
                     color: colorReference[id].color,
                     fillOpacity: 0.7
                 };
-                let markerToAdd = L.circleMarker([partners[sid][0].latitude, partners[sid][0].longitude], markerOption).addTo(DOMElements.map);
+                let markerToAdd = L.circleMarker([partners[sid][0].latitude, partners[sid][0].longitude], markerOption).addTo(map);
     
                 // 2. register new partner information (sid, circleMaker object)
                 sidArray.push(sid);
