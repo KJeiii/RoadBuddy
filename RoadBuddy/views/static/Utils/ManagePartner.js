@@ -20,8 +20,8 @@ export function appendPartner (user_id, container, reference) {
 export function removePartner(user_id) {
 
     let//
-    partnersList = document.querySelector(".tracking-pannel .partners-list");
-    partnerItems = document.querySelectorAll(".tracking-pannel .partners-list .item");
+    partnersList = document.querySelector(".tracking-pannel .partner-list"),
+    partnerItems = document.querySelectorAll(".tracking-pannel .partner-list .item");
 
     for ( let item of partnerItems ) {
         if ( item.getAttribute("id")*1 === user_id*1 ) {
