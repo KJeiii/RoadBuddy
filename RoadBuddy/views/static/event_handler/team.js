@@ -1,7 +1,4 @@
-import { 
-    switchPannel, switchToTrackingPannel, ClearList, RenderList, 
-    RenderOnlineStatus, SwitchPannel } 
-    from "../Utils/GeneralControl.js";
+import { ClearList, RenderList, RenderOnlineStatus, SwitchPannel } from "../Utils/GeneralControl.js";
 import { appendPartner, removePartner } from "../Utils/ManagePartner.js";
 import * as DOMElements from "../Utils/DOMElements.js";
 import { AddTeamClickEvent, AddTeamHoverEvent } from "../Utils/TeamEvent.js";
@@ -10,7 +7,6 @@ import { AddTeamClickEvent, AddTeamHoverEvent } from "../Utils/TeamEvent.js";
 DOMElements.startTripBtn.addEventListener("click", ()=> {
     // switch to tracking pannel
     SwitchPannel("tracking");
-    // switchPannel(DOMElements.trackingPannel, DOMElements.settingOnTracking, DOMElements.pullUpTracking);
 
     // Organize data emitted to listener "enter_team" on server
     let//
@@ -91,7 +87,7 @@ socket.on("team_invite", (data) => {
 let teamYesBtn = document.querySelector(".team-invite-prompt .yes");
 teamYesBtn.addEventListener("click", () => {
     // switch to tracking pannel
-    switchPannel(DOMElements.trackingPannel, DOMElements.settingOnTracking);
+    SwitchPannel("tracking");
     
     // create partner information in partner-list
     // 1. only show team owner and partner it self
@@ -231,7 +227,7 @@ socket.on("add_partner", (user_id) => {
     }
 
     // Partners in team update their partner list
-    for ( id in team_sender_info_cache.partners_color) {
+    for ( let id in team_sender_info_cache.partners_color) {
         if ( id*1 === user_id*1 && id*1 !== team_sender_info_cache.user_id*1 && id*1 !== window.sessionStorage.getItem("user_id")*1) {
             appendPartner(id, partnersList, team_sender_info_cache["partners_color"]);
         }
@@ -539,7 +535,7 @@ socket.on("accept_team_request", (data) => {
     socket.emit("enter_team", joinTeamData);
 
     // switch to tracking pannel
-    switchPannel(DOMElements.trackingPannel, DOMElements.settingOnTracking);
+    SwitchPannel("tracking");
 
     // create partner information in partner-list
     // 1. only show team owner and partner it self
