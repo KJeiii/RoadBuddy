@@ -4,7 +4,7 @@ import {
     CheckRelationship, SendFriendRequest, MakeNewFriend, ReplyToSender
 } from "./ManageFriend.js";
 import { 
-    ControlMsgBox, ClearList, RenderList, SwitchSettingBtn,
+    ControlFriendMsgBox, ClearList, RenderList, SwitchSettingBtn,
     SwitchPullAndDropBtn, SwitchMainPannelContent, SwitchMenuToggle,
     SwitchPannel
 } from "./GeneralControl.js";
@@ -93,7 +93,7 @@ export function AddEventsToFriend() {
         let selectedFriendIDs = FetchSelectedItemIDs(".friend-pannel");
         //  response if no ckeckbox is checked
         if (selectedFriendIDs.length === 0) {
-            ControlMsgBox(".friend-request", "block",
+            ControlFriendMsgBox(".friend-request", "block",
                 {
                     selectedFriendIDs: selectedFriendIDs,
                     repetitionIDs: [],
@@ -106,7 +106,7 @@ export function AddEventsToFriend() {
             .then((oldFriendsList) => {
                 let { repetitionIDs, newFriendIDs } = CheckRelationship(selectedFriendIDs, oldFriendsList);
                 SendFriendRequest(repetitionIDs, newFriendIDs);
-                ControlMsgBox(".friend-request", "block",
+                ControlFriendMsgBox(".friend-request", "block",
                     {
                         selectedFriendIDs: selectedFriendIDs,
                         repetitionIDs: repetitionIDs,
@@ -117,12 +117,12 @@ export function AddEventsToFriend() {
     });
 
     // --- clear response content and disappear ---
-    DOMElements.friendRequestBtn.addEventListener("click", () => {ControlMsgBox(".friend-request", "none")});
+    DOMElements.friendRequestBtn.addEventListener("click", () => {ControlFriendMsgBox(".friend-request", "none")});
 
     // --- Acceptance of friend request ---
     DOMElements.friendYesBtn.addEventListener("click", () => {
         // recover friend prompt
-        ControlMsgBox(".friend-prompt", "none")
+        ControlFriendMsgBox(".friend-prompt", "none")
 
         // receiver fetch api to add friend
         MakeNewFriend(window.sessionStorage.getItem("user_id"), friend_sender_info_cache.user_id)
@@ -171,7 +171,7 @@ export function AddEventsToFriend() {
             })
             .then(() => {
                 // show response
-                ControlMsgBox(".friend-response", "block",
+                ControlFriendMsgBox(".friend-response", "block",
                     {
                         accept: true,
                         senderID: friend_sender_info_cache.user_id,
@@ -187,7 +187,7 @@ export function AddEventsToFriend() {
     // if reject request
     let friendNoBtn = document.querySelector(".friend-prompt .no");
     friendNoBtn.addEventListener("click", () => {
-        ControlMsgBox(".friend-prompt", "none")
+        ControlFriendMsgBox(".friend-prompt", "none")
 
         // feedback result to sender
         ReplyToSender(
@@ -271,7 +271,7 @@ export function AddEventsToTeam() {
 
     // confirm frined response
     let friendOkBtn = document.querySelector(".friend-response button");
-    friendOkBtn.addEventListener("click", ()=>{ControlMsgBox(".friend-response", "none")})
+    friendOkBtn.addEventListener("click", ()=>{ControlFriendMsgBox(".friend-response", "none")})
 }
 
 export function AddEventsToClose() {
