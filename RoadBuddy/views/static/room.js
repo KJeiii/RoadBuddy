@@ -23,14 +23,14 @@ socket.on("connect", ()=>{
             // store user info
             sidArray.push(socket.id);
             ManipulateSessionStorage("clear");
-            ManipulateSessionStorage("store", {...data, sid: socket.id})
+            ManipulateSessionStorage("set", {...data, sid: socket.id})
             
             // render friend list
             SearchOldFriends(data.user_id)
             .then((oldFriendList) => {
                     socket.emit("store_userinfo", {...data, friend_list: oldFriendList});
                     socket.emit("initial_team_status");
-                    ManipulateSessionStorage("store", {friendList: JSON.stringify(oldFriendList)})
+                    ManipulateSessionStorage("set", {friendList: JSON.stringify(oldFriendList)})
                     // window.sessionStorage.setItem("friendList", JSON.stringify(oldFriendList))
                     ClearList(".main-pannel .friend-list");
                     RenderList(".main-pannel .friend-list", oldFriendList);
