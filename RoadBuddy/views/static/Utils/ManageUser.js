@@ -30,21 +30,21 @@ export async function CheckUserStatus() {
 
 
 // cache user_id, username, team_id, email, friendList in sessionStorage
-export function ManipulateSessionStorage(storeOrRemoveOrClear, ...rest){
+export function ManipulateSessionStorage(setOrRemoveOrClear, ...rest){
     try {
-        if (storeOrRemoveOrClear === "store") {
+        if (setOrRemoveOrClear === "store") {
             for (let key in rest[0]){
                 window.sessionStorage.setItem(key, rest[0][key])
             }
         }
     
-        if (storeOrRemoveOrClear === "remove"){
+        if (setOrRemoveOrClear === "remove"){
             for (let key of rest){
                 window.sessionStorage.removeItem(key)
             }
         }
 
-        if (storeOrRemoveOrClear === "clear"){
+        if (setOrRemoveOrClear === "clear"){
             window.sessionStorage.clear()
         }
     }
