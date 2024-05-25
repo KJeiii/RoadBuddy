@@ -133,7 +133,7 @@ export function SwitchPannel(toPannelType){
     })
 }
 
-export function ControlMsgBox(msgCssSelector, display, ...rest) {
+export function ControlFriendMsgBox(msgCssSelector, display, ...rest) {
     if (display === "none") {
         let//
             msgBox = document.querySelector(msgCssSelector),
@@ -295,4 +295,71 @@ export function RenderOnlineStatus(itemCssSelector, onlineItemArray) {
         return
     }
 
+}
+
+
+export function ControlTeamMsgBox(msgCssSelector, display, ...rest) {
+    if (display === "none") {
+        let//
+            msgBox = document.querySelector(msgCssSelector),
+            msgBoxContent = document.querySelector(`${msgCssSelector} .content`),
+            msgBoxFrom = document.querySelector(`${msgCssSelector} .from`);
+
+        msgBoxContent.textContent = "";
+        content.setAttribute("id","")
+        msgBox.style.display = display;
+        if (msgBoxFrom !== null){
+            msgBoxFrom.textContent = "";
+            msgBoxFrom.setAttribute("id", "");
+        }
+        return
+    }
+
+    if (msgCssSelector === ".team-invite-prompt" && display === "block") {
+        let//
+            msgBox = document.querySelector(msgCssSelector),
+            msgBoxContent = document.querySelector(`${msgCssSelector} .content`);
+        msgBoxContent.textContent = `來自 ${rest[0].leaderName} 的隊伍邀請`;
+        msgBox.style.display = display;
+        return
+    }
+
+    if (msgCssSelector === ".team-join-request" && display === "block") {
+        // show prompt of the request for joining team
+        let//
+            team_join_request = document.querySelector(msgCssSelector),
+            from = document.querySelector(`${msgCssSelector} .from`),
+            content = document.querySelector(`${msgCssSelector} .content`);
+
+        content.setAttribute("id", rest[0].requesterID);
+        from.setAttribute("id", rest[0].requesterSID);
+        from.textContent = rest[0].requesterName;
+        content.textContent = `來自 ${rest[0].requesterName} 的入隊申請`;
+        team_join_request.style.display = "block";
+        return
+    }
+
+    if (msgCssSelector === ".team-invite-response" && display === "block") {
+        // // response
+        // let//
+        //     msgBox = document.querySelector(msgCssSelector),
+        //     msgBoxContent = document.querySelector(`${msgCssSelector} .content`);
+
+        // if (window.sessionStorage.getItem("user_id") * 1 === rest[0].senderID * 1) {
+        //     msgBoxContent.textContent = (rest[0].accept) ? `${rest[0].receiverUsername} 接受你的好友邀請` : `${rest[0].rest[0].receiverUsername} 拒絕你的好友邀請`;
+        // }
+
+        // if (window.sessionStorage.getItem("user_id") * 1 === rest[0].receiverID * 1) {
+        //     msgBoxContent.textContent = (rest[0].accept) ? `你與 ${rest[0].senderUsername} 已結為好友` : `你已拒絕 ${rest[0].senderUsername} 的好友邀請`;
+        // }
+
+        // msgBox.style.display = "block";
+        return
+    }
+
+    if (msgCssSelector === ".team-create-response" && display === "block") {
+    }
+
+    if (msgCssSelector === ".team-join-response" && display === "block") {
+    }
 }
