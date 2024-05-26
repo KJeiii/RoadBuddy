@@ -1,6 +1,6 @@
 import { 
     ClearList, RenderList, RenderOnlineStatus, 
-    SwitchPannel, ControlTeamMsgBox
+    SwitchPannel, ControlTeamMsgBox, SwitchSettingBtn, ExpandOrClosePannel, ShowPannelContent
 } from "../Utils/GeneralControl.js";
 import { appendPartner, removePartner } from "../Utils/ManagePartner.js";
 import * as DOMElements from "../Utils/DOMElements.js";
@@ -105,11 +105,7 @@ teamYesBtn.addEventListener("click", () => {
     }
 
     // recover team prompt
-    let//
-    prompt = document.querySelector(".team-invite-prompt"),
-    content = document.querySelector(".team-invite-prompt .content");
-    content.textContent = "";
-    prompt.style.display = "none";
+    ControlTeamMsgBox(".team-invite-prompt", "none");
 
     // Organize data emitted to listener "enter_team" on server
     let joinTeamData = {
@@ -246,6 +242,9 @@ DOMElements.leaveTeamBtn.addEventListener("click", ()=> {
 
     // switch to mainPannel
     SwitchPannel("main");
+    ExpandOrClosePannel(".main-pannel", "close");
+    ShowPannelContent(".main-pannel", "team", false);
+    SwitchSettingBtn({all: "none"});
 
     // remove all partner in the tracking pannel
     ClearList(".tracking-pannel .partner-list");
