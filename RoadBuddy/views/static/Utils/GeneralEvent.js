@@ -5,8 +5,8 @@ import {
 } from "./ManageFriend.js";
 import { 
     ControlFriendMsgBox, ClearList, RenderList, SwitchSettingBtn,
-    SwitchPullAndDropBtn, SwitchMainPannelContent, SwitchMenuToggle,
-    SwitchPannel
+    SwitchPullAndDropBtn, ShowPannelContent, SwitchMenuToggle,
+    SwitchPannel, SwitchMenuTitle, isPannelPulledUp
 } from "./GeneralControl.js";
 
 
@@ -18,7 +18,7 @@ export const AllEvents = [
 
 export function AddEventsToSetting() {
     // ----- toggle down setting  -----
-    DOMElements.settingBtn.addEventListener("click", SwitchSettingBtn)
+    DOMElements.settingBtn.addEventListener("click", ()=>{SwitchSettingBtn()})
 }
 
 
@@ -42,7 +42,12 @@ export function AddEventsToSwitchPannelContent() {
 
     // ----- switch content ----
     DOMElements.menuFriend.addEventListener("click", function(){
-        SwitchMainPannelContent(this.getAttribute("class").split("-")[2]);   
+        const//
+            toContent = this.getAttribute("class").split("-")[2],
+            toShowUp = isPannelPulledUp(".main-pannel");
+        SwitchMenuTitle(toContent);
+        ShowPannelContent(".main-pannel", toContent, toShowUp);
+
         // switch add button
         DOMElements.addTeam.style.display = "none";
         DOMElements.addFriend.style.display = "block";
@@ -53,7 +58,12 @@ export function AddEventsToSwitchPannelContent() {
     })
 
     DOMElements.menuTeam.addEventListener("click", function(){
-        SwitchMainPannelContent(this.getAttribute("class").split("-")[2]);   
+        const//
+            toContent = this.getAttribute("class").split("-")[2],
+            toShowUp = isPannelPulledUp(".main-pannel");
+        SwitchMenuTitle(toContent);
+        ShowPannelContent(".main-pannel", toContent, toShowUp);
+
         // switch add button
         DOMElements.addTeam.style.display = "block";
         DOMElements.addFriend.style.display = "none";  
