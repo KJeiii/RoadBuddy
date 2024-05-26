@@ -32,7 +32,7 @@ export async function CheckUserStatus() {
 // cache user_id, username, team_id, email, friendList in sessionStorage
 export function ManipulateSessionStorage(setOrRemoveOrClear, ...rest){
     try {
-        if (setOrRemoveOrClear === "store") {
+        if (setOrRemoveOrClear === "set") {
             for (let key in rest[0]){
                 window.sessionStorage.setItem(key, rest[0][key])
             }
