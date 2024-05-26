@@ -34,6 +34,48 @@ export function onWhichPannelContent(){
     return pannelAndContent
 }
 
+export function ExpandOrClosePannel(pannelCssSelector, expandOrClose){
+    const pannels = [DOMElements.mainPannel, DOMElements.trackingPannel];
+    if (expandOrClose === "close"){
+        for (let pannel of pannels){
+            pannel.style.top = "70vh";
+            pannel.style.height = "30vh"; 
+        }
+        return
+    }
+    if (expandOrClose === "expand"){
+        for (let pannel of pannels){
+            if (`.${pannel.getAttribute("class")}` === pannelCssSelector){
+                pannel.style.top = "20vh";
+                pannel.style.height = "80vh"; 
+            }
+        }
+    }
+}
+
+export function SwitchMenuTitle(toWhichContent){
+    const//
+        menuTitle = document.querySelector(".nav-menu-title"),
+        selectedContent = document.querySelector(`.nav-menu-${toWhichContent}`);
+    menuTitle.textContent = selectedContent.textContent;
+
+}
+
+export function ShowPannelContent(pannelCssSelector, contentType, toShow){ //SwitchPannelContent
+    const elementsOnPannel = [
+        ...document.querySelectorAll(`${pannelCssSelector} div[class$='intro']`),
+        ...document.querySelectorAll(`${pannelCssSelector}  div[class$='outer']`)
+    ];
+    elementsOnPannel.forEach((element)=>{
+        const contentTypeOfElement = element.getAttribute("class").split("-")[0];
+        if (contentTypeOfElement === contentType) {
+            element.style.display = (toShow) ? "flex" : "none";
+            return
+        }
+        element.style.display = "none";        
+    });
+}
+
 export function SwitchPullAndDropBtn(onWhichPannelCSSSelector){
     const//
         pullUpBtn = document.querySelector(onWhichPannelCSSSelector + " .pull-up"),
@@ -57,12 +99,8 @@ export function SwitchPullAndDropBtn(onWhichPannelCSSSelector){
     //3. adjust content display: color-intro (flex or none), outer(flex or none)
     allPannelContents.forEach((content)=>{
         const toShowUp = content.getAttribute("class").split("-")[0] === pannelAndContent.content; 
-        if(isPulledUp){
-            content.style.display = "none";
-        }
-        else{
-            content.style.display = (toShowUp) ? "flex" : "none";
-        }
+        if(isPulledUp){content.style.display = "none"}
+        else{content.style.display = (toShowUp) ? "flex" : "none"}
 
         if(content.getAttribute("class").split("-")[0] === "partner"){
             content.style.display = "flex";
@@ -70,48 +108,45 @@ export function SwitchPullAndDropBtn(onWhichPannelCSSSelector){
     });
 }
 
-export function SwitchSettingBtn(){
+export function SwitchSettingBtn(...manualSwitch){
+    if (manualSwitch.length !== 0){
+        const btnsCssSelectors = Object.keys(manualSwitch[0]);
+        if (btnsCssSelectors.includes("all")){
+            const// 
+                allSettingBtns = [...document.querySelector(".setting").children],
+                display = manualSwitch[0]["all"];
+
+            allSettingBtns.forEach((btn)=>{
+                if (btn.getAttribute("class") !== "setting-btn"){btn.style.display = display;}
+            })
+            return
+        }
+        for (let btnsCssSelector of btnsCssSelectors){
+            const// 
+                display = manualSwitch[0].btnsCssSelector,
+                btn = document.querySelector(btnsCssSelector);
+            console.log(btn)
+            btn.style.display = display;
+        }
+    }
+
     const//
         btnsForMainPannel = [DOMElements.logout], //DOMElements.config
         btnsForTrackingPannel = [DOMElements.invite, DOMElements.leave];
     
-    const onMainPannel = (DOMElements.mainPannel.style.display !== "none");
+    const onMainPannel = (DOMElements.mainPannel.style.display === "block");
     // on main pannel
     if (onMainPannel) {
-        btnsForMainPannel.forEach((btn) => {btn.style.display = (btn.style.display !== "block") ? "block" : "none";})
-        btnsForTrackingPannel.forEach((btn) => {btn.style.display === "none"})
+        btnsForMainPannel.forEach((btn) => {btn.style.display = (btn.style.display !== "block") ? "block" : "none";});
+        btnsForTrackingPannel.forEach((btn) => {btn.style.display = "none"});
         return
     }
     // on tracking pannel
     btnsForTrackingPannel.forEach((btn)=>{btn.style.display = (btn.style.display !== "block") ? "block" : "none";})
-    btnsForMainPannel.forEach((btn) => {btn.style.display === "none"})
+    btnsForMainPannel.forEach((btn) => {btn.style.display = "none"})
 }
 
 
-export function SwitchMainPannelContent(toWhichContent){
-    //1. change menu title
-    const//
-        menuTitle = document.querySelector(".nav-menu-title"),
-        selectedContent = document.querySelector(`.nav-menu-${toWhichContent}`);
-    menuTitle.textContent = selectedContent.textContent;
-
-    //2. change contents
-    const elementsOnPannel = [
-            ...document.querySelectorAll(".main-pannel div[class$='outer']"), 
-            ...document.querySelectorAll(".main-pannel div[class$='intro']")
-        ];
-    const isPulledUp = isPannelPulledUp(".main-pannel");
-
-    elementsOnPannel.forEach((element)=>{
-        const typeOfElement = element.getAttribute("class").split("-")[0];
-        if (typeOfElement === toWhichContent){
-            element.style.display = (isPulledUp) ? "flex" : "none";
-        }
-        else{
-            element.style.display = "none";
-        }
-    })
-}
 
 export function SwitchMenuToggle(){
     const//
@@ -306,7 +341,7 @@ export function ControlTeamMsgBox(msgCssSelector, display, ...rest) {
             msgBoxFrom = document.querySelector(`${msgCssSelector} .from`);
 
         msgBoxContent.textContent = "";
-        content.setAttribute("id","")
+        msgBoxContent.setAttribute("id","")
         msgBox.style.display = display;
         if (msgBoxFrom !== null){
             msgBoxFrom.textContent = "";
@@ -340,26 +375,14 @@ export function ControlTeamMsgBox(msgCssSelector, display, ...rest) {
     }
 
     if (msgCssSelector === ".team-invite-response" && display === "block") {
-        // // response
-        // let//
-        //     msgBox = document.querySelector(msgCssSelector),
-        //     msgBoxContent = document.querySelector(`${msgCssSelector} .content`);
-
-        // if (window.sessionStorage.getItem("user_id") * 1 === rest[0].senderID * 1) {
-        //     msgBoxContent.textContent = (rest[0].accept) ? `${rest[0].receiverUsername} 接受你的好友邀請` : `${rest[0].rest[0].receiverUsername} 拒絕你的好友邀請`;
-        // }
-
-        // if (window.sessionStorage.getItem("user_id") * 1 === rest[0].receiverID * 1) {
-        //     msgBoxContent.textContent = (rest[0].accept) ? `你與 ${rest[0].senderUsername} 已結為好友` : `你已拒絕 ${rest[0].senderUsername} 的好友邀請`;
-        // }
-
-        // msgBox.style.display = "block";
         return
     }
 
     if (msgCssSelector === ".team-create-response" && display === "block") {
+        return
     }
 
     if (msgCssSelector === ".team-join-response" && display === "block") {
+        return
     }
 }
