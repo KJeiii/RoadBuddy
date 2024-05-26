@@ -1,7 +1,11 @@
-import { ClearList, RenderList, RenderOnlineStatus, SwitchPannel } from "../Utils/GeneralControl.js";
+import { 
+    ClearList, RenderList, RenderOnlineStatus, 
+    SwitchPannel, ControlTeamMsgBox
+} from "../Utils/GeneralControl.js";
 import { appendPartner, removePartner } from "../Utils/ManagePartner.js";
 import * as DOMElements from "../Utils/DOMElements.js";
 import { AddTeamClickEvent, AddTeamHoverEvent } from "../Utils/TeamEvent.js";
+import { ManipulateSessionStorage } from "../Utils/ManageUser.js";
 
 // ----- sender emit invitation to listner "team_invite" on server  -----
 DOMElements.startTripBtn.addEventListener("click", ()=> {
@@ -13,7 +17,9 @@ DOMElements.startTripBtn.addEventListener("click", ()=> {
     checkboxes = document.querySelectorAll(".team-pannel .item input[type=checkbox]"),
     friendsToAdd = [],
     teamID = document.querySelector(".team-pannel .pannel-title").getAttribute("id");
-    window.sessionStorage.setItem("team_id", teamID);
+
+    ManipulateSessionStorage("set", {team_id: teamID})
+    // window.sessionStorage.setItem("team_id", teamID);
 
     for (let checkbox of checkboxes) {
         if (checkbox.checked) {
@@ -33,10 +39,10 @@ DOMElements.startTripBtn.addEventListener("click", ()=> {
 
     // create owner information in partner-list;
     // others will be created when they join in
-    let partnersList = document.querySelector(".tracking-pannel .partner-list");
+    let partnerList = document.querySelector(".tracking-pannel .partner-list");
     for ( let id in partnersColor) {
         if (id*1 === window.sessionStorage.getItem("user_id")*1) {
-            appendPartner(id, partnersList, partnersColor);
+            appendPartner(id, partnerList, partnersColor);
         }
     }
 
@@ -73,12 +79,7 @@ socket.on("team_invite", (data) => {
     team_sender_info_cache = data
 
     // prompt to ask willness
-    let//
-    prompt = document.querySelector(".team-invite-prompt"),
-    content = document.querySelector(".team-invite-prompt .content");
-
-    content.textContent = `來自 ${data.username} 的隊伍邀請`;
-    prompt.style.display = "block";
+    ControlTeamMsgBox(".team-invite-prompt", "block", {leaderName: data.username})
 })
 
 
@@ -92,14 +93,14 @@ teamYesBtn.addEventListener("click", () => {
     // create partner information in partner-list
     // 1. only show team owner and partner it self
     // 2. update other partners when they join in
-    let partnersList = document.querySelector(".tracking-pannel .partner-list");
+    let partnerList = document.querySelector(".tracking-pannel .partner-list");
     for ( let id in team_sender_info_cache["partners_color"] ) {
         if ( id*1 === team_sender_info_cache["user_id"]*1 ) {
-            appendPartner(id, partnersList, team_sender_info_cache["partners_color"]);
+            appendPartner(id, partnerList, team_sender_info_cache["partners_color"]);
         }
 
         if ( id*1 === window.sessionStorage.getItem("user_id")*1 ) {
-            appendPartner(id, partnersList, team_sender_info_cache["partners_color"]);
+            appendPartner(id, partnerList, team_sender_info_cache["partners_color"]);
         }
     }
 
@@ -148,13 +149,7 @@ teamYesBtn.addEventListener("click", () => {
 // if reject
 let teamNoBtn = document.querySelector(".team-invite-prompt .no");
 teamNoBtn.addEventListener("click", () => {
-    let//
-    prompt = document.querySelector(".team-invite-prompt"),
-    content = document.querySelector(".team-invite-prompt .content"),
-    teamID = document.querySelector(".team-pannel .pannel-title").getAttribute("id");
-
-    content.textContent = "";
-    prompt.style.display = "none";
+    ControlTeamMsgBox(".team-invite-prompt", "none");
 
     // Organize data emitted to listener "enter_team" on server
     let joinTeamData = {
@@ -162,19 +157,10 @@ teamNoBtn.addEventListener("click", () => {
         enter_type: "join",
         receiver_sid: socket.id,
         sender_info: team_sender_info_cache,
-        team_id: teamID
+        team_id: document.querySelector(".team-pannel .pannel-title").getAttribute("id")
     };
 
     socket.emit("enter_team", joinTeamData);
-
-    // show response
-    let//
-    response = document.querySelector(".team-invite-response"),
-    responseContent = document.querySelector(".team-invite-response .content");
-
-    response.style.display = "block";
-    responseContent.textContent = `你已拒絕 ${team_sender_info_cache.username} 的隊伍邀請`;    
-    team_sender_info_cache = "";
 })
 
 
@@ -214,13 +200,13 @@ socket.on("enter_team", (data) => {
 
 //  ----- add new partners if they join -----
 socket.on("add_partner", (user_id) => {
-    let partnersList = document.querySelector(".tracking-pannel .partner-list");
+    let partnerList = document.querySelector(".tracking-pannel .partner-list");
 
     // Team owner updates it's partner list
     if ( team_sender_info_cache === undefined ) {
         for ( let id in partnersColor) {
             if ( id*1 === user_id*1 ) {
-                appendPartner(id, partnersList, partnersColor);
+                appendPartner(id, partnerList, partnersColor);
             }
         }
         return
@@ -229,7 +215,7 @@ socket.on("add_partner", (user_id) => {
     // Partners in team update their partner list
     for ( let id in team_sender_info_cache.partners_color) {
         if ( id*1 === user_id*1 && id*1 !== team_sender_info_cache.user_id*1 && id*1 !== window.sessionStorage.getItem("user_id")*1) {
-            appendPartner(id, partnersList, team_sender_info_cache["partners_color"]);
+            appendPartner(id, partnerList, team_sender_info_cache["partners_color"]);
         }
     }
 })
@@ -240,15 +226,7 @@ socket.on("add_partner", (user_id) => {
 // ----- confirm team response -----
 let teamOkBtn = document.querySelector(".team-invite-response button");
 teamOkBtn.addEventListener("click", ()=>{
-
-    // *************************
-    // recover response
-    let//
-    response = document.querySelector(".team-invite-response"),
-    responseContent = document.querySelector(".team-invite-response .content");
-
-    response.style.display = "none";
-    responseContent.textContent = ``;     
+    ControlTeamMsgBox(".team-invite-response", "none");   
 })
 
 
@@ -267,8 +245,6 @@ DOMElements.leaveTeamBtn.addEventListener("click", ()=> {
     socket.emit("leave_team", data);
 
     // switch to mainPannel
-    DOMElements.leaveTeamBtn.style.display = "none";
-    DOMElements.invite.style.display = "none";
     SwitchPannel("main");
 
     // remove all partner in the tracking pannel
@@ -285,7 +261,8 @@ socket.on("leave_team", (data) => {
     if ( socket.id === leavingPartnerSid ) {
 
         // 1. remove team_id in browser session
-        window.sessionStorage.removeItem("team_id");
+        ManipulateSessionStorage("remove", "team_id");
+        // window.sessionStorage.removeItem("team_id");
 
         // 2. remove data in markerArray and sidArray
         // only leave own marker and sid
@@ -340,8 +317,7 @@ invitationBtn.addEventListener("click", () => {
     document.querySelector(".team-pannel .search").style.display = "none";
     invitationBtn.style.display = "none";
     DOMElements.leaveTeamBtn.style.display = "none";
-    // DOMElements.settingOffTracking.style.display = "none";
-    // DOMElements.settingOnTracking.style.display = "block";
+
 
     DOMElements.createTeamBtn.style.display = "none";
     DOMElements.startTripBtn.style.display = "none";
@@ -423,11 +399,7 @@ socket.on("update_team_status", (teamArray) => {
 // Close team-join-response when click ok
 let joinOkBtn = document.querySelector(".team-join-response button");
 joinOkBtn.addEventListener("click", () => {
-    let//
-    teamCreateResponse = document.querySelector(".team-join-response"),
-    content = document.querySelector(".team-join-response .content");
-    teamCreateResponse.style.display = "none";
-    content.textContent = ``;
+    ControlTeamMsgBox(".team-join-response", "none");
 })
 
 
@@ -449,16 +421,11 @@ joinRequestBtn.addEventListener("click", () => {
 // (Team owner) Listener for receiving event "join_team_reqeust" from server
 socket.on("join_team_request", (data) => {
     // show prompt of the request for joining team
-    let//
-    team_join_request = document.querySelector(".team-join-request"),
-    from = document.querySelector(".team-join-request .from"),
-    content = document.querySelector(".team-join-request .content");
-
-    content.setAttribute("id", data["user_id"]);
-    from.setAttribute("id", data["user_sid"]);
-    from.textContent = data["username"];
-    content.textContent = `來自 ${data.username} 的入隊申請`;
-    team_join_request.style.display = "block";
+    ControlTeamMsgBox(".team-join-request", "block", {
+        requesterID: data["user_id"],
+        requesterSID: data["user_sid"],
+        requesterName:data["username"]
+    });
 })
 
 
@@ -488,34 +455,13 @@ requestYesBtn.addEventListener("click", () => {
 
     // *************************
     // recover team prompt
-    let//
-    prompt = document.querySelector(".team-join-request"),
-    content = document.querySelector(".team-join-request .content"),
-    from = document.querySelector(".team-join-request .from");
-
-    content.textContent = "";
-    content.setAttribute("id","");
-    from.textContent = "";
-    from.setAttribute("id","");
-    prompt.style.display = "none";
+    ControlTeamMsgBox(".team-join-request", "none");
 })
 
 // if no
 let requesetNoBtn = document.querySelector(".team-join-request .no");
 requesetNoBtn.addEventListener("click", () => {
-
-    // *************************
-    // recover team prompt
-    let//
-    prompt = document.querySelector(".team-join-request"),
-    content = document.querySelector(".team-join-request .content"),
-    from = document.querySelector(".team-join-request .from");
-
-    content.textContent = "";
-    content.setAttribute("id","");
-    from.textContent = "";
-    from.setAttribute("id","");
-    prompt.style.display = "none";
+    ControlTeamMsgBox(".team-join-request", "none");
 })
 
 
@@ -540,17 +486,17 @@ socket.on("accept_team_request", (data) => {
     // create partner information in partner-list
     // 1. only show team owner and partner it self
     // 2. update other partners when they join in
-    let partnersList = document.querySelector(".tracking-pannel .partner-list");
+    let partnerList = document.querySelector(".tracking-pannel .partner-list");
     for ( let id in team_sender_info_cache["partners_color"] ) {
 
         // create leader item first
         if ( id*1 === team_sender_info_cache["user_id"]*1 ) {
-            appendPartner(id, partnersList, team_sender_info_cache["partners_color"]);
+            appendPartner(id, partnerList, team_sender_info_cache["partners_color"]);
         }
 
         // then, create partner self 
         if ( id*1 === window.sessionStorage.getItem("user_id")*1 ) {
-            appendPartner(id, partnersList, team_sender_info_cache["partners_color"]);
+            appendPartner(id, partnerList, team_sender_info_cache["partners_color"]);
         }
     }
 })
