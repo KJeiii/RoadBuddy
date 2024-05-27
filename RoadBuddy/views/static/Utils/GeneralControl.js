@@ -61,19 +61,55 @@ export function SwitchMenuTitle(toWhichContent){
 
 }
 
-export function ShowPannelContent(pannelCssSelector, contentType, toShow){ //SwitchPannelContent
-    const elementsOnPannel = [
-        ...document.querySelectorAll(`${pannelCssSelector} div[class$='intro']`),
-        ...document.querySelectorAll(`${pannelCssSelector}  div[class$='outer']`)
-    ];
-    elementsOnPannel.forEach((element)=>{
-        const contentTypeOfElement = element.getAttribute("class").split("-")[0];
-        if (contentTypeOfElement === contentType) {
-            element.style.display = (toShow) ? "flex" : "none";
-            return
+export function ShowPannelContent(pannelCssSelector, contentType, toShow, ...teamPannelInfo){ //SwitchPannelContent
+    if (pannelCssSelector === ".main-pannel" || pannelCssSelector === ".tracking-pannel"){
+        const elementsOnPannel = [
+            ...document.querySelectorAll(`${pannelCssSelector} div[class$='intro']`),
+            ...document.querySelectorAll(`${pannelCssSelector}  div[class$='outer']`)
+        ];
+        elementsOnPannel.forEach((element)=>{
+            const contentTypeOfElement = element.getAttribute("class").split("-")[0];
+            if (contentTypeOfElement === contentType) {
+                element.style.display = (toShow) ? "flex" : "none";
+                return
+            }
+            element.style.display = "none";        
+        });
+    }
+
+    if (pannelCssSelector === ".team-pannel" || pannelCssSelector === ".friend-pannel"){
+        const//
+            pannelTitle = document.querySelector(".team-pannel .pannel-title"),
+            search = document.querySelector(".team-pannel .search"),
+            friendTitle = document.querySelector(".team-pannel .friend-title"),
+            friendOuter = document.querySelector(".team-pannel .friend-outer"),
+            btns = document.querySelectorAll(".team-pannel button");
+
+        (contentType !== "create") && (pannelTitle.textContent = teamPannelInfo[0].pannelTitle);
+        (contentType !== "create") && (pannelTitle.setAttribute("id", teamPannelInfo[0].teamID));
+        (contentType === "create") && (search.stye.display = "flex");
+        btns.forEach((btn)=>{
+            const btnType = btn.getAttribute("class").split("-")[0];
+            btn.style.display = (btnType === contentType) ? "block" : "none";
+        })
+
+        switch (contentType) {
+            case "create":
+                break;
+                
+            case "invite":
+                friendOuter.style.height = "55%";
+                break
+
+            case "join":
+                friendTitle.style.display = "none";
+                friendOuter.style.display = "none";
+                break
+
+            default:
+                console.log(`Team pannel does not include contype of: ${contentType}`)
         }
-        element.style.display = "none";        
-    });
+    }
 }
 
 export function SwitchPullAndDropBtn(onWhichPannelCSSSelector){
