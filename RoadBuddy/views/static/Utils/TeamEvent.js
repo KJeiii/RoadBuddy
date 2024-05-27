@@ -1,19 +1,28 @@
 import * as DOMElements from "./DOMElements.js";
+import { ControlTeamMsgBox, ShowPannelContent, SwitchPannel } from "./GeneralControl.js";
 
 export function AddTeamClickEvent(teamItemCssSelector, ...onlineTeamArray){
     const teamList = document.querySelectorAll(teamItemCssSelector);
     if (teamItemCssSelector === ".create-list .item"){
         for (let item of teamList) {
             item.addEventListener("click", function () {
-                document.querySelector(".team-pannel .pannel-title").textContent = this.textContent;
-                document.querySelector(".team-pannel .pannel-title").setAttribute("id", this.getAttribute("id"));
-                document.querySelector(".team-pannel .search").style.display = "none";
-                document.querySelector(".friend-outer").style.height = "55%";
-                DOMElements.createTeamBtn.style.display = "none";
-                DOMElements.startTripBtn.style.display = "block";
-                DOMElements.inviteTripBtn.style.display = "none";
-                DOMElements.mainPannel.style.display = "none";
-                DOMElements.teamPannel.style.display = "flex";
+                // 1. 切換到team pannel > SwithcPannel()
+                SwitchPannel("team");
+                // 2. 切換team pannel content: 標題、 > ShowPannelContent()
+                ShowPannelContent(".team-pannel", "start", true, {
+                    pannelTitle: this.textContent,
+                    teamID: this.getAttribute("id")
+                });
+
+                // document.querySelector(".team-pannel .pannel-title").textContent = this.textContent;
+                // document.querySelector(".team-pannel .pannel-title").setAttribute("id", this.getAttribute("id"));
+                // document.querySelector(".team-pannel .search").style.display = "none";
+                // document.querySelector(".friend-outer").style.height = "55%";
+                // DOMElements.createTeamBtn.style.display = "none";
+                // DOMElements.startTripBtn.style.display = "block";
+                // DOMElements.inviteTripBtn.style.display = "none";
+                // DOMElements.mainPannel.style.display = "none";
+                // DOMElements.teamPannel.style.display = "flex";
             });
         }
     }
@@ -27,28 +36,31 @@ export function AddTeamClickEvent(teamItemCssSelector, ...onlineTeamArray){
 
             if (teamIsInUse) {
                 item.addEventListener("click", function() {
-                    document.querySelector(".team-pannel .pannel-title").textContent = this.textContent;
-                    document.querySelector(".team-pannel .pannel-title").setAttribute("id", this.getAttribute("id"));
-                    document.querySelectorAll(".team-pannel .pannel-title")[1].style.display = "none";
-                    document.querySelector(".team-pannel .search").style.display = "none";
-                    document.querySelector(".team-pannel .friend-outer").style.display = "none";
-                    DOMElements.teamPannel.style.top = "65vh";
-                    DOMElements.createTeamBtn.style.display = "none";
-                    DOMElements.startTripBtn.style.display = "block";
-                    DOMElements.inviteTripBtn.style.display = "none";
-                    DOMElements.mainPannel.style.display = "none";
-                    DOMElements.teamPannel.style.display = "flex";
-                    DOMElements.dropDownMain.style.display = "block";
-                    DOMElements.pullUpMain.style.display = "none";
-                    DOMElements.createTeamBtn.style.display = "none";
-                    DOMElements.startTripBtn.style.display = "none";
-                    DOMElements.inviteTripBtn.style.display = "none";
-                    DOMElements.joinTripBtn.style.display = "block";
+                    SwitchPannel("team");
+                    ShowPannelContent(".team-pannel", "join", true, {
+                        pannelTitle: this.textContent,
+                        teamID: this.getAttribute("id")
+                    });
+                    // document.querySelector(".team-pannel .pannel-title").textContent = this.textContent;
+                    // document.querySelector(".team-pannel .pannel-title").setAttribute("id", this.getAttribute("id"));
+                    // document.querySelector(".team-pannel .friend-title").style.display = "none";
+                    // document.querySelector(".team-pannel .search").style.display = "none";
+                    // document.querySelector(".team-pannel .friend-outer").style.display = "none";
+                    // DOMElements.teamPannel.style.top = "65vh";
+                    // DOMElements.mainPannel.style.display = "none";
+                    // DOMElements.teamPannel.style.display = "flex";
+                    // DOMElements.dropDownMain.style.display = "block";
+                    // DOMElements.pullUpMain.style.display = "none";
+                    // DOMElements.createTeamBtn.style.display = "none";
+                    // DOMElements.startTripBtn.style.display = "none";
+                    // DOMElements.inviteTripBtn.style.display = "none";
+                    // DOMElements.joinTripBtn.style.display = "block";
                 })
                 continue
             }
             // 2. Team not in use
             item.addEventListener("click", function() {
+                // ControlTeamMsgBox(".team-join-response", "block")
                 let//
                 teamCreateResponse = document.querySelector(".team-join-response"),
                 content = document.querySelector(".team-join-response .content");
