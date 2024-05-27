@@ -101,6 +101,10 @@ export function ShowPannelContent(pannelCssSelector, contentType, toShow, ...tea
                 friendOuter.style.height = "55%";
                 break
 
+            case "start":
+                friendOuter.style.height = "55%";
+                break
+
             case "join":
                 friendTitle.style.display = "none";
                 friendOuter.style.display = "none";
@@ -370,12 +374,12 @@ export function RenderOnlineStatus(itemCssSelector, onlineItemArray) {
 
 
 export function ControlTeamMsgBox(msgCssSelector, display, ...rest) {
-    if (display === "none") {
-        let//
-            msgBox = document.querySelector(msgCssSelector),
-            msgBoxContent = document.querySelector(`${msgCssSelector} .content`),
-            msgBoxFrom = document.querySelector(`${msgCssSelector} .from`);
+    let//
+        msgBox = document.querySelector(msgCssSelector),
+        msgBoxContent = document.querySelector(`${msgCssSelector} .content`),
+        msgBoxFrom = document.querySelector(`${msgCssSelector} .from`);
 
+    if (display === "none") {
         msgBoxContent.textContent = "";
         msgBoxContent.setAttribute("id","")
         msgBox.style.display = display;
@@ -386,39 +390,39 @@ export function ControlTeamMsgBox(msgCssSelector, display, ...rest) {
         return
     }
 
-    if (msgCssSelector === ".team-invite-prompt" && display === "block") {
-        let//
-            msgBox = document.querySelector(msgCssSelector),
-            msgBoxContent = document.querySelector(`${msgCssSelector} .content`);
-        msgBoxContent.textContent = `來自 ${rest[0].leaderName} 的隊伍邀請`;
-        msgBox.style.display = display;
-        return
-    }
+    switch(msgCssSelector){
+        case ".team-invite-prompt":
+            if(display === "block"){
+                msgBoxContent.textContent = `來自 ${rest[0].leaderName} 的隊伍邀請`;
+                msgBox.style.display = display;   
+            }
+            break
 
-    if (msgCssSelector === ".team-join-request" && display === "block") {
-        // show prompt of the request for joining team
-        let//
-            team_join_request = document.querySelector(msgCssSelector),
-            from = document.querySelector(`${msgCssSelector} .from`),
-            content = document.querySelector(`${msgCssSelector} .content`);
+        case ".team-join-request":
+            if(display === "block"){
+                msgBoxContent.textContent = `來自 ${rest[0].requesterName} 的入隊申請`;
+                msgBoxContent.setAttribute("id", rest[0].requesterID);
+                msgBoxFrom.textContent = rest[0].requesterName;
+                msgBoxFrom.setAttribute("id", rest[0].requesterSID);
+                msgBox.style.display = display;
+            }
+            break
 
-        content.setAttribute("id", rest[0].requesterID);
-        from.setAttribute("id", rest[0].requesterSID);
-        from.textContent = rest[0].requesterName;
-        content.textContent = `來自 ${rest[0].requesterName} 的入隊申請`;
-        team_join_request.style.display = "block";
-        return
-    }
+        case ".team-join-response":
+            if(display === "block"){
+                msgBoxContent.textContent = `隊伍${rest[0].teamName}，尚未啟程`;
+                msgBox.style.display = display;
+            }
+            break
 
-    if (msgCssSelector === ".team-invite-response" && display === "block") {
-        return
-    }
-
-    if (msgCssSelector === ".team-create-response" && display === "block") {
-        return
-    }
-
-    if (msgCssSelector === ".team-join-response" && display === "block") {
-        return
+        case ".team-invite-response":    
+            if(display === "block"){
+            }
+            break
+        
+        case ".team-create-response":    
+            if(display === "block"){
+            }
+            break
     }
 }
