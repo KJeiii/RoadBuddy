@@ -87,7 +87,7 @@ export function ShowPannelContent(pannelCssSelector, contentType, toShow, ...tea
 
         (contentType !== "create") && (pannelTitle.textContent = teamPannelInfo[0].pannelTitle);
         (contentType !== "create") && (pannelTitle.setAttribute("id", teamPannelInfo[0].teamID));
-        (contentType === "create") && (search.stye.display = "flex");
+        search.style.display = (contentType === "create") ? "flex" : "none";
         btns.forEach((btn)=>{
             const btnType = btn.getAttribute("class").split("-")[0];
             btn.style.display = (btnType === contentType) ? "block" : "none";
@@ -95,6 +95,7 @@ export function ShowPannelContent(pannelCssSelector, contentType, toShow, ...tea
 
         switch (contentType) {
             case "create":
+                search.style.display = "flex";
                 break;
                 
             case "invite":
@@ -128,24 +129,8 @@ export function SwitchPullAndDropBtn(onWhichPannelCSSSelector){
         isPulledUp = isPannelPulledUp(onWhichPannelCSSSelector),
         pannelAndContent = onWhichPannelContent();
 
-    //1. switch pullup and dropdown btn
     pullUpBtn.style.display = (isPulledUp) ? "block" : "none";
     dropDown.style.display = (isPulledUp) ? "none" : "block";
-
-    //2. adjust pannel top and heigth (70vh top + 30vh height or 20vh top + 80vh height)
-    pannel.style.top = (isPulledUp) ? "70vh" : "20vh";
-    pannel.style.height = (isPulledUp) ? "30vh" : "80vh"; 
-
-    //3. adjust content display: color-intro (flex or none), outer(flex or none)
-    allPannelContents.forEach((content)=>{
-        const toShowUp = content.getAttribute("class").split("-")[0] === pannelAndContent.content; 
-        if(isPulledUp){content.style.display = "none"}
-        else{content.style.display = (toShowUp) ? "flex" : "none"}
-
-        if(content.getAttribute("class").split("-")[0] === "partner"){
-            content.style.display = "flex";
-        }
-    });
 }
 
 export function SwitchSettingBtn(...manualSwitch){
@@ -422,6 +407,8 @@ export function ControlTeamMsgBox(msgCssSelector, display, ...rest) {
         
         case ".team-create-response":    
             if(display === "block"){
+                msgBoxContent.textContent = `你已建立隊伍 ${rest[0].teamName}`;
+                msgBox.style.display = display;
             }
             break
     }
