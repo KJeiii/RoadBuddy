@@ -48,6 +48,7 @@ socket.on("connect", ()=>{
             // 1. created team list
             SearchTeams(data.user_id, "created")
                 .then((result) => {
+                    createdTeamArray = [...result.createdTeamList];
                     ClearList(".create-list");
                     RenderList(".create-list", result.createdTeamList);
                     AddTeamClickEvent(".create-list .item");
@@ -60,7 +61,7 @@ socket.on("connect", ()=>{
                 // 2. joined team list 
                 SearchTeams(data.user_id, "joined")
                 .then((result) => {
-                    joinedTeamArray.push(...result.joinedTeamList);
+                    joinedTeamArray = [...result.joinedTeamList];
                     ClearList(".join-list");
                     RenderList(".join-list", result.joinedTeamList);
                     RenderOnlineStatus(".join-list .item", onlineTeamArray);
