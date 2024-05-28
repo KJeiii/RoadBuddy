@@ -25,4 +25,26 @@ export async function SearchTeams(userID, teamType){
     }
 }
 
+export async function CreateNewTeam(userID, teamName){
+    let response = await fetch("/api/team", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            team_name: teamName,
+            user_id: userID
+        })
+    });
+
+    let result = await response.json();
+    if (result.error) {
+        searchInput.value = "";
+        searchInput.setAttribute("placeholder", "隊伍名稱已被使用，請輸入其他名稱");
+        throw new Error("隊伍名稱已被使用，請輸入其他名稱")
+    }
+    return result
+}
+
+export function EmitEnterTeam(){
+    
+}
 
