@@ -29,3 +29,22 @@ export function removePartner(user_id) {
         }
     }
 }
+
+export async function BuildPartnership(userID, teamID){
+    let response = await fetch("/api/team", {
+        method: "PATCH",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            team_id: teamID,
+            user_id: userID
+        })
+    });
+
+    let result = await response.json();
+    if (!result.ok) {
+        throw result.message;
+    }
+    return result
+}
