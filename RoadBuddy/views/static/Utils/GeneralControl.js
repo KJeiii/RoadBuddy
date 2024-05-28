@@ -84,9 +84,12 @@ export function ShowPannelContent(pannelCssSelector, contentType, toShow, ...tea
             friendTitle = document.querySelector(".team-pannel .friend-title"),
             friendOuter = document.querySelector(".team-pannel .friend-outer"),
             btns = document.querySelectorAll(".team-pannel button");
-
-        (contentType !== "create") && (pannelTitle.textContent = teamPannelInfo[0].pannelTitle);
-        (contentType !== "create") && (pannelTitle.setAttribute("id", teamPannelInfo[0].teamID));
+        
+        if (contentType !== "create" && contentType !== "invite"){
+            pannelTitle.textContent = teamPannelInfo[0].pannelTitle;
+            pannelTitle.setAttribute("id", teamPannelInfo[0].teamID);
+        }
+        pannelTitle.style.display = (contentType === "invite") ? "none" : "block";
         search.style.display = (contentType === "create") ? "flex" : "none";
         btns.forEach((btn)=>{
             const btnType = btn.getAttribute("class").split("-")[0];
