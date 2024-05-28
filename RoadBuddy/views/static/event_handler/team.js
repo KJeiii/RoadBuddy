@@ -221,9 +221,7 @@ socket.on("add_partner", (user_id) => {
 
 // ----- confirm team response -----
 let teamOkBtn = document.querySelector(".team-invite-response button");
-teamOkBtn.addEventListener("click", ()=>{
-    ControlTeamMsgBox(".team-invite-response", "none");   
-})
+teamOkBtn.addEventListener("click", ()=>{ControlTeamMsgBox(".team-invite-response", "none")})
 
 
 // ----- emit leave team event to listener "leave_team" on server-----
@@ -261,7 +259,6 @@ socket.on("leave_team", (data) => {
 
         // 1. remove team_id in browser session
         ManipulateSessionStorage("remove", "team_id");
-        // window.sessionStorage.removeItem("team_id");
 
         // 2. remove data in markerArray and sidArray
         // only leave own marker and sid
@@ -281,14 +278,10 @@ socket.on("leave_team", (data) => {
 
     // as a team owner or partners stay in team
     // 1. delete leaving partner in partnersColor
-    if (socket.id === data["leader_sid"]) {
-        delete partnersColor[data["user_id"]*1]
-    }
-
+    if (socket.id === data["leader_sid"]) {delete partnersColor[data["user_id"]*1]}
     if (socket.id !== data["leader_sid"] && socket.id !== leavingPartnerSid) {
         delete team_sender_info_cache["partners_color"][data["user_id"]*1]
     }
-
 
     // 2. remove leaving partner marker on tracking pannel
     map.removeLayer(markerArray[sidArray.indexOf(leavingPartnerSid)]);
@@ -302,31 +295,15 @@ socket.on("leave_team", (data) => {
 
 })
 
-
-
-
-
 // ----- While tracking, invite other frineds -----
 // open team pannel
 let invitationBtn = document.querySelector(".setting .invite");
 invitationBtn.addEventListener("click", () => {
-
-    // *************************
-    document.querySelector(".team-pannel .pannel-title").style.display = "none";
-    document.querySelector(".team-pannel .search").style.display = "none";
-    invitationBtn.style.display = "none";
-    DOMElements.leaveTeamBtn.style.display = "none";
-
-
-    DOMElements.createTeamBtn.style.display = "none";
-    DOMElements.startTripBtn.style.display = "none";
-    DOMElements.inviteTripBtn.style.display = "block";
-    DOMElements.teamPannel.style.display = "flex";
+    SwitchPannel("team");
+    ShowPannelContent(".team-pannel", "invite", true);
 
     let friendItems = document.querySelectorAll(".team-pannel .friend-list input");
-    for ( let item of friendItems ) {
-        item.checked = false
-    }
+    for ( let item of friendItems ) {item.checked = false}
 })
 
 
