@@ -5,9 +5,11 @@ import {
 } from "./ManageFriend.js";
 import { 
     ControlFriendMsgBox, ClearList, RenderList, SwitchSettingBtn,
-    SwitchPullAndDropBtn, ShowPannelContent, SwitchMenuToggle,
-    SwitchPannel, SwitchMenuTitle, isPannelPulledUp
+    SwitchPullAndDropBtn, ShowPannelContent, SwitchMenuToggle, onWhichPannelContent,
+    SwitchPannel, SwitchMenuTitle, isPannelPulledUp, ControlTeamMsgBox, ExpandOrClosePannel,
 } from "./GeneralControl.js";
+import { CreateNewTeam, SearchTeams } from "./ManageTeam.js";
+import { AddTeamClickEvent, AddTeamHoverEvent } from "./TeamEvent.js";
 
 
 export const AllEvents = [
@@ -30,8 +32,15 @@ export function AddEventsToPullAndDrop() {
 
     btns.forEach((btn)=>{
         btn.addEventListener("click", function(){
-            const parentPannelCssSelector = this.parentElement.getAttribute("class");
+            const// 
+                parentPannelCssSelector = this.parentElement.getAttribute("class"),
+                isPulledUp = isPannelPulledUp(`.${parentPannelCssSelector}`),
+                expandOrClose = (!isPulledUp) ? "expand" : "close",
+                pannelAndContent = onWhichPannelContent();
+
             SwitchPullAndDropBtn(`.${parentPannelCssSelector}`);
+            ExpandOrClosePannel(`.${parentPannelCssSelector}`, expandOrClose);
+            ShowPannelContent(`.${parentPannelCssSelector}`, pannelAndContent.content, !isPulledUp)
         })}
     );
 }
@@ -206,11 +215,19 @@ export function AddEventsToFriend() {
             friend_sender_info_cache.sid, 
             friend_sender_info_cache.user_id)
     })
+
+    // confirm frined response
+    let friendOkBtn = document.querySelector(".friend-response button");
+    friendOkBtn.addEventListener("click", ()=>{ControlFriendMsgBox(".friend-response", "none")})
 }
 
 export function AddEventsToTeam() {
     // ----- move to add team page-----
-    DOMElements.addTeam.addEventListener("click", ()=>{SwitchPannel("team")});
+    DOMElements.addTeam.addEventListener("click", ()=>{
+        SwitchPannel("team");
+        ExpandOrClosePannel(".team-pannel", "expand");
+        ShowPannelContent(".team-pannel", "create", true);
+    });
 
     // ----- create a new team -----
     DOMElements.createTeamBtn.addEventListener("click", () => {
@@ -221,67 +238,30 @@ export function AddEventsToTeam() {
             searchInput.setAttribute("placeholder", "請輸入隊伍名稱");
             return
         }
-
-        fetch("/api/team", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                team_name: searchInput.value,
-                user_id: window.sessionStorage.getItem("user_id")
-            })
-        })
-            .then((response) => { return response.json() })
-            .then((result) => {
-
-                if (result.error) {
-                    searchInput.value = "";
-                    searchInput.setAttribute("placeholder", "隊伍名稱已被使用，請輸入其他名稱");
-                    return
-                }
-
-                let//
-                    createList = document.querySelector(".create-list"),
-                    joinList = document.querySelector(".join-list");
-
-                while (createList.hasChildNodes()) {
-                    createList.removeChild(createList.lastChild)
-                }
-
-                // while ( joinList.hasChildNodes() ) {
-                //     joinList.removeChild(joinList.lastChild)
-                // }
-
-                LoadTeamList(window.sessionStorage.getItem("user_id"));
-
-                DOMElements.teamPannel.style.display = "none";
-                DOMElements.mainPannel.style.display = "block";
-                document.querySelectorAll(".team-pannel .pannel-title")[1].style.display = "block";
-                document.querySelector(".team-pannel .friend-outer").style.display = "block";
-
-                // response when creation succeed
-                let//
-                    teamCreateResponse = document.querySelector(".team-create-response"),
-                    content = document.querySelector(".team-create-response .content");
-                content.textContent = `你已建立隊伍 ${searchInput.value}`;
-                teamCreateResponse.style.display = "block";
-                DOMElements.mainPannel.style.top = "65vh";
-
+        CreateNewTeam(window.sessionStorage.getItem("user_id"), searchInput.value)
+            .then((result)=>{
+                SearchTeams(window.sessionStorage.getItem("user_id"), "created")
+                    .then((result) => {
+                        createdTeamArray = [...result.createdTeamList];
+                        ClearList(".create-list");
+                        RenderList(".create-list", result.createdTeamList);
+                        AddTeamClickEvent(".create-list .item");
+                        AddTeamHoverEvent(".create-list .item");
+                    })
+                    .catch((error) => console.log(
+                        `Error in render created team list (room.js):${error}`
+                    ));
+                
+                SwitchPannel("main");
+                ControlTeamMsgBox(".team-create-response", "block", {teamName: searchInput.value});
             })
             .catch((error) => { console.log(`Error in creating team : ${error}`) })
     });
 
     // close team-create-response when click ok
     DOMElements.createOkBtn.addEventListener("click", () => {
-        let//
-            teamCreateResponse = document.querySelector(".team-create-response"),
-            content = document.querySelector(".team-create-response .content");
-        teamCreateResponse.style.display = "none";
-        content.textContent = ``;
+        ControlTeamMsgBox(".team-create-response", "none");
     });
-
-    // confirm frined response
-    let friendOkBtn = document.querySelector(".friend-response button");
-    friendOkBtn.addEventListener("click", ()=>{ControlFriendMsgBox(".friend-response", "none")})
 }
 
 export function AddEventsToClose() {
