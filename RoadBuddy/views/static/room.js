@@ -89,6 +89,8 @@ socket.on("connect", ()=>{
 
 })
 
+for (let event of GeneralEvents.AllEvents) {event()}
+
 
 // // check user status and load info when passing check
 // CheckUserStatus()
@@ -172,9 +174,6 @@ socket.on("connect", ()=>{
 //     catch(error) {console.log(`Error in getting user postion : ${error}`)}
 // }
 
-for (let event of GeneralEvents.AllEvents) {
-    event()
-}
 
 
 
