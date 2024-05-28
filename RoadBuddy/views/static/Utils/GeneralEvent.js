@@ -7,9 +7,12 @@ import {
     ControlFriendMsgBox, ClearList, RenderList, SwitchSettingBtn,
     SwitchPullAndDropBtn, ShowPannelContent, SwitchMenuToggle, onWhichPannelContent,
     SwitchPannel, SwitchMenuTitle, isPannelPulledUp, ControlTeamMsgBox, ExpandOrClosePannel,
+    RenderOnlineStatus
 } from "./GeneralControl.js";
 import { CreateNewTeam, SearchTeams } from "./ManageTeam.js";
 import { AddTeamClickEvent, AddTeamHoverEvent } from "./TeamEvent.js";
+import { ManipulateSessionStorage } from "./ManageUser.js";
+import { appendPartner, BuildPartnership} from "./ManagePartner.js";
 
 
 export const AllEvents = [
@@ -363,28 +366,19 @@ export function AddEventsToTeam() {
         socket.emit("enter_team", joinTeamData);
 
         // Create partner record in partner table in database
-        let payload = {
-            team_id: team_sender_info_cache.team_id,
-            user_id: window.sessionStorage.getItem("user_id")
-        };
-
-        fetch("/api/team", {
-            method: "PATCH",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(payload)
-        })
-        .then((response) => {return response.json()})
-        .then((result) => {
-            if (result.ok) {
-                // update teams list
-                LoadTeamList(window.sessionStorage.getItem("user_id"))
-                return
-            }
-            console.log(result.message);
-        })
-        .catch((error) => {console.log(`Error in accept team request : ${error}`)})
+        BuildPartnership(window.sessionStorage.getItem("user_id"), team_sender_info_cache.team_id)
+            .then((result) => {
+                SearchTeams(window.sessionStorage.getItem("user_id"), "joined")
+                    .then((result) => {
+                        joinedTeamArray = [...result.joinedTeamList];
+                        ClearList(".join-list");
+                        RenderList(".join-list", result.joinedTeamList);
+                        RenderOnlineStatus(".join-list .item", onlineTeamArray);
+                        AddTeamClickEvent(".join-list .item", onlineTeamArray);
+                        AddTeamHoverEvent(".join-list .item");
+                    })
+            })
+            .catch((error) => {console.log(`Error in accept team request : ${error}`)})
     })
 
     // if reject
@@ -519,7 +513,6 @@ export function AddEventsToTeam() {
         };
         socket.emit("accept_team_request", acceptRequestData);
 
-        // *************************
         // recover team prompt
         ControlTeamMsgBox(".team-join-request", "none");
     })
