@@ -9,7 +9,7 @@ import {
     SwitchPannel, SwitchMenuTitle, isPannelPulledUp, ControlTeamMsgBox, ExpandOrClosePannel,
     RenderOnlineStatus
 } from "./GeneralControl.js";
-import { CreateNewTeam, SearchTeams, EmitEnterTeamEvent } from "./ManageTeam.js";
+import { CreateNewTeam, SearchTeams, EmitEnterTeamEvent, EmitInviteTeamEvent } from "./ManageTeam.js";
 import { AddTeamClickEvent, AddTeamHoverEvent } from "./TeamEvent.js";
 import { ManipulateSessionStorage } from "./ManageUser.js";
 import { appendPartner, BuildPartnership} from "./ManagePartner.js";
@@ -305,16 +305,7 @@ export function AddEventsToTeam() {
         }
 
         // send request for joining team
-        let invitation = {
-            sender_sid: socket.id,
-            receiver_info: {
-                receiver_id: friendsToAdd,
-                receiver_color: partnersColor
-            },
-            team_id: teamID
-        };
-        socket.emit("team_invite", invitation);
-
+        EmitInviteTeamEvent(socket.id, teamID, friendsToAdd, partnersColor);
         EmitEnterTeamEvent(true, "create", teamID);
 
         // update team using status to other uses
@@ -432,16 +423,8 @@ export function AddEventsToTeam() {
             }
         }
 
-        let invitation = {
-            sender_sid: socket.id,
-            receiver_info: {
-                receiver_id: friendToInvite,
-                receiver_color: partnersColor
-            },
-            team_id: window.sessionStorage.getItem("team_id")
-        };
-        socket.emit("team_invite", invitation);
-    
+        EmitInviteTeamEvent(socket.id, window.sessionStorage.getItem("team_id"), friendToInvite, partnersColor)
+
         // close team pannel and go back to tracking pannel
         SwitchPannel("tracking");
     })
