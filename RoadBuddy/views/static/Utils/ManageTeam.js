@@ -52,3 +52,16 @@ export function EmitEnterTeamEvent(accept, enterType, teamID){
     };
     socket.emit("enter_team", enterTeamInfo)
 }
+
+export function EmitInviteTeamEvent(senderSID, teamID,friendIDsToAddArray, partnerColorObject){
+    const inviteTeamInfo = {
+        sender_sid: senderSID,
+        team_id: teamID,
+        receiver_info: {
+            receiver_id: friendIDsToAddArray,
+            receiver_color: partnerColorObject            
+        }
+    };
+    socket.emit("team_invite", inviteTeamInfo)
+}
+
