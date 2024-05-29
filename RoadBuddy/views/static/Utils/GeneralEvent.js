@@ -9,7 +9,7 @@ import {
     SwitchPannel, SwitchMenuTitle, isPannelPulledUp, ControlTeamMsgBox, ExpandOrClosePannel,
     RenderOnlineStatus
 } from "./GeneralControl.js";
-import { CreateNewTeam, SearchTeams } from "./ManageTeam.js";
+import { CreateNewTeam, SearchTeams, EmitEnterTeamEvent } from "./ManageTeam.js";
 import { AddTeamClickEvent, AddTeamHoverEvent } from "./TeamEvent.js";
 import { ManipulateSessionStorage } from "./ManageUser.js";
 import { appendPartner, BuildPartnership} from "./ManagePartner.js";
@@ -315,17 +315,7 @@ export function AddEventsToTeam() {
         };
         socket.emit("team_invite", invitation);
 
-        let createTeamData = {
-            accept: true,
-            enter_type: "create",
-            receiver_info: {
-                receiver_id: friendsToAdd,
-                receiver_color: partnersColor
-            },        
-            sender_sid: socket.id,
-            team_id: teamID
-        };
-        socket.emit("enter_team", createTeamData);
+        EmitEnterTeamEvent(true, "create", teamID);
 
         // update team using status to other uses
         socket.emit("update_team_status");
@@ -356,14 +346,8 @@ export function AddEventsToTeam() {
         ControlTeamMsgBox(".team-invite-prompt", "none");
 
         // Organize data emitted to listener "enter_team" on server
-        let joinTeamData = {
-            accept: true,
-            enter_type: "join",
-            team_id: team_sender_info_cache.team_id
-        };
-
+        EmitEnterTeamEvent(true, "join", team_sender_info_cache.team_id);
         window.sessionStorage.setItem("team_id", team_sender_info_cache["team_id"])
-        socket.emit("enter_team", joinTeamData);
 
         // Create partner record in partner table in database
         BuildPartnership(window.sessionStorage.getItem("user_id"), team_sender_info_cache.team_id)
@@ -387,15 +371,7 @@ export function AddEventsToTeam() {
         ControlTeamMsgBox(".team-invite-prompt", "none");
 
         // Organize data emitted to listener "enter_team" on server
-        let joinTeamData = {
-            accept: false,
-            enter_type: "join",
-            receiver_sid: socket.id,
-            sender_info: team_sender_info_cache,
-            team_id: document.querySelector(".team-pannel .pannel-title").getAttribute("id")
-        };
-
-        socket.emit("enter_team", joinTeamData);
+        EmitEnterTeamEvent(false, "join", document.querySelector(".team-pannel .pannel-title").getAttribute("id"))
     })
 
     // ----- confirm team response -----
