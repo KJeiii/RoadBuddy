@@ -44,7 +44,11 @@ export async function CreateNewTeam(userID, teamName){
     return result
 }
 
-export function EmitEnterTeam(){
-    
+export function EmitEnterTeamEvent(accept, enterType, teamID){
+    const enterTeamInfo = {
+        accept: accept,
+        enter_type: enterType,
+        team_id: teamID
+    };
+    socket.emit("enter_team", enterTeamInfo)
 }
-
