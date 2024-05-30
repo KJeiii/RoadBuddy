@@ -59,17 +59,41 @@ export async function SearchOldFriends(userID){ //window.sessionStorage.getItem(
     }
 }
 
-
-
-export function FetchSelectedItemIDs(pannelCssSelector){
-    // find all new friends user_id
-    let//
-    selectedCheckboxes = document.querySelectorAll(`${pannelCssSelector} input[type=checkbox]`), //.friends-pannel
-    itemIDs = [];
-    for ( let checkbox of selectedCheckboxes) {
-        if ( checkbox.checked ) { itemIDs.push(checkbox.getAttribute("id")*1)}
+export function CreateItemFetchingCondition(condtionType, ...conditionInfo){
+    switch(condtionType){
+        case null:
+            return null
+        case "makeNewFriend":
+            return null
+        case "inviteJoiningTeam":
+            return !Object.keys(conditionInfo[0].partnersColor).includes(conditionInfo[0].itemID)
     }
-    return itemIDs
+}
+
+export function FetchSelectedItemIDsByCondition(conditionType, ...reference){
+    return function(pannelCssSelector){
+        let//
+        selectedCheckboxes = document.querySelectorAll(`${pannelCssSelector} input[type=checkbox]`), //.friends-pannel
+        itemIDs = [];
+        for ( let checkbox of selectedCheckboxes) {
+            const//
+                itemID = checkbox.getAttribute("id")*1,
+                fetchingCondition = CreateItemFetchingCondition(conditionType, 
+                    {
+                        ...reference[0],
+                        itemID: itemID
+                    }),
+                criteria = (fetchingCondition !== null) ? 
+                (checkbox.checked && fetchingCondition) : checkbox.checked; //!Object.keys(partnersColor).includes(itemID)
+            console.log("checked?", checkbox.checked)
+            console.log("fetchingCondition", fetchingCondition)
+            console.log("criteria", criteria)
+            if ( criteria ) { itemIDs.push(itemID)}
+        }
+        console.log(itemIDs)
+        return itemIDs
+    }
+
 }
 
 export function CheckRelationship(selectedFriendIDs, oldFriendList){
