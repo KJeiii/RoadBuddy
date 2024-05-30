@@ -1,7 +1,7 @@
 import * as DOMElements from "./DOMElements.js";
 import {
     SearchNewFriends, RenderSearchResult, SearchOldFriends, FetchSelectedItemIDs,
-    CheckRelationship, SendFriendRequest, MakeNewFriend, ReplyToSender
+    CheckRelationship, SendFriendRequest, MakeNewFriend, ReplyToSender, FetchSelectedItemIDsByCondition
 } from "./ManageFriend.js";
 import { 
     ControlFriendMsgBox, ClearList, RenderList, SwitchSettingBtn,
@@ -112,7 +112,10 @@ export function AddEventsToFriend() {
 
     // --- send add friend request ---
     DOMElements.addFriendBtn.addEventListener("click", () => {
-        let selectedFriendIDs = FetchSelectedItemIDs(".friend-pannel");
+        const//     
+            selectedItemFrom = FetchSelectedItemIDsByCondition(null),
+            selectedFriendIDs = selectedItemFrom(".friend-pannel");
+
         //  response if no ckeckbox is checked
         if (selectedFriendIDs.length === 0) {
             ControlFriendMsgBox(".friend-request", "block",
@@ -338,7 +341,8 @@ export function AddEventsToTeam() {
 
         // Organize data emitted to listener "enter_team" on server
         EmitEnterTeamEvent(true, "join", team_sender_info_cache.team_id);
-        window.sessionStorage.setItem("team_id", team_sender_info_cache["team_id"])
+        ManipulateSessionStorage("set", team_sender_info_cache["team_id"]);
+        // window.sessionStorage.setItem("team_id", team_sender_info_cache["team_id"])
 
         // Create partner record in partner table in database
         BuildPartnership(window.sessionStorage.getItem("user_id"), team_sender_info_cache.team_id)
@@ -406,10 +410,12 @@ export function AddEventsToTeam() {
 
     // send invitation
     DOMElements.inviteTripBtn.addEventListener("click", () => {
+        // selectItemsfrom = FetchSelectedItemIDsByCondition(inviteJoiningTeam, {partnersColor: partnersColor}),
+        // friendToInvite = selectItemsfrom(".team-pannel");
+        
         let//
         friendInputs = document.querySelectorAll(".team-pannel .friend-list input"),
         friendToInvite = [];
-
         for ( let input of friendInputs ) {
             let user_id = input.getAttribute("id");
             if ( input.checked && !Object.keys(partnersColor).includes(user_id)){
