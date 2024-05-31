@@ -65,3 +65,13 @@ export function EmitInviteTeamEvent(senderSID, teamID,friendIDsToAddArray, partn
     socket.emit("team_invite", inviteTeamInfo)
 }
 
+export function EmitJoinTeamRequestEvent(userSID, userID, username, teamID){
+    console.log(userSID, userID, username, teamID)
+    const requesterData = {
+        "user_sid": userSID,
+        "user_id": userID,
+        "username": username,
+        "team_id": teamID
+    };
+    socket.emit("join_team_request", requesterData);
+}
