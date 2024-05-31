@@ -1,7 +1,7 @@
 import * as DOMElements from "./DOMElements.js";
 import {
-    SearchNewFriends, RenderSearchResult, SearchOldFriends, FetchSelectedItemIDs,
-    CheckRelationship, SendFriendRequest, MakeNewFriend, ReplyToSender, FetchSelectedItemIDsByCondition
+    SearchNewFriends, RenderSearchResult, SearchOldFriends, FetchSelectedItemIDsByCondition,
+    CheckRelationship, SendFriendRequest, MakeNewFriend, ReplyToSender
 } from "./ManageFriend.js";
 import { 
     ControlFriendMsgBox, ClearList, RenderList, SwitchSettingBtn,
@@ -12,7 +12,7 @@ import {
 import { CreateNewTeam, SearchTeams, EmitEnterTeamEvent, EmitInviteTeamEvent } from "./ManageTeam.js";
 import { AddTeamClickEvent, AddTeamHoverEvent } from "./TeamEvent.js";
 import { ManipulateSessionStorage } from "./ManageUser.js";
-import { appendPartner, BuildPartnership} from "./ManagePartner.js";
+import { appendPartner, BuildPartnership, UpdatePartnersColor} from "./ManagePartner.js";
 
 
 export const AllEvents = [
@@ -114,13 +114,14 @@ export function AddEventsToFriend() {
     DOMElements.addFriendBtn.addEventListener("click", () => {
         const//     
             selectedItemFrom = FetchSelectedItemIDsByCondition(null),
-            selectedFriendIDs = selectedItemFrom(".friend-pannel");
+            selectedFriends = selectedItemFrom(".friend-pannel"),
+            selectedFriedIDs = selectedFriends.map((friend) => friend.id);
 
         //  response if no ckeckbox is checked
-        if (selectedFriendIDs.length === 0) {
+        if (selectedFriends.length === 0) {
             ControlFriendMsgBox(".friend-request", "block",
                 {
-                    selectedFriendIDs: selectedFriendIDs,
+                    selectedFriendIDs: selectedFriedIDs,
                     repetitionIDs: [],
                     oldFriendsList: []
                 })
@@ -129,11 +130,11 @@ export function AddEventsToFriend() {
 
         SearchOldFriends(window.sessionStorage.getItem("user_id"))
             .then((oldFriendsList) => {
-                let { repetitionIDs, newFriendIDs } = CheckRelationship(selectedFriendIDs, oldFriendsList);
+                let { repetitionIDs, newFriendIDs } = CheckRelationship(selectedFriedIDs, oldFriendsList);
                 SendFriendRequest(repetitionIDs, newFriendIDs);
                 ControlFriendMsgBox(".friend-request", "block",
                     {
-                        selectedFriendIDs: selectedFriendIDs,
+                        selectedFriendIDs: selectedFriedIDs,
                         repetitionIDs: repetitionIDs,
                         oldFriendsList: oldFriendsList
                     })
@@ -271,32 +272,24 @@ export function AddEventsToTeam() {
 
     // ----- sender emit invitation to listner "team_invite" on server  -----
     DOMElements.startTripBtn.addEventListener("click", ()=> {
+        // cache team_id in frontend
+        ManipulateSessionStorage("set", {team_id: document.querySelector(".team-pannel .pannel-title").getAttribute("id")})
         // switch to tracking pannel
         SwitchPannel("tracking");
-
         // Organize data emitted to listener "enter_team" on server
-        let//
-        checkboxes = document.querySelectorAll(".team-pannel .item input[type=checkbox]"),
-        friendsToAdd = [],
-        teamID = document.querySelector(".team-pannel .pannel-title").getAttribute("id");
+        const//
+            selectedItemsFrom = FetchSelectedItemIDsByCondition(null),
+            selectedFriends = selectedItemsFrom(".team-pannel"),
+            friendIdsToAdd = selectedFriends.map(friend => friend.id);
 
-        ManipulateSessionStorage("set", {team_id: teamID})
-        // window.sessionStorage.setItem("team_id", teamID);
-
-        for (let checkbox of checkboxes) {
-            if (checkbox.checked) {
-                friendsToAdd.push(checkbox.getAttribute("id")*1);
-                let randomColor = `rgb(${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)})`;
-                partnersColor[checkbox.getAttribute("id")*1] = {
-                    username: checkbox.getAttribute("name"),
-                    color: randomColor
-                };
-            }
-        }
-        partnersColor[window.sessionStorage.getItem("user_id")] = {
-            username: window.sessionStorage.getItem("username"),
-            color: ownColor
-        };
+        UpdatePartnersColor(partnersColor, selectedFriends)
+        UpdatePartnersColor(
+            partnersColor,
+            [
+                {id: window.sessionStorage.getItem("user_id")*1, 
+                name: window.sessionStorage.getItem("username")}
+            ], 
+            ownColor);
 
         // create owner information in partner-list;
         // others will be created when they join in
@@ -308,8 +301,15 @@ export function AddEventsToTeam() {
         }
 
         // send request for joining team
-        EmitInviteTeamEvent(socket.id, teamID, friendsToAdd, partnersColor);
-        EmitEnterTeamEvent(true, "create", teamID);
+        EmitInviteTeamEvent(
+            socket.id, 
+            document.querySelector(".team-pannel .pannel-title").getAttribute("id"), 
+            friendIdsToAdd, 
+            partnersColor);
+        EmitEnterTeamEvent(
+            true, 
+            "create", 
+            document.querySelector(".team-pannel .pannel-title").getAttribute("id"));
 
         // update team using status to other uses
         socket.emit("update_team_status");
@@ -410,26 +410,17 @@ export function AddEventsToTeam() {
 
     // send invitation
     DOMElements.inviteTripBtn.addEventListener("click", () => {
-        // selectItemsfrom = FetchSelectedItemIDsByCondition(inviteJoiningTeam, {partnersColor: partnersColor}),
-        // friendToInvite = selectItemsfrom(".team-pannel");
-        
-        let//
-        friendInputs = document.querySelectorAll(".team-pannel .friend-list input"),
-        friendToInvite = [];
-        for ( let input of friendInputs ) {
-            let user_id = input.getAttribute("id");
-            if ( input.checked && !Object.keys(partnersColor).includes(user_id)){
-                friendToInvite.push(user_id*1);
+        const//
+        selectItemsfrom = FetchSelectedItemIDsByCondition("inviteJoiningTeam", {partnersColor: partnersColor}),
+        selectedFriends = selectItemsfrom(".team-pannel"),
+        friendIDsToInvite = selectedFriends.map(friend => friend.id);
 
-                let randomColor = `rgb(${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)})`;
-                partnersColor[user_id*1] = {
-                    username: input.getAttribute("name"),
-                    color: randomColor
-                };
-            }
-        }
-
-        EmitInviteTeamEvent(socket.id, window.sessionStorage.getItem("team_id"), friendToInvite, partnersColor)
+        UpdatePartnersColor(partnersColor, selectedFriends)
+        EmitInviteTeamEvent(
+            socket.id, 
+            window.sessionStorage.getItem("team_id"), 
+            friendIDsToInvite, 
+            partnersColor)
 
         // close team pannel and go back to tracking pannel
         SwitchPannel("tracking");
