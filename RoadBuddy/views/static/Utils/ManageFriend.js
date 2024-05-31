@@ -74,10 +74,11 @@ export function FetchSelectedItemIDsByCondition(conditionType, ...reference){
     return function(pannelCssSelector){
         let//
         selectedCheckboxes = document.querySelectorAll(`${pannelCssSelector} input[type=checkbox]`), //.friends-pannel
-        itemIDs = [];
+        itemIDAndNamePairs = []; //[{id:XXX, name:XXX}, {}, {}.....]
         for ( let checkbox of selectedCheckboxes) {
             const//
                 itemID = checkbox.getAttribute("id")*1,
+                itemName = checkbox.getAttribute("name"),
                 fetchingCondition = CreateItemFetchingCondition(conditionType, 
                     {
                         ...reference[0],
@@ -85,13 +86,9 @@ export function FetchSelectedItemIDsByCondition(conditionType, ...reference){
                     }),
                 criteria = (fetchingCondition !== null) ? 
                 (checkbox.checked && fetchingCondition) : checkbox.checked; //!Object.keys(partnersColor).includes(itemID)
-            console.log("checked?", checkbox.checked)
-            console.log("fetchingCondition", fetchingCondition)
-            console.log("criteria", criteria)
-            if ( criteria ) { itemIDs.push(itemID)}
+            if ( criteria ) { itemIDAndNamePairs.push({id: itemID, name: itemName})}
         }
-        console.log(itemIDs)
-        return itemIDs
+        return itemIDAndNamePairs
     }
 
 }
