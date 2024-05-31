@@ -9,7 +9,7 @@ import {
     SwitchPannel, SwitchMenuTitle, isPannelPulledUp, ControlTeamMsgBox, ExpandOrClosePannel,
     RenderOnlineStatus
 } from "./GeneralControl.js";
-import { CreateNewTeam, SearchTeams, EmitEnterTeamEvent, EmitInviteTeamEvent } from "./ManageTeam.js";
+import { CreateNewTeam, SearchTeams, EmitEnterTeamEvent, EmitInviteTeamEvent, EmitJoinTeamRequestEvent } from "./ManageTeam.js";
 import { AddTeamClickEvent, AddTeamHoverEvent } from "./TeamEvent.js";
 import { ManipulateSessionStorage } from "./ManageUser.js";
 import { appendPartner, BuildPartnership, UpdatePartnersColor} from "./ManagePartner.js";
@@ -435,14 +435,10 @@ export function AddEventsToTeam() {
     // Emit event "join_team_request" to server
     let joinRequestBtn = document.querySelector(".join-trip-btn");
     joinRequestBtn.addEventListener("click", () => {
-        let team_id = document.querySelector(".team-pannel .pannel-title").getAttribute("id");
-        let requesterData = {
-            "user_sid": window.sessionStorage.getItem("sid"),
-            "user_id": window.sessionStorage.getItem("user_id"),
-            "username": window.sessionStorage.getItem("username"),
-            "team_id": team_id
-        };
-        socket.emit("join_team_request", requesterData);
+        const// 
+            {user_id: userID, sid: userSID, username} = window.sessionStorage,
+            teamID = document.querySelector(".team-pannel .pannel-title").getAttribute("id");
+        EmitJoinTeamRequestEvent(userSID, userID, username, teamID);
     })
 
     // Yes or No response to join team requeset
