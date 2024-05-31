@@ -9,7 +9,7 @@ import {
     SwitchPannel, SwitchMenuTitle, isPannelPulledUp, ControlTeamMsgBox, ExpandOrClosePannel,
     RenderOnlineStatus
 } from "./GeneralControl.js";
-import { CreateNewTeam, SearchTeams, EmitEnterTeamEvent, EmitInviteTeamEvent, EmitJoinTeamRequestEvent } from "./ManageTeam.js";
+import { CreateNewTeam, SearchTeams, EmitEnterTeamEvent, EmitInviteTeamEvent, EmitJoinTeamRequestEvent, EmitAcceptTeamRequestEvent, EmitLeaveTeamEvent } from "./ManageTeam.js";
 import { AddTeamClickEvent, AddTeamHoverEvent } from "./TeamEvent.js";
 import { ManipulateSessionStorage } from "./ManageUser.js";
 import { appendPartner, BuildPartnership, UpdatePartnersColor} from "./ManagePartner.js";
@@ -376,23 +376,18 @@ export function AddEventsToTeam() {
     // ----- emit leave team event to listener "leave_team" on server-----
     DOMElements.leaveTeamBtn.addEventListener("click", ()=> {
         // emit socket event "leave_team"
-        let leader_sid = ( team_sender_info_cache === undefined ) ? socket.id : team_sender_info_cache["sid"];
-        let data = {
-            sid: socket.id,
-            username: window.sessionStorage.getItem("username"),
-            user_id: window.sessionStorage.getItem("user_id"),
-            email: window.sessionStorage.getItem("email"),
-            team_id: window.sessionStorage.getItem("team_id"),
-            leader_sid: leader_sid
-        };
-        socket.emit("leave_team", data);
-
+        const leaderSID = ( team_sender_info_cache === undefined ) ? socket.id : team_sender_info_cache["sid"];
+        EmitLeaveTeamEvent(
+            socket.id,
+            window.sessionStorage.getItem("user_id"),
+            window.sessionStorage.getItem("team_id"),
+            leaderSID
+        );
         // switch to mainPannel
         SwitchPannel("main");
         ExpandOrClosePannel(".main-pannel", "close");
         ShowPannelContent(".main-pannel", "team", false);
         SwitchSettingBtn({all: "none"});
-
         // remove all partner in the tracking pannel
         ClearList(".tracking-pannel .partner-list");
     })
@@ -446,25 +441,19 @@ export function AddEventsToTeam() {
     let requestYesBtn = document.querySelector(".team-join-request .yes");
     requestYesBtn.addEventListener("click", () => {
         // create a new marker color for new partner
-        let//
-        requester_id = document.querySelector(".team-join-request .content").getAttribute("id"),
-        requester_name = document.querySelector(".team-join-request .from").textContent,
-        requester_sid = document.querySelector(".team-join-request .from").getAttribute("id"),
-        randomColor = `rgb(${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)})`;
-
-        partnersColor[requester_id] = {
-            username: requester_name,
-            color: randomColor
-        };
-        
+        UpdatePartnersColor(
+            partnersColor, 
+            [{
+                id: document.querySelector(".team-join-request .content").getAttribute("id"),
+                name: document.querySelector(".team-join-request .from").textContent
+            }]
+        );
         // emit event "enter_team" to server to initialize 
-        let acceptRequestData = {
-            accept: true,
-            requester_sid: requester_sid,
-            partners_color: partnersColor
-        };
-        socket.emit("accept_team_request", acceptRequestData);
-
+        EmitAcceptTeamRequestEvent(
+            true, 
+            document.querySelector(".team-join-request .from").getAttribute("id"),
+            partnersColor
+        );
         // recover team prompt
         ControlTeamMsgBox(".team-join-request", "none");
     })
