@@ -75,3 +75,22 @@ export function EmitJoinTeamRequestEvent(userSID, userID, username, teamID){
     };
     socket.emit("join_team_request", requesterData);
 }
+
+export function EmitAcceptTeamRequestEvent(accept, requestSID, partnersColorObject){
+    let acceptRequestData = {
+        accept: accept,
+        requester_sid: requestSID,
+        partners_color: partnersColorObject
+    };
+    socket.emit("accept_team_request", acceptRequestData);
+}
+
+export function EmitLeaveTeamEvent(userSID, userID, teamID, leaderSID){
+    let data = {
+        sid: userSID,
+        user_id: userID,
+        team_id: teamID,
+        leader_sid: leaderSID
+    };
+    socket.emit("leave_team", data);
+}
