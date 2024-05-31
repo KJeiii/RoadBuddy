@@ -11,7 +11,7 @@ import {
 } from "./GeneralControl.js";
 import { CreateNewTeam, SearchTeams, EmitEnterTeamEvent, EmitInviteTeamEvent, EmitJoinTeamRequestEvent, EmitAcceptTeamRequestEvent, EmitLeaveTeamEvent } from "./ManageTeam.js";
 import { AddTeamClickEvent, AddTeamHoverEvent } from "./TeamEvent.js";
-import { ManipulateSessionStorage } from "./ManageUser.js";
+import { ManipulateSessionStorage, EmitStoreUserInfoEvent } from "./ManageUser.js";
 import { appendPartner, BuildPartnership, UpdatePartnersColor} from "./ManagePartner.js";
 
 
@@ -169,23 +169,18 @@ export function AddEventsToFriend() {
             .then(() => {
                 // update server friend_list in user_info dict
                 let//
-                    friend_list = [],
-                    friend_items = document.querySelectorAll(".main-pannel .friend-list .item");
-                for (item of friend_items) {
+                    friendList = [],
+                    friendItems = document.querySelectorAll(".main-pannel .friend-list .item");
+                for (item of friendItems) {
                     let friend_info = {
                         user_id: item.getAttribute("id"),
                         username: item.textContent
                     };
-                    friend_list.push(friend_info);
+                    friendList.push(friend_info);
                 };
 
-                let data = {
-                    user_id: window.sessionStorage.getItem("user_id"),
-                    username: window.sessionStorage.getItem("username"),
-                    email: window.sessionStorage.getItem("email"),
-                    friend_list: friend_list
-                };
-                socket.emit("store_userinfo", data);
+                const {user_id, username, email} = window.sessionStorage;
+                EmitStoreUserInfoEvent(user_id, username, email, friendList);
             })
             .then(() => {
                 // feedback result to sender
@@ -305,11 +300,13 @@ export function AddEventsToTeam() {
             socket.id, 
             document.querySelector(".team-pannel .pannel-title").getAttribute("id"), 
             friendIdsToAdd, 
-            partnersColor);
+            partnersColor
+        );
         EmitEnterTeamEvent(
             true, 
             "create", 
-            document.querySelector(".team-pannel .pannel-title").getAttribute("id"));
+            document.querySelector(".team-pannel .pannel-title").getAttribute("id")
+        );
 
         // update team using status to other uses
         socket.emit("update_team_status");

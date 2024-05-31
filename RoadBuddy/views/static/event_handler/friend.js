@@ -3,6 +3,7 @@ import { SearchOldFriends, MakeNewFriend } from "../Utils/ManageFriend.js";
 import { 
     ControlFriendMsgBox, ClearList, RenderList, 
     SwitchPannel, RenderOnlineStatus } from "../Utils/GeneralControl.js";
+import { EmitStoreUserInfoEvent } from "../Utils/ManageUser.js";
 
 // *** as a receiver
 socket.on("friend_request", (data) => {
@@ -40,22 +41,17 @@ socket.on("friend_request_result", (data) => {
             .then((oldFriendList) => {
                 // update server friend_list in user_info dict
 
-                let friend_list = [];
+                let friendList = [];
                 for ( friend of oldFriendList ) {
                     let friend_info = {
                         user_id: friend.user_id,
                         username: friend.username
                     };
-                    friend_list.push(friend_info);
+                    friendList.push(friend_info);
                 };
                 
-                let data = {
-                    user_id: window.sessionStorage.getItem("user_id"),
-                    username: window.sessionStorage.getItem("username"),
-                    email: window.sessionStorage.getItem("email"),
-                    friend_list: friend_list
-                };
-                socket.emit("store_userinfo", data);
+                const {user_id, username, email} = window.sessionStorage;
+                EmitStoreUserInfoEvent(user_id, username, email, friendList);
             })
             .catch((error) => {console.log(`Error in add new friend : ${error}`)})
     }

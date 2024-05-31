@@ -1,4 +1,4 @@
-import { CheckUserStatus } from "./Utils/ManageUser.js";
+import { CheckUserStatus, EmitStoreUserInfoEvent } from "./Utils/ManageUser.js";
 import { SearchTeams } from "./Utils/ManageTeam.js";
 import { SearchOldFriends } from "./Utils/ManageFriend.js";
 import { ClearList, RenderList, RenderOnlineStatus, InitializeAllPannelsTagAttributes } from "./Utils/GeneralControl.js";
@@ -28,7 +28,8 @@ socket.on("connect", ()=>{
             // render friend list
             SearchOldFriends(data.user_id)
             .then((oldFriendList) => {
-                    socket.emit("store_userinfo", {...data, friend_list: oldFriendList});
+                    const {user_id, username, email} = data;
+                    EmitStoreUserInfoEvent(user_id, username, email, oldFriendList);
                     socket.emit("initial_team_status");
                     ManipulateSessionStorage("set", {friendList: JSON.stringify(oldFriendList)})
                     // window.sessionStorage.setItem("friendList", JSON.stringify(oldFriendList))
