@@ -3,6 +3,7 @@ import { ClearList, RenderList, RenderOnlineStatus, SwitchPannel, ControlTeamMsg
 import { appendPartner, removePartner } from "../Utils/ManagePartner.js";
 import { AddTeamClickEvent, AddTeamHoverEvent } from "../Utils/TeamEvent.js";
 import { ManipulateSessionStorage } from "../Utils/ManageUser.js";
+import { EmitEnterTeamEvent } from "../Utils/ManageTeam.js";
 
 // ----- listener for receiving event "team_invite" from server -----
 socket.on("team_invite", (data) => {
@@ -139,14 +140,8 @@ socket.on("accept_team_request", (data) => {
     team_sender_info_cache = data;
 
     // Organize data emitted to listener "enter_team" on server
-    let joinTeamData = {
-        accept: true,
-        enter_type: "join",
-        team_id: data["team_id"]
-    };
-
-    window.sessionStorage.setItem("team_id", data["team_id"])
-    socket.emit("enter_team", joinTeamData);
+    EmitEnterTeamEvent(true, "join", data["team_id"]);
+    ManipulateSessionStorage("set", {team_id: data["team_id"]});
 
     // switch to tracking pannel
     SwitchPannel("tracking");
