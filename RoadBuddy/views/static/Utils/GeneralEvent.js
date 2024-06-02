@@ -160,9 +160,10 @@ export function AddEventsToFriend() {
         
                         ClearList(".team-pannel .friend-list");
                         RenderList(".team-pannel .friend-list", oldFriendList);
-
-                        DOMElements.friendPannel.style.display = "none";
-                        DOMElements.mainPannel.style.display = "block";
+                        
+                        SwitchPannel("main");
+                        // DOMElements.friendPannel.style.display = "none";
+                        // DOMElements.mainPannel.style.display = "block";
                     })
                     .catch((error)=>{console.log(error)})
             })

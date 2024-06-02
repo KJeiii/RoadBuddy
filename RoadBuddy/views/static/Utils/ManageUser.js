@@ -1,10 +1,11 @@
 // build function for checking user status
 export async function CheckUserStatus() {
     let jwt = window.localStorage.getItem("token");
-
     try{
+        // Return promise result if not logging yet
         if ( jwt === null) {return {"ok":false, "data": null}}
 
+        // Verify user's token
         let//
         response = await fetch("/api/member/auth", {
             method: "GET",
@@ -12,15 +13,17 @@ export async function CheckUserStatus() {
         }),
         result = await response.json();
 
+        // If verification does not pass
         if (result.data === null) {return {"ok": false, "data": null}}
-
-        let data = {
-            user_id: result.user_id,
-            username: result.username,
-            email: result.email
-        }
-    
-        return {"ok": true, "data": data}
+        
+        // If verification passes
+        return {
+            "ok": true, 
+            "data": {
+                user_id: result.user_id,
+                username: result.username,
+                email: result.email
+            }}
     }
     catch(error) {
         console.log(`Error in CheckUserStatus : ${error}`)
@@ -32,21 +35,18 @@ export async function CheckUserStatus() {
 // cache user_id, username, team_id, email, friendList in sessionStorage
 export function ManipulateSessionStorage(setOrRemoveOrClear, ...rest){
     try {
+        //store data
         if (setOrRemoveOrClear === "set") {
             for (let key in rest[0]){
                 window.sessionStorage.setItem(key, rest[0][key])
             }
         }
-    
+        //remove specified data
         if (setOrRemoveOrClear === "remove"){
-            for (let key of rest){
-                window.sessionStorage.removeItem(key)
-            }
+            rest.forEach((key)=>{window.sessionStorage.removeItem(key)})
         }
-
-        if (setOrRemoveOrClear === "clear"){
-            window.sessionStorage.clear()
-        }
+        //remove ALL data
+        if (setOrRemoveOrClear === "clear"){window.sessionStorage.clear()}
     }
     catch(error){console.log(error)}
 }
