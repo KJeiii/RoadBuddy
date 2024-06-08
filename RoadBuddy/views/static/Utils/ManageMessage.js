@@ -50,3 +50,31 @@ export async function DeleteMessage(userID){
     }
     catch(error){throw error}
 }
+
+export function RenderMessagePannel(){
+    class DOMElement{
+        constructor(elementType, className){
+            this.elementType = elementType;
+            this.className = className;
+        };
+        CreateDOMElement(){
+            const element = document.createElement(this.elementType);
+            element.setAttribute("class", this.className);
+            return element
+        }
+    }
+    
+    const//
+        messagePannel = new DOMElement("div", "message-pannel").CreateDOMElement(),
+        closeBtn = new DOMElement("div", "close").CreateDOMElement(),
+        pannelTitle = new DOMElement("div", "pannel-title").CreateDOMElement(),
+        messageOuter = new DOMElement("div", "message-outer").CreateDOMElement(),
+        messageList = new DOMElement("div", "message-list").CreateDOMElement();
+    
+    pannelTitle.textContent = "交友邀請";
+    messageOuter.appendChild(messageList);
+    for ( let item of [closeBtn, pannelTitle, messageOuter]){
+        messagePannel.appendChild(item);
+    }
+    document.body.appendChild(messagePannel);
+}
