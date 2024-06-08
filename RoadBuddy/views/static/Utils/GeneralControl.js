@@ -159,7 +159,7 @@ export function SwitchSettingBtn(...manualSwitch){
     }
 
     const//
-        btnsForMainPannel = [DOMElements.logout], //DOMElements.config
+        btnsForMainPannel = [DOMElements.logout, DOMElements.message], //DOMElements.config
         btnsForTrackingPannel = [DOMElements.invite, DOMElements.leave];
     
     const onMainPannel = (DOMElements.mainPannel.style.display === "block");
