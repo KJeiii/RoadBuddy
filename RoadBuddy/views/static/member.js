@@ -3,7 +3,7 @@ import { CheckUserStatus } from "./Utils/ManageUser.js";
 CheckUserStatus()
     .then((result) => {
         if (result.ok) {
-            window.location.replace("/room");
+            window.location.replace("/main");
         }
     })
     .catch((error) => {console.log(`Error from CheckUserStatus in member page : ${error}`)})
