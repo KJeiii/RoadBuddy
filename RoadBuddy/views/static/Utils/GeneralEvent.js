@@ -13,11 +13,13 @@ import { CreateNewTeam, SearchTeams, EmitEnterTeamEvent, EmitInviteTeamEvent, Em
 import { AddTeamClickEvent, AddTeamHoverEvent } from "./TeamEvent.js";
 import { ManipulateSessionStorage, EmitStoreUserInfoEvent } from "./ManageUser.js";
 import { appendPartner, BuildPartnership, UpdatePartnersColor} from "./ManagePartner.js";
+import { RenderMessagePannel } from "./ManageMessage.js";
 
 
 export const AllEvents = [
     AddEventsToSetting, AddEventsToSwitchPannelContent, AddEventsToFriend,
-    AddEventsToTeam, AddEventsToPullAndDrop, AddEventsToClose, AddEventsToLogout
+    AddEventsToTeam, AddEventsToPullAndDrop, AddEventToClose, AddEventToLogout,
+    AddEventToMessage
 ]
 
 
@@ -465,7 +467,7 @@ export function AddEventsToTeam() {
 
 }
 
-export function AddEventsToClose() {
+export function AddEventToClose() {
     for (let closeBtn of DOMElements.closePannel) {
         closeBtn.addEventListener("click", () => {
             SwitchPannel("main");
@@ -474,11 +476,16 @@ export function AddEventsToClose() {
     };
 }
 
-export function AddEventsToLogout() {
+export function AddEventToLogout() {
     DOMElements.logout.addEventListener("click", () => {
         window.localStorage.removeItem("token");
         window.location.replace("/member");
     })
 }
 
+export function AddEventToMessage(){
+    DOMElements.message.addEventListener("click", ()=>{
+        if (document.querySelector(".message-pannel") === null){RenderMessagePannel()}
+    })
+}
 
