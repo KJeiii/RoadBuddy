@@ -9,6 +9,7 @@ body {
 .logout:hover,
 .invite:hover,
 .leave:hover,
+.message:hover,
 .nav-menu-friend:hover, 
 .nav-menu-team:hover,
 .nav-toggle:hover,
@@ -59,7 +60,8 @@ button:hover
 .config,
 .logout,
 .invite,
-.leave {
+.leave,
+.message {
     display: none;
     margin: 5px 0;
     text-align: end;
