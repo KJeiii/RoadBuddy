@@ -7,6 +7,7 @@ import * as GeneralEvents from "./Utils/GeneralEvent.js";
 import { ManipulateSessionStorage } from "./Utils/ManageUser.js";
 import { AddTeamClickEvent, AddTeamHoverEvent } from "./Utils/TeamEvent.js";
 import * as DOMElements from "./Utils/DOMElements.js";
+import { RenderMessagePannel } from "./Utils/ManageMessage.js";
 
 // ----- initialize socket.io -----
 socket.on("connect", ()=>{
@@ -27,20 +28,20 @@ socket.on("connect", ()=>{
             
             // render friend list
             SearchOldFriends(data.user_id)
-            .then((oldFriendList) => {
-                    const {user_id, username, email} = data;
-                    EmitStoreUserInfoEvent(user_id, username, email, oldFriendList);
-                    socket.emit("initial_team_status");
-                    ManipulateSessionStorage("set", {friendList: JSON.stringify(oldFriendList)})
-                    // window.sessionStorage.setItem("friendList", JSON.stringify(oldFriendList))
-                    ClearList(".main-pannel .friend-list");
-                    RenderList(".main-pannel .friend-list", oldFriendList);
-                    RenderOnlineStatus(".main-pannel .friend-list .item", oldFriendList);
-                    
-                    ClearList(".team-pannel .friend-list");
-                    RenderList(".team-pannel .friend-list", oldFriendList);
-                    RenderOnlineStatus(".team-pannel .friend-list .item", oldFriendList);
-                })
+                .then((oldFriendList) => {
+                        const {user_id, username, email} = data;
+                        EmitStoreUserInfoEvent(user_id, username, email, oldFriendList);
+                        socket.emit("initial_team_status");
+                        ManipulateSessionStorage("set", {friendList: JSON.stringify(oldFriendList)})
+                        // window.sessionStorage.setItem("friendList", JSON.stringify(oldFriendList))
+                        ClearList(".main-pannel .friend-list");
+                        RenderList(".main-pannel .friend-list", oldFriendList);
+                        RenderOnlineStatus(".main-pannel .friend-list .item", oldFriendList);
+                        
+                        ClearList(".team-pannel .friend-list");
+                        RenderList(".team-pannel .friend-list", oldFriendList);
+                        RenderOnlineStatus(".team-pannel .friend-list .item", oldFriendList);
+                    })
                 .catch((error)=>{console.log(error)})
             
             // render team list
@@ -57,8 +58,8 @@ socket.on("connect", ()=>{
                     `Error in render created team list (room.js):${error}`
                 ))
                 
-                // 2. joined team list 
-                SearchTeams(data.user_id, "joined")
+            // 2. joined team list 
+            SearchTeams(data.user_id, "joined")
                 .then((result) => {
                     joinedTeamArray = [...result.joinedTeamList];
                     ClearList(".join-list");
@@ -66,13 +67,12 @@ socket.on("connect", ()=>{
                     RenderOnlineStatus(".join-list .item", onlineTeamArray);
                     AddTeamClickEvent(".join-list .item", onlineTeamArray);
                     AddTeamHoverEvent(".join-list .item");
-
-                // 3. initialize four pannels style.display in tag attribute
-                InitializeAllPannelsTagAttributes()
                 })
                 .catch((error) => console.log(
                     `Error in render joined team list (room.js):${error}`
                 ))
+            // 3. initialize four pannels style.display in tag attribute
+            InitializeAllPannelsTagAttributes();
         })
         .catch((error) => {
             console.log(error);
