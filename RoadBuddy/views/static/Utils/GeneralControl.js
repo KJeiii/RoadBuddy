@@ -187,8 +187,10 @@ export function SwitchMenuToggle(){
 
 
 export function SwitchPannel(toPannelType){
-    const pannelList = document.querySelectorAll("div[class$='pannel']");
-    const showDisplayStyle = (toPannelType === "friend" || toPannelType === "team") ? "flex" : "block";
+    const//
+        pannelList = document.querySelectorAll("div[class$='pannel']"),
+        pannelsExceptMain = ["friend", "team", "message"],
+        showDisplayStyle = (pannelsExceptMain.includes(toPannelType)) ? "flex" : "block";
     pannelList.forEach((pannel)=>{
         const typeOfPannel = pannel.getAttribute("class").split("-")[0];
         if (typeOfPannel === toPannelType){pannel.style.display = showDisplayStyle}
