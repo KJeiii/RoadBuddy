@@ -486,6 +486,7 @@ export function AddEventToLogout() {
 export function AddEventToMessage(){
     DOMElements.message.addEventListener("click", ()=>{
         if (document.querySelector(".message-pannel") === null){RenderMessagePannel()}
+        else{document.querySelector(".message-pannel").style.display = "flex"}
     })
 }
 
