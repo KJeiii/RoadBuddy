@@ -1,3 +1,5 @@
+import { SwitchPannel } from "./GeneralControl.js";
+
 export async function StoreMessage(userID, fromUserID){
     try{
         const response = await fetch(
@@ -72,6 +74,7 @@ export function RenderMessagePannel(){
         messageList = new DOMElement("div", "message-list").CreateDOMElement();
     
     pannelTitle.textContent = "交友邀請";
+    closeBtn.addEventListener("click", () => {SwitchPannel("main")});
     messageOuter.appendChild(messageList);
     for ( let item of [closeBtn, pannelTitle, messageOuter]){
         messagePannel.appendChild(item);
