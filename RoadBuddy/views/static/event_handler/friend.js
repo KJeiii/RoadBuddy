@@ -74,13 +74,13 @@ socket.on("update_friend_status", (data) => {
     if (data["update-type"] === "online"){
         data["online_friend_list"].forEach((friend) => {
             const {user_id, user_sid, username} = friend;
-            onlineFriendArray.push(user_id);
             onlineFriendInfo.UpdateInfo(user_id, user_sid, username);
         })
     }
 
     if (data["update-type"] === "offline"){
-        onlineFriendArray.splice(onlineFriendArray.indexOf(data["offline_friend_id"]["user_id"]),1)
+        const {user_id} = data["offline_friend_id"];
+        onlineFriendInfo.DeleteInfo(user_id)
     }
     
     RenderOnlineStatus(".team-pannel .friend-list .item", onlineFriendInfo.GetAllFriendIDArray());
