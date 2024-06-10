@@ -219,3 +219,17 @@ export function UpdateFriends(userID, friendID){
     })
     .catch((error) => { console.log(error) })
 }
+
+
+export class OnlineFriendInfo{
+    constructor(){};
+    friendInfo = {};
+    UpdateInfo(id, sid, name){
+        this.friendInfo = {...this.friendInfo, [id]: {sid: sid, name: name}};
+    };
+    DeleteInfo(id){delete this.friendInfo[id]}
+    ShowInfo(){console.log(this.friendInfo)};
+    FindFriendSID(id){return this.friendInfo[id].sid};
+    FindFriendName(id){return this.friendInfo[id].name};
+    GetAllFriendIDArray(){return Object.keys(this.friendInfo).map((id) => id*1)}
+}
