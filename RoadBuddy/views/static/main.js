@@ -6,7 +6,7 @@ import { DrawMap, UserCoordError } from "./Utils/DrawMap.js";
 import * as GeneralEvents from "./Utils/GeneralEvent.js";
 import { ManipulateSessionStorage } from "./Utils/ManageUser.js";
 import { AddTeamClickEvent, AddTeamHoverEvent } from "./Utils/TeamEvent.js";
-import { OnlineFriendInfo } from "./Utils/ManageUser.js";
+import { OnlineFriendInfo } from "./Utils/ManageFriend.js";
 
 // ----- initialize socket.io -----
 socket.on("connect", ()=>{
