@@ -61,7 +61,13 @@ def disconnect():
 
     for sid in friend_sid_online:
         emit("update_friend_status", 
-             {"update-type" : "offline", "offline_friend_id": user_id}
+             {"update-type" : "offline", 
+              "offline_friend_id": {
+                  "user_id": user_id,
+                  "user_sid": user_sid,
+                  "username": username
+                  }
+             }
              , to=sid)
 
 
