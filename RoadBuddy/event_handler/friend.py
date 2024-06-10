@@ -49,10 +49,15 @@ def initial_friend_status():
     for friend in friend_list:
         friend_id = int(friend["user_id"])
         if friend_id in user_info.keys():
-            online_friend_list.append(friend_id)
+            online_friend_list.append(
+                {"user_id": friend_id,
+                "user_sid": user_info[friend_id]["sid"],
+                "username": user_info[friend_id]["username"]
+                })
 
     emit("update_friend_status", 
-         {"update-type" : "online", "online_friend_list": online_friend_list}, 
+         {"update-type" : "online",
+            "online_friend_list": online_friend_list}, 
          to=request.sid)
 
 
@@ -72,7 +77,11 @@ def online_friend_status():
     # 2. emit socket event to update_friend_status
     for sid in friend_sid_online:
         emit("update_friend_status",
-             {"update-type" : "online", "online_friend_list": [user_id]},  
+             {"update-type" : "online", 
+              "online_friend_list": [{
+                  "user_id": user_id,
+                  "user_sid": request.sid,
+                  "username": user_info[user_id]["username"]}]},  
              to=sid)
 
 
