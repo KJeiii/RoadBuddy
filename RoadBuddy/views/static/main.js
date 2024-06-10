@@ -6,8 +6,7 @@ import { DrawMap, UserCoordError } from "./Utils/DrawMap.js";
 import * as GeneralEvents from "./Utils/GeneralEvent.js";
 import { ManipulateSessionStorage } from "./Utils/ManageUser.js";
 import { AddTeamClickEvent, AddTeamHoverEvent } from "./Utils/TeamEvent.js";
-import * as DOMElements from "./Utils/DOMElements.js";
-import { RenderMessagePannel } from "./Utils/ManageMessage.js";
+import { OnlineFriendInfo } from "./Utils/ManageUser.js";
 
 // ----- initialize socket.io -----
 socket.on("connect", ()=>{
@@ -73,6 +72,7 @@ socket.on("connect", ()=>{
                 ))
             // 3. initialize four pannels style.display in tag attribute
             InitializeAllPannelsTagAttributes();
+
         })
         .catch((error) => {
             console.log(error);
@@ -87,6 +87,10 @@ socket.on("connect", ()=>{
 
 // Add events to general DOM elements
 for (let event of GeneralEvents.AllEvents) {event()}
+
+
+//4. create onlineFriendInfo object
+export const onlineFriendInfo = new OnlineFriendInfo();
 
 
 // ----- draw initial map -----
