@@ -4,6 +4,7 @@ import {
     ControlFriendMsgBox, ClearList, RenderList, 
     SwitchPannel, RenderOnlineStatus } from "../Utils/GeneralControl.js";
 import { EmitStoreUserInfoEvent } from "../Utils/ManageUser.js";
+import { onlineFriendInfo } from "../main.js";
 
 // *** as a receiver
 socket.on("friend_request", (data) => {
@@ -71,15 +72,19 @@ socket.on("friend_request_result", (data) => {
 //  Listener for receiving event "initial_status" event from server
 socket.on("update_friend_status", (data) => {
     if (data["update-type"] === "online"){
-        onlineFriendArray.push(...data["online_friend_list"])
+        data["online_friend_list"].forEach((friend) => {
+            const {user_id, user_sid, username} = friend;
+            onlineFriendArray.push(user_id);
+            onlineFriendInfo.UpdateInfo(user_id, user_sid, username);
+        })
     }
 
     if (data["update-type"] === "offline"){
-        onlineFriendArray.splice(onlineFriendArray.indexOf(data["offline_friend_id"]),1)
+        onlineFriendArray.splice(onlineFriendArray.indexOf(data["offline_friend_id"]["user_id"]),1)
     }
-
-    RenderOnlineStatus(".team-pannel .friend-list .item", onlineFriendArray);
-    RenderOnlineStatus(".main-pannel .friend-list .item", onlineFriendArray);
+    
+    RenderOnlineStatus(".team-pannel .friend-list .item", onlineFriendInfo.GetAllFriendIDArray());
+    RenderOnlineStatus(".main-pannel .friend-list .item", onlineFriendInfo.GetAllFriendIDArray());
 })
 
 
