@@ -58,10 +58,11 @@ class MessageTool(pooling.MySQLConnectionPool):
         connection = self.get_connection()
         cursor = connection.cursor(dictionary=True)
 
-        search_string = ('select * from message '
-                         'where user_id = %s or from_user_id = %s'
+        search_string = ('select message.from_user_id, member.username from message '
+                         'inner join member on message.from_user_id = member.user_id '
+                         'where message.user_id = %s'
                         )
-        data_string = (user_id, user_id)
+        data_string = (user_id, )
                 
         cursor.execute(search_string, data_string)
         result = cursor.fetchall()
