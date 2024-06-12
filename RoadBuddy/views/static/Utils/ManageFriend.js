@@ -223,7 +223,7 @@ export function UpdateFriends(userID, friendID){
 
 export class OnlineFriendInfo{
     constructor(){};
-    friendInfo = {};
+    friendInfo = {/*id: {sid: string, name: string}*/};
     UpdateInfo(id, sid, name){
         this.friendInfo = {...this.friendInfo, [id]: {sid: sid, name: name}};
     };
