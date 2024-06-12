@@ -1,4 +1,4 @@
-import { CheckUserStatus, EmitStoreUserInfoEvent } from "./Utils/ManageUser.js";
+import { CheckUserStatus, EmitStoreUserInfoEvent, MessageUserInfo } from "./Utils/ManageUser.js";
 import { SearchTeams } from "./Utils/ManageTeam.js";
 import { SearchOldFriends } from "./Utils/ManageFriend.js";
 import { ClearList, RenderList, RenderOnlineStatus, InitializeAllPannelsTagAttributes } from "./Utils/GeneralControl.js";
@@ -7,6 +7,7 @@ import * as GeneralEvents from "./Utils/GeneralEvent.js";
 import { ManipulateSessionStorage } from "./Utils/ManageUser.js";
 import { AddTeamClickEvent, AddTeamHoverEvent } from "./Utils/TeamEvent.js";
 import { OnlineFriendInfo } from "./Utils/ManageFriend.js";
+import { SearchMessage } from "./Utils/ManageMessage.js";
 
 // ----- initialize socket.io -----
 socket.on("connect", ()=>{
@@ -54,7 +55,7 @@ socket.on("connect", ()=>{
                     AddTeamHoverEvent(".create-list .item");
                 })
                 .catch((error) => console.log(
-                    `Error in render created team list (room.js):${error}`
+                    `Error in render created team list (main.js):${error}`
                 ))
                 
             // 2. joined team list 
@@ -68,9 +69,20 @@ socket.on("connect", ()=>{
                     AddTeamHoverEvent(".join-list .item");
                 })
                 .catch((error) => console.log(
-                    `Error in render joined team list (room.js):${error}`
+                    `Error in render joined team list (main.js):${error}`
                 ))
-            // 3. initialize four pannels style.display in tag attribute
+
+            // 3. render message list
+            SearchMessage(window.sessionStorage.getItem("user_id"))
+                .then((result) => {
+                    ClearList(".message-list");
+                    RenderList(".message-list", result);
+                })
+                .catch((error) => {console.log(
+                    `Error in render message list (main.js):${error}`
+                )})
+
+            // 4. initialize four pannels style.display in tag attribute
             InitializeAllPannelsTagAttributes();
 
         })
