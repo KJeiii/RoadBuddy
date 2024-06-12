@@ -14,7 +14,7 @@ def message():
             MessageTool.Create_message(int(request.json["user_id"]), int(request.json["from_user_id"]))
             return jsonify({"ok": True}), 200
         except Exception as error:
-            print(f'Error in controller(message) - Team(POST method) : {error}')
+            print(f'Error in controller(message) - (POST method) : {error}')
             return jsonify({"error": True, "message": "伺服器內部錯誤"}), 500
 
     if request.method == "PATCH":
@@ -22,7 +22,7 @@ def message():
             messages = MessageTool.Search_message(int(request.json["user_id"]))
             return jsonify({"ok": True, "data": messages}), 200
         except Exception as error:
-            print(f'Error in controller(message) - Team(PATCH method) : {error}')
+            print(f'Error in controller(message) - (PATCH method) : {error}')
             return jsonify({"error": True, "message": "伺服器內部錯誤"}), 500
         
     if request.method == "DELETE":
@@ -30,7 +30,7 @@ def message():
             MessageTool.Delete_message(int(request.json["user_id"]), int(request.json["from_user_id"]))
             return jsonify({"ok": True}), 200
         except Exception as error:
-            print(f'Error in controller(message) - Team(DELETE method) : {error}')
+            print(f'Error in controller(message) - (DELETE method) : {error}')
             return jsonify({"error": True, "message": "伺服器內部錯誤"}), 500
         
     
