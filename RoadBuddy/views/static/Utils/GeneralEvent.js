@@ -164,8 +164,6 @@ export function AddEventsToFriend() {
                         RenderList(".team-pannel .friend-list", oldFriendList);
                         
                         SwitchPannel("main");
-                        // DOMElements.friendPannel.style.display = "none";
-                        // DOMElements.mainPannel.style.display = "block";
                     })
                     .catch((error)=>{console.log(error)})
             })
@@ -485,8 +483,7 @@ export function AddEventToLogout() {
 
 export function AddEventToMessage(){
     DOMElements.message.addEventListener("click", ()=>{
-        if (document.querySelector(".message-pannel") === null){RenderMessagePannel()}
-        else{document.querySelector(".message-pannel").style.display = "flex"}
+        document.querySelector(".message-pannel").style.display = "flex";
     })
 }
 
