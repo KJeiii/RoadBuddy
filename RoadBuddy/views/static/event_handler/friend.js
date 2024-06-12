@@ -1,4 +1,3 @@
-import * as DOMElements from "../Utils/DOMElements.js";
 import { SearchOldFriends, MakeNewFriend } from "../Utils/ManageFriend.js";
 import { 
     ControlFriendMsgBox, ClearList, RenderList, 
@@ -33,8 +32,6 @@ socket.on("friend_request_result", (data) => {
                         RenderList(".team-pannel .friend-list", oldFriendList);
 
                         SwitchPannel("main");
-                        // DOMElements.friendPannel.style.display = "none";
-                        // DOMElements.mainPannel.style.display = "block";
                     })
                     .catch((error)=>{console.log(error)})
                 return oldFriendList
