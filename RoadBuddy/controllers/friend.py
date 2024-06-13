@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, request, jsonify
 from RoadBuddy.models import friend, member
+from RoadBuddy.event_handler import user_info
 
 friendTool = friend.FriendTool()
 memberTool = member.MemberTool()
@@ -58,6 +59,8 @@ def Add_friend():
             user_id = int(request.json["user_id"])
             friend_id = int(request.json["friend_id"])
             friendTool.Add_friend(user_id,friend_id)
+            friend_name = memberTool.Search_member_by_id(friend_id).get("username")
+            user_info.get(user_id).get("friend_list").append({"user_id":friend_id, "username": friend_name})
             response = {
                 "ok": True,
                 "message": "success"
