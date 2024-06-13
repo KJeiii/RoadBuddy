@@ -16,38 +16,38 @@ class MessageTool(pooling.MySQLConnectionPool):
 
         create_string = ("create table message ("
                          "message_id bigint primary key auto_increment, " 
-                         "user_id bigint not null, "
-                         "from_user_id bigint not null, "
-                         "foreign key(user_id) references member(user_id), "
-                         "foreign key(from_user_id) references member(user_id))"
+                         "receiver_id bigint not null, "
+                         "sender_id bigint not null, "
+                         "foreign key(receiver_id) references member(user_id), "
+                         "foreign key(sender_id) references member(user_id))"
                          )
  
         cursor.execute(create_string)
         connection.close() 
 
 
-    def Create_message(self, user_id:int, from_user_id:int) -> None:
+    def Create_message(self, receiver_id:int, sender_id:int) -> None:
         connection = self.get_connection()
         cursor = connection.cursor(dictionary=True)
 
-        create_string = ("insert into message (user_id, from_user_id) "
+        create_string = ("insert into message (receiver_id, sender_id) "
                          "values (%s, %s)"
                          )
-        data_string = (user_id, from_user_id)
+        data_string = (receiver_id, sender_id)
 
         cursor.execute(create_string, data_string)
         connection.commit()
         connection.close() 
 
 
-    def Delete_message(self, user_id:int, from_user_id:int) -> None:
+    def Delete_message(self, receiver_id:int, sender_id:int) -> None:
         connection = self.get_connection()
         cursor = connection.cursor(dictionary=True)
 
         delete_string = ("delete from message "
-                         "where (user_id = %s and from_user_id = %s)"
+                         "where (receiver_id = %s and sender_id = %s)"
                          )
-        data_string = (user_id, from_user_id)
+        data_string = (receiver_id, sender_id)
 
         cursor.execute(delete_string, data_string)
         connection.commit()
@@ -58,17 +58,20 @@ class MessageTool(pooling.MySQLConnectionPool):
         connection = self.get_connection()
         cursor = connection.cursor(dictionary=True)
 
-        search_string = ('select message.from_user_id, member.username from message '
-                         'inner join member on message.from_user_id = member.user_id '
-                         'where message.user_id = %s'
+        search_string = ('select message.message_id, message.sender_id, sender.username as sender_name, '
+                        'message.receiver_id, receiver.username as receiver_name '
+                        'from message '
+                        'inner join member sender on message.sender_id = sender.user_id '
+                        'inner join member receiver on message.receiver_id = receiver.user_id '
+                        'where message.receiver_id = %s or message.sender_id = %s'
                         )
-        data_string = (user_id, )
-                
+        data_string = (user_id, user_id)
+    
         cursor.execute(search_string, data_string)
         result = cursor.fetchall()
         connection.close()
         return result
-    
+   
 if __name__ == "__main__":
     test = MessageTool()
     test.Create_Message_table()
