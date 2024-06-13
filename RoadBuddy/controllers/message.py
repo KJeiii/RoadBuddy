@@ -27,7 +27,7 @@ def message():
         
     if request.method == "DELETE":
         try:
-            MessageTool.Delete_message(int(request.json["user_id"]), int(request.json["from_user_id"]))
+            MessageTool.Delete_message(int(request.json["sender_id"]), int(request.json["receiver_id"]))
             return jsonify({"ok": True}), 200
         except Exception as error:
             print(f'Error in controller(message) - (DELETE method) : {error}')

@@ -40,14 +40,14 @@ class MessageTool(pooling.MySQLConnectionPool):
         connection.close() 
 
 
-    def Delete_message(self, receiver_id:int, sender_id:int) -> None:
+    def Delete_message(self, sender_id:int, receiver_id:int) -> None:
         connection = self.get_connection()
         cursor = connection.cursor(dictionary=True)
 
         delete_string = ("delete from message "
-                         "where (receiver_id = %s and sender_id = %s)"
+                         "where (sender_id = %s and receiver_id = %s)"
                          )
-        data_string = (receiver_id, sender_id)
+        data_string = (sender_id, receiver_id)
 
         cursor.execute(delete_string, data_string)
         connection.commit()
