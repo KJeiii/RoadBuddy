@@ -1,7 +1,7 @@
 import * as DOMElements from "./DOMElements.js";
 import {
     SearchNewFriends, RenderSearchResult, SearchOldFriends, FetchSelectedItemIDsByCondition,
-    CheckRelationship, SendFriendRequest, MakeNewFriend, ReplyToSender
+    CheckRelationship, SendFriendRequest, MakeNewFriend, EmitFriendRequestResultEvent, UpdateFriends
 } from "./ManageFriend.js";
 import { 
     ControlFriendMsgBox, ClearList, RenderList, SwitchSettingBtn,
@@ -13,7 +13,6 @@ import { CreateNewTeam, SearchTeams, EmitEnterTeamEvent, EmitInviteTeamEvent, Em
 import { AddTeamClickEvent, AddTeamHoverEvent } from "./TeamEvent.js";
 import { ManipulateSessionStorage, EmitStoreUserInfoEvent } from "./ManageUser.js";
 import { appendPartner, BuildPartnership, UpdatePartnersColor} from "./ManagePartner.js";
-import { RenderMessagePannel } from "./ManageMessage.js";
 
 
 export const AllEvents = [
@@ -153,57 +152,13 @@ export function AddEventsToFriend() {
         ControlFriendMsgBox(".friend-prompt", "none")
 
         // receiver fetch api to add friend
-        MakeNewFriend(window.sessionStorage.getItem("user_id"), friend_sender_info_cache.user_id)
-            .then(() => {
-                SearchOldFriends(window.sessionStorage.getItem("user_id"))
-                    .then((oldFriendList) => {
-                        ClearList(".main-pannel .friend-list");
-                        RenderList(".main-pannel .friend-list", oldFriendList);
-        
-                        ClearList(".team-pannel .friend-list");
-                        RenderList(".team-pannel .friend-list", oldFriendList);
-                        
-                        SwitchPannel("main");
-                    })
-                    .catch((error)=>{console.log(error)})
-            })
-            .then(() => {
-                // update server friend_list in user_info dict
-                let//
-                    friendList = [],
-                    friendItems = document.querySelectorAll(".main-pannel .friend-list .item");
-                for (item of friendItems) {
-                    let friend_info = {
-                        user_id: item.getAttribute("id"),
-                        username: item.textContent
-                    };
-                    friendList.push(friend_info);
-                };
-
-                const {user_id, username, email} = window.sessionStorage;
-                EmitStoreUserInfoEvent(user_id, username, email, friendList);
-            })
-            .then(() => {
-                // feedback result to sender
-                ReplyToSender(
-                    true, 
-                    socket.id, 
-                    friend_sender_info_cache.sid, 
-                    friend_sender_info_cache.user_id)
-            })
-            .then(() => {
-                // show response
-                ControlFriendMsgBox(".friend-response", "block",
-                    {
-                        accept: true,
-                        senderID: friend_sender_info_cache.user_id,
-                        senderUsername: friend_sender_info_cache.username,
-                        receiverID: window.sessionStorage.getItem("user_id"),
-                        receiverUsername: window.sessionStorage.getItem("username"),
-                    }
-                )
-            })
-            .catch((error) => { console.log(error) })
+        const {user_id, username} = window.sessionStorage;
+        UpdateFriends(user_id, {
+            senderID: friend_sender_info_cache.user_id,
+            senderName: friend_sender_info_cache.username,
+            receiverID: user_id,
+            receiverName: username
+        })
     })
 
     // if reject request
@@ -212,11 +167,13 @@ export function AddEventsToFriend() {
         ControlFriendMsgBox(".friend-prompt", "none")
 
         // feedback result to sender
-        ReplyToSender(
-            false, 
-            socket.id, 
-            friend_sender_info_cache.sid, 
-            friend_sender_info_cache.user_id)
+        const {user_id, username} = window.sessionStorage;
+        EmitFriendRequestResultEvent(false, {
+                senderID: friend_sender_info_cache.user_id,
+                senderName: friend_sender_info_cache.username,
+                receiverID: user_id,
+                receiverName: username
+        })
     })
 
     // confirm frined response
