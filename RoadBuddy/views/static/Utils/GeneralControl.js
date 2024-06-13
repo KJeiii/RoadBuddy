@@ -1,6 +1,7 @@
 import { messageInfo } from "../main.js";
 import * as DOMElements from "./DOMElements.js";
 import { UpdateFriends } from "./ManageFriend.js";
+import { DeleteMessage } from "./ManageMessage.js";
 
 export function InitializeAllPannelsTagAttributes(){
     DOMElements.mainPannel.style.display = "block";
@@ -155,7 +156,6 @@ export function SwitchSettingBtn(...manualSwitch){
             const// 
                 display = manualSwitch[0].btnsCssSelector,
                 btn = document.querySelector(btnsCssSelector);
-            console.log(btn)
             btn.style.display = display;
         }
     }
@@ -321,6 +321,12 @@ export function RenderList(listCssSelector, listItemArray) {
         
         case ".message-list":
             const messageList = document.querySelector(listCssSelector);
+            if (listItemArray.length === 0) {
+                const messageItem = document.createElement("div");
+                messageItem.setAttribute("class", "item");
+                messageItem.textContent = "目前沒有交友申請";
+                messageList.appendChild(messageItem);
+            }
             for (let item of listItemArray) {
                 const//
                     messageItem = document.createElement("div"),
@@ -330,8 +336,8 @@ export function RenderList(listCssSelector, listItemArray) {
                     rejectBtn = document.createElement("div");
 
                 messageItem.setAttribute("class", "item");
-                messageItem.setAttribute("id", item.from_user_id);
-                name.textContent = item.username;
+                messageItem.setAttribute("id", item.sender_id);
+                name.textContent = item.sender_name;
                 btnOuter.setAttribute("class", "btn-outer");
                 acceptBtn.setAttribute("class", "accept-btn");
                 rejectBtn.setAttribute("class", "reject-btn");
@@ -340,15 +346,18 @@ export function RenderList(listCssSelector, listItemArray) {
                 messageItem.append(name, btnOuter);
                 messageList.appendChild(messageItem);
                 acceptBtn.addEventListener("click", function(){
-                    const//
-                        friendID = Number(this.parentElement.parentElement.getAttribute("id")),
-                        {user_id, username} = window.sessionStorage;
                     UpdateFriends(Number(window.sessionStorage.getItem("user_id")), {
-                        senderID: friendID,
+                        senderID: Number(this.parentElement.parentElement.getAttribute("id")),
                         senderName: messageInfo.FindSenderName(friendID),
-                        receiverID: user_id,
-                        receiverName: username
+                        receiverID: Number(window.sessionStorage.getItem("user_id")),
+                        receiverName: window.sessionStorage.getItem("username")
                     })
+                });
+                rejectBtn.addEventListener("click", function(){
+                    DeleteMessage(
+                        Number(this.parentElement.parentElement.getAttribute("id")), 
+                        Number(window.sessionStorage.getItem("user_id"))
+                    )
                 })
             }
             break
