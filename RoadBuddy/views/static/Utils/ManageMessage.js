@@ -53,33 +53,23 @@ export async function DeleteMessage(userID){
     catch(error){throw error}
 }
 
-export function RenderMessagePannel(){
-    class DOMElement{
-        constructor(elementType, className){
-            this.elementType = elementType;
-            this.className = className;
-        };
-        CreateDOMElement(){
-            const element = document.createElement(this.elementType);
-            element.setAttribute("class", this.className);
-            return element
-        }
-    }
-    
+export function RenderMessageBtn(checkAlready){
     const//
-        messagePannel = new DOMElement("div", "message-pannel").CreateDOMElement(),
-        closeBtn = new DOMElement("div", "close").CreateDOMElement(),
-        pannelTitle = new DOMElement("div", "pannel-title").CreateDOMElement(),
-        messageOuter = new DOMElement("div", "message-outer").CreateDOMElement(),
-        messageList = new DOMElement("div", "message-list").CreateDOMElement();
-    
-    pannelTitle.textContent = "交友邀請";
-    closeBtn.addEventListener("click", () => {SwitchPannel("main")});
-    messageOuter.appendChild(messageList);
-    for ( let item of [closeBtn, pannelTitle, messageOuter]){
-        messagePannel.appendChild(item);
+    hasMessages = document.querySelectorAll(".message-list .item").length > 1,
+    messageBtn = document.querySelector(".setting .message");
+    if (checkAlready === false){
+        if (hasMessages) {
+            messageBtn.style.backgroundColor = "rgb(253,124,124)";
+            messageBtn.style.display = "block";
+        }
+        else{
+            messageBtn.style.backgroundColor = "";
+            messageBtn.style.display = "none";
+        }
+        return 
     }
-    document.body.appendChild(messagePannel);
+    messageBtn.style.backgroundColor = "";
+    messageBtn.style.display = "none";
 }
 
 export class MessageInfo{
