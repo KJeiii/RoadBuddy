@@ -525,7 +525,7 @@ input[name=create-team]
 }
 
 .message-outer{
-    width: 60%;
+    width: 50%;
 }
 
 .message-list .item{
@@ -543,14 +543,14 @@ input[name=create-team]
     margin: 0 5px;
 }
 
-.check-img{
+.accept-btn{
     background-image: url("./images/check.svg");
     background-position: center;
     background-repeat: no-repeat;
     width: 20px;
 }
 
-.cross-img{
+.reject-btn{
     background-image: url("./images/xmark.svg");
     background-position: center;
     background-repeat: no-repeat;
