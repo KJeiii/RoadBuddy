@@ -1,4 +1,4 @@
-import { CheckUserStatus, EmitStoreUserInfoEvent, MessageUserInfo } from "./Utils/ManageUser.js";
+import { CheckUserStatus, EmitStoreUserInfoEvent } from "./Utils/ManageUser.js";
 import { SearchTeams } from "./Utils/ManageTeam.js";
 import { SearchOldFriends } from "./Utils/ManageFriend.js";
 import { ClearList, RenderList, RenderOnlineStatus, InitializeAllPannelsTagAttributes } from "./Utils/GeneralControl.js";
@@ -7,7 +7,13 @@ import * as GeneralEvents from "./Utils/GeneralEvent.js";
 import { ManipulateSessionStorage } from "./Utils/ManageUser.js";
 import { AddTeamClickEvent, AddTeamHoverEvent } from "./Utils/TeamEvent.js";
 import { OnlineFriendInfo } from "./Utils/ManageFriend.js";
-import { SearchMessage } from "./Utils/ManageMessage.js";
+import { SearchMessage, MessageInfo } from "./Utils/ManageMessage.js";
+
+
+// create onlineFriendInfo  and messageInfo objects
+export const//
+    onlineFriendInfo = new OnlineFriendInfo(),
+    messageInfo = new MessageInfo();
 
 // ----- initialize socket.io -----
 socket.on("connect", ()=>{
@@ -75,6 +81,7 @@ socket.on("connect", ()=>{
             // 3. render message list
             SearchMessage(window.sessionStorage.getItem("user_id"))
                 .then((result) => {
+                    result.forEach((message) => {messageInfo.UpdateInfo(message)});
                     ClearList(".message-list");
                     RenderList(".message-list", result);
                 })
@@ -101,8 +108,6 @@ socket.on("connect", ()=>{
 for (let event of GeneralEvents.AllEvents) {event()}
 
 
-//4. create onlineFriendInfo object
-export const onlineFriendInfo = new OnlineFriendInfo();
 
 
 // ----- draw initial map -----
