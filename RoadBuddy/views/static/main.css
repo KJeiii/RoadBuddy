@@ -20,13 +20,12 @@ body {
 .team-list .item:hover,
 .pull-up:hover,
 .drop-down:hover,
-/* 
-.pull-up-tracking:hover,
-.drop-down-tracking:hover, */
 .nav-add-friend:hover,
 .nav-add-team:hover,
 .create-list .item:hover,
 .join-list .item:hover,
+.accept-btn,
+.reject-btn,
 button:hover
  {
     cursor: pointer;
