@@ -1,6 +1,6 @@
-import { messageInfo } from "../main.js";
 import * as DOMElements from "./DOMElements.js";
-import { ReRenderList, RenderList, ClearList } from "./GeneralControl.js";
+import { ReRenderList } from "./GeneralControl.js";
+import { ControlFriendMsgBox, SwitchPannel } from "./GeneralControl.js";
 
 // ----- build function for searching new friend -----
 export async function SearchNewFriends(username) {
