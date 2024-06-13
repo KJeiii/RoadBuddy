@@ -81,3 +81,43 @@ export function RenderMessagePannel(){
     }
     document.body.appendChild(messagePannel);
 }
+
+export class MessageInfo{
+    constructor(){}
+    messageInfo = {/*messageID: {sender: number, senderName: string, receiverID: number}*/};
+    UpdateInfo(message){  /*{message_id: number, sender_id: number, sender_name: string, receiver_id: number, receiver_name: string}*/
+        this.messageInfo = {
+            ...this.messageInfo, 
+            [message.message_id]: {
+                senderID: message.sender_id,
+                senderName: message.sender_name,
+                receiverID: message.receiver_id,
+                receiverName: message.receiver_name
+            }}
+    };
+    DeleteInfo(senderID){
+        for (const messageID in this.messageInfo){
+            if (this.messageInfo[messageID].senderID === senderID) {
+                delete this.messageInfo[messageID];
+                return
+            }
+        }
+    };
+    ShowInfo(){console.log(this.messageInfo)};
+    FindSenderName(senderID){
+        for (const messageID in this.messageInfo){
+            if (this.messageInfo[messageID].senderID === senderID){
+                return this.messageInfo[messageID].senderName
+            }
+            else{return null}
+        }
+    };
+    FindReceiverName(receiverID){
+        for (const messageID in this.messageInfo){
+            if (this.messageInfo[messageID].receiverID === receiverID){
+                return this.messageInfo[messageID].receiverName
+            }
+            else{return null}
+        }
+    };
+}
