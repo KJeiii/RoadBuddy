@@ -41,9 +41,9 @@ class FriendTool(pooling.MySQLConnectionPool):
         cursor = connection.cursor(dictionary=True)
 
         insert_string = ("insert into friends(user_id, friend_id) "
-                         "values (%s, %s)"
+                         "values (%s, %s), (%s, %s)"
                          )
-        data_string = (user_id, friend_id)
+        data_string = (user_id, friend_id, friend_id, user_id)
 
         cursor.execute(insert_string, data_string)
         connection.commit()
