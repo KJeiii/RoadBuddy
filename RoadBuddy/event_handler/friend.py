@@ -24,19 +24,7 @@ def friend_request(data):
 @socketio.on("friend_request_result")
 def friend_request_result(data):
     # organize data and emit event "friend_request_result" to client (sender)
-    sender_sid = data["sender_info"]["sid"]
-    receiver_id = sid_reference[data["receiver_sid"]]
-    receiver_info = user_info[receiver_id]
-    data = {
-        "accept": data["accept"],
-        "sender_sid": sender_sid,
-        "receiver_info": {
-            "user_id": receiver_id,
-            "username": receiver_info["username"],
-            "email": receiver_info["email"]
-        }
-    }
-    emit("friend_request_result", data, to=sender_sid)
+    emit("friend_request_result", data, to=user_info[int(data["senderID"])]["sid"])
 
 
 @socketio.on("initial_friend_status")
