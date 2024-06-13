@@ -1,4 +1,6 @@
+import { messageInfo } from "../main.js";
 import * as DOMElements from "./DOMElements.js";
+import { ReRenderList, RenderList, ClearList } from "./GeneralControl.js";
 
 // ----- build function for searching new friend -----
 export async function SearchNewFriends(username) {
@@ -152,70 +154,28 @@ export async function MakeNewFriend(myID, newFriendID){
     }
 }
 
-export function ReplyToSender(isAccept, mySocketID, newFriendSocketID, newFriendID){ //SendFriendResponse
+export function EmitFriendRequestResultEvent(isAccept, ...rest){ //SendFriendResponse
     // feedback result to sender
-    let data = {
-        accept: isAccept,
-        receiver_sid: mySocketID,
-        sender_info: {
-            sid: newFriendSocketID,
-            user_id: newFriendID,
-        }
-    };
+    const data = {accept: isAccept, ...rest[0]};
     socket.emit("friend_request_result", data);
 }
 
-export function UpdateFriends(userID, friendID){
+export function UpdateFriends(myID, ...rest){ // rest = {senderID, senderName, receiverID, receiverName}
     // receiver fetch api to add friend
-    MakeNewFriend(userID, friendID)
+    MakeNewFriend(rest[0].senderID, rest[0].receiverID)
     .then(() => {
-        SearchOldFriends(userID)
+        SearchOldFriends(myID)
             .then((oldFriendList) => {
-                ClearList(".main-pannel .friend-list");
-                RenderList(".main-pannel .friend-list", oldFriendList);
-
-                ClearList(".team-pannel .friend-list");
-                RenderList(".team-pannel .friend-list", oldFriendList);
-                
+                ReRenderList([".main-pannel .friend-list", ".team-pannel .friend-list"], oldFriendList);
                 SwitchPannel("main");
             })
             .catch((error)=>{console.log(error)})
     })
     .then(() => {
-        // update server friend_list in user_info dict
-        let//
-            friendList = [],
-            friendItems = document.querySelectorAll(".main-pannel .friend-list .item");
-        for (item of friendItems) {
-            let friend_info = {
-                user_id: item.getAttribute("id"),
-                username: item.textContent
-            };
-            friendList.push(friend_info);
-        };
-
-        const {user_id, username, email} = window.sessionStorage;
-        EmitStoreUserInfoEvent(user_id, username, email, friendList);
-    })
-    .then(() => {
         // feedback result to sender
-        ReplyToSender(
-            true, 
-            socket.id, 
-            friend_sender_info_cache.sid, //這邊會有問題，因為剛上線，申請者的資訊不會透過socket event存在receiver FE
-            friendID)
-    })
-    .then(() => {
+        EmitFriendRequestResultEvent(true, rest[0]) 
         // show response
-        ControlFriendMsgBox(".friend-response", "block",
-            {
-                accept: true,
-                senderID: friendID,
-                senderUsername: friend_sender_info_cache.username, ////這邊會有問題，因為剛上線，申請者的資訊不會透過socket event存在receiver FE
-                receiverID: userID,
-                receiverUsername: window.sessionStorage.getItem("username"),
-            }
-        )
+        ControlFriendMsgBox(".friend-response", "block", {accept: true, ...rest[0]})
     })
     .catch((error) => { console.log(error) })
 }
