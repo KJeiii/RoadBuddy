@@ -7,7 +7,7 @@ import * as GeneralEvents from "./Utils/GeneralEvent.js";
 import { ManipulateSessionStorage } from "./Utils/ManageUser.js";
 import { AddTeamClickEvent, AddTeamHoverEvent } from "./Utils/TeamEvent.js";
 import { OnlineFriendInfo } from "./Utils/ManageFriend.js";
-import { SearchMessage, MessageInfo } from "./Utils/ManageMessage.js";
+import { SearchMessage, MessageInfo, RenderMessageBtn } from "./Utils/ManageMessage.js";
 
 
 // create onlineFriendInfo  and messageInfo objects
@@ -84,6 +84,7 @@ socket.on("connect", ()=>{
                     result.forEach((message) => {messageInfo.UpdateInfo(message)});
                     ClearList(".message-list");
                     RenderList(".message-list", result);
+                    RenderMessageBtn(false);
                 })
                 .catch((error) => {console.log(
                     `Error in render message list (main.js):${error}`
