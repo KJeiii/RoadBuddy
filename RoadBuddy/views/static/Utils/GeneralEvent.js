@@ -441,6 +441,11 @@ export function AddEventToLogout() {
 export function AddEventToMessage(){
     DOMElements.message.addEventListener("click", ()=>{
         document.querySelector(".message-pannel").style.display = "flex";
+        SwitchSettingBtn({"all": "none"});
+    });
+
+    document.querySelector(".message-pannel .close").addEventListener("click", ()=>{
+        DOMElements.message.style.backgroundColor = "";
     })
 }
 
