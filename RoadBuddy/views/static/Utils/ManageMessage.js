@@ -36,7 +36,7 @@ export async function SearchMessage(userID){
     catch(error){throw error}
 }
 
-export async function DeleteMessage(userID){
+export async function DeleteMessage(senderID, receiverID){
     try{
         const response = await fetch(
             "/api/message", {
@@ -44,7 +44,7 @@ export async function DeleteMessage(userID){
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({user_id: userID})
+                body: JSON.stringify({sender_id: senderID, receiver_id: receiverID})
             });
         const result = await response.json();
         if(response.ok){return result.ok}
