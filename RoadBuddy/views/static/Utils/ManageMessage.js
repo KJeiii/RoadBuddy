@@ -55,7 +55,7 @@ export async function DeleteMessage(senderID, receiverID){
 
 export function RenderMessageBtn(checkAlready){
     const//
-    hasMessages = document.querySelectorAll(".message-list .item").length > 1,
+    hasMessages = document.querySelectorAll(".message-list .item")[0].children.length > 0,
     messageBtn = document.querySelector(".setting .message");
     if (checkAlready === false){
         if (hasMessages) {
@@ -110,4 +110,13 @@ export class MessageInfo{
             else{return null}
         }
     };
+    GetSenderList(){
+        const senderList = [];
+        for ( let messageID in this.messageInfo) {
+                senderList.push({
+                    senderID: this.messageInfo[messageID].senderID,
+                    senderName: this.messageInfo[messageID].senderName})
+            }
+        return senderList
+    }
 }
