@@ -1,7 +1,7 @@
 import * as DOMElements from "./DOMElements.js";
 import {
     SearchNewFriends, RenderSearchResult, SearchOldFriends, FetchSelectedItemIDsByCondition,
-    CheckRelationship, SendFriendRequest, MakeNewFriend, EmitFriendRequestResultEvent, UpdateFriends
+    CheckRelationship, SendFriendRequest, EmitFriendRequestResultEvent, UpdateFriends
 } from "./ManageFriend.js";
 import { 
     ControlFriendMsgBox, ClearList, RenderList, SwitchSettingBtn,
@@ -153,12 +153,12 @@ export function AddEventsToFriend() {
 
         // receiver fetch api to add friend
         const {user_id, username} = window.sessionStorage;
-        UpdateFriends(user_id, {
+        UpdateFriends(Number(user_id), {
             senderID: friend_sender_info_cache.user_id,
             senderName: friend_sender_info_cache.username,
-            receiverID: user_id,
+            receiverID: Number(user_id),
             receiverName: username
-        })
+        });
     })
 
     // if reject request
