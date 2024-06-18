@@ -83,7 +83,7 @@ socket.on("connect", ()=>{
                 .then((result) => {
                     result.forEach((message) => {messageInfo.UpdateInfo(message)});
                     ClearList(".message-list");
-                    RenderList(".message-list", result);
+                    RenderList(".message-list", messageInfo.GetSenderList());
                     RenderMessageBtn(false);
                 })
                 .catch((error) => {console.log(
