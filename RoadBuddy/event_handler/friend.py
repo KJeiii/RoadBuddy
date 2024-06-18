@@ -2,29 +2,37 @@ from flask_socketio import SocketIO, emit, send, join_room, leave_room
 from RoadBuddy import socketio
 from flask import request, session
 from RoadBuddy.event_handler import sid_reference, user_info
+from RoadBuddy.models.message import MessageTool
 
-
+messageTool = MessageTool()
 
 @socketio.on("friend_reqeust")
 def friend_request(data):
-    sender_sid = data["sender_sid"]
-    sender_id = sid_reference[sender_sid]
+    sender_id = data.get("senderID")
+    sender_sid = user_info.get(sender_id).get("sid")
 
-    for id in data["receiver_id"]:
-        sender_data = {
-            "sid": sender_sid,
-            "user_id": sender_id,
-            "username": user_info[sender_id]["username"],
-            "email": user_info[sender_id]["email"]
-        }
-        emit("friend_request", sender_data, to=user_info[id]["sid"])
-        print(f'{user_info[sender_id]["username"]} sends request to {user_info[id]["username"]}')
+    for id in data["receiverIDs"]:
+        is_receiver_online = user_info.get(id) != None
+        if is_receiver_online:
+            sender_data = {
+                "sid": sender_sid,
+                "user_id": sender_id,
+                "username": user_info[sender_id]["username"],
+                "email": user_info[sender_id]["email"]
+            }
+            emit("friend_request", sender_data, to=user_info[id]["sid"])
+            print(f'{user_info[sender_id]["username"]} sends request to {user_info[id]["username"]}')
+        else:
+            messageTool.Create_message(id, sender_id)
+
 
 
 @socketio.on("friend_request_result")
 def friend_request_result(data):
     # organize data and emit event "friend_request_result" to client (sender)
-    emit("friend_request_result", data, to=user_info[int(data["senderID"])]["sid"])
+    is_sender_online = user_info.get(int(data["senderID"])) != None
+    if is_sender_online:
+        emit("friend_request_result", data, to=user_info[int(data["senderID"])]["sid"])
 
 
 @socketio.on("initial_friend_status")
