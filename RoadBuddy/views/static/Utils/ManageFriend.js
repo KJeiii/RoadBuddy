@@ -125,12 +125,11 @@ export function CheckRelationship(selectedFriendIDs, oldFriendList){
 export function SendFriendRequest(repetitionIDs, newFriendIDs){
     // Allowed if friendship has not been built yet 
     if ( repetitionIDs.length == 0 && newFriendIDs.length !== 0 ) {
-        let sender_data = {
-            sender_sid: socket.id,
-            receiver_id: newFriendIDs
-        }
-        socket.emit("friend_reqeust", sender_data);
-        console.log(`Send request from ${window.sessionStorage.getItem("sid")}`);
+        let data = {
+            senderID: Number(window.sessionStorage.getItem("user_id")),
+            receiverIDs: newFriendIDs
+        };
+        socket.emit("friend_reqeust", data);
         return
     }
 }
@@ -163,21 +162,23 @@ export function EmitFriendRequestResultEvent(isAccept, ...rest){ //SendFriendRes
 export function UpdateFriends(myID, ...rest){ // rest = {senderID, senderName, receiverID, receiverName}
     // receiver fetch api to add friend
     MakeNewFriend(rest[0].senderID, rest[0].receiverID)
-    .then(() => {
-        SearchOldFriends(myID)
-            .then((oldFriendList) => {
-                ReRenderList([".main-pannel .friend-list", ".team-pannel .friend-list"], oldFriendList);
-                SwitchPannel("main");
-            })
-            .catch((error)=>{console.log(error)})
-    })
-    .then(() => {
-        // feedback result to sender
-        EmitFriendRequestResultEvent(true, rest[0]) 
-        // show response
-        ControlFriendMsgBox(".friend-response", "block", {accept: true, ...rest[0]})
-    })
-    .catch((error) => { console.log(error) })
+        .then(() => {
+            SearchOldFriends(myID)
+                .then((oldFriendList) => {
+                    // re-render friend list and update online status
+                    ReRenderList([".main-pannel .friend-list", ".team-pannel .friend-list"], oldFriendList);
+                    socket.emit("initial_friend_status");
+                    SwitchPannel("main");
+                })
+                .catch((error)=>{console.log(error)})
+        })
+        .then(() => {
+            // feedback result to sender
+            EmitFriendRequestResultEvent(true, rest[0]);
+            // show response
+            ControlFriendMsgBox(".friend-response", "block", {accept: true, ...rest[0]});
+        })
+        .catch((error) => { console.log(error) })
 }
 
 
