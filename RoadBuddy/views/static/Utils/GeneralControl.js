@@ -154,10 +154,11 @@ export function SwitchSettingBtn(...manualSwitch){
         }
         for (let btnsCssSelector of btnsCssSelectors){
             const// 
-                display = manualSwitch[0].btnsCssSelector,
+                display = manualSwitch[0][btnsCssSelector],
                 btn = document.querySelector(btnsCssSelector);
             btn.style.display = display;
         }
+        return
     }
 
     const//
