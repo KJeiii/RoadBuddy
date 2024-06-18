@@ -326,6 +326,7 @@ export function RenderList(listCssSelector, listItemArray) {
                 messageItem.setAttribute("class", "item");
                 messageItem.textContent = "目前沒有交友申請";
                 messageList.appendChild(messageItem);
+                return
             }
             for (let item of listItemArray) {
                 const//
@@ -336,8 +337,8 @@ export function RenderList(listCssSelector, listItemArray) {
                     rejectBtn = document.createElement("div");
 
                 messageItem.setAttribute("class", "item");
-                messageItem.setAttribute("id", item.sender_id);
-                name.textContent = item.sender_name;
+                messageItem.setAttribute("id", item.senderID);
+                name.textContent = item.senderName;
                 btnOuter.setAttribute("class", "btn-outer");
                 acceptBtn.setAttribute("class", "accept-btn");
                 rejectBtn.setAttribute("class", "reject-btn");
@@ -346,18 +347,29 @@ export function RenderList(listCssSelector, listItemArray) {
                 messageItem.append(name, btnOuter);
                 messageList.appendChild(messageItem);
                 acceptBtn.addEventListener("click", function(){
-                    UpdateFriends(Number(window.sessionStorage.getItem("user_id")), {
-                        senderID: Number(this.parentElement.parentElement.getAttribute("id")),
-                        senderName: messageInfo.FindSenderName(friendID),
-                        receiverID: Number(window.sessionStorage.getItem("user_id")),
-                        receiverName: window.sessionStorage.getItem("username")
-                    })
+                    const//
+                        {user_id, username} = window.sessionStorage,
+                        senderID = Number(this.parentElement.parentElement.getAttribute("id")),
+                        senerName = messageInfo.FindSenderName(senderID);
+                    UpdateFriends(Number(user_id), {
+                        senderID: senderID,
+                        senderName: senerName,
+                        receiverID: Number(user_id),
+                        receiverName: username
+                    });
+                    messageInfo.DeleteInfo(senderID);
+                    ReRenderList([".message-list"], messageInfo.GetSenderList());
+                    DeleteMessage(senderID,Number(user_id));
                 });
                 rejectBtn.addEventListener("click", function(){
-                    DeleteMessage(
-                        Number(this.parentElement.parentElement.getAttribute("id")), 
-                        Number(window.sessionStorage.getItem("user_id"))
-                    )
+                    const// 
+                        senderID = Number(this.parentElement.parentElement.getAttribute("id")),
+                        {user_id} = window.sessionStorage;
+                    DeleteMessage(senderID, Number(user_id))
+                        .then(()=>{
+                            messageInfo.DeleteInfo(senderID);
+                            ReRenderList([".message-list"], messageInfo.GetSenderList());
+                        })
                 })
             }
             break
