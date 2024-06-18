@@ -57,10 +57,12 @@ def Add_friend():
     if request.method == "POST": 
         try:
             user_id = int(request.json["user_id"])
+            user_name = memberTool.Search_member_by_id(user_id).get("username")
             friend_id = int(request.json["friend_id"])
-            friendTool.Add_friend(user_id,friend_id)
             friend_name = memberTool.Search_member_by_id(friend_id).get("username")
+            friendTool.Add_friend(user_id,friend_id)
             user_info.get(user_id).get("friend_list").append({"user_id":friend_id, "username": friend_name})
+            user_info.get(friend_id).get("friend_list").append({"user_id":user_id, "username": user_name})
             response = {
                 "ok": True,
                 "message": "success"
