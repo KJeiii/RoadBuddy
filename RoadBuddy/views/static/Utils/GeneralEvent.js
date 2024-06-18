@@ -7,12 +7,15 @@ import {
     ControlFriendMsgBox, ClearList, RenderList, SwitchSettingBtn,
     SwitchPullAndDropBtn, ShowPannelContent, SwitchMenuToggle, onWhichPannelContent,
     SwitchPannel, SwitchMenuTitle, isPannelPulledUp, ControlTeamMsgBox, ExpandOrClosePannel,
-    RenderOnlineStatus
+    RenderOnlineStatus,
+    ReRenderList
 } from "./GeneralControl.js";
 import { CreateNewTeam, SearchTeams, EmitEnterTeamEvent, EmitInviteTeamEvent, EmitJoinTeamRequestEvent, EmitAcceptTeamRequestEvent, EmitLeaveTeamEvent } from "./ManageTeam.js";
 import { AddTeamClickEvent, AddTeamHoverEvent } from "./TeamEvent.js";
-import { ManipulateSessionStorage, EmitStoreUserInfoEvent } from "./ManageUser.js";
+import { ManipulateSessionStorage } from "./ManageUser.js";
 import { appendPartner, BuildPartnership, UpdatePartnersColor} from "./ManagePartner.js";
+import { messageInfo } from "../main.js";
+import { RenderMessageBtn } from "./ManageMessage.js";
 
 
 export const AllEvents = [
@@ -229,6 +232,7 @@ export function AddEventsToTeam() {
         ManipulateSessionStorage("set", {team_id: document.querySelector(".team-pannel .pannel-title").getAttribute("id")})
         // switch to tracking pannel
         SwitchPannel("tracking");
+        SwitchSettingBtn({"all":"none"});
         // Organize data emitted to listener "enter_team" on server
         const//
             selectedItemsFrom = FetchSelectedItemIDsByCondition(null),
@@ -338,11 +342,17 @@ export function AddEventsToTeam() {
             window.sessionStorage.getItem("team_id"),
             leaderSID
         );
+        // re-render message list
+        ReRenderList([".message-list"], messageInfo.GetSenderList());
         // switch to mainPannel
         SwitchPannel("main");
         ExpandOrClosePannel(".main-pannel", "close");
         ShowPannelContent(".main-pannel", "team", false);
-        SwitchSettingBtn({all: "none"});
+        SwitchSettingBtn({".message": "block",
+                          ".logout": "none",
+                          ".invite": "none",
+                          ".leave": "none" });
+        RenderMessageBtn(false);
         // remove all partner in the tracking pannel
         ClearList(".tracking-pannel .partner-list");
     })
