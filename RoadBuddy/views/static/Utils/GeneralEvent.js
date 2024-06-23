@@ -14,8 +14,8 @@ import { CreateNewTeam, SearchTeams, EmitEnterTeamEvent, EmitInviteTeamEvent, Em
 import { AddTeamClickEvent, AddTeamHoverEvent } from "./TeamEvent.js";
 import { ManipulateSessionStorage } from "./ManageUser.js";
 import { appendPartner, BuildPartnership, UpdatePartnersColor} from "./ManagePartner.js";
-import { messageInfo } from "../main.js";
-import { RenderMessageBtn } from "./ManageMessage.js";
+import { messageInfo, onlineUserInfo } from "../main.js";
+import { RenderMessageBtn, SearchMessage } from "./ManageMessage.js";
 
 
 export const AllEvents = [
@@ -132,7 +132,17 @@ export function AddEventsToFriend() {
             return
         }
 
-        SearchOldFriends(window.sessionStorage.getItem("user_id"))
+        // update information for following execution: onlineUserInfo and messageInfo
+        const userID = Number(window.sessionStorage.getItem("user_id")); 
+        onlineUserInfo.EmitSyncOnlineUserEvent();
+        SearchMessage(userID)
+            .then((messages)=>{
+                messages.forEach(message => messageInfo.UpdateInfo(message))
+            })
+            .catch((error) => console.log(error))
+        
+        // sending requests
+        SearchOldFriends(userID)
             .then((oldFriendsList) => {
                 let { repetitionIDs, newFriendIDs } = CheckRelationship(selectedFriedIDs, oldFriendsList);
                 SendFriendRequest(repetitionIDs, newFriendIDs);
