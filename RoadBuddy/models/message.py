@@ -26,16 +26,16 @@ class MessageTool(pooling.MySQLConnectionPool):
         connection.close() 
 
 
-    def Create_message(self, receiver_id:int, sender_id:int) -> None:
+    def Create_message(self, sender_id:int, receiver_id_list: list) -> None:
         connection = self.get_connection()
         cursor = connection.cursor(dictionary=True)
 
-        create_string = ("insert into message (receiver_id, sender_id) "
+        create_string = ("insert into message (sender_id, receiver_id) "
                          "values (%s, %s)"
                          )
-        data_string = (receiver_id, sender_id)
+        data_string = [(sender_id, receiver_id) for receiver_id in receiver_id_list]
 
-        cursor.execute(create_string, data_string)
+        cursor.executemany(create_string, data_string)
         connection.commit()
         connection.close() 
 
