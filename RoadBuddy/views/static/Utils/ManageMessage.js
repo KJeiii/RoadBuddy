@@ -1,6 +1,5 @@
-import { SwitchPannel } from "./GeneralControl.js";
 
-export async function StoreMessage(userID, fromUserID){
+export async function CreateMessage(senderID, receiverIDArray){
     try{
         const response = await fetch(
             "/api/message", {
@@ -9,8 +8,8 @@ export async function StoreMessage(userID, fromUserID){
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    user_id: userID,
-                    from_user_id: fromUserID
+                    senderID: senderID,
+                    receiverIDArray: receiverIDArray
                 })});
         const result = await response.json();
         if (response.ok){return result.ok};
@@ -113,10 +112,28 @@ export class MessageInfo{
     GetSenderList(){
         const senderList = [];
         for ( let messageID in this.messageInfo) {
-                senderList.push({
-                    senderID: this.messageInfo[messageID].senderID,
-                    senderName: this.messageInfo[messageID].senderName})
+            const sentFromMe = this.messageInfo[messageID].senderID === Number(window.sessionStorage.getItem("user_id"));
+            if (sentFromMe){continue}
+            senderList.push({
+                senderID: this.messageInfo[messageID].senderID,
+                senderName: this.messageInfo[messageID].senderName})
             }
         return senderList
+    };
+    isSentAlready(senderID, receiverID){
+        let isSentAlready = false;
+        for ( const messageID in this.messageInfo){
+            const//
+                senderIDExists = this.messageInfo[messageID].senderID === senderID,
+                receiverIDExists = this.messageInfo[messageID].receiverID === receiverID;
+            if (senderIDExists && receiverIDExists) {isSentAlready = true}
+        }
+        return isSentAlready
+    };
+    ExtractNotYetRequestedUsers(userIDArray){
+        return userIDArray.filter((userID) => {
+            const isSentAlready = this.isSentAlready(Number(window.sessionStorage.getItem("user_id")), userID);
+            if (!isSentAlready){return userID}
+        })
     }
 }
