@@ -1,10 +1,10 @@
-import { CheckUserStatus, EmitStoreUserInfoEvent } from "./Utils/ManageUser.js";
+import { CheckUserStatus } from "./Utils/ManageUser.js";
 import { SearchTeams } from "./Utils/ManageTeam.js";
 import { SearchOldFriends } from "./Utils/ManageFriend.js";
 import { ClearList, RenderList, RenderOnlineStatus, InitializeAllPannelsTagAttributes } from "./Utils/GeneralControl.js";
-import { DrawMap, UserCoordError } from "./Utils/DrawMap.js";
+import { DrawMap } from "./Utils/DrawMap.js";
 import * as GeneralEvents from "./Utils/GeneralEvent.js";
-import { ManipulateSessionStorage } from "./Utils/ManageUser.js";
+import { ManipulateSessionStorage, OnlineUserInfo } from "./Utils/ManageUser.js";
 import { AddTeamClickEvent, AddTeamHoverEvent } from "./Utils/TeamEvent.js";
 import { OnlineFriendInfo } from "./Utils/ManageFriend.js";
 import { SearchMessage, MessageInfo, RenderMessageBtn } from "./Utils/ManageMessage.js";
@@ -13,7 +13,8 @@ import { SearchMessage, MessageInfo, RenderMessageBtn } from "./Utils/ManageMess
 // create onlineFriendInfo  and messageInfo objects
 export const//
     onlineFriendInfo = new OnlineFriendInfo(),
-    messageInfo = new MessageInfo();
+    messageInfo = new MessageInfo(),
+    onlineUserInfo = new OnlineUserInfo();
 
 // ----- initialize socket.io -----
 socket.on("connect", ()=>{
@@ -22,21 +23,20 @@ socket.on("connect", ()=>{
         .then((result) => {
             if (!result.ok){window.location.replace("/member")};
 
-            let data = result.data;
+            const {user_id:userID, username} = result.data;
+            // EmitStoreUserInfoEvent(userID, username, email, oldFriendList);
             // update main-pannel description
             let description = document.querySelector(".main-pannel .description").textContent;
-            document.querySelector(".main-pannel .description").textContent = description + ` ${data.username}`;
+            document.querySelector(".main-pannel .description").textContent = description + ` ${username}`;
             
             // store user info
             sidArray.push(socket.id);
             ManipulateSessionStorage("clear");
-            ManipulateSessionStorage("set", {...data, sid: socket.id})
+            ManipulateSessionStorage("set", {...result.data, sid: socket.id})
             
             // render friend list
-            SearchOldFriends(data.user_id)
+            SearchOldFriends(userID)
                 .then((oldFriendList) => {
-                        const {user_id, username, email} = data;
-                        EmitStoreUserInfoEvent(user_id, username, email, oldFriendList);
                         socket.emit("initial_team_status");
                         ManipulateSessionStorage("set", {friendList: JSON.stringify(oldFriendList)})
                         // window.sessionStorage.setItem("friendList", JSON.stringify(oldFriendList))
@@ -52,7 +52,7 @@ socket.on("connect", ()=>{
             
             // render team list
             // 1. created team list
-            SearchTeams(data.user_id, "created")
+            SearchTeams(userID, "created")
                 .then((result) => {
                     createdTeamArray = [...result.createdTeamList];
                     ClearList(".create-list");
@@ -65,7 +65,7 @@ socket.on("connect", ()=>{
                 ))
                 
             // 2. joined team list 
-            SearchTeams(data.user_id, "joined")
+            SearchTeams(userID, "joined")
                 .then((result) => {
                     joinedTeamArray = [...result.joinedTeamList];
                     ClearList(".join-list");
@@ -79,7 +79,7 @@ socket.on("connect", ()=>{
                 ))
 
             // 3. render message list
-            SearchMessage(window.sessionStorage.getItem("user_id"))
+            SearchMessage(userID)
                 .then((result) => {
                     result.forEach((message) => {messageInfo.UpdateInfo(message)});
                     ClearList(".message-list");
