@@ -60,3 +60,20 @@ export function EmitStoreUserInfoEvent(userID, username, email, friendList){
     };
     socket.emit("store_userinfo", userInfo);
 }
+
+export class OnlineUserInfo{
+    constructor(){}
+    onlineUserIDs = [];
+    AppendUserID(...rest){
+        const onlineUserIDArray = rest[0];
+        onlineUserIDArray.forEach((userID) => {
+            !this.onlineUserIDs.includes(userID) && this.onlineUserIDs.push(userID)
+        })
+    }
+    EmitSyncOnlineUserEvent(){
+        socket.emit("sync_online_user")
+    }
+    GetOnlineUserIDArray(){
+        return this.onlineUserIDs
+    }
+}
