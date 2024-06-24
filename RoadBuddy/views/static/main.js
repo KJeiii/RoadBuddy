@@ -4,7 +4,7 @@ import { SearchOldFriends } from "./Utils/ManageFriend.js";
 import { ClearList, RenderList, RenderOnlineStatus, InitializeAllPannelsTagAttributes } from "./Utils/GeneralControl.js";
 import { DrawMap } from "./Utils/DrawMap.js";
 import * as GeneralEvents from "./Utils/GeneralEvent.js";
-import { ManipulateSessionStorage, OnlineUserInfo } from "./Utils/ManageUser.js";
+import { ManipulateSessionStorage, OnlineUserInfo, EmitUpdateOnlineStatusEvents } from "./Utils/ManageUser.js";
 import { AddTeamClickEvent, AddTeamHoverEvent } from "./Utils/TeamEvent.js";
 import { OnlineFriendInfo } from "./Utils/ManageFriend.js";
 import { SearchMessage, MessageInfo, RenderMessageBtn } from "./Utils/ManageMessage.js";
@@ -33,11 +33,15 @@ socket.on("connect", ()=>{
             sidArray.push(socket.id);
             ManipulateSessionStorage("clear");
             ManipulateSessionStorage("set", {...result.data, sid: socket.id})
+
             
             // render friend list
             SearchOldFriends(userID)
                 .then((oldFriendList) => {
                         socket.emit("initial_team_status");
+                        // fetch online friendsArray and notify own online status
+                        EmitUpdateOnlineStatusEvents();
+                        
                         ManipulateSessionStorage("set", {friendList: JSON.stringify(oldFriendList)})
                         // window.sessionStorage.setItem("friendList", JSON.stringify(oldFriendList))
                         ClearList(".main-pannel .friend-list");
