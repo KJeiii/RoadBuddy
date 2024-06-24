@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, request, jsonify
 from RoadBuddy.models import member
+import RoadBuddy.event_handler
 from werkzeug.security import generate_password_hash, check_password_hash
 import datetime as dt
 import jwt, os
@@ -89,10 +90,23 @@ def Login():
             if "Bearer" in JWT_in_headers:
                 JWT = JWT_in_headers[1]
                 jwt_payload = jwt.decode(JWT, os.environ.get("jwtsecret"),"HS256")
+                user_id = jwt_payload["usi"]
+                username = jwt_payload["usn"]
+                email = jwt_payload["eml"]
+
+                RoadBuddy.event_handler.sid_reference[RoadBuddy.event_handler.my_sid] = user_id
+                RoadBuddy.event_handler.user_info[user_id] = {
+                    "sid": RoadBuddy.event_handler.my_sid,
+                    "username": username,
+                    "email": email,
+                    "team_id": None,
+                    "messages": []
+                }
+                
                 response = {
-                    "user_id": jwt_payload["usi"],
-                    "username": jwt_payload["usn"],
-                    "email": jwt_payload["eml"]
+                    "user_id": user_id,
+                    "username": username,
+                    "email": email
                 }
                 return jsonify(response), 200
         
