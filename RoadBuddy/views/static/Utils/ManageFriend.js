@@ -208,6 +208,10 @@ export function UpdateFriends(myID, ...rest){ // rest = {senderID, senderName, r
         .catch((error) => { console.log(error) })
 }
 
+export function EmitUpdateOnlineStatusEvents(){
+    socket.emit("initial_friend_status");
+    socket.emit("online_friend_status");
+}
 
 export class OnlineFriendInfo{
     constructor(){};

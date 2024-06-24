@@ -61,11 +61,6 @@ export function EmitStoreUserInfoEvent(userID, username, email, friendList){
     socket.emit("store_userinfo", userInfo);
 }
 
-export function EmitUpdateOnlineStatusEvents(){
-    socket.emit("initial_friend_status");
-    socket.emit("online_friend_status");
-}
-
 export class OnlineUserInfo{
     constructor(){}
     onlineUserIDs = [];
