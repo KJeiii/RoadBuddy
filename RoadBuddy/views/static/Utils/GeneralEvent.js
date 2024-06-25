@@ -345,24 +345,27 @@ export function AddEventsToTeam() {
     // ----- emit leave team event to listener "leave_team" on server-----
     DOMElements.leaveTeamBtn.addEventListener("click", ()=> {
         // emit socket event "leave_team"
-        const leaderSID = ( team_sender_info_cache === undefined ) ? socket.id : team_sender_info_cache["sid"];
-        EmitLeaveTeamEvent(
-            socket.id,
-            window.sessionStorage.getItem("user_id"),
-            window.sessionStorage.getItem("team_id"),
-            leaderSID
-        );
+        const//
+            leaderSID = ( team_sender_info_cache === undefined ) ? socket.id : team_sender_info_cache["sid"],
+            userID = Number(window.sessionStorage.getItem("user_id")),
+            teamID = window.sessionStorage.getItem("team_id");
+        EmitLeaveTeamEvent(socket.id, userID, teamID, leaderSID);
+
         // re-render message list
-        ReRenderList([".message-list"], messageInfo.GetSenderList());
+        SearchMessage(userID)
+            .then((messages) => {
+                messages.forEach((message) => {messageInfo.UpdateInfo(message)})
+                ReRenderList([".message-list"], messageInfo.GetSenderList());
+                SwitchSettingBtn({"all": "none"});
+                RenderMessageBtn(false);
+            })
+            .catch((error) => {console.log(error)})
+
         // switch to mainPannel
         SwitchPannel("main");
         ExpandOrClosePannel(".main-pannel", "close");
         ShowPannelContent(".main-pannel", "team", false);
-        SwitchSettingBtn({".message": "block",
-                          ".logout": "none",
-                          ".invite": "none",
-                          ".leave": "none" });
-        RenderMessageBtn(false);
+
         // remove all partner in the tracking pannel
         ClearList(".tracking-pannel .partner-list");
     })
