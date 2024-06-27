@@ -31,7 +31,6 @@ def friend_request(data):
     if len(receivers_in_travel) != 0:
         messageTool.Create_message(sender_id, receivers_in_travel)
         RoadBuddy.event_handler.user_info[sender_id]["message"] = messageTool.Search_message(sender_id)
-        emit("update_message", to=RoadBuddy.event_handler.user_info.get(sender_id).get("sid"))
 
 
 
