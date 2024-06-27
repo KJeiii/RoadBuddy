@@ -1,5 +1,3 @@
-import * as DOMElements from "../Utils/DOMElements.js";
-
 // test user's position by select position from randomPosition
 let randomCoords = {
     latitude: 24.982 + Math.random()*0.006,
