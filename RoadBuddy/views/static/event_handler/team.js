@@ -29,18 +29,14 @@ socket.on("enter_team", (data) => {
     // }
 
     // Emit event "postion" with the position data from team owner or friends invited by owner
-    let positionData = {
-        sid : sessionStorage.getItem("sid"),
-        user_id : sessionStorage.getItem("user_id"),
-        username : sessionStorage.getItem("username"),
-        email : sessionStorage.getItem("email"),
-        team_id : sessionStorage.getItem("team_id"), 
+    const positionData = {
+        ...window.sessionStorage,
         coord : {
             latitude: initialCoord.latitude,
             longitude: initialCoord.longitude
         }
     };
-
+    delete positionData["friendList"];
     socket.emit("position", positionData);
 })
 
