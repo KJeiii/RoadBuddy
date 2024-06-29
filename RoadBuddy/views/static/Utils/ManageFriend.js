@@ -137,9 +137,13 @@ function SeperateUserByOnlineStatus(userArrayToSentRequest, onlineUserArray){
 
 export function SendFriendRequest(repetitionIDs, newFriendIDs){
     if ( repetitionIDs.length == 0 && newFriendIDs.length !== 0 ) {
+        // sync online users array at first
+        onlineUserInfo.EmitSyncOnlineUserEvent();
+
         const//
             senderID = Number(window.sessionStorage.getItem("user_id")), 
             [onlineUserArray, offlineUserArray] = SeperateUserByOnlineStatus(newFriendIDs, onlineUserInfo.GetOnlineUserIDArray())
+            
         // send message if users are online
         let data = {
             senderID: senderID,
@@ -147,16 +151,19 @@ export function SendFriendRequest(repetitionIDs, newFriendIDs){
         };
         socket.emit("friend_reqeust", data);
 
-        // send message if users are offline
-        CreateMessage(senderID, messageInfo.ExtractNotYetRequestedUsers(offlineUserArray))
-            .then(()=>{
-                SearchMessage(senderID)
-                    .then((result) => {
-                        result.forEach((message) => {messageInfo.UpdateInfo(message)});
-                    })
-                    .catch((error) => {console.log("Error occured at messageInfo.UpdateInfo(message) in ManageFriend.js:", error)})
-            })
-            .catch((error) => {console.log("Error occured at CreateMessage() in ManageFriend.js:", error)})
+        // send message if users are offline and have not been sent request yet
+        const notYetRequestedUsers = messageInfo.ExtractNotYetRequestedUsers(offlineUserArray);
+        if (notYetRequestedUsers.length !== 0) {
+            CreateMessage(senderID, notYetRequestedUsers)
+                .then(()=>{
+                    SearchMessage(senderID)
+                        .then((result) => {
+                            result.forEach((message) => {messageInfo.UpdateInfo(message)});
+                        })
+                        .catch((error) => {console.log("Error occured at messageInfo.UpdateInfo(message) in ManageFriend.js:", error)})
+                })
+                .catch((error) => {console.log("Error occured at CreateMessage() in ManageFriend.js:", error)})
+        }
         return
     }
 }
