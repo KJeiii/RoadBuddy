@@ -310,13 +310,12 @@ export function AddEventsToTeam() {
 
         // Organize data emitted to listener "enter_team" on server
         EmitEnterTeamEvent(true, "join", team_sender_info_cache.team_id);
-        ManipulateSessionStorage("set", team_sender_info_cache["team_id"]);
-        // window.sessionStorage.setItem("team_id", team_sender_info_cache["team_id"])
+        ManipulateSessionStorage("set", {team_id: team_sender_info_cache["team_id"]});
 
         // Create partner record in partner table in database
-        BuildPartnership(window.sessionStorage.getItem("user_id"), team_sender_info_cache.team_id)
+        BuildPartnership(Number(window.sessionStorage.getItem("user_id")), team_sender_info_cache.team_id)
             .then((result) => {
-                SearchTeams(window.sessionStorage.getItem("user_id"), "joined")
+                SearchTeams(Number(window.sessionStorage.getItem("user_id")), "joined")
                     .then((result) => {
                         joinedTeamArray = [...result.joinedTeamList];
                         ClearList(".join-list");
