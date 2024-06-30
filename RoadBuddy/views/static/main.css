@@ -556,6 +556,50 @@ input[name=create-team]
     width: 20px;
 }
 
+/* configure pannel */
+.configure-pannel{
+    display: flex; /*flex*/
+    flex: none;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    position: absolute;
+    top: 10vh;
+    left: 25vw;
+    z-index: 2000;
+    width: 50vw;
+    height: 55vh;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 2px;
+}
+
+.configure-outer .image{
+    background-image: url("../static/images/wally.jpeg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 15vw;
+    height: 15vh;
+    margin: 10px auto;
+}
+
+.configure-form-username,
+.configure-form-email,
+.configure-form-password{
+    display: flex;
+    justify-content: space-between;
+    width: 35vw;
+}
+
+.configure-form p {
+    margin: 5px 0;
+}
+
+.configure-form p.value{
+    color: grey;
+}
+
 /* ------ socket friend and team request ------ */
 .friend-prompt,
 .team-invite-prompt
@@ -615,10 +659,6 @@ input[name=create-team]
 }
 
 /* ----- tracking pannel ----- */
-/* .main-pannel {
-    display: none;
-} */
-
 .tracking-pannel {
     display: none;
     position: absolute;
