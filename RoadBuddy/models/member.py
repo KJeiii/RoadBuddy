@@ -45,7 +45,6 @@ class MemberTool(pooling.MySQLConnectionPool):
         cursor.execute(search_string, data_string)
         result = cursor.fetchall()
         connection.close()
-
         return result
     
 
@@ -61,9 +60,9 @@ class MemberTool(pooling.MySQLConnectionPool):
         cursor.execute(search_string, data_string)
         result = cursor.fetchall()
         connection.close()
-
         return result        
     
+
     def Search_member_by_id(self, user_id: int) -> list:
         connection = self.get_connection()
         cursor = connection.cursor(dictionary=True)
@@ -76,7 +75,6 @@ class MemberTool(pooling.MySQLConnectionPool):
         cursor.execute(search_string, data_string)
         result = cursor.fetchall()[0]
         connection.close()
-
         return result    
 
         
@@ -92,6 +90,40 @@ class MemberTool(pooling.MySQLConnectionPool):
                     
         cursor.execute(update_string, data_string)
         connection.commit()
+        connection.close()
+
+
+    def Update_basic_info(self, user_id: int, username: str, email: str, image: str):
+        connection = self.get_connection()
+        cursor = connection.cursor(dictionary = True)
+
+        update_string = (
+                        "update member "
+                        "set username = if(username != %s, %s, username) "
+                        "email = if(email != %s, %s , email) "
+                        "image = %s "
+                        "where user_id = %s"
+                        )
+        data_string = (username, username, email, email, image, user_id)
+
+        cursor.execute(update_string, data_string)
+        cursor.commit()
+        connection.close()
+
+
+    def Update_password(self, user_id: int, password:str):
+        connection = self.get_connection()
+        cursor = connection.cursor(dictionary = True)
+
+        update_string = (
+                        "update member "
+                        "set password = %s "
+                        "where user_id = %s"
+                        )
+        data_string = (password, user_id)
+
+        cursor.execute(update_string, data_string)
+        cursor.commit()
         connection.close()
 
 
