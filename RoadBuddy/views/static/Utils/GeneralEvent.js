@@ -16,18 +16,45 @@ import { ManipulateSessionStorage } from "./ManageUser.js";
 import { appendPartner, BuildPartnership, UpdatePartnersColor} from "./ManagePartner.js";
 import { messageInfo, onlineUserInfo } from "../main.js";
 import { RenderMessageBtn, SearchMessage } from "./ManageMessage.js";
+import { PreviewAvatar } from "./ManageConfigure.js";
 
 
 export const AllEvents = [
     AddEventsToSetting, AddEventsToSwitchPannelContent, AddEventsToFriend,
-    AddEventsToTeam, AddEventsToPullAndDrop, AddEventToClose, AddEventToLogout,
-    AddEventToMessage
+    AddEventsToTeam, AddEventsToPullAndDrop, AddEventToClose
 ]
 
 
 export function AddEventsToSetting() {
     // ----- toggle down setting  -----
     DOMElements.settingBtn.addEventListener("click", ()=>{SwitchSettingBtn()})
+
+    // ----- logout button -----
+    DOMElements.logout.addEventListener("click", () => {
+        window.localStorage.removeItem("token");
+        window.location.replace("/member");
+    })
+
+    // ----- message button -----
+    DOMElements.message.addEventListener("click", ()=>{
+        document.querySelector(".message-pannel").style.display = "flex";
+        SwitchSettingBtn({"all": "none"});
+    });
+
+    document.querySelector(".message-pannel .close").addEventListener("click", ()=>{
+        DOMElements.message.style.backgroundColor = "";
+    })
+
+    // ------ configure button -----
+    const avatarInput = document.querySelector("input#avatar");
+    avatarInput.addEventListener("change", PreviewAvatar);
+
+    const modifyButton = document.querySelector("img.modify");
+    modifyButton.addEventListener("click", ()=>{
+        const disabledStatus = document.querySelector("input#username").disabled;
+        document.querySelector("input#username").disabled = !disabledStatus;
+    })
+
 }
 
 
@@ -453,21 +480,4 @@ export function AddEventToClose() {
     };
 }
 
-export function AddEventToLogout() {
-    DOMElements.logout.addEventListener("click", () => {
-        window.localStorage.removeItem("token");
-        window.location.replace("/member");
-    })
-}
-
-export function AddEventToMessage(){
-    DOMElements.message.addEventListener("click", ()=>{
-        document.querySelector(".message-pannel").style.display = "flex";
-        SwitchSettingBtn({"all": "none"});
-    });
-
-    document.querySelector(".message-pannel .close").addEventListener("click", ()=>{
-        DOMElements.message.style.backgroundColor = "";
-    })
-}
 
