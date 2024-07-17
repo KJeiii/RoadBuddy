@@ -649,6 +649,34 @@ div.button button{
     font-weight: bold;
 }
 
+.configure-response {
+    display: flex; 
+    flex: none;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    position: absolute;
+    top: 10vh;
+    left: 37.5vw;
+    z-index: 2000;
+    width: 25vw;
+    height: 25vh;
+    background-color: wheat;
+    border-radius: 10px;
+    box-shadow: 2px;
+}
+
+.configure-response p{
+    padding: 0;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.configure-response img{
+    width: 60px;
+    height: 60px;
+}
+
 /* ------ socket friend and team request ------ */
 .friend-prompt,
 .team-invite-prompt
