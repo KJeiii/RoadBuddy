@@ -16,7 +16,7 @@ import { ManipulateSessionStorage } from "./ManageUser.js";
 import { appendPartner, BuildPartnership, UpdatePartnersColor} from "./ManagePartner.js";
 import { messageInfo, onlineUserInfo } from "../main.js";
 import { RenderMessageBtn, SearchMessage } from "./ManageMessage.js";
-import { PreviewAvatar } from "./ManageConfigure.js";
+import { CollectUpdateBasicInfo, PreviewAvatar, RenderUpdateResult, UpdateBasicInfo } from "./ManageConfigure.js";
 
 
 export const AllEvents = [
@@ -46,13 +46,38 @@ export function AddEventsToSetting() {
     })
 
     // ------ configure button -----
+    // preview avatar
     const avatarInput = document.querySelector("input#avatar");
     avatarInput.addEventListener("change", PreviewAvatar);
 
+    // Be albe to modify username
     const modifyButton = document.querySelector("img.modify");
     modifyButton.addEventListener("click", ()=>{
         const disabledStatus = document.querySelector("input#username").disabled;
         document.querySelector("input#username").disabled = !disabledStatus;
+    })
+
+    // Sending request
+    const confirmUpdateBasicBtn = document.querySelector("button.update-basic");
+    confirmUpdateBasicBtn.addEventListener("click", ()=>{
+        UpdateBasicInfo(CollectUpdateBasicInfo())
+            .then((updateResult)=>{
+                // pop up prompt to show update success
+                RenderUpdateResult(updateResult.ok);
+
+                // re-render username and avatar in the configure pannel and main pannel
+                document.querySelector("div.configure-form-username input#username-to-update").value = updateResult.username;
+                document.querySelector("div.configure-outer div.image").style.backgroundImage = `url(${updateResult.image_url})`;
+                document.querySelector(".user-info .description").textContent = `Here we go! ${updateResult.username}`;
+                document.querySelector(".user-info .icon").style.backgroundImage = `url(${updateResult.image_url})`;
+
+                // update username in sessionStorage
+                ManipulateSessionStorage("set", {username: updateResult.username});
+            })
+            .catch((updateResult)=>{
+                RenderUpdateResult(updateResult.ok);
+                console.log(updateResult.message)
+            })
     })
 
 }
