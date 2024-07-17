@@ -181,7 +181,8 @@ def update_basic_info():
                 username_to_update = username_to_update,
                 image_url_to_update = image_url_to_update
             )
-            return jsonify({"ok": True}), 200
+            response = {"ok": True, "username": username_to_update, "image_url": image_url_to_update}
+            return jsonify(response), 200
         
         except Exception as error:
             print("Failed to update basic information: ", error)
