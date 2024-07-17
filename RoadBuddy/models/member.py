@@ -93,25 +93,39 @@ class MemberTool(pooling.MySQLConnectionPool):
         connection.close()
 
 
-    def Update_basic_info(self, user_id: int, username: str, email: str, image: str):
+    def Update_basic_info(self, user_id: int, username_to_update: str, image_url_to_update: str):
         connection = self.get_connection()
         cursor = connection.cursor(dictionary = True)
 
         update_string = (
                         "update member "
                         "set username = if(username != %s, %s, username) "
-                        "email = if(email != %s, %s , email) "
-                        "image = %s "
+                        "image_url = if(image_url != %s, %s, image_url) "
+                        "where user_id = %s"
+                        )\
+                        if image_url_to_update != "" else\
+                        (
+                        "update member "
+                        "set username = if(username != %s, %s, username) "
                         "where user_id = %s"
                         )
-        data_string = (username, username, email, email, image, user_id)
+        data_string = (
+                       username_to_update, username_to_update, 
+                       image_url_to_update, image_url_to_update, 
+                       user_id
+                       ) \
+                        if image_url_to_update != "" else\
+                       (
+                       username_to_update, username_to_update, 
+                       user_id
+                       )
 
         cursor.execute(update_string, data_string)
-        cursor.commit()
+        connection.commit()
         connection.close()
 
 
-    def Update_password(self, user_id: int, password:str):
+    def Update_password(self, user_id: int, password_to_update:str):
         connection = self.get_connection()
         cursor = connection.cursor(dictionary = True)
 
@@ -120,13 +134,13 @@ class MemberTool(pooling.MySQLConnectionPool):
                         "set password = %s "
                         "where user_id = %s"
                         )
-        data_string = (password, user_id)
+        data_string = (password_to_update, user_id)
 
         cursor.execute(update_string, data_string)
-        cursor.commit()
+        connection.commit()
         connection.close()
 
-
-# test = MemberTool()
-# print(test.Search_member(email="123@mail"))
+if __name__ == "__main__":
+    test = MemberTool()
+    print(test.Search_member(email="123@mail"))
 
