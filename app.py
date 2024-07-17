@@ -8,8 +8,9 @@ from RoadBuddy.event_handler.connect import *
 from RoadBuddy.event_handler.friend import *
 from RoadBuddy.event_handler.team import *
 from RoadBuddy.event_handler.tracking import *
+import dotenv
 
-
+dotenv.load_dotenv()
 app.register_blueprint(member_bp)
 app.register_blueprint(friend_bp)
 app.register_blueprint(team_bp)
