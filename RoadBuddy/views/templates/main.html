@@ -176,24 +176,28 @@
             <div class="close"></div>
             <div class="pannel-title">個人資料</div>
             <div class="configure-outer">
-                <div class="image"></div>
+                <div class="image">
+                    <label for="avatar" class="avatar"></label>
+                    <input type="file" name="avatar" id="avatar">
+                </div>
                 <div class="configure-form">
-                    <div class="configure-form-username">
-                        <p class="item">姓名</p>
-                        <p class="value">username > </p>
-                    </div>
                     <div class="configure-form-email">
-                        <p class="item">信箱</p>
-                        <p class="value">123@mail > </p>
+                        <div class="item">信箱</div>
+                        <div class="value">123@mail</div>
+                        <div></div>
                     </div>
-                    <div class="configure-form-password">
-                        <p class="item">密碼</p>
-                        <p class="value">****** > </p>
+                    <div class="configure-form-username">
+                        <label for="username">姓名</label>
+                        <input id="username" type="text" value="test1" disabled>
+                        <img src="../static/images/modify.svg" alt="modify.svg" class="modify">
                     </div>
+                </div>
+                <div class="button">
+                    <button class="update-password">更改密碼</button>
+                    <button class="update-basic">確認修改基本資料</button>
                 </div>
             </div>
         </div>
-
     </div>
 
     <div class="alert">
@@ -202,6 +206,13 @@
         <button class="alert">send</button>
         <button class="leave">leave</button>
     </div>
+
+    <!-- <div>
+        <input type="text" class="test-username" name="test-username">
+        <input class="avatar" type="file" name="avatar">
+        <button class="avatar-submit">Submit!!</button>
+    </div> -->
+
     <script>
         // build global variables
         let//
@@ -221,6 +232,25 @@
 
         //initialize socket.io
         let socket = io();
+
+        //test file uploadind
+//         const avatarSubmit = document.querySelector(".avatar-submit");
+//         avatarSubmit.addEventListener("click", ()=>{
+//             const avatarImgFile = document.querySelector(".avatar").files[0];
+//             const username = document.querySelector(".test-username").value;
+//             const formData = new FormData();
+//             formData.append("avatar", avatarImgFile, avatarImgFile.filename);
+//             formData.append("username", username);
+// ;
+//             fetch("/api/member/update/test", {
+//                     method: "PATCH",
+//                     //headers: {"Content-Type": "multipart/form-data"}, //*** browser會在尾巴加上boundary=----WebKitFormBoundary"XXXXXXXX流水碼"
+//                     body: formData
+//                 })
+//                     .then((response) => response.json())
+//                     .then((result) => {console.log(result)})
+//         })
+
     </script>
     <script type="module" src="../static/main.js"></script>
     <script type="module" src="../static/event_handler/connect.js"></script>
