@@ -24,11 +24,13 @@ body {
 .nav-add-team:hover,
 .create-list .item:hover,
 .join-list .item:hover,
-.accept-btn,
-.reject-btn,
+.accept-btn:hover,
+.reject-btn:hover,
 button:hover,
-.configure-form p.value
-.configure-form image
+.configure-form p.value:hover,
+.configure-form image:hover,
+label.avatar:hover,
+img.modify:hover
  {
     cursor: pointer;
 }
@@ -560,7 +562,7 @@ input[name=create-team]
 
 /* configure pannel */
 .configure-pannel{
-    display: flex; /*flex*/
+    display: flex; 
     flex: none;
     flex-direction: column;
     justify-content: start;
@@ -586,6 +588,21 @@ input[name=create-team]
     margin: 10px auto;
 }
 
+input#avatar{
+    display: none;
+}
+
+label.avatar{
+    position: absolute;
+    left: 35vw;
+    background-image: url("../static/images/modify.svg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 20px;
+    height: 20px;
+}
+
 .configure-form-username,
 .configure-form-email,
 .configure-form-password{
@@ -600,6 +617,36 @@ input[name=create-team]
 
 .configure-form p.value{
     color: grey;
+}
+
+.configure-form-username img,
+.configure-form-email div:nth-child(3){
+    width: 20px;
+    height: 20px;
+}
+
+.configure-form-username input{
+    font-size: 15px;
+    text-align: center;
+}
+
+div.button{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    justify-content: center;
+    margin: 15px 0;
+}
+
+div.button button{
+    margin: 5px 0;
+    width: 28vw;
+    border-radius: 5px;
+    border-style: none;
+    opacity: 0.7;    
+    background-color: rgb(234, 234, 234);
+    font-weight: bold;
 }
 
 /* ------ socket friend and team request ------ */
