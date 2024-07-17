@@ -142,14 +142,14 @@ def update_basic_info():
                 user_id, username, email = Decode_JWT_Token(JWT_in_headers[1]).values()
 
             # check if there are new information
-            has_new_username = request.form.get("username_to_update") != username
+            has_new_username = request.form.get("usernameToUpdate") != username
             has_new_avatar = request.files.get("avatar") != None
             if not has_new_avatar and not has_new_username:
                 response = {"ok": True, "message": "There is no information to update."}
                 return jsonify(response), 200
 
             # create username_to_update
-            username_to_update = request.form.get("username_to_update") if has_new_username else username
+            username_to_update = request.form.get("usernameToUpdate") if has_new_username else username
 
             # create image_url_to_update
             image_url_to_update = ""                    
