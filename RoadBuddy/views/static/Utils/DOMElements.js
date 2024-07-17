@@ -1,7 +1,7 @@
 // ----- elememts -----
 export let//
 settingBtn = document.querySelector(".setting-btn"),
-config = document.querySelector(".config"),
+config = document.querySelector(".configure"),
 logout = document.querySelector(".logout"),
 invite = document.querySelector(".invite"),
 leave = document.querySelector(".leave"),
