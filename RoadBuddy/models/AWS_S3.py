@@ -7,4 +7,13 @@ s3_client = boto3.client("s3",
             )
 
 def Upload_file(file, file_name:str) -> None:
-    s3_client.upload_fileobj(file, "picboard-bucket", file_name)
+    try:    
+        s3_client.upload_fileobj(file, "picboard-bucket", file_name)
+    except Exception as error:
+        print("Failed to upload file: ", error)
+
+def Delete_file(filename: str) -> None:
+    try:
+        s3_client.delete_object(Bucket="picboard-bucket", Key=filename)
+    except Exception as error:
+        print("Failed to delete file: ", error)
