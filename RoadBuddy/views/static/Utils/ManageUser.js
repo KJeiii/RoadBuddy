@@ -17,13 +17,7 @@ export async function CheckUserStatus() {
         if (result.data === null) {return {"ok": false, "data": null}}
         
         // If verification passes
-        return {
-            "ok": true, 
-            "data": {
-                user_id: result.user_id,
-                username: result.username,
-                email: result.email
-            }}
+        return {"ok": true, "data": result}
     }
     catch(error) {
         console.log(`Error in CheckUserStatus : ${error}`)
@@ -77,3 +71,20 @@ export class OnlineUserInfo{
         return this.onlineUserIDs
     }
 }
+
+export function RenderUsername(username){
+    document.querySelector(".main-pannel .description").textContent = `Here we go! ${username}`;
+    document.querySelector(".configure-pannel input#username-to-update").value = username;
+}
+
+export function RenderEmail(email){
+    document.querySelector(".configure-form-email div.value").textContent = email;
+}
+
+export function RenderAvatar(imageUrl){
+    if (imageUrl !== null){
+        document.querySelector(".user-info .icon").style.backgroundImage = `url(${imageUrl})`;
+        document.querySelector(".configure-outer .image").style.backgroundImage = `url(${imageUrl})`;
+    }
+}
+
