@@ -188,7 +188,7 @@ nav {
 .user-info .icon {
     width: 40px;
     height: 40px;
-    background-image: url("../static/images/user-2.jpeg");
+    background-image: url("../static/images/loading-grey.gif");
     background-position: center;
     background-size: cover;
     margin-left: 10px;
@@ -562,7 +562,7 @@ input[name=create-team]
 
 /* configure pannel */
 .configure-pannel{
-    display: flex; 
+    display: none; /*flex*/
     flex: none;
     flex-direction: column;
     justify-content: start;
@@ -650,7 +650,7 @@ div.button button{
 }
 
 .configure-response {
-    display: flex; 
+    display: none; /*flex */
     flex: none;
     flex-direction: column;
     justify-content: start;
@@ -661,20 +661,42 @@ div.button button{
     z-index: 2000;
     width: 25vw;
     height: 25vh;
-    background-color: wheat;
+    background-color: white;
     border-radius: 10px;
     box-shadow: 2px;
 }
 
-.configure-response p{
+.configure-response p.configure-response-title{
     padding: 0;
     font-size: 20px;
     font-weight: bold;
+    margin: 10px 0 5px 0;
 }
 
 .configure-response img{
     width: 60px;
     height: 60px;
+}
+
+div.configure-response-icon-src{
+    display: flex;
+    flex:none;
+    justify-items: center;
+    align-items: center;
+    margin-top: 5px;
+}
+
+div.configure-response-icon-src p,
+.configure-response a{
+    font-size: 10px;
+    padding: 0;
+    margin: 0;
+    color: grey;
+}
+
+.configure-response div.close{
+    width: 18px;
+    height: 18px;
 }
 
 /* ------ socket friend and team request ------ */
