@@ -12,11 +12,11 @@ import {
 } from "./GeneralControl.js";
 import { CreateNewTeam, SearchTeams, EmitEnterTeamEvent, EmitInviteTeamEvent, EmitJoinTeamRequestEvent, EmitAcceptTeamRequestEvent, EmitLeaveTeamEvent } from "./ManageTeam.js";
 import { AddTeamClickEvent, AddTeamHoverEvent } from "./TeamEvent.js";
-import { ManipulateSessionStorage } from "./ManageUser.js";
+import { ManipulateSessionStorage, RenderAvatar, RenderUsername } from "./ManageUser.js";
 import { appendPartner, BuildPartnership, UpdatePartnersColor} from "./ManagePartner.js";
 import { messageInfo, onlineUserInfo } from "../main.js";
 import { RenderMessageBtn, SearchMessage } from "./ManageMessage.js";
-import { CollectUpdateBasicInfo, PreviewAvatar, RenderUpdateResult, UpdateBasicInfo } from "./ManageConfigure.js";
+import { CollectUpdateBasicInfo, PreviewAvatar, RenderUpdateResponse, UpdateBasicInfo } from "./ManageConfigure.js";
 
 
 export const AllEvents = [
@@ -46,6 +46,13 @@ export function AddEventsToSetting() {
     })
 
     // ------ configure button -----
+    // show configure pannel
+    const configureBtn = document.querySelector("div.configure");
+    configureBtn.addEventListener("click", ()=>{
+        document.querySelector(".configure-pannel").style.display = "flex";
+        SwitchSettingBtn({"all": "none"});
+    })
+
     // preview avatar
     const avatarInput = document.querySelector("input#avatar");
     avatarInput.addEventListener("change", PreviewAvatar);
@@ -53,33 +60,66 @@ export function AddEventsToSetting() {
     // Be albe to modify username
     const modifyButton = document.querySelector("img.modify");
     modifyButton.addEventListener("click", ()=>{
-        const disabledStatus = document.querySelector("input#username").disabled;
-        document.querySelector("input#username").disabled = !disabledStatus;
+        const disabledStatus = document.querySelector("input#username-to-update").disabled;
+        document.querySelector("input#username-to-update").disabled = !disabledStatus;
     })
+
+    // click close to initialize update-response prompt
+    const updateResponseCloseBtn = document.querySelector(".configure-response .close");
+    updateResponseCloseBtn.addEventListener("click", ()=>{
+        RenderUpdateResponse(3);
+        document.querySelector(".configure-response").style.display = "none";
+    });
+
+    // click close to initialzie update-pannel input value
+    const configPannelCloseBtn = document.querySelector(".configure-pannel .close");
+    configPannelCloseBtn.addEventListener("click", ()=>{
+        document.querySelector("input#avatar").value = "";
+        document.querySelector(".configure-outer .image").style.backgroundImage = `url(${window.sessionStorage.getItem("image_url")})`;
+        document.querySelector(".configure-pannel input#username-to-update").value = window.sessionStorage.getItem("username");
+    })
+
 
     // Sending request
     const confirmUpdateBasicBtn = document.querySelector("button.update-basic");
     confirmUpdateBasicBtn.addEventListener("click", ()=>{
-        UpdateBasicInfo(CollectUpdateBasicInfo())
-            .then((updateResult)=>{
-                // pop up prompt to show update success
-                RenderUpdateResult(updateResult.ok);
+        CollectUpdateBasicInfo()
+            .then((dataToUpdate)=>{
+                document.querySelector(".configure-response").style.display = "flex";
+                document.querySelector(".configure-pannel").style.display = "none";
+                UpdateBasicInfo(dataToUpdate)
+                    .then((updateResponse)=>{
+                        // close configure pannel
+                        SwitchPannel("main");
+        
+                        // pop up prompt to show update success
+                        RenderUpdateResponse(updateResponse.responseCode);
+        
+                        // re-render username and avatar in the configure pannel and main pannel
+                        if (updateResponse.ok && updateResponse.responseCode === 1 ){
+                            if (updateResponse.username !== window.sessionStorage.getItem("username")){
+                                RenderUsername(updateResponse.username);
+                                ManipulateSessionStorage("set", {username: updateResponse.username});
+                            }
+                            if (updateResponse.image_url !== ""){
+                                RenderAvatar(updateResponse.image_url);
+                                ManipulateSessionStorage("set", {image_url: updateResponse.image_url});
+                            }
+                        }
 
-                // re-render username and avatar in the configure pannel and main pannel
-                document.querySelector("div.configure-form-username input#username-to-update").value = updateResult.username;
-                document.querySelector("div.configure-outer div.image").style.backgroundImage = `url(${updateResult.image_url})`;
-                document.querySelector(".user-info .description").textContent = `Here we go! ${updateResult.username}`;
-                document.querySelector(".user-info .icon").style.backgroundImage = `url(${updateResult.image_url})`;
-
-                // update username in sessionStorage
-                ManipulateSessionStorage("set", {username: updateResult.username});
+                        //remove the value(file) of input#avatar
+                        document.querySelector("input#avatar").value = "";
+                    })
+                    .catch((updateResponse)=>{
+                        RenderUpdateResponse(updateResponse.responseCode);
+                        console.log(updateResponse.message)
+                    })
             })
-            .catch((updateResult)=>{
-                RenderUpdateResult(updateResult.ok);
-                console.log(updateResult.message)
+            .catch((error) => {
+                RenderUpdateResponse(2)
+                console.log(error)
             })
     })
-
 }
 
 
