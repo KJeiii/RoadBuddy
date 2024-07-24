@@ -69,6 +69,7 @@ export function AddEventsToSetting() {
     updateResponseCloseBtn.addEventListener("click", ()=>{
         RenderUpdateResponse(3);
         document.querySelector(".configure-response").style.display = "none";
+        document.querySelector(".configure-outer .image .undo").style.display = "none";
     });
 
     // click close to initialzie update-pannel input value
@@ -77,8 +78,16 @@ export function AddEventsToSetting() {
         document.querySelector("input#avatar").value = "";
         document.querySelector(".configure-outer .image").style.backgroundImage = `url(${window.sessionStorage.getItem("image_url")})`;
         document.querySelector(".configure-pannel input#username-to-update").value = window.sessionStorage.getItem("username");
+        document.querySelector(".configure-outer .image .undo").style.display = "none";
     })
 
+    // undo file seleted
+    const undo = document.querySelector(".configure-outer .image .undo");
+    undo.addEventListener("click", ()=>{
+        document.querySelector(".configure-outer .image").style.backgroundImage = `url(${window.sessionStorage.getItem("image_url")})`;
+        document.querySelector("input#avatar").value = "";
+        document.querySelector(".configure-outer .image .undo").style.display = "none";
+    })
 
     // Sending request
     const confirmUpdateBasicBtn = document.querySelector("button.update-basic");
@@ -109,6 +118,7 @@ export function AddEventsToSetting() {
 
                         //remove the value(file) of input#avatar
                         document.querySelector("input#avatar").value = "";
+                        document.querySelector(".configure-outer .image .undo").style.display = "none";
                     })
                     .catch((updateResponse)=>{
                         RenderUpdateResponse(updateResponse.responseCode);
