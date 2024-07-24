@@ -1,4 +1,4 @@
-import { CheckUserStatus } from "./Utils/ManageUser.js";
+import { CheckUserStatus, RenderAvatar, RenderEmail, RenderUsername } from "./Utils/ManageUser.js";
 import { SearchTeams } from "./Utils/ManageTeam.js";
 import { SearchOldFriends } from "./Utils/ManageFriend.js";
 import { ClearList, RenderList, RenderOnlineStatus, InitializeAllPannelsTagAttributes } from "./Utils/GeneralControl.js";
@@ -22,18 +22,17 @@ CheckUserStatus()
     .then((result) => {
         if (!result.ok){window.location.replace("/member")};
 
-        const {user_id:userID, username} = result.data;
-        // EmitStoreUserInfoEvent(userID, username, email, oldFriendList);
-        // update main-pannel description
-        let description = document.querySelector(".main-pannel .description").textContent;
-        document.querySelector(".main-pannel .description").textContent = description + ` ${username}`;
-        
+        const {user_id:userID, username, email, image_url: imageUrl} = result.data;
+        // update main-pannel description and configure pannel username input
+        RenderUsername(username);
+        RenderEmail(email);
+        RenderAvatar(imageUrl);
+
         // store user info
         sidArray.push(socket.id);
         ManipulateSessionStorage("clear");
         ManipulateSessionStorage("set", {...result.data, sid: socket.id})
 
-        
         // render friend list
         SearchOldFriends(userID)
             .then((oldFriendList) => {
