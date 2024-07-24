@@ -30,7 +30,8 @@ button:hover,
 .configure-form p.value:hover,
 .configure-form image:hover,
 label.avatar:hover,
-img.modify:hover
+img.modify:hover,
+.configure-outer .image .undo:hover
  {
     cursor: pointer;
 }
@@ -586,6 +587,19 @@ input[name=create-team]
     width: 15vw;
     height: 15vh;
     margin: 10px auto;
+}
+
+.configure-outer .image .undo{
+    display: none;
+    position: absolute;
+    left: 35vw;
+    top: 19vh;
+    background-image: url("../static/images/trash.svg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 20px;
+    height: 20px;
 }
 
 input#avatar{
