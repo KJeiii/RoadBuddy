@@ -67,7 +67,7 @@ class MemberTool(pooling.MySQLConnectionPool):
         connection = self.get_connection()
         cursor = connection.cursor(dictionary=True)
 
-        search_string = ('select user_id, username, email from member '
+        search_string = ('select user_id, email, username, image_url from member '
                         'where user_id = %s'
                         )
         data_string = (user_id, )
@@ -99,8 +99,8 @@ class MemberTool(pooling.MySQLConnectionPool):
 
         update_string = (
                         "update member "
-                        "set username = if(username != %s, %s, username) "
-                        "image_url = if(image_url != %s, %s, image_url) "
+                        "set username = if(username != %s, %s, username), "
+                        "image_url = %s "
                         "where user_id = %s"
                         )\
                         if image_url_to_update != "" else\
@@ -111,8 +111,7 @@ class MemberTool(pooling.MySQLConnectionPool):
                         )
         data_string = (
                        username_to_update, username_to_update, 
-                       image_url_to_update, image_url_to_update, 
-                       user_id
+                       image_url_to_update, user_id
                        ) \
                         if image_url_to_update != "" else\
                        (
@@ -142,5 +141,5 @@ class MemberTool(pooling.MySQLConnectionPool):
 
 if __name__ == "__main__":
     test = MemberTool()
-    print(test.Search_member(email="123@mail"))
+    print(test.Search_member_by_id(16))
 
