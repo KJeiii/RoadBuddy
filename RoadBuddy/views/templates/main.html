@@ -47,7 +47,7 @@
             </nav>
             <div class="user-info">
                 <div class="icon"></div>
-                <div class="description">Here we go!</div>
+                <div class="description">Loading...</div>
             </div>
             <div class="friend-color-intro">
                 <div class="online">上線</div>
@@ -132,7 +132,7 @@
             <div class="configure-outer">
                 <div class="image">
                     <label for="avatar" class="avatar"></label>
-                    <input type="file" name="avatar" id="avatar">
+                    <input type="file" name="avatar" id="avatar" accept="image/png, image/jpg, image/jpeg">
                 </div>
                 <div class="configure-form">
                     <div class="configure-form-email">
@@ -201,8 +201,13 @@
     </div>
 
     <div class="configure-response">
-        <p>更新中</p>
+        <div class="close"></div>
+        <p class="configure-response-title">更新中</p>
         <img src="../static/images/loading.gif" alt="loading.gif">
+        <div class="configure-response-icon-src">
+            <p>Icon by&nbsp</p>
+            <a target="_blank" href="https://icons8.com">Icons8</a>
+        </div>
     </div>
 
     <div class="update-password">
@@ -215,12 +220,6 @@
         <button class="alert">send</button>
         <button class="leave">leave</button>
     </div>
-
-    <!-- <div>
-        <input type="text" class="test-username" name="test-username">
-        <input class="avatar" type="file" name="avatar">
-        <button class="avatar-submit">Submit!!</button>
-    </div> -->
 
     <script>
         // build global variables
@@ -241,25 +240,6 @@
 
         //initialize socket.io
         let socket = io();
-
-        //test file uploadind
-//         const avatarSubmit = document.querySelector(".avatar-submit");
-//         avatarSubmit.addEventListener("click", ()=>{
-//             const avatarImgFile = document.querySelector(".avatar").files[0];
-//             const username = document.querySelector(".test-username").value;
-//             const formData = new FormData();
-//             formData.append("avatar", avatarImgFile, avatarImgFile.filename);
-//             formData.append("username", username);
-// ;
-//             fetch("/api/member/update/test", {
-//                     method: "PATCH",
-//                     //headers: {"Content-Type": "multipart/form-data"}, //*** browser會在尾巴加上boundary=----WebKitFormBoundary"XXXXXXXX流水碼"
-//                     body: formData
-//                 })
-//                     .then((response) => response.json())
-//                     .then((result) => {console.log(result)})
-//         })
-
     </script>
     <script type="module" src="../static/main.js"></script>
     <script type="module" src="../static/event_handler/connect.js"></script>
