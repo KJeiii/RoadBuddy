@@ -3,11 +3,11 @@ export function PreviewAvatar(){
         avatarImg = document.querySelector("input#avatar").files[0],
         imagePreview = document.querySelector(".configure-outer .image"),
         fileReader = new FileReader();
-    
     fileReader.onload = () =>{
         imagePreview.style.backgroundImage = `url(${fileReader.result})`;
-    }
-    fileReader.readAsDataURL(avatarImg)
+    };
+    fileReader.readAsDataURL(avatarImg);
+    document.querySelector(".configure-outer .image .undo").style.display = "block";
 }
 
 export async function CollectUpdateBasicInfo(){
