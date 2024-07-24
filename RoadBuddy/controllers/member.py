@@ -44,9 +44,8 @@ def Signup():
 def Decode_JWT_Token(JWT_token: str) -> dict:
     jwt_payload = jwt.decode(JWT_token, os.environ.get("jwtsecret"),"HS256")
     user_id = jwt_payload["usi"]
-    username = jwt_payload["usn"]
     email = jwt_payload["eml"]
-    return {"user_id": user_id, "username": username, "email": email}
+    return {"user_id": user_id, "email": email}
 
 # signin and check user status
 @member_bp.route("/api/member/auth", methods = ["PUT", "GET"])
@@ -66,9 +65,8 @@ def Login():
             if check_password_hash(member_info["password"], request.json["password"]):
                 jwt_payload = {
                     "usi": member_info["user_id"],
-                    "usn": member_info["username"],
                     "eml": member_info["email"],
-                    "exp" : dt.datetime.utcnow() + dt.timedelta(days=7)
+                    "exp" : dt.datetime.now(dt.timezone.utc) + dt.timedelta(days=7)
                 } 
 
                 JWT = jwt.encode(jwt_payload, os.environ.get("jwtsecret"),)
@@ -96,12 +94,8 @@ def Login():
         try:
             JWT_in_headers = request.headers.get("authorization").split(" ")
             if "Bearer" in JWT_in_headers:
-                user_id, username, email = Decode_JWT_Token(JWT_in_headers[1]).values()
-                # JWT = JWT_in_headers[1]
-                # jwt_payload = jwt.decode(JWT, os.environ.get("jwtsecret"),"HS256")
-                # user_id = jwt_payload["usi"]
-                # username = jwt_payload["usn"]
-                # email = jwt_payload["eml"]
+                user_id, email = Decode_JWT_Token(JWT_in_headers[1]).values()
+                *rest, username, image_url = memberTool.Search_member_by_id(user_id).values()
 
                 RoadBuddy.event_handler.sid_reference[RoadBuddy.event_handler.my_sid] = user_id
                 RoadBuddy.event_handler.user_info[user_id] = {
@@ -109,18 +103,20 @@ def Login():
                     "username": username,
                     "email": email,
                     "team_id": None,
+                    "image_url": image_url,
                     "messages": []
                 }
                 
                 response = {
                     "user_id": user_id,
                     "username": username,
-                    "email": email
+                    "email": email,
+                    "image_url": image_url
                 }
                 return jsonify(response), 200
         
         except Exception as error:
-            print(f"Error in signin(GET) : {error}")
+            print(f"Error in login(GET) : {error}")
             response = {
                 "data": None
             }
@@ -130,7 +126,7 @@ def Login():
 # update user information - avatar and username
 def allow_upload(filename: str) -> bool:
     allow_extensions = ["jpg", "jpeg", "png"]
-    file_extension = filename.split(".")[-1]
+    file_extension = filename.split(".")[-1].lower()
     return "." in filename and file_extension in allow_extensions
 
 @member_bp.route("/api/member/update/basic", methods = ["PATCH"])
@@ -139,7 +135,8 @@ def update_basic_info():
         try: 
             JWT_in_headers = request.headers.get("authorization").split(" ")
             if "Bearer" in JWT_in_headers:
-                user_id, username, email = Decode_JWT_Token(JWT_in_headers[1]).values()
+                user_id, email = Decode_JWT_Token(JWT_in_headers[1]).values()
+                username = memberTool.Search_member_by_id(user_id).get("username")
 
             # check if there are new information
             has_new_username = request.form.get("usernameToUpdate") != username
@@ -162,30 +159,31 @@ def update_basic_info():
                     return jsonify(response), 422
                 else: 
                     new_avatar = request.files.get("avatar")
+                    datetime = dt.datetime.now(dt.timezone.utc).strftime("%Y%m%d%H%M%S")
                     avatar_extension = request.files.get("avatar").filename.split(".")[-1]
-                    new_filename = "roadbuddy_avatar_" + \
-                                    user_id + "_" + \
-                                    email + \
-                                    avatar_extension
+                    new_filename = f"roadbuddy_avatar_{user_id}_{email}_{datetime}.{avatar_extension}"
                 
                 # File uploaded with name already used in bucket will overwrite the old one.
                 RoadBuddy.models.AWS_S3.Upload_file(new_avatar, new_filename)
 
                 # update image_url
-                # RDS_domain_name = "https://d3esmkykp2s2l5.cloudfront.net/"
                 image_url_to_update = os.getenv("RDS_domain_name") + new_filename
 
             # update RDS
             memberTool.Update_basic_info(
-                user_id = request.json["user_id"],
+                user_id = user_id,
                 username_to_update = username_to_update,
                 image_url_to_update = image_url_to_update
             )
+
+            # update username of user_info stored in the server side
+            RoadBuddy.event_handler.user_info[user_id]["username"] = username_to_update
+
             response = {"ok": True, "username": username_to_update, "image_url": image_url_to_update}
             return jsonify(response), 200
         
         except Exception as error:
-            print("Failed to update basic information: ", error)
+            print("Failed to update basic information (update_basic_info()): ", error)
             response = {"error": True, "message": "伺服器內部錯誤"}
             return jsonify(response), 500
 
@@ -214,16 +212,6 @@ def update_password():
             response = {"error": True, "message": "伺服器內部錯誤"}
             return jsonify(response), 500
 
-#testing
-@member_bp.route("/api/member/update/test", methods = ["PATCH"])
-def test_file_upload():
-    if request.method == "PATCH":
-        print(dir(os.environ))
-        print((os.environ))
-        image_file = request.files["avatar"]
-        print("request files", request.files)
-        print("request form", request.form)
-        return jsonify({"ok": True}), 200
 
 
 
