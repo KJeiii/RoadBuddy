@@ -6,9 +6,9 @@ s3_client = boto3.client("s3",
             aws_secret_access_key = os.environ.get("aws_secret_access_key")
             )
 
-def Upload_file(file, file_name:str) -> None:
+def Upload_file(file: bytes, filename:str) -> None:
     try:    
-        s3_client.upload_fileobj(file, "picboard-bucket", file_name)
+        s3_client.upload_fileobj(file, "picboard-bucket", filename)
     except Exception as error:
         print("Failed to execute Upload_file: ", error)
 
@@ -27,17 +27,17 @@ def List_all_files() -> list:
 def Find_files(user_id: int, email: str) -> list:
     try:
         prefix = f"roadbuddy_avatar_{user_id}_{email}"
-        return s3_client.list_objects(Bucket="picboard-bucket", Prefix=prefix)["Contents"]
+        return s3_client.list_objects(Bucket="picboard-bucket", Prefix=prefix).get("Contents")
     except Exception as error:
         print("Failed to execute Find_files: ", error)
 
-def Update_file(user_id: int, email: str, file: bytes, filename: str) -> None:
+def Update_file(user_id: int, email: str, file_to_update: bytes, filename_to_update: str) -> None:
     try:
         user_files = Find_files(user_id, email)
-        if len(user_files) != 0:
+        if user_files != None:
             for file in user_files:
                 Delete_file(file.get("Key"))
-        Update_file(user_id, email, file, filename)
+        Upload_file(file_to_update, filename_to_update)
     except Exception as error:
         print("Failed to execute Update_file: ", error)
 
