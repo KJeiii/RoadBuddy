@@ -164,7 +164,7 @@ def update_basic_info():
                     new_filename = f"roadbuddy_avatar_{user_id}_{email}_{datetime}.{avatar_extension}"
                 
                 # File uploaded with name already used in bucket will overwrite the old one.
-                RoadBuddy.models.AWS_S3.Upload_file(new_avatar, new_filename)
+                RoadBuddy.models.AWS_S3.Update_file(user_id, email, new_avatar, new_filename)
 
                 # update image_url
                 image_url_to_update = os.getenv("RDS_domain_name") + new_filename
