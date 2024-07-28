@@ -35,25 +35,15 @@ def sync_online_user():
 # Listener for receiver event "disconnect" from client
 @socketio.on("disconnect")
 def disconnect():
-
-    # send event "disconnect" to team partners for removing marker
-    # 這邊應該要改成建立專屬的team event handler
     user_sid = request.sid
     user_id = RoadBuddy.event_handler.sid_reference.get(user_sid)
+    is_user_online = user_id != None
 
-    if user_id != None:
+    if is_user_online:
         username = RoadBuddy.event_handler.user_info.get(user_id).get("username")
         email = RoadBuddy.event_handler.user_info.get(user_id).get("email")
         team_id = RoadBuddy.event_handler.user_info.get(user_id).get("team_id")
-
-        data = {
-            "sid": user_sid,
-            "user_id": user_id,
-            "username": username,
-            "email":  email,
-            "team_id": team_id
-        }
-        emit("disconnect", data, to=team_id)
+        is_in_team = team_id != None
 
         # send event "update_friend_status" to friends 
         friend_list = RoadBuddy.event_handler.user_info[user_id]["friend_list"]
@@ -75,13 +65,20 @@ def disconnect():
                 }
                 , to=sid)
 
-
-        # remove leaving partner
-        if team_id != None:
+        # send event "leave_team" to team partners for removing marker
+        if is_in_team:
+            data = {
+                "sid": user_sid,
+                "user_id": user_id,
+                "username": username,
+                "email":  email,
+                "team_id": team_id
+            }
+            emit("leave_team", data, to=team_id)
             leave_room(team_id)
-            del RoadBuddy.event_handler.rooms_info[team_id]["partner"][user_sid]
+            del RoadBuddy.event_handler.rooms_info[team_id]["partners"][user_sid]
 
-            if len(RoadBuddy.event_handler.rooms_info[team_id]["partner"].keys()) <= 0 :
+            if len(RoadBuddy.event_handler.rooms_info[team_id]["partners"].keys()) <= 0 :
                 del RoadBuddy.event_handler.rooms_info[team_id]
 
         # remove user online status
