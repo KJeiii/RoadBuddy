@@ -1,41 +1,37 @@
-export function appendPartner (user_id, container, reference) {
-    let//
-    item = document.createElement("div"),
-    icon = document.createElement("div"),
-    username = document.createElement("div");
+export function AppendUserInPartnerList (userID, username, imageUrl, partnerListElement) {
+    console.log(partnerListElement);
+    const//
+        itemDiv = document.createElement("div"),
+        iconDiv = document.createElement("div"),
+        usernameDiv = document.createElement("div");
 
-    item.setAttribute("class", "item");
-    item.setAttribute("id", user_id);
-    icon.setAttribute("class", "icon");
-    icon.style.backgroundColor = reference[user_id].color;
-    username.setAttribute("class", "username");
-    username.setAttribute("id", user_id);
-    username.textContent = reference[user_id].username;
+    itemDiv.setAttribute("class", "item");
+    itemDiv.setAttribute("id", userID);
+    iconDiv.setAttribute("class", "icon");
+    iconDiv.style.backgroundImage = `url(${imageUrl})`;
+    usernameDiv.setAttribute("class", "username");
+    usernameDiv.setAttribute("id", userID);
+    usernameDiv.textContent = username;
 
-    item.appendChild(icon);
-    item.appendChild(username);
-    container.appendChild(item);
+    itemDiv.appendChild(iconDiv);
+    itemDiv.appendChild(usernameDiv);
+    partnerListElement.appendChild(itemDiv);
 };
 
-export function removePartner(user_id) {
-
-    let//
-    partnersList = document.querySelector(".tracking-pannel .partner-list"),
-    partnerItems = document.querySelectorAll(".tracking-pannel .partner-list .item");
-
+export function RemoveUserFromPartnerList(userID) {
+    const//
+        partnersList = document.querySelector(".tracking-pannel .partner-list"),
+        partnerItems = document.querySelectorAll(".tracking-pannel .partner-list .item");
     for ( let item of partnerItems ) {
-        if ( item.getAttribute("id")*1 === user_id*1 ) {
-            partnersList.removeChild(item);
-        }
+        const isTheUserToRemove = item.getAttribute("id")*1 === userID*1;
+        isTheUserToRemove && partnersList.removeChild(item)
     }
 }
 
 export async function BuildPartnership(userID, teamID){
     let response = await fetch("/api/team", {
         method: "PATCH",
-        headers: {
-            "Content-Type": "application/json"
-        },
+        headers: {"Content-Type": "application/json"},
         body: JSON.stringify({
             team_id: teamID,
             user_id: userID
