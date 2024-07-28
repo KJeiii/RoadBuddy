@@ -83,6 +83,11 @@ img.modify:hover,
     background-color: grey;
 }
 
+.icon-on-map{
+    border-radius: 50%;
+    background-color: white;
+}
+
 
 /* ------ main pannel -----*/
 .main-pannel {
@@ -821,9 +826,14 @@ div.configure-response-icon-src p,
 }
 
 .tracking-pannel .item .icon {
-    width: 20px;
-    height: 20px;
+    width: 30px;
+    height: 30px;
     margin-right: 10%;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    border-radius: 50%;
+    background-color: white;
 }
 
 .tracking-pannel .username {
