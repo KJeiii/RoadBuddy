@@ -9,16 +9,20 @@ my_sid = None
 
 # user_info = {
 #   user_id-1 (int) : {
-#       sid: XXX,
-#       username: XXX,
-#       email: XXX,
-#       team_id: XXX (str),
+#       sid: str,
+#       username: str,
+#       email: str,
+#       team_id: str,
+#       image_url: str,
+#       coordination: [{latitude: , longitude: },{latitude: , longitude: }]
 #   },
 #   user_id-2 (int) : {
-#       sid: XXX,
-#       username: XXX,
-#       email: XXX,
-#       team_id:XXX (str)
+#       sid: str,
+#       username: str,
+#       email: str,
+#       team_id: str,
+#       image_url: str,
+#       coordination: [{latitude: , longitude: },{latitude: , longitude: }]
 #   }
 # }
 
@@ -31,38 +35,27 @@ my_sid = None
 
 # rooms_info = {
 #   room_id-1: {
-#       sid-1 : [{
-#                 "latitude": XXX, 
-#                 "longitude": XXX
-#                },
-#                {
-#                 "latitude": XXX, 
-#                 "longitude": XXX
-#                }],
-#       sid-2 : [{
-#                 "latitude": XXX, 
-#                 "longitude": XXX
-#                },
-#                {
-#                 "latitude": XXX, 
-#                 "longitude": XXX
-#                }]
-#       },
+#       "owner_sid": str,
+#       "partners": {
+#           sid-1 : {
+#                   coordination: [{"latitude": XXX, "longitude": XXX},{"latitude": XXX, "longitude": XXX}],
+#                   image_url: str
+#                   }
+#           sid-2 : {
+#                   coordination: [{"latitude": XXX, "longitude": XXX},{"latitude": XXX, "longitude": XXX}],
+#                   image_url: str
+#                   }
+#   },
 #   room_id-2: {
-#       sid-1 : [{
-#                 "latitude": XXX, 
-#                 "longitude": XXX
-#                },
-#                {
-#                 "latitude": XXX, 
-#                 "longitude": XXX
-#                }],
-#       sid-2 : [{
-#                 "latitude": XXX, 
-#                 "longitude": XXX
-#                },
-#                {
-#                 "latitude": XXX, 
-#                 "longitude": XXX
-#                }]
-#       },
+#       "owner_sid": str,
+#       "partners": {
+#           sid-1 : {
+#                   coordination: [{"latitude": XXX, "longitude": XXX},{"latitude": XXX, "longitude": XXX}],
+#                   image_url: str
+#                   }
+#           sid-2 : {
+#                   coordination: [{"latitude": XXX, "longitude": XXX},{"latitude": XXX, "longitude": XXX}],
+#                   image_url: str
+#                   }
+#   }
+#}
