@@ -1,8 +1,8 @@
-import { CheckUserStatus, RenderAvatar, RenderEmail, RenderUsername } from "./Utils/ManageUser.js";
+import { CheckUserStatus, CreateIconColor, RenderAvatar, RenderEmail, RenderUsername } from "./Utils/ManageUser.js";
 import { SearchTeams } from "./Utils/ManageTeam.js";
 import { SearchOldFriends } from "./Utils/ManageFriend.js";
 import { ClearList, RenderList, RenderOnlineStatus, InitializeAllPannelsTagAttributes } from "./Utils/GeneralControl.js";
-import { DrawMap } from "./Utils/DrawMap.js";
+import { Map } from "./Utils/ManageMap.js";
 import * as GeneralEvents from "./Utils/GeneralEvent.js";
 import { ManipulateSessionStorage, OnlineUserInfo } from "./Utils/ManageUser.js";
 import { AddTeamClickEvent, AddTeamHoverEvent } from "./Utils/TeamEvent.js";
@@ -14,7 +14,8 @@ import { SearchMessage, MessageInfo, RenderMessageBtn } from "./Utils/ManageMess
 export const//
     onlineFriendInfo = new OnlineFriendInfo(),
     messageInfo = new MessageInfo(),
-    onlineUserInfo = new OnlineUserInfo();
+    onlineUserInfo = new OnlineUserInfo(),
+    mapInfo = new Map();
 
 
 // check user status and load info when passing check
@@ -23,15 +24,20 @@ CheckUserStatus()
         if (!result.ok){window.location.replace("/member")};
 
         const {user_id:userID, username, email, image_url: imageUrl} = result.data;
+        // map ************** 這邊要改抓真實位置*******************
+        const testCoord = {latitude: 24.982 + Math.random()*0.006, longitude: 121.534 + Math.random()*0.006};
+        mapInfo.CreateMap(testCoord);
+        mapInfo.CreateMarker(socket.id, imageUrl, testCoord);
+        // sidArray.push(socket.id);
+        
         // update main-pannel description and configure pannel username input
         RenderUsername(username);
         RenderEmail(email);
         RenderAvatar(imageUrl);
 
         // store user info
-        sidArray.push(socket.id);
         ManipulateSessionStorage("clear");
-        ManipulateSessionStorage("set", {...result.data, sid: socket.id})
+        ManipulateSessionStorage("set", {...result.data, sid: socket.id, iconColor: CreateIconColor()})
 
         // render friend list
         SearchOldFriends(userID)
@@ -102,10 +108,10 @@ CheckUserStatus()
 
 
 // test user's position by select position from randomPosition
-DrawMap({coords: {
-    latitude: 24.982 + Math.random()*0.006,
-    longitude: 121.534 + Math.random()*0.006
-}});
+// DrawMap({coords: {
+//     latitude: 24.982 + Math.random()*0.006,
+//     longitude: 121.534 + Math.random()*0.006
+// }});
 
 // Add events to general DOM elements
 for (let event of GeneralEvents.AllEvents) {event()}    
