@@ -9,8 +9,7 @@ import { AddTeamClickEvent, AddTeamHoverEvent } from "./Utils/TeamEvent.js";
 import { OnlineFriendInfo, EmitUpdateOnlineStatusEvents } from "./Utils/ManageFriend.js";
 import { SearchMessage, MessageInfo, RenderMessageBtn } from "./Utils/ManageMessage.js";
 
-
-// create onlineFriendInfo  and messageInfo objects
+// initialzie objects
 export const//
     onlineFriendInfo = new OnlineFriendInfo(),
     messageInfo = new MessageInfo(),
@@ -105,13 +104,6 @@ CheckUserStatus()
     .catch((error) => {
         console.log(error);
     })
-
-
-// test user's position by select position from randomPosition
-// DrawMap({coords: {
-//     latitude: 24.982 + Math.random()*0.006,
-//     longitude: 121.534 + Math.random()*0.006
-// }});
 
 // Add events to general DOM elements
 for (let event of GeneralEvents.AllEvents) {event()}    
