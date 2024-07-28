@@ -1,10 +1,49 @@
-// test user's position by select position from randomPosition
-let randomCoords = {
-    latitude: 24.982 + Math.random()*0.006,
-    longitude: 121.534 + Math.random()*0.006
-};
+import { mapInfo } from "../main.js";
 
+// ----- update partners postion when moving -----
+socket.on("movingPostion", (partners) => {
+    for (const partnerSID in partners){
+        const parterIsOnMap = mapInfo.GetAllMarkersSID().includes(partnerSID);
+        if (parterIsOnMap){
+            mapInfo.UpdateMarkerPosition(partnerSID, partners[partnerSID]["coordination"]);
+        }
+    }
+});
 
+// ----- change postion randomly -----
+setInterval(()=> {
+    const//
+        randomCoords = {latitude: 24.982 + Math.random()*0.006, longitude: 121.534 + Math.random()*0.006},
+        dataToUpdatePosition = { ...window.sessionStorage, coordination: {...randomCoords}},
+        notInTeam = window.sessionStorage.getItem("team_id") === "" 
+                   || window.sessionStorage.getItem("team_id") === null;
+    delete dataToUpdatePosition["friendList"];
+
+    if (notInTeam){
+        myCoord = {...myCoord, ...randomCoords}
+        mapInfo.UpdateMarkerPosition(socket.id, myCoord);
+        return
+    }
+    socket.emit("position", dataToUpdatePosition);
+}, 1000)
+
+// ----- tracking user device position changing-----
+// setInterval(() => {
+//     let data = {
+//         sid : sessionStorage.getItem("sid"),
+//         user_id : sessionStorage.getItem("user_id"),
+//         username : sessionStorage.getItem("username"),
+//         email : sessionStorage.getItem("email"),
+//         team_id : sessionStorage.getItem("team_id"),
+//         coord : {
+//             latitude: coordFromBrowser.latitude,
+//             longitude: coordFromBrowser.longitude    
+//         }
+//     };
+    
+//     socket.emit("position", data);
+
+// }, 500);
 
 // ----- receive partners initial postion and show on the map -----
 socket.on("initPosition", (partners) => {
@@ -13,37 +52,50 @@ socket.on("initPosition", (partners) => {
 
         // Create new collection of markers
         // If partner get in team at the first time
-        let oldMarker = document.querySelector(".leaflet-interactive");
-        if (oldMarker.getAttribute("fill") !== colorReference[sidReference[socket.id]]["color"]) {
-            // 1. delete original marker
-            for ( let i = 0; i < markerArray.length; i++) {
-                map.removeLayer(markerArray[i]);
-                markerArray.pop();
-            }
+        // let oldMarker = document.querySelector(".leaflet-interactive");
+        // if (oldMarker.getAttribute("fill") !== colorReference[sidReference[socket.id]]["color"]) {
+        //     // 1. delete original marker
+        //     for ( let i = 0; i < markerArray.length; i++) {
+        //         map.removeLayer(markerArray[i]);
+        //         markerArray.pop();
+        //     }
             
-            // 2. create a new marker with specified color refering to colorReference
-            let//
-            id = sidReference[socket.id],
-            markerOption = {
-                color: colorReference[id].color,
-                fillOpacity: 0.7
-            },
-            markerToAdd = L.circleMarker([partners[socket.id][0].latitude, partners[socket.id][0].longitude], markerOption).addTo(map);
-            markerArray.push(markerToAdd);
-        }
+        //     // 2. create a new marker with specified color refering to colorReference
+        //     let//
+        //     id = sidReference[socket.id],
+        //     markerOption = {
+        //         color: colorReference[id].color,
+        //         fillOpacity: 0.7
+        //     },
+        //     markerToAdd = L.circleMarker([partners[socket.id][0].latitude, partners[socket.id][0].longitude], markerOption).addTo(map);
+        //     markerArray.push(markerToAdd);
+        // }
 
 
         // Create other partners marker
         for ( let sid in partners ) {
-            let id = sidReference[sid];
+            const//
+                notMe = sid !== socket.id,
+                notYetJoined = !sidArray.includes(sid),
+                userID = sidReference[sid];
 
-            if ( sid !== socket.id && !sidArray.includes(sid)) {
+            // if ( sid !== socket.id && !sidArray.includes(sid)) {
+            if ( notMe && notYetJoined) {
                 // 1. add circleMarker
-                let markerOption = {
-                    color: colorReference[id].color,
-                    fillOpacity: 0.7
-                };
-                let markerToAdd = L.circleMarker([partners[sid][0].latitude, partners[sid][0].longitude], markerOption).addTo(map);
+                // let markerOption = {
+                //     color: colorReference[userID].color,
+                //     fillOpacity: 0.7
+                // };
+                // let markerToAdd = L.circleMarker([partners[sid][0].latitude, partners[sid][0].longitude], markerOption).addTo(map);
+
+                // 1. add icon
+                const myIcon = L.icon({
+                    iconUrl: partners[sid]["image_url"],
+                    iconSize: [40, 40],
+                    className: "icon-on-map"
+                });
+                let markerToAdd = L.marker([partners[sid]["coordination"][0].latitude, partners[sid]["coordination"][0].longitude], 
+                                    {icon: myIcon}).addTo(map);
     
                 // 2. register new partner information (sid, circleMaker object)
                 sidArray.push(sid);
@@ -68,70 +120,3 @@ socket.on("initPosition", (partners) => {
 });
 
 
-// ----- update partners postion when moving -----
-socket.on("movingPostion", (partners) => {
-    for (let sid of sidArray) {
-        try {
-        let//
-        oldLatLng = [partners[sid][0].latitude, partners[sid][0].longitude],
-        newLatLng = [partners[sid][1].latitude, partners[sid][1].longitude],
-        movingMarker = markerArray[sidArray.indexOf(sid)];
-
-        movingMarker.setLatLng(oldLatLng, newLatLng);
-        }
-        catch(error) {error};
-    }
-
-});
-
-
-
-// ----- receive msg and show on the view -----
-socket.on("message", (msg) => {
-    const item = document.createElement('li');
-    item.textContent = msg;
-    messages.appendChild(item);
-    window.scrollTo(0, document.body.scrollHeight);
-});
-
-
-// ----- tracking user device position changing-----
-// setInterval(() => {
-//     let data = {
-//         sid : sessionStorage.getItem("sid"),
-//         user_id : sessionStorage.getItem("user_id"),
-//         username : sessionStorage.getItem("username"),
-//         email : sessionStorage.getItem("email"),
-//         team_id : sessionStorage.getItem("team_id"),
-//         coord : {
-//             latitude: coordFromBrowser.latitude,
-//             longitude: coordFromBrowser.longitude    
-//         }
-//     };
-    
-//     socket.emit("position", data);
-
-// }, 500);
-
-
-
-// ----- change postion randomly -----
-setInterval(()=> {
-    let randomCoords = {
-        latitude: 24.982 + Math.random()*0.006,
-        longitude: 121.534 + Math.random()*0.006
-    };
-
-    let data = {
-        sid : sessionStorage.getItem("sid"),
-        user_id : sessionStorage.getItem("user_id"),
-        username : sessionStorage.getItem("username"),
-        email : sessionStorage.getItem("email"),
-        team_id : sessionStorage.getItem("team_id"),
-        coord : {
-            latitude: randomCoords.latitude,
-            longitude: randomCoords.longitude    
-        }
-    };
-    socket.emit("position", data);
-}, 2000)
