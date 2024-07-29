@@ -1,5 +1,4 @@
 export function AppendUserInPartnerList (userID, username, imageUrl, partnerListElement) {
-    console.log(partnerListElement);
     const//
         itemDiv = document.createElement("div"),
         iconDiv = document.createElement("div"),
@@ -23,8 +22,8 @@ export function RemoveUserFromPartnerList(userID) {
         partnersList = document.querySelector(".tracking-pannel .partner-list"),
         partnerItems = document.querySelectorAll(".tracking-pannel .partner-list .item");
     for ( let item of partnerItems ) {
-        const isTheUserToRemove = item.getAttribute("id")*1 === userID*1;
-        isTheUserToRemove && partnersList.removeChild(item)
+        const isTheUserToRemove = Number(item.getAttribute("id")) === Number(userID);
+        isTheUserToRemove && partnersList.removeChild(item);
     }
 }
 
