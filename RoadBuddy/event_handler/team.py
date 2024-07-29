@@ -7,15 +7,15 @@ import RoadBuddy.event_handler
 # Listener for receiving event "team request" from server
 @socketio.on("team_invite")
 def team_invite(invitation):
-    sender_sid = invitation["senderSid"]
+    sender_sid = invitation["senderSID"]
     sender_id = RoadBuddy.event_handler.sid_reference[sender_sid]
 
-    for id in invitation["receiver_info"]["receiver_id"]:
+    for id in invitation["friendIDsToInvite"]:
         sender_info = {
             **RoadBuddy.event_handler.user_info.get(sender_id),
             "user_id": sender_id,
             "coordination": invitation["senderCoordination"],
-            "team_id": invitation["team_id"]
+            "team_id": invitation["teamID"]
         }
         del sender_info["friend_list"]
         emit("team_invite", sender_info, to=RoadBuddy.event_handler.user_info[id]["sid"])
