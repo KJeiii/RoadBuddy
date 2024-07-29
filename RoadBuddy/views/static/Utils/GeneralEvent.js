@@ -13,8 +13,8 @@ import {
 import { CreateNewTeam, SearchTeams, EmitEnterTeamEvent, EmitInviteTeamEvent, EmitJoinTeamRequestEvent, EmitAcceptTeamRequestEvent, EmitLeaveTeamEvent } from "./ManageTeam.js";
 import { AddTeamClickEvent, AddTeamHoverEvent } from "./TeamEvent.js";
 import { ManipulateSessionStorage, RenderAvatar, RenderUsername } from "./ManageUser.js";
-import { appendPartner, BuildPartnership, UpdatePartnersColor} from "./ManagePartner.js";
-import { messageInfo, onlineUserInfo } from "../main.js";
+import { AppendUserInPartnerList, BuildPartnership, UpdatePartnersColor} from "./ManagePartner.js";
+import { mapInfo, messageInfo, onlineUserInfo} from "../main.js";
 import { RenderMessageBtn, SearchMessage } from "./ManageMessage.js";
 import { CollectUpdateBasicInfo, PreviewAvatar, RenderUpdateResponse, UpdateBasicInfo } from "./ManageConfigure.js";
 
@@ -351,35 +351,33 @@ export function AddEventsToTeam() {
             selectedFriends = selectedItemsFrom(".team-pannel"),
             friendIdsToAdd = selectedFriends.map(friend => friend.id);
 
-        UpdatePartnersColor(partnersColor, selectedFriends)
-        UpdatePartnersColor(
-            partnersColor,
-            [
-                {id: window.sessionStorage.getItem("user_id")*1, 
-                name: window.sessionStorage.getItem("username")}
-            ], 
-            ownColor);
+        // UpdatePartnersColor(partnersColor, selectedFriends)
+        // UpdatePartnersColor(
+        //     partnersColor,
+        //     [
+        //         {id: window.sessionStorage.getItem("user_id")*1, 
+        //         name: window.sessionStorage.getItem("username")}
+        //     ], 
+        //     ownColor);
 
         // create owner information in partner-list;
         // others will be created when they join in
-        let partnerList = document.querySelector(".tracking-pannel .partner-list");
-        for ( let id in partnersColor) {
-            if (id*1 === window.sessionStorage.getItem("user_id")*1) {
-                appendPartner(id, partnerList, partnersColor);
-            }
-        }
-
+        const {user_id:userID, sid, username, image_url:imageUrl} = window.sessionStorage;
+        AppendUserInPartnerList(userID, username, imageUrl, document.querySelector(".tracking-pannel .partner-list"));
+  
         // send request for joining team
         EmitInviteTeamEvent(
             socket.id, 
-            document.querySelector(".team-pannel .pannel-title").getAttribute("id"), 
+            document.querySelector(".team-pannel .pannel-title").getAttribute("id"),
+            myCoord, 
             friendIdsToAdd, 
             partnersColor
         );
         EmitEnterTeamEvent(
             true, 
             "create", 
-            document.querySelector(".team-pannel .pannel-title").getAttribute("id")
+            document.querySelector(".team-pannel .pannel-title").getAttribute("id"),
+            myCoord
         );
 
         // update team using status to other uses
@@ -394,24 +392,22 @@ export function AddEventsToTeam() {
         SwitchPannel("tracking");
         
         // create partner information in partner-list
-        // 1. only show team owner and partner it self
+        // 1. only show team owner and partner itself
         // 2. update other partners when they join in
-        let partnerList = document.querySelector(".tracking-pannel .partner-list");
-        for ( let id in team_sender_info_cache["partners_color"] ) {
-            if ( id*1 === team_sender_info_cache["user_id"]*1 ) {
-                appendPartner(id, partnerList, team_sender_info_cache["partners_color"]);
-            }
-
-            if ( id*1 === window.sessionStorage.getItem("user_id")*1 ) {
-                appendPartner(id, partnerList, team_sender_info_cache["partners_color"]);
-            }
-        }
-
+        const//
+            partnerList = document.querySelector(".tracking-pannel .partner-list"),
+            {user_id:userID, username, image_url:imageUrl} = window.sessionStorage,
+            {user_id:leaderID, username: leaderUsername, sid:leaderSid, 
+            image_url:leaderImageUrl, coordination:leaderCoordination} = team_sender_info_cache;
+        AppendUserInPartnerList(userID, username, imageUrl, partnerList);
+        AppendUserInPartnerList(leaderID, leaderUsername, leaderImageUrl, partnerList);
+        mapInfo.CreateMarker(leaderSid, leaderImageUrl, leaderCoordination);
+ 
         // recover team prompt
         ControlTeamMsgBox(".team-invite-prompt", "none");
 
         // Organize data emitted to listener "enter_team" on server
-        EmitEnterTeamEvent(true, "join", team_sender_info_cache.team_id);
+        EmitEnterTeamEvent(true, "join", team_sender_info_cache.team_id, myCoord);
         ManipulateSessionStorage("set", {team_id: team_sender_info_cache["team_id"]});
 
         // Create partner record in partner table in database
@@ -451,6 +447,17 @@ export function AddEventsToTeam() {
             userID = Number(window.sessionStorage.getItem("user_id")),
             teamID = window.sessionStorage.getItem("team_id");
         EmitLeaveTeamEvent(socket.id, userID, teamID, leaderSID);
+        ManipulateSessionStorage("remove", "team_id");
+        team_sender_info_cache = undefined;
+
+        // switch to mainPannel
+        SwitchPannel("main");
+        ExpandOrClosePannel(".main-pannel", "close");
+        ShowPannelContent(".main-pannel", "team", false);
+
+        //remove all user in the partner list and just leave own marker on the map
+        ClearList(".tracking-pannel .partner-list");
+        mapInfo.RemoveAllOtherMarkersExcept(socket.id);
 
         // re-render message list
         SearchMessage(userID)
@@ -461,14 +468,6 @@ export function AddEventsToTeam() {
                 RenderMessageBtn(false);
             })
             .catch((error) => {console.log(error)})
-
-        // switch to mainPannel
-        SwitchPannel("main");
-        ExpandOrClosePannel(".main-pannel", "close");
-        ShowPannelContent(".main-pannel", "team", false);
-
-        // remove all partner in the tracking pannel
-        ClearList(".tracking-pannel .partner-list");
     })
 
     // ----- While tracking, invite other frineds -----
