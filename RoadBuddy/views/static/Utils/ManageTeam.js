@@ -1,8 +1,3 @@
-// seperate to 3 parts:
-// 1. search created team 
-// 2. search joined team
-// 3. render team list >> move to GeneralControl.js
-
 export async function SearchTeams(userID, teamType){
     try {
         let response = await fetch("/api/team", {
@@ -44,25 +39,27 @@ export async function CreateNewTeam(userID, teamName){
     return result
 }
 
-export function EmitEnterTeamEvent(accept, enterType, teamID){
+export function EmitEnterTeamEvent(accept, enterType, teamID, coordination){
     const enterTeamInfo = {
         accept: accept,
         enter_type: enterType,
-        team_id: teamID
+        team_id: teamID,
+        coordination: coordination
     };
     socket.emit("enter_team", enterTeamInfo)
 }
 
-export function EmitInviteTeamEvent(senderSID, teamID,friendIDsToAddArray, partnerColorObject){
-    const inviteTeamInfo = {
-        sender_sid: senderSID,
+export function EmitInviteTeamEvent(senderSID, teamID, myCoordination, friendIDsToAddArray, partnerColorObject){
+    const invitation = {
+        senderSid: senderSID,
         team_id: teamID,
+        senderCoordination: myCoordination,
         receiver_info: {
             receiver_id: friendIDsToAddArray,
             receiver_color: partnerColorObject            
         }
     };
-    socket.emit("team_invite", inviteTeamInfo)
+    socket.emit("team_invite", invitation)
 }
 
 export function EmitJoinTeamRequestEvent(userSID, userID, username, teamID){
@@ -86,11 +83,11 @@ export function EmitAcceptTeamRequestEvent(accept, requestSID, partnersColorObje
 }
 
 export function EmitLeaveTeamEvent(userSID, userID, teamID, leaderSID){
-    let data = {
+    const leavingUser = {
         sid: userSID,
         user_id: userID,
         team_id: teamID,
         leader_sid: leaderSID
     };
-    socket.emit("leave_team", data);
+    socket.emit("leave_team", leavingUser);
 }
