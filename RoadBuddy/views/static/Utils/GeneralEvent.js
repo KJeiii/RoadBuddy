@@ -370,8 +370,7 @@ export function AddEventsToTeam() {
             socket.id, 
             document.querySelector(".team-pannel .pannel-title").getAttribute("id"),
             myCoord, 
-            friendIdsToAdd, 
-            partnersColor
+            friendIdsToAdd
         );
         EmitEnterTeamEvent(
             true, 
@@ -493,8 +492,7 @@ export function AddEventsToTeam() {
             socket.id, 
             window.sessionStorage.getItem("team_id"), 
             myCoord,
-            friendIDsToInvite, 
-            partnersColor)
+            friendIDsToInvite)
 
         // close team pannel and go back to tracking pannel
         SwitchPannel("tracking");
