@@ -510,37 +510,35 @@ export function AddEventsToTeam() {
     let joinRequestBtn = document.querySelector(".join-trip-btn");
     joinRequestBtn.addEventListener("click", () => {
         const// 
-            {user_id: userID, sid: userSID, username} = window.sessionStorage,
+            {user_id: userID, sid: userSID, username, image_url:imageUrl} = window.sessionStorage,
             teamID = document.querySelector(".team-pannel .pannel-title").getAttribute("id");
-        EmitJoinTeamRequestEvent(userSID, userID, username, teamID);
+        EmitJoinTeamRequestEvent(socket.id, userID, username, imageUrl, myCoord, teamID);
     })
 
     // Yes or No response to join team requeset
     // if yes
     let requestYesBtn = document.querySelector(".team-join-request .yes");
     requestYesBtn.addEventListener("click", () => {
+        const applicantID = document.querySelector(".team-join-request .content").getAttribute("id");
         // create a new marker color for new partner
-        UpdatePartnersColor(
-            partnersColor, 
-            [{
-                id: document.querySelector(".team-join-request .content").getAttribute("id"),
-                name: document.querySelector(".team-join-request .from").textContent
-            }]
-        );
+        // UpdatePartnersColor(
+        //     partnersColor, 
+        //     [{id: applicantID, name: document.querySelector(".team-join-request .from").textContent}]
+        // );
         // emit event "enter_team" to server to initialize 
-        EmitAcceptTeamRequestEvent(
-            true, 
-            document.querySelector(".team-join-request .from").getAttribute("id"),
-            partnersColor
-        );
-        // recover team prompt
+        EmitAcceptTeamRequestEvent(true, team_applicants_cache[applicantID].userSID);
+
+        // recover team prompt and remove team_applicants_cache
         ControlTeamMsgBox(".team-join-request", "none");
+        delete team_applicants_cache[applicantID];
     })
 
     // if no
     let requesetNoBtn = document.querySelector(".team-join-request .no");
     requesetNoBtn.addEventListener("click", () => {
         ControlTeamMsgBox(".team-join-request", "none");
+        // remove team_applicants_cache
+        delete team_applicants_cache[document.querySelector(".team-join-request .content").getAttribute("id")];
     })
 
 
