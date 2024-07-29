@@ -484,14 +484,15 @@ export function AddEventsToTeam() {
     // send invitation
     DOMElements.inviteTripBtn.addEventListener("click", () => {
         const//
-        selectItemsfrom = FetchSelectedItemIDsByCondition("inviteJoiningTeam", {partnersColor: partnersColor}),
-        selectedFriends = selectItemsfrom(".team-pannel"),
-        friendIDsToInvite = selectedFriends.map(friend => friend.id);
+            selectItemsfrom = FetchSelectedItemIDsByCondition("inviteJoiningTeam", {partnersColor: partnersColor}),
+            selectedFriends = selectItemsfrom(".team-pannel"),
+            friendIDsToInvite = selectedFriends.map(friend => friend.id);
 
         UpdatePartnersColor(partnersColor, selectedFriends)
         EmitInviteTeamEvent(
             socket.id, 
             window.sessionStorage.getItem("team_id"), 
+            myCoord,
             friendIDsToInvite, 
             partnersColor)
 
