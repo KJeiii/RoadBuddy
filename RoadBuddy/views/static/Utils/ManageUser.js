@@ -88,3 +88,6 @@ export function RenderAvatar(imageUrl){
     }
 }
 
+export function CreateIconColor(){
+    return `rgb(${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)})`
+}
