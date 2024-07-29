@@ -1,9 +1,10 @@
 import { ClearList, RenderList, RenderOnlineStatus, SwitchPannel, ControlTeamMsgBox
 } from "../Utils/GeneralControl.js";
-import { appendPartner, removePartner } from "../Utils/ManagePartner.js";
+import { AppendUserInPartnerList, RemoveUserFromPartnerList } from "../Utils/ManagePartner.js";
 import { AddTeamClickEvent, AddTeamHoverEvent } from "../Utils/TeamEvent.js";
 import { ManipulateSessionStorage } from "../Utils/ManageUser.js";
 import { EmitEnterTeamEvent } from "../Utils/ManageTeam.js";
+import { mapInfo } from "../main.js";
 
 // ----- listener for receiving event "team_invite" from server -----
 socket.on("team_invite", (data) => {
@@ -29,90 +30,32 @@ socket.on("enter_team", (data) => {
     // }
 
     // Emit event "postion" with the position data from team owner or friends invited by owner
-    const positionData = {
-        ...window.sessionStorage,
-        coord : {
-            latitude: initialCoord.latitude,
-            longitude: initialCoord.longitude
-        }
-    };
+    const positionData = {...window.sessionStorage, coordination: myCoord};
     delete positionData["friendList"];
     socket.emit("position", positionData);
 })
 
-
-
 //  ----- add new partners if they join -----
-socket.on("add_partner", (user_id) => {
-    let partnerList = document.querySelector(".tracking-pannel .partner-list");
-
-    // Team owner updates it's partner list
-    if ( team_sender_info_cache === undefined ) {
-        for ( let id in partnersColor) {
-            if ( id*1 === user_id*1 ) {
-                appendPartner(id, partnerList, partnersColor);
-            }
-        }
-        return
-    }
-
-    // Partners in team update their partner list
-    for ( let id in team_sender_info_cache.partners_color) {
-        if ( id*1 === user_id*1 && id*1 !== team_sender_info_cache.user_id*1 && id*1 !== window.sessionStorage.getItem("user_id")*1) {
-            appendPartner(id, partnerList, team_sender_info_cache["partners_color"]);
-        }
+socket.on("add_partner", (partner) => { 
+    const//
+        {user_id:userID, sid, username, image_url:imageUrl, coordination} = partner,
+        notMyself = userID !== Number(window.sessionStorage.getItem("user_id"));
+    if (notMyself){
+        mapInfo.CreateMarker(sid, imageUrl, coordination);
+        AppendUserInPartnerList(userID, username, imageUrl, document.querySelector(".tracking-pannel .partner-list"));
     }
 })
 
 // ----- Listener for receiving event "leave_team" from server -----
 socket.on("leave_team", (data) => {
-    let leavingPartnerSid = data.sid;
-    
-    // as a leaving partner:
-    if ( socket.id === leavingPartnerSid ) {
-
-        // 1. remove team_id in browser session
-        ManipulateSessionStorage("remove", "team_id");
-
-        // 2. remove data in markerArray and sidArray
-        // only leave own marker and sid
-        let lengthOfSidArray = sidArray.length;
-        for ( let i = 0; i < lengthOfSidArray; i++ ) {
-            if (sidArray[i] !== socket.id){
-                map.removeLayer(markerArray[i]);
-                markerArray.splice(i,1);
-                sidArray.splice(i,1);
-            }
-        }
-
-        // 3. clear team_sender_info_cache
-        team_sender_info_cache = undefined;
-        return
-    }
-
-    // as a team owner or partners stay in team
-    // 1. delete leaving partner in partnersColor
-    if (socket.id === data["leader_sid"]) {delete partnersColor[data["user_id"]*1]}
-    if (socket.id !== data["leader_sid"] && socket.id !== leavingPartnerSid) {
-        delete team_sender_info_cache["partners_color"][data["user_id"]*1]
-    }
-
-    // 2. remove leaving partner marker on tracking pannel
-    map.removeLayer(markerArray[sidArray.indexOf(leavingPartnerSid)]);
-
-    // 3. delete leaving partner in markerArray and sidArray
-    markerArray.splice(sidArray.indexOf(leavingPartnerSid), 1);
-    sidArray.splice(sidArray.indexOf(leavingPartnerSid), 1);
-
-    // 4. remove partner in tracking pannel
-    removePartner(data["user_id"])
-
+    // remove leaving partner's marker and information in the partner list
+    mapInfo.RemoveMarker(data.sid);
+    RemoveUserFromPartnerList(data["user_id"])
 })
 
 socket.on("update_team_status", (teamArray) => {
     // update global var
     onlineTeamArray = teamArray;
-
     ClearList(".join-list");
     RenderList(".join-list", joinedTeamArray);
     RenderOnlineStatus(".join-list .item", onlineTeamArray);
@@ -150,12 +93,12 @@ socket.on("accept_team_request", (data) => {
 
         // create leader item first
         if ( id*1 === team_sender_info_cache["user_id"]*1 ) {
-            appendPartner(id, partnerList, team_sender_info_cache["partners_color"]);
+            AppendUserInPartnerList(id, partnerList, team_sender_info_cache["partners_color"]);
         }
 
         // then, create partner self 
         if ( id*1 === window.sessionStorage.getItem("user_id")*1 ) {
-            appendPartner(id, partnerList, team_sender_info_cache["partners_color"]);
+            AppendUserInPartnerList(id, partnerList, team_sender_info_cache["partners_color"]);
         }
     }
 })
