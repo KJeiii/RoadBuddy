@@ -39,32 +39,30 @@ export class Map{
     RemoveMarker(sid){
         try{
             this.map.removeLayer(this.sidAndmarkerPair[sid]);
-            delete this.sidAndmarkerPair;
+            delete this.sidAndmarkerPair[sid];
         }
         catch(error){"Failed to execute method RemoveMarker in Map class: ", error}
     }
 
-    RemoveAllOtherMarkersExcept(sid){
+    RemoveAllOtherMarkersExcept(sidToSave){
         try{
-            for( const sid in this.sidAndmarkerPair){
-                const sidToSave = sid === socket.id;
-                if (!sidToSave){delete this.sidAndmarkerPair[sid]}
-            }
+            for(const sid in this.sidAndmarkerPair){
+                const isSidToRemove = sid !== sidToSave;
+                if (isSidToRemove){
+                    this.map.removeLayer(this.sidAndmarkerPair[sid]);
+                    delete this.sidAndmarkerPair[sid];
+                }}
         }
         catch(error){console.log("Failed to execute method RemoveAllOtherMarkersExcept in Map class: ",error)}
     }
 
     UpdateMarkerPosition(sid, newCoordination){ //coordination = {latitude:xxx, longitude:xxx}
-        try{
-            this.sidAndmarkerPair[sid].setLatLng([newCoordination.latitude, newCoordination.longitude]);
-        }
+        try{this.sidAndmarkerPair[sid].setLatLng([newCoordination.latitude, newCoordination.longitude])}
         catch(error){console.log("Failed to execute method UpdateMarkerPosition in Map class: ", error)}
     }
 
     GetAllMarkersSID(){
-        try{
-            return Object.keys(this.sidAndmarkerPair)
-        }
+        try{return Object.keys(this.sidAndmarkerPair)}
         catch(error){console.log("Failed to execute method GetAllMarkersSID: ", error)}
     }
 }
