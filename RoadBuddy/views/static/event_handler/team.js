@@ -13,27 +13,6 @@ socket.on("team_invite", (data) => {
     ControlTeamMsgBox(".team-invite-prompt", "block", {leaderName: data.username})
 })
 
-// ----- Listener for receiving "enter_team" event from server ----- 
-// ----- and emit event "position" with data of user initial position to server -----
-socket.on("enter_team", (data) => {
-    sidReference = (data["sender_info"] === undefined) ? data : data["sid_reference"];
-
-    // // Emit event "position" with position data from friends requesting join team
-    // if (data["sender_info"] !== undefined ) {
-    //     team_sender_info_cache = data["sender_info"]
-
-    //     // requester poistion data
-    //     let positionData = data["requester_info"];
-    //     socket.emit("position", positionData);
-    //     return 
-    // }
-
-    // Emit event "postion" with the position data from team owner or friends invited by owner
-    const positionData = {...window.sessionStorage, coordination: myCoord};
-    delete positionData["friendList"];
-    socket.emit("position", positionData);
-})
-
 //  ----- add new partners if they join -----
 socket.on("add_partner", (partner) => { 
     const//
@@ -79,7 +58,7 @@ socket.on("join_team_request", (applicant) => {
 // (Requester) Listener for receiving event "accept_team_request" from team owner
 socket.on("accept_team_request", (acceptApplicationResponse) => {
     // cache sender_info
-    team_sender_info_cache = acceptApplicationResponse;   //<<<<<<<<<<<<<<<<<<
+    team_sender_info_cache = acceptApplicationResponse;   
     const {team_id:teamID, partners} = acceptApplicationResponse;
 
     // Organize data emitted to listener "enter_team" on server
