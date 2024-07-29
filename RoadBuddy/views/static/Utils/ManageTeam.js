@@ -49,37 +49,34 @@ export function EmitEnterTeamEvent(accept, enterType, teamID, coordination){
     socket.emit("enter_team", enterTeamInfo)
 }
 
-export function EmitInviteTeamEvent(senderSID, teamID, myCoordination, friendIDsToAddArray, partnerColorObject){
+export function EmitInviteTeamEvent(senderSID, teamID, myCoordination, friendIDsToInviteArray){
     const invitation = {
-        senderSid: senderSID,
-        team_id: teamID,
+        senderSID: senderSID,
+        teamID: teamID,
         senderCoordination: myCoordination,
-        receiver_info: {
-            receiver_id: friendIDsToAddArray,
-            receiver_color: partnerColorObject            
-        }
+        friendIDsToInvite: friendIDsToInviteArray            
     };
     socket.emit("team_invite", invitation)
 }
 
-export function EmitJoinTeamRequestEvent(userSID, userID, username, teamID){
-    console.log(userSID, userID, username, teamID)
-    const requesterData = {
-        "user_sid": userSID,
-        "user_id": userID,
-        "username": username,
-        "team_id": teamID
+export function EmitJoinTeamRequestEvent(userSID, userID, username, imageUrl, coordination, teamID){
+    const applicant = {
+        userSID: userSID,
+        userID: userID,
+        username: username,
+        imageUrl: imageUrl,
+        coordination: coordination,
+        teamID: teamID
     };
-    socket.emit("join_team_request", requesterData);
+    socket.emit("join_team_request", applicant);
 }
 
-export function EmitAcceptTeamRequestEvent(accept, requestSID, partnersColorObject){
-    let acceptRequestData = {
+export function EmitAcceptTeamRequestEvent(accept, applicantSID){
+    let acceptApplicationData = {
         accept: accept,
-        requester_sid: requestSID,
-        partners_color: partnersColorObject
+        applicantSID: applicantSID,
     };
-    socket.emit("accept_team_request", acceptRequestData);
+    socket.emit("accept_team_request", acceptApplicationData);
 }
 
 export function EmitLeaveTeamEvent(userSID, userID, teamID, leaderSID){
