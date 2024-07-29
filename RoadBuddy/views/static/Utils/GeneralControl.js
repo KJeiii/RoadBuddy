@@ -454,10 +454,10 @@ export function ControlTeamMsgBox(msgCssSelector, display, ...rest) {
 
         case ".team-join-request":
             if(display === "block"){
-                msgBoxContent.textContent = `來自 ${rest[0].requesterName} 的入隊申請`;
-                msgBoxContent.setAttribute("id", rest[0].requesterID);
-                msgBoxFrom.textContent = rest[0].requesterName;
-                msgBoxFrom.setAttribute("id", rest[0].requesterSID);
+                msgBoxContent.textContent = `來自 ${rest[0].applicantUsername} 的入隊申請`;
+                msgBoxContent.setAttribute("id", rest[0].applicantID);
+                msgBoxFrom.textContent = rest[0].applicantUsername;
+                msgBoxFrom.setAttribute("id", rest[0].applicantSID);
                 msgBox.style.display = display;
             }
             break
