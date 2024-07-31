@@ -1,3 +1,6 @@
+import { mapInfo } from "../main.js";
+import { CreateIconImage, ClearCanvasContext } from "./ManageUser.js";
+
 export function AppendUserInPartnerList (userID, username, imageUrl, partnerListElement) {
     const//
         itemDiv = document.createElement("div"),
@@ -58,4 +61,13 @@ export function UpdatePartnersColor(partnersColorObject, userIDAndNamePairs, ...
         color: partnerColor
         };
     });
+}
+
+export function CreatePartner(userID, userSID, username, imageUrl, iconColor, coordination, partnerListDOMElement){
+    const//
+        partnerHasAvatar = imageUrl !== null,
+        imageUrlToRenderPartner = partnerHasAvatar ? imageUrl : CreateIconImage(username, iconColor);
+    AppendUserInPartnerList(userID, username, imageUrlToRenderPartner, partnerListDOMElement);
+    mapInfo.CreateMarker(userSID, imageUrlToRenderPartner, coordination);
+    ClearCanvasContext();
 }
