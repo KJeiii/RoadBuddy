@@ -1,4 +1,4 @@
-import { CheckUserStatus, CreateIconColor, RenderAvatar, RenderEmail, RenderUsername } from "./Utils/ManageUser.js";
+import { CheckUserStatus, ClearCanvasContext, CreateIconImage, GetRandomIconColor, RenderAvatar, RenderEmail, RenderUsername } from "./Utils/ManageUser.js";
 import { SearchTeams } from "./Utils/ManageTeam.js";
 import { SearchOldFriends } from "./Utils/ManageFriend.js";
 import { ClearList, RenderList, RenderOnlineStatus, InitializeAllPannelsTagAttributes } from "./Utils/GeneralControl.js";
@@ -22,21 +22,27 @@ CheckUserStatus()
     .then((result) => {
         if (!result.ok){window.location.replace("/member")};
 
-        const {user_id:userID, username, email, image_url: imageUrl} = result.data;
-        // map ************** 這邊要改抓真實位置*******************
+        const {user_id:userID, username, email} = result.data;
+        // store user info
+        ManipulateSessionStorage("clear");
+        ManipulateSessionStorage("set", {...result.data, sid: socket.id, iconColor: GetRandomIconColor()});
+
+        // create imageUrl if user doesn't upload avatar
+        const//
+            hasAvatar = result.data.image_url !== null,
+            imageUrl = (hasAvatar) ? (result.data.image_url) :
+                        CreateIconImage(username, window.sessionStorage.getItem("iconColor"));
+        (!hasAvatar) && ManipulateSessionStorage("set", {image_url: imageUrl});
+        ClearCanvasContext();
+        // ************** 這邊要改抓真實位置*******************
         const testCoord = {latitude: 24.982 + Math.random()*0.006, longitude: 121.534 + Math.random()*0.006};
         mapInfo.CreateMap(testCoord);
         mapInfo.CreateMarker(socket.id, imageUrl, testCoord);
-        // sidArray.push(socket.id);
         
         // update main-pannel description and configure pannel username input
         RenderUsername(username);
         RenderEmail(email);
         RenderAvatar(imageUrl);
-
-        // store user info
-        ManipulateSessionStorage("clear");
-        ManipulateSessionStorage("set", {...result.data, sid: socket.id, iconColor: CreateIconColor()})
 
         // render friend list
         SearchOldFriends(userID)
@@ -46,7 +52,6 @@ CheckUserStatus()
                     EmitUpdateOnlineStatusEvents();
 
                     ManipulateSessionStorage("set", {friendList: JSON.stringify(oldFriendList)})
-                    // window.sessionStorage.setItem("friendList", JSON.stringify(oldFriendList))
                     ClearList(".main-pannel .friend-list");
                     RenderList(".main-pannel .friend-list", oldFriendList);
                     RenderOnlineStatus(".main-pannel .friend-list .item", oldFriendList);
