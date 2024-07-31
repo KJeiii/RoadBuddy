@@ -848,6 +848,11 @@ div.configure-response-icon-src p,
     display: none;
 }
 
+/* icon canvas */
+.icon-canvas{
+    display: none;
+}
+
 /* ------ alert test ------*/
 .alert {
     width: 80%;
