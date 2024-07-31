@@ -9,13 +9,15 @@ import RoadBuddy.event_handler
 def team_invite(invitation):
     sender_sid = invitation["senderSID"]
     sender_id = RoadBuddy.event_handler.sid_reference[sender_sid]
+    team_id = invitation["teamID"]
 
     for id in invitation["friendIDsToInvite"]:
         sender_info = {
             **RoadBuddy.event_handler.user_info.get(sender_id),
             "user_id": sender_id,
-            "coordination": invitation["senderCoordination"],
-            "team_id": invitation["teamID"]
+            "coordination": invitation.get("senderCoordination"),
+            "team_id": team_id,
+            "icon_color": invitation.get("senderIconColor")
         }
         del sender_info["friend_list"]
         emit("team_invite", sender_info, to=RoadBuddy.event_handler.user_info[id]["sid"])
@@ -35,6 +37,7 @@ def enter_team(data):
                     "owner_sid": request.sid,
                     "partners": {request.sid : {
                         "image_url": RoadBuddy.event_handler.user_info.get(user_id).get("image_url"),
+                        "icon_color": data.get("iconColor"),
                         "coordination": data.get("coordination"),
                         "username": RoadBuddy.event_handler.user_info.get(user_id).get("username"),
                         "user_id": user_id
@@ -47,6 +50,7 @@ def enter_team(data):
             if data["enter_type"] == "join" and team_is_online:
                 RoadBuddy.event_handler.rooms_info[team_id]["partners"][request.sid] = {
                     "image_url": RoadBuddy.event_handler.user_info.get(user_id).get("image_url"),
+                    "icon_color": data.get("iconColor"),
                     "coordination": data.get("coordination"),
                     "username": RoadBuddy.event_handler.user_info.get(user_id).get("username"),
                     "user_id": user_id
@@ -58,6 +62,7 @@ def enter_team(data):
                     "sid": request.sid,
                     "username": RoadBuddy.event_handler.user_info.get(user_id).get("username"),
                     "image_url": RoadBuddy.event_handler.user_info.get(user_id).get("image_url"),
+                    "icon_color": data.get("iconColor"),
                     "coordination": data.get("coordination")
                 }
                 emit("add_partner", partner, to=team_id)
@@ -106,7 +111,7 @@ def update_team_status():
 
 
 # Event listener for receiving event "join_team_request" from frontend
-# And emit event "join_team_request" to team owner in frontend 
+# And emit event "join_team_request" to team owner 
 @socketio.on("join_team_request")
 def join_team_request(applicant):
     team_is_online = applicant["teamID"] in RoadBuddy.event_handler.rooms_info.keys()
