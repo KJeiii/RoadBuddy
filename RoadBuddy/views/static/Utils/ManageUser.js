@@ -88,6 +88,36 @@ export function RenderAvatar(imageUrl){
     }
 }
 
-export function CreateIconColor(){
-    return `rgb(${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)})`
+export function GetRandomIconColor(){
+    return `rgb(
+        ${Math.floor(Math.random()*256)},
+        ${Math.floor(Math.random()*256)},
+        ${Math.floor(Math.random()*256)}
+        )`
+}
+
+export function DrawCanvas(username, userColor){
+    const//
+        canvas = document.querySelector("canvas.icon-canvas"),
+        context = canvas.getContext("2d"),
+        userFirstCharacter = username[0],
+        characterPosition = (["W", "M"].includes(userFirstCharacter)) ? {x:10,y:175} : {x:40,y:175},
+        userColorIsAccessible = userColor !== null;
+
+    context.fillStyle = userColorIsAccessible ? "rgb(128,128,128)" : userColor; //"rgb(128,128,128)" is grey
+    context.fillRect(0,0,200,200);
+    context.font = "bold 180px serif";
+    context.fillStyle = "rgb(0,0,0)";
+    context.fillText(userFirstCharacter, characterPosition.x, characterPosition.y);
+}
+
+export function ClearCanvasContext(){
+    const canvasContext = document.querySelector("canvas.icon-canvas").getContext("2d");
+    canvasContext.clearRect(0,0,200,200);
+}
+
+export function CreateIconImage(username, userColor){
+    DrawCanvas(username, userColor);
+    const imageUrl = document.querySelector("canvas.icon-canvas").toDataURL();
+    return imageUrl
 }
