@@ -2,9 +2,7 @@ export async function SearchTeams(userID, teamType){
     try {
         let response = await fetch("/api/team", {
             method: "PUT",
-            headers: {
-                "Content-Type": "application/json"
-            },
+            headers: {"Content-Type": "application/json"},
             body: JSON.stringify({user_id: userID, team_type: teamType})
         });
         
@@ -12,8 +10,7 @@ export async function SearchTeams(userID, teamType){
         return {
             createdTeamList: result.data.created_team_list,
             joinedTeamList: result.data.joined_team_list
-        }
-    }
+        }}
     catch(error){
         console.log(error);
         throw(new Error(`Search created teams failed (ManageTeams.js): ${error}`))
@@ -27,8 +24,7 @@ export async function CreateNewTeam(userID, teamName){
         body: JSON.stringify({
             team_name: teamName,
             user_id: userID
-        })
-    });
+        })});
 
     let result = await response.json();
     if (result.error) {
@@ -39,32 +35,35 @@ export async function CreateNewTeam(userID, teamName){
     return result
 }
 
-export function EmitEnterTeamEvent(accept, enterType, teamID, coordination){
+export function EmitEnterTeamEvent(accept, enterType, teamID, iconColor, coordination){
     const enterTeamInfo = {
         accept: accept,
         enter_type: enterType,
         team_id: teamID,
+        iconColor: iconColor,
         coordination: coordination
     };
     socket.emit("enter_team", enterTeamInfo)
 }
 
-export function EmitInviteTeamEvent(senderSID, teamID, myCoordination, friendIDsToInviteArray){
+export function EmitInviteTeamEvent(senderSID, teamID, senderIconColor, senderCoordination, friendIDsToInviteArray){
     const invitation = {
         senderSID: senderSID,
         teamID: teamID,
-        senderCoordination: myCoordination,
+        senderIconColor: senderIconColor,
+        senderCoordination: senderCoordination,
         friendIDsToInvite: friendIDsToInviteArray            
     };
     socket.emit("team_invite", invitation)
 }
 
-export function EmitJoinTeamRequestEvent(userSID, userID, username, imageUrl, coordination, teamID){
+export function EmitJoinTeamRequestEvent(userSID, userID, username, imageUrl, iconColor, coordination, teamID){
     const applicant = {
         userSID: userSID,
         userID: userID,
         username: username,
         imageUrl: imageUrl,
+        iconColor: iconColor,
         coordination: coordination,
         teamID: teamID
     };
