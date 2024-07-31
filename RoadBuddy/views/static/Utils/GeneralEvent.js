@@ -12,8 +12,8 @@ import {
 } from "./GeneralControl.js";
 import { CreateNewTeam, SearchTeams, EmitEnterTeamEvent, EmitInviteTeamEvent, EmitJoinTeamRequestEvent, EmitAcceptTeamRequestEvent, EmitLeaveTeamEvent } from "./ManageTeam.js";
 import { AddTeamClickEvent, AddTeamHoverEvent } from "./TeamEvent.js";
-import { ManipulateSessionStorage, RenderAvatar, RenderUsername } from "./ManageUser.js";
-import { AppendUserInPartnerList, BuildPartnership, UpdatePartnersColor} from "./ManagePartner.js";
+import { CreateIconImage, ClearCanvasContext, ManipulateSessionStorage, RenderAvatar, RenderUsername } from "./ManageUser.js";
+import { AppendUserInPartnerList, BuildPartnership, CreatePartner, UpdatePartnersColor} from "./ManagePartner.js";
 import { mapInfo, messageInfo, onlineUserInfo} from "../main.js";
 import { RenderMessageBtn, SearchMessage } from "./ManageMessage.js";
 import { CollectUpdateBasicInfo, PreviewAvatar, RenderUpdateResponse, UpdateBasicInfo } from "./ManageConfigure.js";
@@ -100,7 +100,6 @@ export function AddEventsToSetting() {
                     .then((updateResponse)=>{
                         // close configure pannel
                         SwitchPannel("main");
-        
                         // pop up prompt to show update success
                         RenderUpdateResponse(updateResponse.responseCode);
         
@@ -108,14 +107,11 @@ export function AddEventsToSetting() {
                         if (updateResponse.ok && updateResponse.responseCode === 1 ){
                             if (updateResponse.username !== window.sessionStorage.getItem("username")){
                                 RenderUsername(updateResponse.username);
-                                ManipulateSessionStorage("set", {username: updateResponse.username});
-                            }
+                                ManipulateSessionStorage("set", {username: updateResponse.username})}
                             if (updateResponse.image_url !== ""){
                                 RenderAvatar(updateResponse.image_url);
-                                ManipulateSessionStorage("set", {image_url: updateResponse.image_url});
-                            }
+                                ManipulateSessionStorage("set", {image_url: updateResponse.image_url})}
                         }
-
                         //remove the value(file) of input#avatar
                         document.querySelector("input#avatar").value = "";
                         document.querySelector(".configure-outer .image .undo").style.display = "none";
@@ -200,16 +196,13 @@ export function AddEventsToFriend() {
     DOMElements.searchIcon.addEventListener("click", () => {
         let searchInput = document.querySelector("input[name=search-friend]");
         searchInput.setAttribute("placeholder", "搜尋姓名");
-
         while (DOMElements.searchList.hasChildNodes()) {
             DOMElements.searchList.removeChild(DOMElements.searchList.lastChild)
         }
-
         if (searchInput.value === "") {
             searchInput.setAttribute("placeholder", "請填入姓名");
             return
         }
-
         let username = document.querySelector("input[name=search-friend]").value;
         SearchNewFriends(username)
             .then(newfriendList => RenderSearchResult(newfriendList))
@@ -238,9 +231,7 @@ export function AddEventsToFriend() {
         const userID = Number(window.sessionStorage.getItem("user_id")); 
         onlineUserInfo.EmitSyncOnlineUserEvent();
         SearchMessage(userID)
-            .then((messages)=>{
-                messages.forEach(message => messageInfo.UpdateInfo(message))
-            })
+            .then((messages)=>{messages.forEach(message => messageInfo.UpdateInfo(message))})
             .catch((error) => console.log(error))
         
         // sending requests
@@ -321,8 +312,7 @@ export function AddEventsToTeam() {
                         ClearList(".create-list");
                         RenderList(".create-list", result.createdTeamList);
                         AddTeamClickEvent(".create-list .item");
-                        AddTeamHoverEvent(".create-list .item");
-                    })
+                        AddTeamHoverEvent(".create-list .item");})
                     .catch((error) => console.log(
                         `Error in render created team list (room.js):${error}`
                     ));
@@ -351,24 +341,16 @@ export function AddEventsToTeam() {
             selectedFriends = selectedItemsFrom(".team-pannel"),
             friendIdsToAdd = selectedFriends.map(friend => friend.id);
 
-        // UpdatePartnersColor(partnersColor, selectedFriends)
-        // UpdatePartnersColor(
-        //     partnersColor,
-        //     [
-        //         {id: window.sessionStorage.getItem("user_id")*1, 
-        //         name: window.sessionStorage.getItem("username")}
-        //     ], 
-        //     ownColor);
-
-        // create owner information in partner-list;
-        // others will be created when they join in
-        const {user_id:userID, sid, username, image_url:imageUrl} = window.sessionStorage;
-        AppendUserInPartnerList(userID, username, imageUrl, document.querySelector(".tracking-pannel .partner-list"));
+        // create owner information in partner-list;others will be created when they join in
+        const {user_id:userID, sid, username, image_url:imageUrl, iconColor} = window.sessionStorage;
+        AppendUserInPartnerList(userID, username, imageUrl, document.querySelector(".tracking-pannel .partner-list")); 
+        //Issue of not having avatar was tacked in main.js at the beginning of rendering main page
   
         // send request for joining team
         EmitInviteTeamEvent(
             socket.id, 
             document.querySelector(".team-pannel .pannel-title").getAttribute("id"),
+            iconColor,
             myCoord, 
             friendIdsToAdd
         );
@@ -376,9 +358,9 @@ export function AddEventsToTeam() {
             true, 
             "create", 
             document.querySelector(".team-pannel .pannel-title").getAttribute("id"),
+            window.sessionStorage.getItem("iconColor"),
             myCoord
         );
-
         // update team using status to other uses
         socket.emit("update_team_status");
     })
@@ -395,18 +377,24 @@ export function AddEventsToTeam() {
         // 2. update other partners when they join in
         const//
             partnerList = document.querySelector(".tracking-pannel .partner-list"),
-            {user_id:userID, username, image_url:imageUrl} = window.sessionStorage,
-            {user_id:leaderID, username: leaderUsername, sid:leaderSid, 
+            {user_id:userID, username, image_url:imageUrl} = window.sessionStorage;
+        AppendUserInPartnerList(userID, username, imageUrl, partnerList); //own imageUrl has been managed at the beginning of render main page
+        const//
+            {user_id:leaderID, username: leaderUsername, sid:leaderSID, icon_Color: leaaderIconColor,
             image_url:leaderImageUrl, coordination:leaderCoordination} = team_sender_info_cache;
-        AppendUserInPartnerList(userID, username, imageUrl, partnerList);
-        AppendUserInPartnerList(leaderID, leaderUsername, leaderImageUrl, partnerList);
-        mapInfo.CreateMarker(leaderSid, leaderImageUrl, leaderCoordination);
+        CreatePartner(
+            leaderID, leaderSID, leaderUsername, leaderImageUrl, 
+            leaaderIconColor, leaderCoordination, partnerList);
  
         // recover team prompt
         ControlTeamMsgBox(".team-invite-prompt", "none");
 
         // Organize data emitted to listener "enter_team" on server
-        EmitEnterTeamEvent(true, "join", team_sender_info_cache.team_id, myCoord);
+        EmitEnterTeamEvent(
+            true, 
+            "join", 
+            team_sender_info_cache.team_id, 
+            window.sessionStorage.getItem("iconColor"), myCoord);
         ManipulateSessionStorage("set", {team_id: team_sender_info_cache["team_id"]});
 
         // Create partner record in partner table in database
@@ -420,8 +408,7 @@ export function AddEventsToTeam() {
                         RenderOnlineStatus(".join-list .item", onlineTeamArray);
                         AddTeamClickEvent(".join-list .item", onlineTeamArray);
                         AddTeamHoverEvent(".join-list .item");
-                    })
-            })
+                    })})
             .catch((error) => {console.log(`Error in accept team request : ${error}`)})
     })
 
@@ -429,7 +416,6 @@ export function AddEventsToTeam() {
     let teamNoBtn = document.querySelector(".team-invite-prompt .no");
     teamNoBtn.addEventListener("click", () => {
         ControlTeamMsgBox(".team-invite-prompt", "none");
-
         // Organize data emitted to listener "enter_team" on server
         EmitEnterTeamEvent(false, "join", document.querySelector(".team-pannel .pannel-title").getAttribute("id"))
     })
@@ -464,8 +450,7 @@ export function AddEventsToTeam() {
                 messages.forEach((message) => {messageInfo.UpdateInfo(message)})
                 ReRenderList([".message-list"], messageInfo.GetSenderList());
                 SwitchSettingBtn({"all": "none"});
-                RenderMessageBtn(false);
-            })
+                RenderMessageBtn(false);})
             .catch((error) => {console.log(error)})
     })
 
@@ -491,6 +476,7 @@ export function AddEventsToTeam() {
         EmitInviteTeamEvent(
             socket.id, 
             window.sessionStorage.getItem("team_id"), 
+            window.sessionStorage.getItem("iconColor"),
             myCoord,
             friendIDsToInvite)
 
@@ -508,9 +494,9 @@ export function AddEventsToTeam() {
     let joinRequestBtn = document.querySelector(".join-trip-btn");
     joinRequestBtn.addEventListener("click", () => {
         const// 
-            {user_id: userID, sid: userSID, username, image_url:imageUrl} = window.sessionStorage,
+            {user_id: userID, username, image_url:imageUrl, iconColor} = window.sessionStorage,
             teamID = document.querySelector(".team-pannel .pannel-title").getAttribute("id");
-        EmitJoinTeamRequestEvent(socket.id, userID, username, imageUrl, myCoord, teamID);
+        EmitJoinTeamRequestEvent(socket.id, userID, username, imageUrl, iconColor, myCoord, teamID);
     })
 
     // Yes or No response to join team requeset
@@ -518,14 +504,8 @@ export function AddEventsToTeam() {
     let requestYesBtn = document.querySelector(".team-join-request .yes");
     requestYesBtn.addEventListener("click", () => {
         const applicantID = document.querySelector(".team-join-request .content").getAttribute("id");
-        // create a new marker color for new partner
-        // UpdatePartnersColor(
-        //     partnersColor, 
-        //     [{id: applicantID, name: document.querySelector(".team-join-request .from").textContent}]
-        // );
         // emit event "enter_team" to server to initialize 
         EmitAcceptTeamRequestEvent(true, team_applicants_cache[applicantID].userSID);
-
         // recover team prompt and remove team_applicants_cache
         ControlTeamMsgBox(".team-join-request", "none");
         delete team_applicants_cache[applicantID];
