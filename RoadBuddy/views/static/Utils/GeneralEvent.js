@@ -12,7 +12,7 @@ import {
 } from "./GeneralControl.js";
 import { CreateNewTeam, SearchTeams, EmitEnterTeamEvent, EmitInviteTeamEvent, EmitJoinTeamRequestEvent, EmitAcceptTeamRequestEvent, EmitLeaveTeamEvent } from "./ManageTeam.js";
 import { AddTeamClickEvent, AddTeamHoverEvent } from "./TeamEvent.js";
-import { CreateIconImage, ClearCanvasContext, ManipulateSessionStorage, RenderAvatar, RenderUsername } from "./ManageUser.js";
+import { ChangeIconColor, ManipulateSessionStorage, RenderAvatar, RenderUsername } from "./ManageUser.js";
 import { AppendUserInPartnerList, BuildPartnership, CreatePartner, UpdatePartnersColor} from "./ManagePartner.js";
 import { mapInfo, messageInfo, onlineUserInfo} from "../main.js";
 import { RenderMessageBtn, SearchMessage } from "./ManageMessage.js";
@@ -21,7 +21,7 @@ import { CollectUpdateBasicInfo, PreviewAvatar, RenderUpdateResponse, UpdateBasi
 
 export const AllEvents = [
     AddEventsToSetting, AddEventsToSwitchPannelContent, AddEventsToFriend,
-    AddEventsToTeam, AddEventsToPullAndDrop, AddEventToClose
+    AddEventsToTeam, AddEventsToPullAndDrop, AddEventsToClose, AddEventsToUser
 ]
 
 
@@ -522,7 +522,7 @@ export function AddEventsToTeam() {
 
 }
 
-export function AddEventToClose() {
+export function AddEventsToClose() {
     for (let closeBtn of DOMElements.closePannel) {
         closeBtn.addEventListener("click", () => {
             SwitchPannel("main");
@@ -531,4 +531,9 @@ export function AddEventToClose() {
     };
 }
 
-
+export function AddEventsToUser(){
+    // change avatar color
+    document.querySelector("div.user-info>div.icon").addEventListener("click", ()=>{
+        ChangeIconColor(socket.id, window.sessionStorage.getItem("username"))   
+    })
+}
