@@ -1,3 +1,5 @@
+import { mapInfo } from "../main.js";
+
 // build function for checking user status
 export async function CheckUserStatus() {
     let jwt = window.localStorage.getItem("token");
@@ -104,7 +106,7 @@ export function DrawCanvas(username, userColor){
         characterPosition = (["W", "M"].includes(userFirstCharacter)) ? {x:10,y:175} : {x:40,y:175},
         userColorIsAccessible = userColor !== null;
 
-    context.fillStyle = userColorIsAccessible ? "rgb(128,128,128)" : userColor; //"rgb(128,128,128)" is grey
+    context.fillStyle = userColorIsAccessible ? userColor : "rgb(128,128,128)"; //"rgb(128,128,128)" is grey
     context.fillRect(0,0,200,200);
     context.font = "bold 180px serif";
     context.fillStyle = "rgb(0,0,0)";
@@ -120,4 +122,15 @@ export function CreateIconImage(username, userColor){
     DrawCanvas(username, userColor);
     const imageUrl = document.querySelector("canvas.icon-canvas").toDataURL();
     return imageUrl
+}
+
+export function ChangeIconColor(sid, username){
+    ClearCanvasContext();
+    const//
+        newColor = GetRandomIconColor(),
+        newImageUrl = CreateIconImage(username, newColor);   
+    ManipulateSessionStorage("set", {iconColor: newColor, image_url: newImageUrl});
+    RenderAvatar(newImageUrl);
+    mapInfo.UpdateMarkerImage(sid, newImageUrl);
+    ClearCanvasContext();
 }
