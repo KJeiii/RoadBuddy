@@ -27,7 +27,7 @@ export class Map{
             const myIcon = L.icon({
             iconUrl: imageUrl,
             iconSize: [40, 40],
-            className: "icon-on-map"
+            className: sid
             });
             const newMarker = L.marker([coordination.latitude, coordination.longitude], 
                                 {icon: myIcon}).addTo(this.map);
@@ -59,6 +59,15 @@ export class Map{
     UpdateMarkerPosition(sid, newCoordination){ //coordination = {latitude:xxx, longitude:xxx}
         try{this.sidAndmarkerPair[sid].setLatLng([newCoordination.latitude, newCoordination.longitude])}
         catch(error){console.log("Failed to execute method UpdateMarkerPosition in Map class: ", error)}
+    }
+
+    UpdateMarkerImage(sid, imageUrl){
+        try{
+            console.log(this.sidAndmarkerPair[sid])
+            const marker = document.querySelector(`.leaflet-marker-pane img.${sid}`);
+            marker.src = imageUrl;
+        }
+        catch(error){console.log("Failed to execute method UpdateMarkerImage in Map class: ", error)}
     }
 
     GetAllMarkersSID(){
