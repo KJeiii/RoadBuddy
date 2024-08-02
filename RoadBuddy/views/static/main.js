@@ -1,15 +1,16 @@
-import { CheckUserStatus, ClearCanvasContext, CreateIconImage, GetRandomIconColor, RenderAvatar, RenderEmail, RenderUsername } from "./Utils/ManageUser.js";
+import { ManipulateSessionStorage, OnlineUserInfo, CheckUserStatus, ClearCanvasContext, CreateIconImage, GetRandomIconColor, RenderAvatar, RenderEmail, RenderUsername } from "./Utils/ManageUser.js";
 import { SearchTeams } from "./Utils/ManageTeam.js";
-import { SearchOldFriends } from "./Utils/ManageFriend.js";
+import { SearchOldFriends, OnlineFriendInfo, EmitUpdateOnlineStatusEvents } from "./Utils/ManageFriend.js";
 import { ClearList, RenderList, RenderOnlineStatus, InitializeAllPannelsTagAttributes } from "./Utils/GeneralControl.js";
 import { Map } from "./Utils/ManageMap.js";
 import * as GeneralEvents from "./Utils/GeneralEvent.js";
-import { ManipulateSessionStorage, OnlineUserInfo } from "./Utils/ManageUser.js";
+// import { ManipulateSessionStorage, OnlineUserInfo } from "./Utils/ManageUser.js";
 import { AddTeamClickEvent, AddTeamHoverEvent } from "./Utils/TeamEvent.js";
-import { OnlineFriendInfo, EmitUpdateOnlineStatusEvents } from "./Utils/ManageFriend.js";
+// import { OnlineFriendInfo, EmitUpdateOnlineStatusEvents } from "./Utils/ManageFriend.js";
 import { SearchMessage, MessageInfo, RenderMessageBtn } from "./Utils/ManageMessage.js";
 
-// initialzie objects
+console.log(OnlineFriendInfo)
+// initialize objects
 export const//
     onlineFriendInfo = new OnlineFriendInfo(),
     messageInfo = new MessageInfo(),
