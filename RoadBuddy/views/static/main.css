@@ -31,7 +31,8 @@ button:hover,
 .configure-form image:hover,
 label.avatar:hover,
 img.modify:hover,
-.configure-outer .image .undo:hover
+.configure-outer .image .undo:hover,
+.user-info .icon:hover
  {
     cursor: pointer;
 }
@@ -83,7 +84,7 @@ img.modify:hover,
     background-color: grey;
 }
 
-.icon-on-map{
+.leaflet-marker-pane img{
     border-radius: 50%;
     background-color: white;
 }
@@ -592,6 +593,7 @@ input[name=create-team]
     width: 15vw;
     height: 15vh;
     margin: 10px auto;
+    border-radius: 10%;
 }
 
 .configure-outer .image .undo{
@@ -647,6 +649,7 @@ label.avatar{
 .configure-form-username input{
     font-size: 15px;
     text-align: center;
+    width: 20vw;
 }
 
 div.button{
