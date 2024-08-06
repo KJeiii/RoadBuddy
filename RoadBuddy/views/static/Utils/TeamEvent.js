@@ -1,4 +1,3 @@
-import * as DOMElements from "./DOMElements.js";
 import { ControlTeamMsgBox, ShowPannelContent, SwitchPannel } from "./GeneralControl.js";
 
 export function AddTeamClickEvent(teamItemCssSelector, ...onlineTeamArray){
