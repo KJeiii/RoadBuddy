@@ -1,13 +1,17 @@
-export function PreviewAvatar(){
-    const//
-        avatarImg = document.querySelector("input#avatar").files[0],
-        imagePreview = document.querySelector(".configure-outer .image"),
-        fileReader = new FileReader();
+export function PreviewAvatar(avatarFile, elementToPreviewAvatar){
+    const fileReader = new FileReader();
     fileReader.onload = () =>{
-        imagePreview.style.backgroundImage = `url(${fileReader.result})`;
+        elementToPreviewAvatar.style.backgroundImage = `url(${fileReader.result})`;
+        elementToPreviewAvatar.style.backgroundSize = "80%";
     };
-    fileReader.readAsDataURL(avatarImg);
-    document.querySelector(".configure-outer .image .undo").style.display = "block";
+    fileReader.readAsDataURL(avatarFile);
+}
+
+export function SwitchAvatarUndoBtn(undoBtnCssSelector){
+    const//
+        undoBtn = document.querySelector(undoBtnCssSelector), //"div.configure-outer div.image div.undo"
+        isShown = (undoBtn.style.display === "block") ? true : false;
+    undoBtn.style.display = (isShown) ? "none" : "block";
 }
 
 export async function CollectUpdateBasicInfo(){
