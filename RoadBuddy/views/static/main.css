@@ -590,8 +590,8 @@ input[name=create-team]
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
-    width: 15vw;
-    height: 15vh;
+    aspect-ratio: 1/1;
+    width: 100px;
     margin: 10px auto;
     border-radius: 10%;
 }
