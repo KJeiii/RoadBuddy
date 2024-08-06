@@ -1,11 +1,11 @@
-import { mapInfo } from "../main.js";
+import { map } from "../Utils/AppClass.js";
 
 // ----- update partners postion when moving -----
 socket.on("movingPostion", (partners) => {
     for (const partnerSID in partners){
-        const parterIsOnMap = mapInfo.GetAllMarkersSID().includes(partnerSID);
+        const parterIsOnMap = map.GetAllMarkersSID().includes(partnerSID);
         if (parterIsOnMap){
-            mapInfo.UpdateMarkerPosition(partnerSID, partners[partnerSID]["coordination"]);
+            map.UpdateMarkerPosition(partnerSID, partners[partnerSID]["coordination"]);
         }
     }
 });
@@ -20,7 +20,7 @@ setInterval(()=> {
     delete dataToUpdatePosition["friendList"];
     if (notInTeam){
         myCoord = {...myCoord, ...randomCoords}
-        mapInfo.UpdateMarkerPosition(socket.id, myCoord);
+        map.UpdateMarkerPosition(socket.id, myCoord);
         return
     }
     socket.emit("position", dataToUpdatePosition);
