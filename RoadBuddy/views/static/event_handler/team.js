@@ -2,9 +2,9 @@ import { ClearList, RenderList, RenderOnlineStatus, SwitchPannel, ControlTeamMsg
 } from "../Utils/GeneralControl.js";
 import { AppendUserInPartnerList, CreatePartner, RemoveUserFromPartnerList } from "../Utils/ManagePartner.js";
 import { AddTeamClickEvent, AddTeamHoverEvent } from "../Utils/TeamEvent.js";
-import { ClearCanvasContext, CreateIconImage, ManipulateSessionStorage } from "../Utils/ManageUser.js";
+import { ManipulateSessionStorage } from "../Utils/ManageUser.js";
 import { EmitEnterTeamEvent } from "../Utils/ManageTeam.js";
-import { mapInfo } from "../main.js";
+import { map } from "../Utils/AppClass.js";
 
 // ----- listener for receiving event "team_invite" from server -----
 socket.on("team_invite", (data) => {
@@ -29,7 +29,7 @@ socket.on("leave_team", (leavingUser) => {
     // remove leaving partner's marker and information in the partner list
     const isNotMe = leavingUser.sid !== socket.id;
     if (isNotMe){
-        mapInfo.RemoveMarker(leavingUser.sid);
+        map.RemoveMarker(leavingUser.sid);
         RemoveUserFromPartnerList(leavingUser["user_id"])
     }
 })
