@@ -1,4 +1,4 @@
-import { mapInfo } from "../main.js";
+import { map } from "./AppClass.js";
 import { CreateIconImage, ClearCanvasContext } from "./ManageUser.js";
 
 export function AppendUserInPartnerList (userID, username, imageUrl, partnerListElement) {
@@ -68,6 +68,6 @@ export function CreatePartner(userID, userSID, username, imageUrl, iconColor, co
         partnerHasAvatar = imageUrl !== null,
         imageUrlToRenderPartner = partnerHasAvatar ? imageUrl : CreateIconImage(username, iconColor);
     AppendUserInPartnerList(userID, username, imageUrlToRenderPartner, partnerListDOMElement);
-    mapInfo.CreateMarker(userSID, imageUrlToRenderPartner, coordination);
+    map.CreateMarker(userSID, imageUrlToRenderPartner, coordination);
     ClearCanvasContext();
 }
