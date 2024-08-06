@@ -1,4 +1,4 @@
-import { mapInfo } from "./AppClass.js";
+import { map } from "./AppClass.js";
 
 // build function for checking user status
 export async function CheckUserStatus() {
@@ -114,6 +114,6 @@ export function ChangeIconColor(sid, username){
         newImageUrl = CreateIconImage(username, newColor);   
     ManipulateSessionStorage("set", {iconColor: newColor, image_url: newImageUrl});
     RenderAvatar(newImageUrl);
-    mapInfo.UpdateMarkerImage(sid, newImageUrl);
+    map.UpdateMarkerImage(sid, newImageUrl);
     ClearCanvasContext();
 }
