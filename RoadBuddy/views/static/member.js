@@ -1,3 +1,4 @@
+import { PreviewAvatar, SwitchAvatarUndoBtn } from "./Utils/ManageConfigure.js";
 import { CheckUserStatus } from "./Utils/ManageUser.js";
 CheckUserStatus()
     .then((result) => {
@@ -10,13 +11,13 @@ CheckUserStatus()
     
 // ----- switch sigup/login page -----
 let//
-signupDiv = document.querySelector(".title-signup"),
-loginDiv = document.querySelector(".title-login");
+signupDiv = document.querySelector("div.title-signup"),
+loginDiv = document.querySelector("div.title-login");
 
 signupDiv.addEventListener("click", () => {
     let//
-    signupForm = document.querySelector(".signup"),
-    loginForm = document.querySelector(".login");
+    signupForm = document.querySelector("div.signup"),
+    loginForm = document.querySelector("div.login");
 
     signupForm.style.display = "flex";
     loginForm.style.display = "none";
@@ -24,9 +25,9 @@ signupDiv.addEventListener("click", () => {
 
 loginDiv.addEventListener("click", () => {
     let//
-    signupForm = document.querySelector(".signup"),
-    loginForm = document.querySelector(".login"),
-    loginBtn = document.querySelector(".login-btn");
+    signupForm = document.querySelector("div.signup"),
+    loginForm = document.querySelector("div.login"),
+    loginBtn = document.querySelector("button.login");
 
     signupForm.style.display = "none";
     loginBtn.style.backgroundColor = "rgba(83,186,190,0.5)";
@@ -36,8 +37,8 @@ loginDiv.addEventListener("click", () => {
 
 // ----- submit user information when click signup/login button -----
 let//
-signupBtn = document.querySelector(".signup-btn"),
-loginBtn = document.querySelector(".login-btn");
+signupBtn = document.querySelector("button.signup"),
+loginBtn = document.querySelector("button.login");
 
 let addErrorMsg = (cssSelector, msgText) => {
     let//
@@ -51,20 +52,39 @@ let addErrorMsg = (cssSelector, msgText) => {
     inputTitle.appendChild(msg)
 }
 
+// --- preview avatar ---
+const avatarInput = document.querySelector("div.form-div.avatar input[name='avatar']");
+avatarInput.addEventListener("change", ()=>{
+    PreviewAvatar(
+        avatarInput.files[0], 
+        document.querySelector("div.form-div.avatar label")
+    );
+    SwitchAvatarUndoBtn("div.form-div.avatar div.undo");
+})
+
+// --- undo avatar upload ---
+document.querySelector("div.form-div.avatar div.undo").addEventListener("click", ()=>{
+    const avatarLabel = document.querySelector("div.form-div.avatar label");
+    avatarLabel.style.backgroundImage = "";
+    avatarLabel.style.backgroundSize = "20%";
+    document.querySelector("div.form-div.avatar input").value = "";
+    SwitchAvatarUndoBtn("div.form-div.avatar div.undo");
+})
+
 // --- signup ---
 signupBtn.addEventListener("click", async() => {
     let//
-    emailInput = document.querySelector(".signup input[name=email]"),
-    usernameInput = document.querySelector(".signup input[name=username]"),
-    passwordInput = document.querySelector(".signup input[name=password]"),
-    confirmInput = document.querySelector(".signup input[name=confirm-password]");
+    emailInput = document.querySelector("div.signup input[name=email]"),
+    usernameInput = document.querySelector("div.signup input[name=username]"),
+    passwordInput = document.querySelector("div.signup input[name=password]"),
+    confirmInput = document.querySelector("div.signup input[name=confirm-password]");
     
-    let emailTitle = document.querySelector(".signup .email");
+    let emailTitle = document.querySelector("div.signup div.form-div-title.email");
     while ( emailTitle.childNodes.length > 2 ) {
         emailTitle.removeChild(emailTitle.lastChild)
     }
 
-    let passwordTitle = document.querySelector(".signup .confirm-password");
+    let passwordTitle = document.querySelector("div.signup div.form-div-title.confirm-password");
     while ( passwordTitle.childNodes.length > 2 ) {
         passwordTitle.removeChild(passwordTitle.lastChild)
     }
@@ -112,10 +132,10 @@ signupBtn.addEventListener("click", async() => {
         }
         
         let//
-        signupForm = document.querySelector(".signup"),
-        loginForm = document.querySelector(".login"),
-        loginBtn = document.querySelector(".login-btn"),
-        loginMailInput = document.querySelector(".login input[name=email]");
+        signupForm = document.querySelector("div.signup"),
+        loginForm = document.querySelector("div.login"),
+        loginBtn = document.querySelector("button.login"),
+        loginMailInput = document.querySelector("div.login input[name=email]");
     
         signupForm.style.display = "none";
         loginMailInput.value = emailInput.value;
@@ -135,15 +155,15 @@ signupBtn.addEventListener("click", async() => {
 // --- login ---
 loginBtn.addEventListener("click", async() => {
     let//
-    emailInput = document.querySelector(".login input[name=email]"),
-    passwordInput = document.querySelector(".login input[name=password]");
+    emailInput = document.querySelector("div.login input[name=email]"),
+    passwordInput = document.querySelector("div.login input[name=password]");
 
-    let emailTitle = document.querySelector(".login .email");
+    let emailTitle = document.querySelector("div.login div.form-div-title.email");
     while ( emailTitle.childNodes.length > 2 ) {
         emailTitle.removeChild(emailTitle.lastChild)
     }
 
-    let passwordTitle = document.querySelector(".login .password");
+    let passwordTitle = document.querySelector("div.login div.form-div-title.password");
     while ( passwordTitle.childNodes.length > 2 ) {
         passwordTitle.removeChild(passwordTitle.lastChild)
     }
