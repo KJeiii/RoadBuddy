@@ -56,7 +56,7 @@ body {
 
 }
 
-.login {
+div.login {
     display: none;
     flex-wrap: wrap;
     align-items: center;
@@ -114,3 +114,58 @@ button:hover {
 
 }
 
+.form-div.avatar{
+    height: 40vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.form-div-title.avatar{
+    color: black;
+}
+
+.form-div.avatar .outer{
+    position: relative;
+    width: 170px;
+    height: 170px;
+    margin: 0;
+    padding: 0;
+}
+
+.form-div.avatar label{
+    aspect-ratio: 1/1;
+    width: 170px;
+    border-radius: 10px;
+    border: 5px solid rgb(244, 244, 244);
+    background-image: url("./images/upload.svg");
+    background-position: center;
+    background-size: 20%;
+    background-repeat: no-repeat;
+}
+
+.form-div.avatar div.undo{
+    display: none;
+    position: absolute;
+    right: 5%;
+    top: 5%;
+    background-image: url("../static/images/trash.svg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 20px;
+    height: 20px;
+}
+
+.form-div.avatar label:hover{
+    cursor: pointer;
+}
+
+.form-div.avatar input[type="file"]{
+    display: none;
+}
+
+button.pass,
+button.signup{
+    display: none;
+}
