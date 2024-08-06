@@ -19,7 +19,7 @@
 
 
         <div class="signup">
-            <div class="form-div">
+            <!-- <div class="form-div">
                 <div class="form-div-title email">
                     <div>電子信箱</div>
                 </div>
@@ -42,8 +42,22 @@
                     <div>確認密碼</div>
                 </div>
                 <input type="password" name="confirm-password" placeholder="再次輸入密碼">
+            </div> -->
+            <div class="form-div avatar">
+                <div class="form-div-title avatar">
+                    <div>上傳照片</div>
+                </div>
+                <div class="form-div avatar outer">
+                    <div class="undo"></div>
+                    <label for="avatar"></label>
+                </div>  
+                <input type="file" name="avatar" id="avatar">
             </div>
-            <button type="submit" class="signup-btn">註冊</button>
+            <div>
+                <button class="next">下一步</button>
+                <button class="pass">跳過</button>
+                <button type="submit"  class="signup">完成註冊</button>
+            </div>
         </div>
 
         <div class="login">
@@ -59,7 +73,7 @@
                 </div>
                 <input type="password" name="password" placeholder="輸入密碼">
             </div>
-            <button type="submit" class="login-btn">登入</button>
+            <button type="submit" class="login">登入</button>
         </div>
     <div>
     
