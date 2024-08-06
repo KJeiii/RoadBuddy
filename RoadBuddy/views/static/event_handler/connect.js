@@ -1,4 +1,4 @@
-import { onlineUserInfo } from "../main.js";
+import { onlineUsers } from "../Utils/AppClass.js";
 
 socket.on("initialization", () => {
     socket.emit("initial_friend_status");
@@ -6,5 +6,5 @@ socket.on("initialization", () => {
 });
 
 socket.on("sync_online_user", (userIDArray) => {
-    onlineUserInfo.AppendUserID(userIDArray)
+    onlineUsers.AppendUserID(userIDArray)
 })
