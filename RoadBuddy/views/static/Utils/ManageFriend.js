@@ -1,4 +1,4 @@
-import { messageInfo, onlineUserInfo } from "../main.js";
+import { messageInfo, onlineUserInfo } from "./AppClass.js";
 import * as DOMElements from "./DOMElements.js";
 import { ReRenderList } from "./GeneralControl.js";
 import { ControlFriendMsgBox, SwitchPannel } from "./GeneralControl.js";
@@ -218,17 +218,4 @@ export function UpdateFriends(myID, ...rest){ // rest = {senderID, senderName, r
 export function EmitUpdateOnlineStatusEvents(){
     socket.emit("initial_friend_status");
     socket.emit("online_friend_status");
-}
-
-export class OnlineFriendInfo{
-    constructor(){};
-    friendInfo = {/*id: {sid: string, name: string}*/};
-    UpdateInfo(id, sid, name){
-        this.friendInfo = {...this.friendInfo, [id]: {sid: sid, name: name}};
-    };
-    DeleteInfo(id){delete this.friendInfo[id]}
-    ShowInfo(){console.log(this.friendInfo)};
-    FindFriendSID(id){return this.friendInfo[id].sid};
-    FindFriendName(id){return this.friendInfo[id].name};
-    GetAllFriendIDArray(){return Object.keys(this.friendInfo).map((id) => id*1)}
 }
