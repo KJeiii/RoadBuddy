@@ -1,4 +1,4 @@
-import { mapInfo } from "../main.js";
+import { mapInfo } from "./AppClass.js";
 
 // build function for checking user status
 export async function CheckUserStatus() {
@@ -9,11 +9,11 @@ export async function CheckUserStatus() {
 
         // Verify user's token
         let//
-        response = await fetch("/api/member/auth", {
-            method: "GET",
-            headers: {"authorization": `Bearer ${jwt}`}
-        }),
-        result = await response.json();
+            response = await fetch("/api/member/auth", {
+                method: "GET",
+                headers: {"authorization": `Bearer ${jwt}`}
+            }),
+            result = await response.json();
 
         // If verification does not pass
         if (result.data === null) {return {"ok": false, "data": null}}
@@ -55,23 +55,6 @@ export function EmitStoreUserInfoEvent(userID, username, email, friendList){
         friend_list: friendList
     };
     socket.emit("store_userinfo", userInfo);
-}
-
-export class OnlineUserInfo{
-    constructor(){}
-    onlineUserIDs = [];
-    AppendUserID(...rest){
-        const onlineUserIDArray = rest[0];
-        onlineUserIDArray.forEach((userID) => {
-            !this.onlineUserIDs.includes(userID) && this.onlineUserIDs.push(userID)
-        })
-    }
-    EmitSyncOnlineUserEvent(){
-        socket.emit("sync_online_user")
-    }
-    GetOnlineUserIDArray(){
-        return this.onlineUserIDs
-    }
 }
 
 export function RenderUsername(username){
