@@ -1,6 +1,6 @@
 import { SearchOldFriends } from "../Utils/ManageFriend.js";
 import { ControlFriendMsgBox, RenderOnlineStatus, ReRenderList } from "../Utils/GeneralControl.js";
-import { onlineFriendInfo } from "../main.js";
+import { onlineFriends } from "../Utils/AppClass.js";
 
 // *** as a receiver
 socket.on("friend_request", (data) => {
@@ -28,17 +28,17 @@ socket.on("update_friend_status", (data) => {
     if (data["update-type"] === "online"){
         data["online_friend_list"].forEach((friend) => {
             const {user_id, user_sid, username} = friend;
-            onlineFriendInfo.UpdateInfo(user_id, user_sid, username);
+            onlineFriends.UpdateInfo(user_id, user_sid, username);
         })
     }
 
     if (data["update-type"] === "offline"){
         const {user_id} = data["offline_friend_id"];
-        onlineFriendInfo.DeleteInfo(user_id)
+        onlineFriends.DeleteInfo(user_id)
     }
     
-    RenderOnlineStatus(".team-pannel .friend-list .item", onlineFriendInfo.GetAllFriendIDArray());
-    RenderOnlineStatus(".main-pannel .friend-list .item", onlineFriendInfo.GetAllFriendIDArray());
+    RenderOnlineStatus(".team-pannel .friend-list .item", onlineFriends.GetAllFriendIDArray());
+    RenderOnlineStatus(".main-pannel .friend-list .item", onlineFriends.GetAllFriendIDArray());
 })
 
 
