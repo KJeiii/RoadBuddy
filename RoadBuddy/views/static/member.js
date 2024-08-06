@@ -1,5 +1,4 @@
 import { CheckUserStatus } from "./Utils/ManageUser.js";
-
 CheckUserStatus()
     .then((result) => {
         if (result.ok) {
