@@ -530,7 +530,12 @@ export function AddEventsToClose() {
 
 export function AddEventsToUser(){
     // change avatar color
-    document.querySelector("div.user-info>div.icon").addEventListener("click", ()=>{
-        ChangeIconColor(socket.id, window.sessionStorage.getItem("username"))   
-    })
+    const//
+        iconDiv = document.querySelector("div.user-info>div.icon"),
+        notUploadingAvatar = window.sessionStorage.getItem("image_url").split(":")[0] === "data";
+    if (notUploadingAvatar) {
+        iconDiv.addEventListener("click", ()=>{
+            ChangeIconColor(socket.id, window.sessionStorage.getItem("username"))   
+        })
+    }
 }
