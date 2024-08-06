@@ -1,4 +1,4 @@
-import { messageInfo } from "../main.js";
+import { messages } from "./AppClass.js";
 import * as DOMElements from "./DOMElements.js";
 import { UpdateFriends } from "./ManageFriend.js";
 import { DeleteMessage } from "./ManageMessage.js";
@@ -354,15 +354,15 @@ export function RenderList(listCssSelector, listItemArray) {
                     const//
                         {user_id, username} = window.sessionStorage,
                         senderID = Number(this.parentElement.parentElement.getAttribute("id")),
-                        senerName = messageInfo.FindSenderName(senderID);
+                        senerName = messages.FindSenderName(senderID);
                     UpdateFriends(Number(user_id), {
                         senderID: senderID,
                         senderName: senerName,
                         receiverID: Number(user_id),
                         receiverName: username
                     });
-                    messageInfo.DeleteInfo(senderID);
-                    ReRenderList([".message-list"], messageInfo.GetSenderList());
+                    messages.DeleteInfo(senderID);
+                    ReRenderList([".message-list"], messages.GetSenderList());
                     DeleteMessage(senderID,Number(user_id));
                 });
                 rejectBtn.addEventListener("click", function(){
@@ -371,8 +371,8 @@ export function RenderList(listCssSelector, listItemArray) {
                         {user_id} = window.sessionStorage;
                     DeleteMessage(senderID, Number(user_id))
                         .then(()=>{
-                            messageInfo.DeleteInfo(senderID);
-                            ReRenderList([".message-list"], messageInfo.GetSenderList());
+                            messages.DeleteInfo(senderID);
+                            ReRenderList([".message-list"], messages.GetSenderList());
                         })
                 })
             }
