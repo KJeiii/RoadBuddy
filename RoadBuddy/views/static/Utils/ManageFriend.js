@@ -1,4 +1,4 @@
-import { messageInfo, onlineUserInfo } from "./AppClass.js";
+import { messages, onlineUsers } from "./AppClass.js";
 import * as DOMElements from "./DOMElements.js";
 import { ReRenderList } from "./GeneralControl.js";
 import { ControlFriendMsgBox, SwitchPannel } from "./GeneralControl.js";
@@ -138,11 +138,11 @@ function SeperateUserByOnlineStatus(userArrayToSentRequest, onlineUserArray){
 export function SendFriendRequest(repetitionIDs, newFriendIDs){
     if ( repetitionIDs.length == 0 && newFriendIDs.length !== 0 ) {
         // sync online users array at first
-        onlineUserInfo.EmitSyncOnlineUserEvent();
+        onlineUsers.EmitSyncOnlineUserEvent();
 
         const//
             senderID = Number(window.sessionStorage.getItem("user_id")), 
-            [onlineUserArray, offlineUserArray] = SeperateUserByOnlineStatus(newFriendIDs, onlineUserInfo.GetOnlineUserIDArray())
+            [onlineUserArray, offlineUserArray] = SeperateUserByOnlineStatus(newFriendIDs, onlineUsers.GetOnlineUserIDArray())
             
         // send message if users are online
         let data = {
@@ -152,15 +152,15 @@ export function SendFriendRequest(repetitionIDs, newFriendIDs){
         socket.emit("friend_reqeust", data);
 
         // send message if users are offline and have not been sent request yet
-        const notYetRequestedUsers = messageInfo.ExtractNotYetRequestedUsers(offlineUserArray);
+        const notYetRequestedUsers = messages.ExtractNotYetRequestedUsers(offlineUserArray);
         if (notYetRequestedUsers.length !== 0) {
             CreateMessage(senderID, notYetRequestedUsers)
                 .then(()=>{
                     SearchMessage(senderID)
                         .then((result) => {
-                            result.forEach((message) => {messageInfo.UpdateInfo(message)});
+                            result.forEach((message) => {messages.UpdateInfo(message)});
                         })
-                        .catch((error) => {console.log("Error occured at messageInfo.UpdateInfo(message) in ManageFriend.js:", error)})
+                        .catch((error) => {console.log("Error occured at messages.UpdateInfo(message) in ManageFriend.js:", error)})
                 })
                 .catch((error) => {console.log("Error occured at CreateMessage() in ManageFriend.js:", error)})
         }
