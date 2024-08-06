@@ -13,7 +13,7 @@ import { ChangeIconColor, ManipulateSessionStorage, RenderAvatar, RenderUsername
 import { AppendUserInPartnerList, BuildPartnership, CreatePartner, UpdatePartnersColor} from "./ManagePartner.js";
 import { map, messages, onlineUsers} from "./AppClass.js";
 import { RenderMessageBtn, SearchMessage } from "./ManageMessage.js";
-import { CollectUpdateBasicInfo, PreviewAvatar, RenderUpdateResponse, UpdateBasicInfo } from "./ManageConfigure.js";
+import { CollectUpdateBasicInfo, PreviewAvatar, RenderUpdateResponse, SwitchAvatarUndoBtn, UpdateBasicInfo } from "./ManageConfigure.js";
 
 
 export const AllEvents = [
@@ -52,7 +52,13 @@ export function AddEventsToSetting() {
 
     // preview avatar
     const avatarInput = document.querySelector("input#avatar");
-    avatarInput.addEventListener("change", PreviewAvatar);
+    avatarInput.addEventListener("change", ()=>{
+        PreviewAvatar(
+            document.querySelector("input#avatar").files[0],
+            document.querySelector("div.configure-outer div.image")
+        );
+        SwitchAvatarUndoBtn("div.configure-outer div.undo");
+    });
 
     // Be albe to modify username
     const modifyButton = document.querySelector("img.modify");
@@ -66,7 +72,7 @@ export function AddEventsToSetting() {
     updateResponseCloseBtn.addEventListener("click", ()=>{
         RenderUpdateResponse(3);
         document.querySelector(".configure-response").style.display = "none";
-        document.querySelector(".configure-outer .image .undo").style.display = "none";
+        SwitchAvatarUndoBtn("div.configure-outer div.undo");
     });
 
     // click close to initialzie update-pannel input value
@@ -75,7 +81,7 @@ export function AddEventsToSetting() {
         document.querySelector("input#avatar").value = "";
         document.querySelector(".configure-outer .image").style.backgroundImage = `url(${window.sessionStorage.getItem("image_url")})`;
         document.querySelector(".configure-pannel input#username-to-update").value = window.sessionStorage.getItem("username");
-        document.querySelector(".configure-outer .image .undo").style.display = "none";
+        SwitchAvatarUndoBtn("div.configure-outer div.undo");
     })
 
     // undo file seleted
@@ -83,7 +89,7 @@ export function AddEventsToSetting() {
     undo.addEventListener("click", ()=>{
         document.querySelector(".configure-outer .image").style.backgroundImage = `url(${window.sessionStorage.getItem("image_url")})`;
         document.querySelector("input#avatar").value = "";
-        document.querySelector(".configure-outer .image .undo").style.display = "none";
+        SwitchAvatarUndoBtn("div.configure-outer div.undo");
     })
 
     // Sending request
@@ -111,7 +117,7 @@ export function AddEventsToSetting() {
                         }
                         //remove the value(file) of input#avatar
                         document.querySelector("input#avatar").value = "";
-                        document.querySelector(".configure-outer .image .undo").style.display = "none";
+                        SwitchAvatarUndoBtn("div.configure-outer div.undo");
                     })
                     .catch((updateResponse)=>{
                         RenderUpdateResponse(updateResponse.responseCode);
