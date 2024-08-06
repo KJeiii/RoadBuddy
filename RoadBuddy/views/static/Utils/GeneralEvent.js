@@ -1,20 +1,17 @@
 import * as DOMElements from "./DOMElements.js";
-import {
-    SearchNewFriends, RenderSearchResult, SearchOldFriends, FetchSelectedItemIDsByCondition,
+import { SearchNewFriends, RenderSearchResult, SearchOldFriends, FetchSelectedItemIDsByCondition,
     CheckRelationship, SendFriendRequest, EmitFriendRequestResultEvent, UpdateFriends
 } from "./ManageFriend.js";
-import { 
-    ControlFriendMsgBox, ClearList, RenderList, SwitchSettingBtn,
-    SwitchPullAndDropBtn, ShowPannelContent, SwitchMenuToggle, onWhichPannelContent,
-    SwitchPannel, SwitchMenuTitle, isPannelPulledUp, ControlTeamMsgBox, ExpandOrClosePannel,
-    RenderOnlineStatus,
-    ReRenderList
+import { ControlFriendMsgBox, ClearList, RenderList, SwitchSettingBtn, SwitchPullAndDropBtn, 
+    ShowPannelContent, SwitchMenuToggle, onWhichPannelContent, SwitchPannel, SwitchMenuTitle, 
+    isPannelPulledUp, ControlTeamMsgBox, ExpandOrClosePannel, RenderOnlineStatus, ReRenderList 
 } from "./GeneralControl.js";
-import { CreateNewTeam, SearchTeams, EmitEnterTeamEvent, EmitInviteTeamEvent, EmitJoinTeamRequestEvent, EmitAcceptTeamRequestEvent, EmitLeaveTeamEvent } from "./ManageTeam.js";
+import { CreateNewTeam, SearchTeams, EmitEnterTeamEvent, EmitInviteTeamEvent, EmitJoinTeamRequestEvent, 
+    EmitAcceptTeamRequestEvent, EmitLeaveTeamEvent } from "./ManageTeam.js";
 import { AddTeamClickEvent, AddTeamHoverEvent } from "./TeamEvent.js";
 import { ChangeIconColor, ManipulateSessionStorage, RenderAvatar, RenderUsername } from "./ManageUser.js";
 import { AppendUserInPartnerList, BuildPartnership, CreatePartner, UpdatePartnersColor} from "./ManagePartner.js";
-import { mapInfo, messageInfo, onlineUserInfo} from "../main.js";
+import { map, messages, onlineUsers} from "./AppClass.js";
 import { RenderMessageBtn, SearchMessage } from "./ManageMessage.js";
 import { CollectUpdateBasicInfo, PreviewAvatar, RenderUpdateResponse, UpdateBasicInfo } from "./ManageConfigure.js";
 
@@ -227,11 +224,11 @@ export function AddEventsToFriend() {
             return
         }
 
-        // update information for following execution: onlineUserInfo and messageInfo
+        // update information for following execution: onlineUsers and messages
         const userID = Number(window.sessionStorage.getItem("user_id")); 
-        onlineUserInfo.EmitSyncOnlineUserEvent();
+        onlineUsers.EmitSyncOnlineUserEvent();
         SearchMessage(userID)
-            .then((messages)=>{messages.forEach(message => messageInfo.UpdateInfo(message))})
+            .then((msgs)=>{msgs.forEach(message => messages.UpdateInfo(message))})
             .catch((error) => console.log(error))
         
         // sending requests
@@ -442,13 +439,13 @@ export function AddEventsToTeam() {
 
         //remove all user in the partner list and just leave own marker on the map
         ClearList(".tracking-pannel .partner-list");
-        mapInfo.RemoveAllOtherMarkersExcept(socket.id);
+        map.RemoveAllOtherMarkersExcept(socket.id);
 
         // re-render message list
         SearchMessage(userID)
-            .then((messages) => {
-                messages.forEach((message) => {messageInfo.UpdateInfo(message)})
-                ReRenderList([".message-list"], messageInfo.GetSenderList());
+            .then((msgs) => {
+                msgs.forEach((message) => {messages.UpdateInfo(message)})
+                ReRenderList([".message-list"], messages.GetSenderList());
                 SwitchSettingBtn({"all": "none"});
                 RenderMessageBtn(false);})
             .catch((error) => {console.log(error)})
