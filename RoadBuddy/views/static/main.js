@@ -1,22 +1,14 @@
-import { ManipulateSessionStorage, OnlineUserInfo, CheckUserStatus, ClearCanvasContext, CreateIconImage, GetRandomIconColor, RenderAvatar, RenderEmail, RenderUsername } from "./Utils/ManageUser.js";
+import { messages, map} from "./Utils/AppClass.js";
+import { ManipulateSessionStorage, CheckUserStatus, ClearCanvasContext, CreateIconImage, 
+    GetRandomIconColor, RenderAvatar, RenderEmail, RenderUsername 
+} from "./Utils/ManageUser.js";
 import { SearchTeams } from "./Utils/ManageTeam.js";
-import { SearchOldFriends, OnlineFriendInfo, EmitUpdateOnlineStatusEvents } from "./Utils/ManageFriend.js";
-import { ClearList, RenderList, RenderOnlineStatus, InitializeAllPannelsTagAttributes } from "./Utils/GeneralControl.js";
-import { Map } from "./Utils/ManageMap.js";
+import { SearchOldFriends, EmitUpdateOnlineStatusEvents } from "./Utils/ManageFriend.js";
+import { ClearList, RenderList, RenderOnlineStatus, InitializeAllPannelsTagAttributes 
+} from "./Utils/GeneralControl.js";
 import * as GeneralEvents from "./Utils/GeneralEvent.js";
-// import { ManipulateSessionStorage, OnlineUserInfo } from "./Utils/ManageUser.js";
 import { AddTeamClickEvent, AddTeamHoverEvent } from "./Utils/TeamEvent.js";
-// import { OnlineFriendInfo, EmitUpdateOnlineStatusEvents } from "./Utils/ManageFriend.js";
-import { SearchMessage, MessageInfo, RenderMessageBtn } from "./Utils/ManageMessage.js";
-
-console.log(OnlineFriendInfo)
-// initialize objects
-export const//
-    onlineFriendInfo = new OnlineFriendInfo(),
-    messageInfo = new MessageInfo(),
-    onlineUserInfo = new OnlineUserInfo(),
-    mapInfo = new Map();
-
+import { SearchMessage, RenderMessageBtn } from "./Utils/ManageMessage.js";
 
 // check user status and load info when passing check
 CheckUserStatus()
@@ -37,8 +29,8 @@ CheckUserStatus()
         ClearCanvasContext();
         // ************** 這邊要改抓真實位置*******************
         const testCoord = {latitude: 24.982 + Math.random()*0.006, longitude: 121.534 + Math.random()*0.006};
-        mapInfo.CreateMap(testCoord);
-        mapInfo.CreateMarker(socket.id, imageUrl, testCoord);
+        map.CreateMap(testCoord);
+        map.CreateMarker(socket.id, imageUrl, testCoord);
         
         // update main-pannel description and configure pannel username input
         RenderUsername(username);
@@ -94,9 +86,9 @@ CheckUserStatus()
         // 3. render message list
         SearchMessage(userID)
             .then((result) => {
-                result.forEach((message) => {messageInfo.UpdateInfo(message)});
+                result.forEach((message) => {messages.UpdateInfo(message)});
                 ClearList(".message-list");
-                RenderList(".message-list", messageInfo.GetSenderList());
+                RenderList(".message-list", messages.GetSenderList());
                 RenderMessageBtn(false);
             })
             .catch((error) => {console.log(
