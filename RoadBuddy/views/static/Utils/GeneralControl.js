@@ -482,3 +482,28 @@ export function ControlTeamMsgBox(msgCssSelector, display, ...rest) {
             break
     }
 }
+
+export function SwitchSignUpStep(){
+    const//
+        btns = document.querySelectorAll("div.signup button"),
+        formDivs = document.querySelectorAll("div.form-div"),
+        isOnFillingUserInfo = document.querySelector("div.form-div.avatar").style.display !== "flex";
+    if (isOnFillingUserInfo){
+        btns.forEach((btn) =>{
+            const isNextBtn = btn.getAttribute("class") === "next";
+            btn.style.display = (isNextBtn) ? "none" : "block";
+        })
+        formDivs.forEach((div) => {
+            const isAvatarForm = div.getAttribute("class").includes("avatar");
+            div.style.display = (!isAvatarForm) ? "none" : "flex";
+        })}
+    if (!isOnFillingUserInfo){
+        btns.forEach((btn) =>{
+            const isNextBtn = btn.getAttribute("class") === "next";
+            btn.style.display = (isNextBtn) ? "block" : "none";
+        })
+        formDivs.forEach((div) => {
+            const isAvatarForm = div.getAttribute("class").includes("avatar");
+            div.style.display = (!isAvatarForm) ? "block" : "none";
+        })}
+}
