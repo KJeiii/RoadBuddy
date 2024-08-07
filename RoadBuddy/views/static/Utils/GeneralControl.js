@@ -483,10 +483,19 @@ export function ControlTeamMsgBox(msgCssSelector, display, ...rest) {
     }
 }
 
+export function SwitchBetweenSignupAndLogin(){
+    const//
+        signupForm = document.querySelector("div.signup"),
+        loginForm = document.querySelector("div.login"),
+        isOnSignupForm = loginForm.style.display !== "flex";
+    signupForm.style.display = (isOnSignupForm) ? "none" : "flex";
+    loginForm.style.display = (isOnSignupForm) ? "flex" : "none";
+}
+
 export function SwitchSignUpStep(){
     const//
         btns = document.querySelectorAll("div.signup button"),
-        formDivs = document.querySelectorAll("div.form-div"),
+        formDivs = document.querySelectorAll("div.signup div.form-div"),
         isOnFillingUserInfo = document.querySelector("div.form-div.avatar").style.display !== "flex";
     if (isOnFillingUserInfo){
         btns.forEach((btn) =>{
