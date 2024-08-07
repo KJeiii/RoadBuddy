@@ -1,4 +1,4 @@
-import { SwitchSignUpStep } from "./Utils/GeneralControl.js";
+import { SwitchBetweenSignupAndLogin, SwitchSignUpStep } from "./Utils/GeneralControl.js";
 import { PreviewAvatar, SwitchAvatarUndoBtn } from "./Utils/ManageConfigure.js";
 import { CheckUserStatus } from "./Utils/ManageUser.js";
 CheckUserStatus()
@@ -11,29 +11,8 @@ CheckUserStatus()
 
     
 // ----- switch sigup/login page -----
-let//
-signupDiv = document.querySelector("div.title-signup"),
-loginDiv = document.querySelector("div.title-login");
-
-signupDiv.addEventListener("click", () => {
-    let//
-    signupForm = document.querySelector("div.signup"),
-    loginForm = document.querySelector("div.login");
-
-    signupForm.style.display = "flex";
-    loginForm.style.display = "none";
-});
-
-loginDiv.addEventListener("click", () => {
-    let//
-    signupForm = document.querySelector("div.signup"),
-    loginForm = document.querySelector("div.login"),
-    loginBtn = document.querySelector("button.login");
-
-    signupForm.style.display = "none";
-    loginBtn.style.backgroundColor = "rgba(83,186,190,0.5)";
-    loginForm.style.display = "flex";
-});
+document.querySelector("div.title-signup").addEventListener("click", SwitchBetweenSignupAndLogin);
+document.querySelector("div.title-login").addEventListener("click", SwitchBetweenSignupAndLogin);
 
 
 // ----- submit user information when click signup/login button -----
