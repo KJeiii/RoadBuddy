@@ -1,3 +1,4 @@
+import { SwitchSignUpStep } from "./Utils/GeneralControl.js";
 import { PreviewAvatar, SwitchAvatarUndoBtn } from "./Utils/ManageConfigure.js";
 import { CheckUserStatus } from "./Utils/ManageUser.js";
 CheckUserStatus()
@@ -71,6 +72,10 @@ document.querySelector("div.form-div.avatar div.undo").addEventListener("click",
     SwitchAvatarUndoBtn("div.form-div.avatar div.undo");
 })
 
+// --- go to avatar uploading step after filling user information or singup
+document.querySelector("button.next").addEventListener("click", SwitchSignUpStep);
+document.querySelector("button.previous").addEventListener("click", SwitchSignUpStep);
+
 // --- signup ---
 signupBtn.addEventListener("click", async() => {
     let//
@@ -114,9 +119,7 @@ signupBtn.addEventListener("click", async() => {
     try{
         let response = await fetch("/api/member", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
+            headers: {"Content-Type": "application/json"},
             body: JSON.stringify({
                 email: emailInput.value,
                 username: usernameInput.value,
@@ -141,15 +144,8 @@ signupBtn.addEventListener("click", async() => {
         loginMailInput.value = emailInput.value;
         loginBtn.style.backgroundColor = "rgba(83,186,190,0.5)";
         loginForm.style.display = "flex"; 
-
-        console.log(result.message);
-
-
     }
-    catch(error) {
-        console.log(error)
-    }
-
+    catch(error) {console.log(error)}
 });
 
 // --- login ---
@@ -182,9 +178,7 @@ loginBtn.addEventListener("click", async() => {
     try {
         let response = await fetch("/api/member/auth", {
             method: "PUT",
-            headers: {
-                "Content-Type": "application/json"
-            },
+            headers: {"Content-Type": "application/json"},
             body: JSON.stringify({
                 email: emailInput.value,
                 password: passwordInput.value
@@ -209,10 +203,6 @@ loginBtn.addEventListener("click", async() => {
         let jwt = result.token;
         window.localStorage.setItem("token", jwt);
         window.location.replace("/main");
-
     }
-    catch(error) {
-        console.log(error)
-    }
-
+    catch(error) {console.log(error)}
 });
