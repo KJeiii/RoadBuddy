@@ -109,6 +109,10 @@ button {
     opacity: 0.7;    
 }
 
+button.login{
+    background-color: rgba(83,186,190,0.5)
+}
+
 button:hover {
     opacity: 1;
 
