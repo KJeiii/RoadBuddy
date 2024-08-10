@@ -516,3 +516,82 @@ export function SwitchSignUpStep(){
             div.style.display = (!isAvatarForm) ? "block" : "none";
         })}
 }
+
+export const inputErrorMessages = {
+    isInputFilledIn: "(此欄位不可空白)",
+    isInputValuesConsistent: "(兩次密碼不一致，請重新輸入)",
+    isInputValueIncludingCharacters: "(格式錯誤，須包含@)"
+}
+
+export function isInputErrorRepeating(inputTitleElement, inputExaminationCallback){
+    const//
+        inputTitleChildElements = Array.from(inputTitleElement.children),
+        errorMessageToAppend = inputErrorMessages[inputExaminationCallback.name];
+    let isRepeating = false;
+    inputTitleChildElements.forEach((childElement) => {
+        if (childElement.textContent === errorMessageToAppend) {isRepeating = true}
+    })
+    return isRepeating
+}
+
+export function RenderErrorMessage(inputTitleElement, inputExaminationCallback){
+    if (!isInputErrorRepeating(inputTitleElement, inputExaminationCallback)){
+        const messageDiv = document.createElement("div");
+        messageDiv.textContent = inputErrorMessages[inputExaminationCallback.name];
+        messageDiv.style.color = "red";
+        messageDiv.style.fontSize = "13px";
+        messageDiv.style.lineHeight = "30px";
+        messageDiv.style.marginLeft = "10px";
+        inputTitleElement.appendChild(messageDiv);
+        inputTitleElement.nextElementSibling.style.border = "2px solid rgb(255, 197, 197)";
+    }
+}
+
+export function ClearErrorMessage(inputTitleElement){
+    while ( inputTitleElement.childNodes.length > 2 ) {
+        inputTitleElement.removeChild(inputTitleElement.lastChild)
+    }
+    inputTitleElement.nextElementSibling.style.border = "none";
+}
+
+export function isInputFilledIn(inputElementToBeExamined, ...rest){
+    return inputElementToBeExamined.value !== "" 
+}
+
+export function isInputValuesConsistent(inputElementToBeExamined, ...inputElementsAsReferece){
+    let allValuesConsistent = true;
+    inputElementsAsReferece.flat().forEach((inputElement)=>{
+        if (inputElement.value !== inputElementToBeExamined.value){
+            allValuesConsistent = false;
+            return
+        }
+    })
+    return allValuesConsistent
+}
+
+export function isInputValueIncludingCharacters(inputElementToBeExamined, ...characters){
+    let examinationPass = true;
+    characters.flat().forEach((character) => {
+        if (!inputElementToBeExamined.value.includes(character)){
+            examinationPass = false;
+            return
+        }
+    })
+    return examinationPass
+}
+
+export function VerifyInputValue(inputElementToBeExamined, inputExaminationCallback, ...examinationParameters){
+    const examinationPass = inputExaminationCallback(inputElementToBeExamined, examinationParameters);
+    if (examinationPass){ClearErrorMessage(inputElementToBeExamined.previousElementSibling)}
+    else{RenderErrorMessage(inputElementToBeExamined.previousElementSibling, inputExaminationCallback)}
+    return {pass: examinationPass}
+}
+
+export function ControlMebmerMsgBox(msgCssSelector, display) {
+    const//
+        msgBox = document.querySelector(msgCssSelector),
+        msgBoxContent = document.querySelector(`${msgCssSelector} div.content`);
+    if (display === "flex") {msgBoxContent.textContent = "是否跳過上傳照片？"}
+    if (display === "none") {msgBoxContent.textContent = ""}
+    msgBox.style.display = display;
+}
