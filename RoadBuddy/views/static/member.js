@@ -1,4 +1,4 @@
-import { SwitchBetweenSignupAndLogin, SwitchSignUpStep } from "./Utils/GeneralControl.js";
+import { ClearErrorMessage, ControlMebmerMsgBox, SwitchBetweenSignupAndLogin, SwitchSignUpStep, VerifyInputValue, isInputFilledIn, isInputValueIncludingCharacters, isInputValuesConsistent } from "./Utils/GeneralControl.js";
 import { PreviewAvatar, SwitchAvatarUndoBtn } from "./Utils/ManageConfigure.js";
 import { CheckUserStatus } from "./Utils/ManageUser.js";
 CheckUserStatus()
@@ -15,22 +15,7 @@ document.querySelector("div.title-signup").addEventListener("click", SwitchBetwe
 document.querySelector("div.title-login").addEventListener("click", SwitchBetweenSignupAndLogin);
 
 
-// ----- submit user information when click signup/login button -----
-let//
-signupBtn = document.querySelector("button.signup"),
-loginBtn = document.querySelector("button.login");
 
-let addErrorMsg = (cssSelector, msgText) => {
-    let//
-    inputTitle = document.querySelector(cssSelector),
-    msg = document.createElement("div");
-    msg.textContent = msgText;
-    msg.style.color = "red";
-    msg.style.fontSize = "15px";
-    msg.style.lineHeight = "30px";
-    msg.style.marginLeft = "10px";
-    inputTitle.appendChild(msg)
-}
 
 // --- preview avatar ---
 const avatarInput = document.querySelector("div.form-div.avatar input[name='avatar']");
@@ -51,80 +36,90 @@ document.querySelector("div.form-div.avatar div.undo").addEventListener("click",
     SwitchAvatarUndoBtn("div.form-div.avatar div.undo");
 })
 
-// --- go to avatar uploading step after filling user information or singup
-document.querySelector("button.next").addEventListener("click", SwitchSignUpStep);
+// --- go to next step after passing examination of user information: avatar uploading
+document.querySelector("button.next").addEventListener("click", ()=>{
+    const inputElements = document.querySelectorAll("div.signup div.form-div input");
+    let allPass = true;
+    inputElements.forEach((input) => {
+        const notAvatarInput = input.getAttribute("id") !== "avatar";
+        if (notAvatarInput){allPass &= VerifyInputValue(input, isInputFilledIn).pass}
+    });
+    (allPass == true) && SwitchSignUpStep();
+})
+
+// --- go back to previous step
 document.querySelector("button.previous").addEventListener("click", SwitchSignUpStep);
 
-// --- signup ---
-signupBtn.addEventListener("click", async() => {
-    let//
-    emailInput = document.querySelector("div.signup input[name=email]"),
-    usernameInput = document.querySelector("div.signup input[name=username]"),
-    passwordInput = document.querySelector("div.signup input[name=password]"),
-    confirmInput = document.querySelector("div.signup input[name=confirm-password]");
-    
-    let emailTitle = document.querySelector("div.signup div.form-div-title.email");
-    while ( emailTitle.childNodes.length > 2 ) {
-        emailTitle.removeChild(emailTitle.lastChild)
-    }
-
-    let passwordTitle = document.querySelector("div.signup div.form-div-title.confirm-password");
-    while ( passwordTitle.childNodes.length > 2 ) {
-        passwordTitle.removeChild(passwordTitle.lastChild)
-    }
-
-    // feedback error message when one of the inputs is empty
-    for ( let input of [emailInput, usernameInput, passwordInput, confirmInput] ) {
-        if  (input.value === "") {
-            input.setAttribute("placeholder", "此欄位不可空白");
-            input.style.border = "2px solid rgb(255, 197, 197)";
-            return;
+// --- check values of inputs when they are changed
+const inputElements = document.querySelectorAll("div.signup div.form-div input");
+inputElements.forEach((input)=>{
+    const//
+        isEmailInput = input.getAttribute("name") === "email",
+        isUsernameInput = input.getAttribute("name") === "username",
+        isPasswordInput = input.getAttribute("name") === "password",
+        isConfirmPasswordInput = input.getAttribute("name") === "confirm-password";
+    if (isEmailInput){
+        input.addEventListener(
+            "change", 
+            function(){
+                ClearErrorMessage(this.previousElementSibling);
+                VerifyInputValue(this, isInputValueIncludingCharacters, "@")}
+        )}
+    if (isConfirmPasswordInput){
+        input.addEventListener(
+            "change",
+            function(){
+                ClearErrorMessage(this.previousElementSibling);
+                VerifyInputValue(this, isInputValuesConsistent, document.querySelector("div.signup div.form-div input[name='password']"))
+            }
+        )}
+    if (isUsernameInput || isPasswordInput){
+        input.addEventListener("change", function(){ClearErrorMessage(this.previousElementSibling)})
         }
-    }
+})
 
-    // check email format by identify "@"
-    if ( emailInput.value.includes("@") != true ) {
-        addErrorMsg(".signup .email", "(格式錯誤，須包含@)");
-        return;
-    }
 
-    // check if password is confirmed correctly
-    if ( passwordInput.value !== confirmInput.value ) {
-        addErrorMsg(".signup .confirm-password", "(兩次密碼不一致，請重新輸入)");
-        return;
-    }
+// --- signup ---
+let//
+signupBtn = document.querySelector("button.signup"),
+loginBtn = document.querySelector("button.login");
+
+signupBtn.addEventListener("click", async() => {
+    const avatarInput = document.querySelector("div.signup div.form-div input#avatar");
+    if(!isInputFilledIn(avatarInput)){ControlMebmerMsgBox("div.signup-prompt", "flex")}
+    //*********針對yes no button作出不同動作 */
 
     // request signup information to api
-    try{
-        let response = await fetch("/api/member", {
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({
-                email: emailInput.value,
-                username: usernameInput.value,
-                password: passwordInput.value
-            })
-        });
-        let result = await response.json();
+    // try{
+    //     let response = await fetch("/api/member", {
+    //         method: "POST",
+    //         headers: {"Content-Type": "application/json"},
+    //         body: JSON.stringify({
+    //             email: emailInput.value,
+    //             username: usernameInput.value,
+    //             password: passwordInput.value
+    //         })
+    //     });
+    //     let result = await response.json();
 
-        if (response.status !== 200) {
-            addErrorMsg(".signup .email", result.message);
-            console.log(result.message);
-            return;
-        }
+    //     if (response.status !== 200) {
+    //         RenderErrorMsg(".signup .email", result.message);
+    //         console.log(result.message);
+    //         return;
+    //     }
         
-        let//
-        signupForm = document.querySelector("div.signup"),
-        loginForm = document.querySelector("div.login"),
-        loginBtn = document.querySelector("button.login"),
-        loginMailInput = document.querySelector("div.login input[name=email]");
+    //     let//
+    //     signupForm = document.querySelector("div.signup"),
+    //     loginForm = document.querySelector("div.login"),
+    //     loginBtn = document.querySelector("button.login"),
+    //     loginMailInput = document.querySelector("div.login input[name=email]");
     
-        signupForm.style.display = "none";
-        loginMailInput.value = emailInput.value;
-        loginBtn.style.backgroundColor = "rgba(83,186,190,0.5)";
-        loginForm.style.display = "flex"; 
-    }
-    catch(error) {console.log(error)}
+    //     signupForm.style.display = "none";
+    //     loginMailInput.value = emailInput.value;
+    //     loginBtn.style.backgroundColor = "rgba(83,186,190,0.5)";
+    //     loginForm.style.display = "flex"; 
+    // }
+    // catch(error) {console.log(error)}
 });
 
 // --- login ---
@@ -170,11 +165,11 @@ loginBtn.addEventListener("click", async() => {
         if (response.status === 400) {
             let msg = result.message;
             if ( msg.includes("電子信件") ) {
-                addErrorMsg(".login .email", result.message);
+                RenderErrorMsg(".login .email", result.message);
                 return;
             }
             else{
-                addErrorMsg(".login .password", result.message);
+                RenderErrorMsg(".login .password", result.message);
                 return;
             }
         }
