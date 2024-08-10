@@ -22,7 +22,10 @@ body {
     border-style: none;
 }
 
-.title-signup:hover, .title-login:hover {
+.title-signup:hover, 
+.title-login:hover,
+div.signup-prompt-button button
+{
     cursor: pointer;
 }
 
@@ -179,3 +182,24 @@ button.previous,
 button.signup{
     display: none;
 }
+
+div.signup-prompt{
+    display: none; /*flex*/
+    flex-wrap: wrap;
+    flex: 90%;
+    justify-content: center;
+    align-items: center;
+    width: 250px;
+    height: 100px;
+    position: absolute;
+    top: 35%;
+    left: 25%;
+    text-align: center;
+    background-color: rgb(210, 242, 243);
+    border-radius: 10px;
+}
+
+div.signup-prompt-button button{
+    margin: 0;
+    background-color: white;
+} 
