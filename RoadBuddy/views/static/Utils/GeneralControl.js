@@ -523,21 +523,19 @@ export const inputErrorMessages = {
     isInputValueIncludingCharacters: "(格式錯誤，須包含@)"
 }
 
-export function isInputErrorRepeating(inputTitleElement, inputExaminationCallback){
-    const//
-        inputTitleChildElements = Array.from(inputTitleElement.children),
-        errorMessageToAppend = inputErrorMessages[inputExaminationCallback.name];
+export function isInputErrorRepeating(inputTitleElement, message){
+    const inputTitleChildElements = Array.from(inputTitleElement.children);
     let isRepeating = false;
     inputTitleChildElements.forEach((childElement) => {
-        if (childElement.textContent === errorMessageToAppend) {isRepeating = true}
+        if (childElement.textContent === message) {isRepeating = true}
     })
     return isRepeating
 }
 
-export function RenderErrorMessage(inputTitleElement, inputExaminationCallback){
-    if (!isInputErrorRepeating(inputTitleElement, inputExaminationCallback)){
+export function RenderErrorMessage(inputTitleElement, message){
+    if (!isInputErrorRepeating(inputTitleElement, message)){
         const messageDiv = document.createElement("div");
-        messageDiv.textContent = inputErrorMessages[inputExaminationCallback.name];
+        messageDiv.textContent = message;
         messageDiv.style.color = "red";
         messageDiv.style.fontSize = "13px";
         messageDiv.style.lineHeight = "30px";
@@ -583,7 +581,7 @@ export function isInputValueIncludingCharacters(inputElementToBeExamined, ...cha
 export function VerifyInputValue(inputElementToBeExamined, inputExaminationCallback, ...examinationParameters){
     const examinationPass = inputExaminationCallback(inputElementToBeExamined, examinationParameters);
     if (examinationPass){ClearErrorMessage(inputElementToBeExamined.previousElementSibling)}
-    else{RenderErrorMessage(inputElementToBeExamined.previousElementSibling, inputExaminationCallback)}
+    else{RenderErrorMessage(inputElementToBeExamined.previousElementSibling, inputErrorMessages[inputExaminationCallback.name])}
     return {pass: examinationPass}
 }
 
