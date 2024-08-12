@@ -1,5 +1,23 @@
 import { map } from "./AppClass.js";
 
+export async function SignupNewAccount(dataToSingup){
+    try{
+        const//
+            response = await fetch("/api/member", {
+            method: "POST",
+            body: dataToSingup
+            }),
+            result = await response.json();
+
+        if (response.status !== 200) {return {...result, ok: false}}
+        return {...result}
+    }
+    catch(error){
+        console.log("Failed to execute SignupNewAccount (ManageUser.js): ", error);
+        throw error
+    }
+}
+
 // build function for checking user status
 export async function CheckUserStatus() {
     let jwt = window.localStorage.getItem("token");
@@ -116,4 +134,48 @@ export function ChangeIconColor(sid, username){
     RenderAvatar(newImageUrl);
     map.UpdateMarkerImage(sid, newImageUrl);
     ClearCanvasContext();
+}
+
+export function CollectInformationToSignup(){
+    const dataToSingup = new FormData();
+    dataToSingup.append("email", document.querySelector("div.signup div.form-div input[name='email']").value);
+    dataToSingup.append("username", document.querySelector("div.signup div.form-div input[name='username']").value);
+    dataToSingup.append("password", document.querySelector("div.signup div.form-div input[name='password']").value);
+    dataToSingup.append("avatar", document.querySelector("div.signup div.form-div input[name='avatar']").files[0]);
+    return dataToSingup
+}
+
+export async function CollectInformationToUpdate(){
+    const//
+        hasFile = document.querySelector("input#avatar").files.length > 0,
+        hasNewUsername = document.querySelector("input#username-to-update").value 
+                        !== window.sessionStorage.getItem("username");
+
+    if (hasFile || hasNewUsername){
+        const//
+            avatarFile = document.querySelector("input#avatar").files[0],
+            usernameToUpdate = document.querySelector("input#username-to-update").value,
+            dataToUpdate = new FormData();
+        dataToUpdate.append("usernameToUpdate", usernameToUpdate);
+        dataToUpdate.append("avatar", avatarFile);
+        return dataToUpdate
+    }
+    throw "There is no new information to update."
+}
+
+export async function UpdateUserInformation(formDataToUpdate){
+    try{
+        const response = await fetch("/api/member/update/basic", {
+            method: "PATCH",
+            headers: {"authorization": `Bearer ${window.localStorage.getItem("token")}`},
+            body: formDataToUpdate
+        });
+        if (!response.ok){throw {responseCode: 0, message: response.statusText}}
+        const result = await response.json();
+        return {...result, responseCode: 1}
+    }
+    catch(error){
+        console.log("Failed to execute UpdateUserInformation: ", error)
+        throw {responseCode: 0, message: error}
+    }
 }
