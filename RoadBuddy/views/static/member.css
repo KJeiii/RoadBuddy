@@ -197,6 +197,7 @@ div.signup-prompt{
     text-align: center;
     background-color: rgb(210, 242, 243);
     border-radius: 10px;
+    border: 1px rgb(226, 240, 241) solid;
 }
 
 div.signup-prompt-button button{
