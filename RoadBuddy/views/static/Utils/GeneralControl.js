@@ -587,6 +587,26 @@ export function VerifyInputValue(inputElementToBeExamined, inputExaminationCallb
     return {pass: examinationPass}
 }
 
+export function isEmailInputPass(emailInputElement){
+    const isValueEligible = true &
+        VerifyInputValue(emailInputElement, isInputFilledIn).pass &
+        VerifyInputValue(emailInputElement, isInputValueIncludingCharacters, "@").pass;
+    return isValueEligible
+}
+
+export function isUsernameInputPass(usernameInputElement){
+    const isValueEligible = true & VerifyInputValue(usernameInputElement, isInputFilledIn).pass;
+    return isValueEligible
+}
+
+export function isPasswordInputPass(passwordInputElement, confirmPasswordInputElement){
+    const isValueEligible = true & 
+        VerifyInputValue(passwordInputElement, isInputFilledIn).pass &
+        VerifyInputValue(confirmPasswordInputElement, isInputFilledIn).pass &
+        VerifyInputValue(confirmPasswordInputElement, isInputValuesConsistent, passwordInputElement).pass
+    return isValueEligible
+}
+
 export function ControlMebmerMsgBox(msgCssSelector, display) {
     const//
         msgBox = document.querySelector(msgCssSelector),
