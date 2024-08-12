@@ -24,16 +24,16 @@ def List_all_files() -> list:
     except Exception as error:
         print("Failed to execute List_all_files: ", error)
 
-def Find_files(user_id: int, email: str) -> list:
+def Find_files(email: str) -> list:
     try:
-        prefix = f"roadbuddy_avatar_{user_id}_{email}"
+        prefix = f"roadbuddy_avatar_{email}"
         return s3_client.list_objects(Bucket="picboard-bucket", Prefix=prefix).get("Contents")
     except Exception as error:
         print("Failed to execute Find_files: ", error)
 
-def Update_file(user_id: int, email: str, file_to_update: bytes, filename_to_update: str) -> None:
+def Update_file(email: str, file_to_update: bytes, filename_to_update: str) -> None:
     try:
-        user_files = Find_files(user_id, email)
+        user_files = Find_files(email)
         if user_files != None:
             for file in user_files:
                 Delete_file(file.get("Key"))
