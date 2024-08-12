@@ -1,6 +1,9 @@
-import { ClearErrorMessage, ControlMebmerMsgBox, SwitchBetweenSignupAndLogin, SwitchSignUpStep, VerifyInputValue, isInputFilledIn, isInputValueIncludingCharacters, isInputValuesConsistent } from "./Utils/GeneralControl.js";
+import { ClearErrorMessage, ControlMebmerMsgBox, RenderErrorMessage, SwitchBetweenSignupAndLogin, 
+    SwitchSignUpStep, VerifyInputValue, isEmailInputPass, isInputFilledIn, isInputValueIncludingCharacters, 
+    isInputValuesConsistent, isPasswordInputPass, isUsernameInputPass} from "./Utils/GeneralControl.js";
 import { PreviewAvatar, SwitchAvatarUndoBtn } from "./Utils/ManageConfigure.js";
-import { CheckUserStatus } from "./Utils/ManageUser.js";
+import { CheckUserStatus, CollectInformationToSignup, SignupNewAccount } from "./Utils/ManageUser.js";
+
 CheckUserStatus()
     .then((result) => {
         if (result.ok) {
@@ -9,13 +12,9 @@ CheckUserStatus()
     })
     .catch((error) => {console.log(`Error from CheckUserStatus in member page : ${error}`)})
 
-    
 // ----- switch sigup/login page -----
 document.querySelector("div.title-signup").addEventListener("click", SwitchBetweenSignupAndLogin);
 document.querySelector("div.title-login").addEventListener("click", SwitchBetweenSignupAndLogin);
-
-
-
 
 // --- preview avatar ---
 const avatarInput = document.querySelector("div.form-div.avatar input[name='avatar']");
@@ -38,13 +37,13 @@ document.querySelector("div.form-div.avatar div.undo").addEventListener("click",
 
 // --- go to next step after passing examination of user information: avatar uploading
 document.querySelector("button.next").addEventListener("click", ()=>{
-    const inputElements = document.querySelectorAll("div.signup div.form-div input");
-    let allPass = true;
-    inputElements.forEach((input) => {
-        const notAvatarInput = input.getAttribute("id") !== "avatar";
-        if (notAvatarInput){allPass &= VerifyInputValue(input, isInputFilledIn).pass}
-    });
-    (allPass == true) && SwitchSignUpStep();
+    const isAllInputValuesEligible = true & 
+        isEmailInputPass(document.querySelector("div.signup div.form-div input[name='email']")) &
+        isUsernameInputPass(document.querySelector("div.signup div.form-div input[name='username']")) &
+        isPasswordInputPass(
+            document.querySelector("div.signup div.form-div input[name='password']"), 
+            document.querySelector("div.signup div.form-div input[name='confirm-password']"));
+    (isAllInputValuesEligible == true) && SwitchSignUpStep();
 })
 
 // --- go back to previous step
@@ -78,52 +77,30 @@ inputElements.forEach((input)=>{
         }
 })
 
-
 // --- signup ---
-let//
-signupBtn = document.querySelector("button.signup"),
-loginBtn = document.querySelector("button.login");
-
-signupBtn.addEventListener("click", async() => {
+document.querySelector("button.signup").addEventListener("click", async() => {
     const avatarInput = document.querySelector("div.signup div.form-div input#avatar");
-    if(!isInputFilledIn(avatarInput)){ControlMebmerMsgBox("div.signup-prompt", "flex")}
-    //*********針對yes no button作出不同動作 */
-
-    // request signup information to api
-    // try{
-    //     let response = await fetch("/api/member", {
-    //         method: "POST",
-    //         headers: {"Content-Type": "application/json"},
-    //         body: JSON.stringify({
-    //             email: emailInput.value,
-    //             username: usernameInput.value,
-    //             password: passwordInput.value
-    //         })
-    //     });
-    //     let result = await response.json();
-
-    //     if (response.status !== 200) {
-    //         RenderErrorMsg(".signup .email", result.message);
-    //         console.log(result.message);
-    //         return;
-    //     }
-        
-    //     let//
-    //     signupForm = document.querySelector("div.signup"),
-    //     loginForm = document.querySelector("div.login"),
-    //     loginBtn = document.querySelector("button.login"),
-    //     loginMailInput = document.querySelector("div.login input[name=email]");
-    
-    //     signupForm.style.display = "none";
-    //     loginMailInput.value = emailInput.value;
-    //     loginBtn.style.backgroundColor = "rgba(83,186,190,0.5)";
-    //     loginForm.style.display = "flex"; 
-    // }
-    // catch(error) {console.log(error)}
+    if(!isInputFilledIn(avatarInput)){
+        ControlMebmerMsgBox("div.signup-prompt", "flex");
+        return
+    }
+    SignupNewAccount(CollectInformationToSignup())
+        .then((signupResponse) => {
+            if (!signupResponse.ok){
+                SwitchSignUpStep();
+                RenderErrorMessage(document.querySelector("div.signup div.form-div-title.email"), signupResponse.message);
+                return
+            }
+            SwitchBetweenSignupAndLogin();
+            document.querySelector("div.login input[name=email]").value = signupResponse.email;
+        })
+        .catch((error)=>{console.log(error)})
 });
 
+//*********針對yes no button作出不同動作 */
+
 // --- login ---
-loginBtn.addEventListener("click", async() => {
+document.querySelector("button.login").addEventListener("click", async() => {
     let//
     emailInput = document.querySelector("div.login input[name=email]"),
     passwordInput = document.querySelector("div.login input[name=password]");
