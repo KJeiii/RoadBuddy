@@ -78,15 +78,15 @@ class MemberTool(pooling.MySQLConnectionPool):
         return result    
 
         
-    def Add_member(self, username: str, email: str, password: str) -> None:
+    def Add_member(self, username: str, email: str, password: str, image_url: str = "") -> None:
         connection = self.get_connection()
         cursor = connection.cursor(dictionary=True)
 
         update_string = (
-                        "insert into member (username, email, password)"
-                        "values (%s, %s, %s)"
+                        "insert into member (username, email, password, image_url)"
+                        "values (%s, %s, %s, %s)"
                         )
-        data_string = (username, email, password)
+        data_string = (username, email, password, image_url)
                     
         cursor.execute(update_string, data_string)
         connection.commit()
