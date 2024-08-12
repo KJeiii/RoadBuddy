@@ -78,7 +78,7 @@ inputElements.forEach((input)=>{
 })
 
 // --- signup ---
-document.querySelector("button.signup").addEventListener("click", async() => {
+document.querySelector("button.signup").addEventListener("click", () => {
     const avatarInput = document.querySelector("div.signup div.form-div input#avatar");
     if(!isInputFilledIn(avatarInput)){
         ControlMebmerMsgBox("div.signup-prompt", "flex");
@@ -97,7 +97,26 @@ document.querySelector("button.signup").addEventListener("click", async() => {
         .catch((error)=>{console.log(error)})
 });
 
-//*********針對yes no button作出不同動作 */
+// --- click no button of signup prompt ---
+document.querySelector("div.signup-prompt button.no").addEventListener("click", ()=>{
+    ControlMebmerMsgBox("div.signup-prompt", "none");
+})
+
+// --- click yes button of signup prompt ---
+document.querySelector("div.signup-prompt button.yes").addEventListener("click", ()=>{
+    SignupNewAccount(CollectInformationToSignup())
+        .then((signupResponse) => {
+            if (!signupResponse.ok){
+                SwitchSignUpStep();
+                RenderErrorMessage(document.querySelector("div.signup div.form-div-title.email"), signupResponse.message);
+                return
+            }
+            ControlMebmerMsgBox("div.signup-prompt", "none");
+            SwitchBetweenSignupAndLogin();
+            document.querySelector("div.login input[name=email]").value = signupResponse.email;
+        })
+        .catch((error)=>{console.log(error)})
+})
 
 // --- login ---
 document.querySelector("button.login").addEventListener("click", async() => {
