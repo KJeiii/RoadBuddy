@@ -78,7 +78,8 @@ class MemberTool(pooling.MySQLConnectionPool):
         return result    
 
         
-    def Add_member(self, username: str, email: str, password: str, image_url: str = "") -> None:
+    def Add_member(self, username: str, email: str, password: str, image_url: str = None) -> None:
+        print(image_url)
         connection = self.get_connection()
         cursor = connection.cursor(dictionary=True)
 
