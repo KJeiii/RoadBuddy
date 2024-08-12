@@ -9,11 +9,12 @@ import { ControlFriendMsgBox, ClearList, RenderList, SwitchSettingBtn, SwitchPul
 import { CreateNewTeam, SearchTeams, EmitEnterTeamEvent, EmitInviteTeamEvent, EmitJoinTeamRequestEvent, 
     EmitAcceptTeamRequestEvent, EmitLeaveTeamEvent } from "./ManageTeam.js";
 import { AddTeamClickEvent, AddTeamHoverEvent } from "./TeamEvent.js";
-import { ChangeIconColor, ManipulateSessionStorage, RenderAvatar, RenderUsername } from "./ManageUser.js";
+import { ChangeIconColor, ManipulateSessionStorage, RenderAvatar, 
+    RenderUsername, CollectInformationToUpdate, UpdateUserInformation } from "./ManageUser.js";
 import { AppendUserInPartnerList, BuildPartnership, CreatePartner, UpdatePartnersColor} from "./ManagePartner.js";
 import { map, messages, onlineUsers} from "./AppClass.js";
 import { RenderMessageBtn, SearchMessage } from "./ManageMessage.js";
-import { CollectUpdateBasicInfo, PreviewAvatar, RenderUpdateResponse, SwitchAvatarUndoBtn, UpdateBasicInfo } from "./ManageConfigure.js";
+import { PreviewAvatar, RenderUpdateResponse, SwitchAvatarUndoBtn } from "./ManageConfigure.js";
 
 
 export const AllEvents = [
@@ -95,11 +96,11 @@ export function AddEventsToSetting() {
     // Sending request
     const confirmUpdateBasicBtn = document.querySelector("button.update-basic");
     confirmUpdateBasicBtn.addEventListener("click", ()=>{
-        CollectUpdateBasicInfo()
+        CollectInformationToUpdate()
             .then((dataToUpdate)=>{
                 document.querySelector(".configure-response").style.display = "flex";
                 document.querySelector(".configure-pannel").style.display = "none";
-                UpdateBasicInfo(dataToUpdate)
+                UpdateUserInformation(dataToUpdate)
                     .then((updateResponse)=>{
                         // close configure pannel
                         SwitchPannel("main");
@@ -113,6 +114,7 @@ export function AddEventsToSetting() {
                                 ManipulateSessionStorage("set", {username: updateResponse.username})}
                             if (updateResponse.image_url !== ""){
                                 RenderAvatar(updateResponse.image_url);
+                                map.UpdateMarkerImage(socket.id, updateResponse.image_url);
                                 ManipulateSessionStorage("set", {image_url: updateResponse.image_url})}
                         }
                         //remove the value(file) of input#avatar
