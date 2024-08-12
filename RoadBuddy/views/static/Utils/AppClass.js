@@ -35,13 +35,11 @@ export class Map{
 
     CreateMarker(sid, imageUrl, coordination){ //coordination = {latitude: XXX, longitude: XXX}
         try{
-            const myIcon = L.icon({
-            iconUrl: imageUrl,
-            iconSize: [40, 40],
-            className: sid
-            });
-            const newMarker = L.marker([coordination.latitude, coordination.longitude], 
-                                {icon: myIcon}).addTo(this.map);
+            const//
+                myIcon = L.icon({iconUrl: imageUrl, iconSize: [40, 40], className: `sid${sid}`}),
+                newMarker = L.marker(
+                    [coordination.latitude, coordination.longitude], 
+                    {icon: myIcon}).addTo(this.map);
             this.sidAndmarkerPair[sid] = newMarker;
         }
         catch(error){console.log("Failed to execute method CreateMarker in Map class: ", error)}
@@ -75,7 +73,7 @@ export class Map{
     UpdateMarkerImage(sid, imageUrl){
         try{
             console.log(this.sidAndmarkerPair[sid])
-            const marker = document.querySelector(`.leaflet-marker-pane img.${sid}`);
+            const marker = document.querySelector(`.leaflet-marker-pane img.sid${sid}`);
             marker.src = imageUrl;
         }
         catch(error){console.log("Failed to execute method UpdateMarkerImage in Map class: ", error)}
