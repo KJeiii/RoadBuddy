@@ -14,41 +14,6 @@ export function SwitchAvatarUndoBtn(undoBtnCssSelector){
     undoBtn.style.display = (isShown) ? "none" : "block";
 }
 
-export async function CollectUpdateBasicInfo(){
-    const//
-        hasFile = document.querySelector("input#avatar").files.length > 0,
-        hasNewUsername = document.querySelector("input#username-to-update").value 
-                        !== window.sessionStorage.getItem("username");
-
-    if (hasFile || hasNewUsername){
-        const//
-            avatarFile = document.querySelector("input#avatar").files[0],
-            usernameToUpdate = document.querySelector("input#username-to-update").value,
-            dataToUpdate = new FormData();
-        dataToUpdate.append("usernameToUpdate", usernameToUpdate);
-        dataToUpdate.append("avatar", avatarFile);
-        return dataToUpdate
-    }
-    throw "There is no new information to update."
-}
-
-export async function UpdateBasicInfo(formDataToUpdate){
-    try{
-        const response = await fetch("/api/member/update/basic", {
-            method: "PATCH",
-            headers: {"authorization": `Bearer ${window.localStorage.getItem("token")}`},
-            body: formDataToUpdate
-        });
-        if (!response.ok){throw {responseCode: 0, message: response.statusText}}
-        const result = await response.json();
-        return {...result, responseCode: 1}
-    }
-    catch(error){
-        console.log("Failed to execute UpdateBasicInfo: ", error)
-        throw {responseCode: 0, message: error}
-    }
-}
-
 export function RenderUpdateResponse(responseCode){
     document.querySelector(".configure-pannel").style.display = "none";
     document.querySelector(".configure-response").style.display = "flex";
