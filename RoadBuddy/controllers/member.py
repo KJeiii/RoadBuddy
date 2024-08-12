@@ -12,26 +12,66 @@ member_bp = Blueprint("member_bp",
                       template_folder="templates",
                       static_folder="static")
 
+# verify file to upload
+def allow_upload(filename: str) -> bool:
+    allow_extensions = ["jpg", "jpeg", "png"]
+    file_extension = filename.split(".")[-1].lower()
+    return "." in filename and file_extension in allow_extensions
+
+# create a new name for file uploaded
+def create_new_filename(fileObject: object, email: str) -> str:
+    datetime = dt.datetime.now(dt.timezone.utc).strftime("%Y%m%d%H%M%S")
+    avatar_extension = fileObject.filename.split(".")[-1]
+    new_filename = f"roadbuddy_avatar_{email}_{datetime}.{avatar_extension}"
+    return new_filename
+
+# upload avatar
+def upload_avatar(avatar_file: object, email: str) -> dict:
+    # create image_url_to_update
+    has_new_avatar = avatar_file != None
+    if has_new_avatar:       
+        if not allow_upload(request.files.get("avatar").filename):
+            return {
+                "error": True,
+                "message": "File format is unacceptable; only jpg, jpeg, png are available."
+            }
+
+        # File uploaded with name already used in bucket will overwrite the old one.
+        new_filename = create_new_filename(avatar_file, email)
+        RoadBuddy.models.AWS_S3.Update_file(email, avatar_file, new_filename)
+    return {
+        "ok": True,
+        "image_url": os.getenv("RDS_domain_name") + new_filename if has_new_avatar else ""
+    }
+
 # Signup
 @member_bp.route("/api/member", methods = ["POST"])
 def Signup():
     if request.method == "POST":
         try:
-            email = request.json["email"]
-            if len(memberTool.Search_member_by_email(email)) != 0 :
+            username = request.form.get("username")
+            email = request.form.get("email")
+            email_is_used = len(memberTool.Search_member_by_email(email)) != 0
+            if email_is_used :
                 response = {
                     "error": True,
-                    "message": "註冊失敗，電子信箱重覆"
+                    "message": "註冊失敗，該電子信箱已註冊"
                 }
-                return jsonify(response), 400
-            username = request.json["username"]
-            password = generate_password_hash(request.json["password"])
-            memberTool.Add_member(username, email, password)
+                return jsonify(response), 409
+            
+            # check if avatar is allowed to upload
+            avatar_upload_response = upload_avatar(request.files.get("avatar"), email)
+            if avatar_upload_response.get("error"):
+                return jsonify(**avatar_upload_response), 422
 
-            response = {
-                 "ok": True
-            }
-            return jsonify(response), 200
+            # add new data to member table
+            memberTool.Add_member(
+                username, 
+                email, 
+                generate_password_hash(request.form.get("password")),
+                avatar_upload_response.get("image_url")
+                )
+            return jsonify({"ok": True, "email": email}), 200
 
         except Exception as error:
             print(error)
@@ -50,7 +90,7 @@ def Decode_JWT_Token(JWT_token: str) -> dict:
 # signin and check user status
 @member_bp.route("/api/member/auth", methods = ["PUT", "GET"])
 def Login():
-    # signin
+    # login
     if request.method == "PUT":
         try:
             email = request.json["email"]
@@ -89,7 +129,7 @@ def Login():
             }
             return jsonify(response), 500
     
-    # check user status
+    # check if user has logged in already by jwt
     if request.method == "GET":
         try:
             JWT_in_headers = request.headers.get("authorization").split(" ")
@@ -122,13 +162,7 @@ def Login():
             }
             return jsonify(response), 200
 
-
 # update user information - avatar and username
-def allow_upload(filename: str) -> bool:
-    allow_extensions = ["jpg", "jpeg", "png"]
-    file_extension = filename.split(".")[-1].lower()
-    return "." in filename and file_extension in allow_extensions
-
 @member_bp.route("/api/member/update/basic", methods = ["PATCH"])
 def update_basic_info():
     if request.method == "PATCH":   
@@ -149,37 +183,21 @@ def update_basic_info():
             username_to_update = request.form.get("usernameToUpdate") if has_new_username else username
 
             # create image_url_to_update
-            image_url_to_update = ""                    
-            if has_new_avatar:       
-                if not allow_upload(request.files.get("avatar").filename):
-                    response = {
-                        "error": True,
-                        "message": "File format is unacceptable; only jpg, jpeg, png are available."
-                    }
-                    return jsonify(response), 422
-                else: 
-                    new_avatar = request.files.get("avatar")
-                    datetime = dt.datetime.now(dt.timezone.utc).strftime("%Y%m%d%H%M%S")
-                    avatar_extension = request.files.get("avatar").filename.split(".")[-1]
-                    new_filename = f"roadbuddy_avatar_{user_id}_{email}_{datetime}.{avatar_extension}"
-                
-                # File uploaded with name already used in bucket will overwrite the old one.
-                RoadBuddy.models.AWS_S3.Update_file(user_id, email, new_avatar, new_filename)
-
-                # update image_url
-                image_url_to_update = os.getenv("RDS_domain_name") + new_filename
+            avatar_upload_response = upload_avatar(request.files.get("avatar"), email)
+            if avatar_upload_response.get("error"):
+                return jsonify(**avatar_upload_response), 422
 
             # update RDS
             memberTool.Update_basic_info(
                 user_id = user_id,
                 username_to_update = username_to_update,
-                image_url_to_update = image_url_to_update
+                image_url_to_update = avatar_upload_response.get("image_url")
             )
 
             # update username of user_info stored in the server side
             RoadBuddy.event_handler.user_info[user_id]["username"] = username_to_update
 
-            response = {"ok": True, "username": username_to_update, "image_url": image_url_to_update}
+            response = {"ok": True, "username": username_to_update, "image_url": avatar_upload_response.get("image_url")}
             return jsonify(response), 200
         
         except Exception as error:
