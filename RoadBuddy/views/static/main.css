@@ -569,7 +569,7 @@ input[name=create-team]
 
 /* configure pannel */
 .configure-pannel{
-    display: none; /*flex*/
+    display: flex; /*flex*/
     flex: none;
     flex-direction: column;
     justify-content: start;
@@ -652,7 +652,7 @@ label.avatar{
     width: 20vw;
 }
 
-div.button{
+div.configure-outer div.button{
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -661,7 +661,7 @@ div.button{
     margin: 15px 0;
 }
 
-div.button button{
+div.configure-outer div.button button{
     margin: 5px 0;
     width: 28vw;
     border-radius: 5px;
@@ -719,6 +719,55 @@ div.configure-response-icon-src p,
 .configure-response div.close{
     width: 18px;
     height: 18px;
+}
+
+div.change-password{
+    display: none; /*flex */
+    flex: none;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    position: absolute;
+    z-index: 2000;
+    width: 50vw;
+    height: 35vh;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 2px;
+}
+
+p.change-password__title{
+    font-size: 20px;
+    font-weight: bold;
+    padding: 0;
+    margin: 20px 0;
+}
+
+div.change-password div{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+div.change-password input{
+    border: none;
+    font-size: 15px;
+    text-align: center;
+    width: 25vw;
+    margin-left: 10px;
+    background-color: rgb(234, 234, 234);
+    padding: 3px;
+    margin: 5px;
+}
+
+div.change-password__button button{
+    margin: 10px 5px;
+    width: 15vw;
+    border-radius: 5px;
+    border-style: none;
+    opacity: 0.7;    
+    background-color: rgb(234, 234, 234);
+    font-weight: bold;
 }
 
 /* ------ socket friend and team request ------ */
