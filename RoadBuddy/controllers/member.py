@@ -81,6 +81,14 @@ def Signup():
             }
             return jsonify(response), 500
 
+def Encode_JWT_Token(user_id: int, email: str) -> str:
+    jwt_payload = {
+        "usi": user_id,
+        "eml": email,
+        "exp" : dt.datetime.now(dt.timezone.utc) + dt.timedelta(days=7)
+    } 
+    return jwt.encode(jwt_payload, os.environ.get("jwtsecret"))
+
 def Decode_JWT_Token(JWT_token: str) -> dict:
     jwt_payload = jwt.decode(JWT_token, os.environ.get("jwtsecret"),"HS256")
     user_id = jwt_payload["usi"]
@@ -103,16 +111,7 @@ def Login():
             
             member_info = memberTool.Search_member_by_email(email)[0]
             if check_password_hash(member_info["password"], request.json["password"]):
-                jwt_payload = {
-                    "usi": member_info["user_id"],
-                    "eml": member_info["email"],
-                    "exp" : dt.datetime.now(dt.timezone.utc) + dt.timedelta(days=7)
-                } 
-
-                JWT = jwt.encode(jwt_payload, os.environ.get("jwtsecret"),)
-                response = {
-                    "token": JWT
-                }
+                response = {"token": Encode_JWT_Token(member_info["user_id"], member_info["email"])}
                 return jsonify(response), 200
             else:
                 response = {
