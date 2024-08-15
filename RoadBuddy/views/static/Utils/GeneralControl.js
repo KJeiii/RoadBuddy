@@ -519,8 +519,9 @@ export function SwitchSignUpStep(){
 
 export const inputErrorMessages = {
     isInputFilledIn: "(此欄位不可空白)",
-    isInputValuesConsistent: "(兩次密碼不一致，請重新輸入)",
-    isInputValueIncludingCharacters: "(格式錯誤，須包含@)"
+    isInputValuesConsistent: "(與新密碼不一致)",
+    isInputValueIncludingCharacters: "(格式錯誤，須包含@)",
+    isInputValuesUnique: "(不可與舊密碼相同)"
 }
 
 export function isInputErrorRepeating(inputTitleElement, message){
@@ -534,6 +535,7 @@ export function isInputErrorRepeating(inputTitleElement, message){
 
 export function RenderErrorMessage(inputTitleElement, message){
     if (!isInputErrorRepeating(inputTitleElement, message)){
+        ClearErrorMessage(inputTitleElement);
         const messageDiv = document.createElement("div");
         messageDiv.textContent = message;
         messageDiv.style.color = "red";
@@ -545,11 +547,13 @@ export function RenderErrorMessage(inputTitleElement, message){
     }
 }
 
-export function ClearErrorMessage(inputTitleElement){
-    while ( inputTitleElement.childNodes.length > 2 ) {
-        inputTitleElement.removeChild(inputTitleElement.lastChild)
-    }
-    inputTitleElement.nextElementSibling.style.border = "none";
+export function ClearErrorMessage(...inputTitleElements){
+    inputTitleElements.forEach(inputTitleElement => {
+        while ( inputTitleElement.childElementCount >= 2 ) {
+            inputTitleElement.removeChild(inputTitleElement.lastChild)
+        }
+        inputTitleElement.nextElementSibling.style.border = "none";
+    })
 }
 
 export function isInputFilledIn(inputElementToBeExamined, ...rest){
@@ -565,6 +569,17 @@ export function isInputValuesConsistent(inputElementToBeExamined, ...inputElemen
         }
     })
     return allValuesConsistent
+}
+
+export function isInputValuesUnique(inputElementToBeExamined, ...inputElementsAsReferece){
+    let allValuesUnique = true;
+    inputElementsAsReferece.flat().forEach(inputElement => {
+        if(inputElement.value === inputElementToBeExamined.value){
+            allValuesUnique = false;
+            return
+        }
+    })
+    return allValuesUnique
 }
 
 export function isInputValueIncludingCharacters(inputElementToBeExamined, ...characters){
@@ -612,4 +627,17 @@ export function ControlMebmerMsgBox(msgCssSelector, display) {
     if (display === "flex") {msgBoxContent.textContent = "是否跳過上傳照片？"}
     if (display === "none") {msgBoxContent.textContent = ""}
     msgBox.style.display = display;
+}
+
+export function VerifyPasswordInputs(){
+    let isAllInputValuesEligible = true;
+    const [oldPwdInput, newPwdInput, confirmPwdInput] = document.querySelectorAll("div.update-password input");
+    [oldPwdInput, newPwdInput, confirmPwdInput].forEach(pwdInput => {
+        isAllInputValuesEligible &= VerifyInputValue(pwdInput, isInputFilledIn).pass;
+    });
+    if (isAllInputValuesEligible == true){
+        isAllInputValuesEligible &= VerifyInputValue(newPwdInput, isInputValuesUnique, oldPwdInput).pass;
+        isAllInputValuesEligible &= VerifyInputValue(confirmPwdInput, isInputValuesConsistent, newPwdInput).pass;
+    }
+    return {pass: isAllInputValuesEligible}
 }
