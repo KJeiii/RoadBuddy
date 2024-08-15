@@ -1,3 +1,5 @@
+import { isInputFilledIn, isPasswordInputPass, isInputValuesConsistent, RenderErrorMessage, inputErrorMessages, isInputErrorRepeating, isInputValuesUnique } from "./GeneralControl.js";
+
 export function PreviewAvatar(avatarFile, elementToPreviewAvatar){
     const fileReader = new FileReader();
     fileReader.onload = () =>{
@@ -29,4 +31,49 @@ export function RenderUpdateResponse(responseCode){
     };
     responseTitle.textContent = resultObj[responseCode].title;
     img.src = resultObj[responseCode].img_src;
+}
+
+export function SwitchChangePasswordPrompt(){
+    const//
+        prompt = document.querySelector("div.update-password"),
+        isShown = prompt.style.display === "flex";
+    console.log(isShown);
+    prompt.style.display = isShown ? "none" : "flex";
+}
+
+export function ClearInputValues(inputElementsArray){
+    inputElementsArray.forEach(input => {input.value = "";});
+}
+
+export function VerifyPasswordInputs(){
+    let isAllInputValuesEligible = true;
+    const [oldPwdInput, newPwdInput, confirmPwdInput] = document.querySelectorAll("div.update-password input");
+    [oldPwdInput, newPwdInput, confirmPwdInput].forEach(pwdInputs => {
+        if(!isInputFilledIn(pwdInputs)){
+            isAllInputValuesEligible &= false;
+            const oldPwdInputTitle = pwdInputs.previousElementSibling;
+            (!isInputErrorRepeating(oldPwdInputTitle, inputErrorMessages[isInputFilledIn.name]) &&
+            oldPwdInputTitle.childElementCount < 2) 
+            &&
+            RenderErrorMessage(oldPwdInputTitle, inputErrorMessages[isInputFilledIn.name]);
+        }
+    })
+    if (!isInputValuesUnique(newPwdInput, oldPwdInput)){
+        isAllInputValuesEligible &= false;
+        const newPwdInputTitle = newPwdInput.previousElementSibling;
+        (!isInputErrorRepeating(newPwdInputTitle, inputErrorMessages[isInputValuesUnique.name]) &&
+        newPwdInputTitle.childElementCount < 2)  
+        &&
+        RenderErrorMessage(newPwdInputTitle, inputErrorMessages[isInputValuesUnique.name]);
+    }
+    if (!isInputValuesConsistent(newPwdInput, confirmPwdInput)){
+        isAllInputValuesEligible &= false;
+        const confirmPwdInputTitle = confirmPwdInput.previousElementSibling;
+        (!isInputErrorRepeating(confirmPwdInputTitle, inputErrorMessages[isInputValuesConsistent.name]) &&
+        confirmPwdInputTitle.childElementCount < 2)  
+        &&
+        RenderErrorMessage(confirmPwdInputTitle, inputErrorMessages[isInputValuesConsistent.name]);
+    }
+    console.log(isAllInputValuesEligible);
+    // (isAllInputValuesEligible == true) && SwitchSignUpStep();
 }
