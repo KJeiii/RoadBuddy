@@ -4,7 +4,8 @@ import { SearchNewFriends, RenderSearchResult, SearchOldFriends, FetchSelectedIt
 } from "./ManageFriend.js";
 import { ControlFriendMsgBox, ClearList, RenderList, SwitchSettingBtn, SwitchPullAndDropBtn, 
     ShowPannelContent, SwitchMenuToggle, onWhichPannelContent, SwitchPannel, SwitchMenuTitle, 
-    isPannelPulledUp, ControlTeamMsgBox, ExpandOrClosePannel, RenderOnlineStatus, ReRenderList 
+    isPannelPulledUp, ControlTeamMsgBox, ExpandOrClosePannel, RenderOnlineStatus, ReRenderList, 
+    isInputValuesConsistent, ClearErrorMessage, VerifyPasswordInputs, VerifyInputValue, isInputFilledIn, isInputValuesUnique
 } from "./GeneralControl.js";
 import { CreateNewTeam, SearchTeams, EmitEnterTeamEvent, EmitInviteTeamEvent, EmitJoinTeamRequestEvent, 
     EmitAcceptTeamRequestEvent, EmitLeaveTeamEvent } from "./ManageTeam.js";
@@ -14,7 +15,7 @@ import { ChangeIconColor, ManipulateSessionStorage, RenderAvatar,
 import { AppendUserInPartnerList, BuildPartnership, CreatePartner, UpdatePartnersColor} from "./ManagePartner.js";
 import { map, messages, onlineUsers} from "./AppClass.js";
 import { RenderMessageBtn, SearchMessage } from "./ManageMessage.js";
-import { PreviewAvatar, RenderUpdateResponse, SwitchAvatarUndoBtn } from "./ManageConfigure.js";
+import { ClearInputValues, PreviewAvatar, RenderUpdateResponse, SwitchAvatarUndoBtn, SwitchChangePasswordPrompt } from "./ManageConfigure.js";
 
 
 export const AllEvents = [
@@ -93,7 +94,7 @@ export function AddEventsToSetting() {
         SwitchAvatarUndoBtn("div.configure-outer div.undo");
     })
 
-    // Sending request
+    // update user information
     const confirmUpdateBasicBtn = document.querySelector("button.update-basic");
     confirmUpdateBasicBtn.addEventListener("click", ()=>{
         CollectInformationToUpdate()
@@ -130,6 +131,37 @@ export function AddEventsToSetting() {
                 RenderUpdateResponse(2)
                 console.log(error)
             })
+    })
+
+    // click change password and show prompt
+    document.querySelector("div.configure-pannel button.update-password").addEventListener("click", ()=>{
+        document.querySelector("div.configure-pannel").style.display = "none";
+        SwitchChangePasswordPrompt();
+    });
+
+    // click cancel to go back to configure pannel
+    document.querySelector("div.update-password button.cancel").addEventListener("click", ()=>{
+        document.querySelector("div.configure-pannel").style.display = "flex";
+        SwitchChangePasswordPrompt();
+        ClearInputValues(document.querySelectorAll("div.update-password input"));
+        ClearErrorMessage(
+            document.querySelector("div.update-password div.update-password__old-password__title"),
+            document.querySelector("div.update-password div.update-password__new-password__title"),
+            document.querySelector("div.update-password div.update-password__confirm-password__title")
+        )
+    })
+
+    // check password input values when they are changed
+    const [oldPwdInput, newPwdInput, confirmPwdInput] = document.querySelectorAll("div.update-password input");
+    oldPwdInput.addEventListener("change", function(){VerifyInputValue(this, isInputFilledIn)});
+    newPwdInput.addEventListener("change", function(){VerifyInputValue(this, isInputValuesUnique, oldPwdInput)});
+    confirmPwdInput.addEventListener("change", function(){VerifyInputValue(this, isInputValuesConsistent, newPwdInput)});
+
+    // click change password button to update
+    document.querySelector("div.update-password button.update").addEventListener("click", ()=>{
+        if(VerifyPasswordInputs().pass){
+            // send request to api:  asynchornizingly check old pwd pass and update new pwd
+        }
     })
 }
 
