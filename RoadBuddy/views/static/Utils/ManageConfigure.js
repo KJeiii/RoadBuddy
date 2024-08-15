@@ -44,36 +44,3 @@ export function SwitchChangePasswordPrompt(){
 export function ClearInputValues(inputElementsArray){
     inputElementsArray.forEach(input => {input.value = "";});
 }
-
-export function VerifyPasswordInputs(){
-    let isAllInputValuesEligible = true;
-    const [oldPwdInput, newPwdInput, confirmPwdInput] = document.querySelectorAll("div.update-password input");
-    [oldPwdInput, newPwdInput, confirmPwdInput].forEach(pwdInputs => {
-        if(!isInputFilledIn(pwdInputs)){
-            isAllInputValuesEligible &= false;
-            const oldPwdInputTitle = pwdInputs.previousElementSibling;
-            (!isInputErrorRepeating(oldPwdInputTitle, inputErrorMessages[isInputFilledIn.name]) &&
-            oldPwdInputTitle.childElementCount < 2) 
-            &&
-            RenderErrorMessage(oldPwdInputTitle, inputErrorMessages[isInputFilledIn.name]);
-        }
-    })
-    if (!isInputValuesUnique(newPwdInput, oldPwdInput)){
-        isAllInputValuesEligible &= false;
-        const newPwdInputTitle = newPwdInput.previousElementSibling;
-        (!isInputErrorRepeating(newPwdInputTitle, inputErrorMessages[isInputValuesUnique.name]) &&
-        newPwdInputTitle.childElementCount < 2)  
-        &&
-        RenderErrorMessage(newPwdInputTitle, inputErrorMessages[isInputValuesUnique.name]);
-    }
-    if (!isInputValuesConsistent(newPwdInput, confirmPwdInput)){
-        isAllInputValuesEligible &= false;
-        const confirmPwdInputTitle = confirmPwdInput.previousElementSibling;
-        (!isInputErrorRepeating(confirmPwdInputTitle, inputErrorMessages[isInputValuesConsistent.name]) &&
-        confirmPwdInputTitle.childElementCount < 2)  
-        &&
-        RenderErrorMessage(confirmPwdInputTitle, inputErrorMessages[isInputValuesConsistent.name]);
-    }
-    console.log(isAllInputValuesEligible);
-    // (isAllInputValuesEligible == true) && SwitchSignUpStep();
-}
