@@ -152,28 +152,6 @@
                     <button class="update-password">更改密碼</button>
                 </div>
             </div>
-            <div class="change-password">
-                <p class="change-password__title">更改密碼</p>
-                <div class="change-password__password--old">
-                    <label for="original-password">舊密碼</label>
-                    <input type="password" name="original-password" id="original-password" placeholder="輸入舊密碼">
-                </div>
-
-                <div class="change-password__password--new">
-                    <label for="new-password">新密碼</label>
-                    <input type="password" name="new-password" id="new-password" placeholder="輸入新密碼">    
-                </div>
-
-                <div class="change-password__password--confirm">
-                    <label for="confirm-password">確認新密碼</label>
-                    <input type="password" name="confirm-password" id="confirm-password" placeholder="再輸入一次新密碼">    
-                </div>
-
-                <div class="change-password__button">
-                    <button class="cancel">取消</button>
-                    <button class="submit">確認更改</button>    
-                </div>
-            </div>
         </div>
     </div>
 
@@ -234,7 +212,29 @@
     </div>
 
     <div class="update-password">
-
+        <p class="update-password__title">更改密碼</p>
+        <div class="update-password__old-password">
+            <div class="update-password__old-password__title">
+                <div>舊密碼</div>
+            </div>
+            <input type="password" name="original-password" id="old-password" placeholder="輸入舊密碼">
+        </div>
+        <div class="update-password__new-password">
+            <div class="update-password__new-password__title">
+                <div>新密碼</div>
+            </div>
+            <input type="password" name="original-password" id="new-password" placeholder="輸入新密碼">
+        </div>
+        <div class="update-password__confirm-password">
+            <div class="update-password__confirm-password__title">
+                <div>確認密碼</div>
+            </div>
+            <input type="password" name="original-password" id="confirm-password" placeholder="再次輸入新密碼">
+        </div>
+        <div class="update-password__button">
+            <button class="cancel">取消</button>
+            <button class="update">確認更改</button>    
+        </div>
     </div>
 
     <canvas class="icon-canvas" width="200" height="200"></canvas>

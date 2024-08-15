@@ -569,7 +569,7 @@ input[name=create-team]
 
 /* configure pannel */
 .configure-pannel{
-    display: flex; /*flex*/
+    display: none; /*flex*/
     flex: none;
     flex-direction: column;
     justify-content: start;
@@ -721,48 +721,66 @@ div.configure-response-icon-src p,
     height: 18px;
 }
 
-div.change-password{
-    display: none; /*flex */
+div.update-password{
+    display: flex; /*flex */
     flex: none;
     flex-direction: column;
     justify-content: start;
     align-items: center;
     position: absolute;
+    top: 10vh;
+    left: 27vw;
     z-index: 2000;
-    width: 50vw;
-    height: 35vh;
+    width: 240px;
+    height: fit-content;
     background-color: white;
     border-radius: 10px;
     box-shadow: 2px;
 }
 
-p.change-password__title{
+p.update-password__title{
     font-size: 20px;
     font-weight: bold;
     padding: 0;
-    margin: 20px 0;
+    margin: 10px 0 5px 0;
 }
 
-div.change-password div{
+div.update-password div.update-password__old-password__title,
+div.update-password div.update-password__new-password__title,
+div.update-password div.update-password__confirm-password__title{
+    margin: 1px 15px;
+    font-size: 15px;
     display: flex;
-    justify-content: center;
-    align-items: center;
+    line-height: 30px;
 }
 
-div.change-password input{
+div.update-password div.update-password__new-password,
+div.update-password div.update-password__old-password,
+div.update-password div.update-password__confirm-password
+{
+    background-color: rgb(234, 234, 234);
+    border-radius: 10px;
+    margin: 5px 0;
+    width: 90%;
+    padding: 2px;
+}
+
+div.update-password input{
     border: none;
     font-size: 15px;
     text-align: center;
-    width: 25vw;
-    margin-left: 10px;
+    width: 80%;
     background-color: rgb(234, 234, 234);
     padding: 3px;
-    margin: 5px;
+    margin: 2px 14px;
+    border-radius: 5px;
+    text-align: start;
 }
 
-div.change-password__button button{
-    margin: 10px 5px;
-    width: 15vw;
+div.update-password__button button{
+    margin: 7px 5px;
+    width: 80px;
+    height: 25px;
     border-radius: 5px;
     border-style: none;
     opacity: 0.7;    
