@@ -89,11 +89,36 @@ def Encode_JWT_Token(user_id: int, email: str) -> str:
     } 
     return jwt.encode(jwt_payload, os.environ.get("jwtsecret"))
 
-def Decode_JWT_Token(JWT_token: str) -> dict:
-    jwt_payload = jwt.decode(JWT_token, os.environ.get("jwtsecret"),"HS256")
-    user_id = jwt_payload["usi"]
-    email = jwt_payload["eml"]
-    return {"user_id": user_id, "email": email}
+def check_headers_authorization(authorization_value: str) -> dict:
+    try:
+        if authorization_value == None:
+            return {"ok": False, "message": "The value of authorization is empty"}
+
+        split_value_of_authorization = authorization_value.split(" ")
+        if "Bearer" not in split_value_of_authorization:
+            return {"ok": False, "message": "The type of authorization scheme is not Bearer"}
+        if len(split_value_of_authorization) != 2:
+            return {"ok": False, "message": "The credential is missing"}
+        return {"ok": True, "token": split_value_of_authorization[1]}
+
+    except Exception as error:
+        print("Failed to execute check_headers_authorization: ", error)
+
+def Decode_JWT_Token(authorization_value: str) -> dict: 
+    try:
+        response_checking_authorization = check_headers_authorization(authorization_value)
+        if not response_checking_authorization.get("ok"):
+            return response_checking_authorization
+        jwt_payload = jwt.decode(response_checking_authorization.get("token"), os.environ.get("jwtsecret"),"HS256")
+        user_id = jwt_payload["usi"]
+        email = jwt_payload["eml"]
+        return {"ok": True, "user_id": user_id, "email": email}
+    except jwt.exceptions.InvalidTokenError as error:
+        print("Failed to decode JWT: ", error)
+        return {"ok": False, "message": "JWT token is unacceptable"}
+    except Exception as error:
+        print("Failed to execute Decode_JWT_token: ", error)
+        return {"ok": False, "message": "JWT decoding does not work"}
 
 # signin and check user status
 @member_bp.route("/api/member/auth", methods = ["PUT", "GET"])
@@ -131,28 +156,29 @@ def Login():
     # check if user has logged in already by jwt
     if request.method == "GET":
         try:
-            JWT_in_headers = request.headers.get("authorization").split(" ")
-            if "Bearer" in JWT_in_headers:
-                user_id, email = Decode_JWT_Token(JWT_in_headers[1]).values()
-                *rest, username, image_url = memberTool.Search_member_by_id(user_id).values()
-
-                RoadBuddy.event_handler.sid_reference[RoadBuddy.event_handler.my_sid] = user_id
-                RoadBuddy.event_handler.user_info[user_id] = {
-                    "sid": RoadBuddy.event_handler.my_sid,
-                    "username": username,
-                    "email": email,
-                    "team_id": None,
-                    "image_url": image_url,
-                    "messages": []
-                }
-                
-                response = {
-                    "user_id": user_id,
-                    "username": username,
-                    "email": email,
-                    "image_url": image_url
-                }
-                return jsonify(response), 200
+            response_decoding_JWT = Decode_JWT_Token(request.headers.get("authorization"))
+            if not response_decoding_JWT.get("ok"):
+                return jsonify(response_decoding_JWT), 401
+            *rest, user_id, email = response_decoding_JWT.values()
+        
+            *rest, username, image_url = memberTool.Search_member_by_id(user_id).values()
+            RoadBuddy.event_handler.sid_reference[RoadBuddy.event_handler.my_sid] = user_id
+            RoadBuddy.event_handler.user_info[user_id] = {
+                "sid": RoadBuddy.event_handler.my_sid,
+                "username": username,
+                "email": email,
+                "team_id": None,
+                "image_url": image_url,
+                "messages": []
+            }
+            
+            response = {
+                "user_id": user_id,
+                "username": username,
+                "email": email,
+                "image_url": image_url
+            }
+            return jsonify(response), 200
         
         except Exception as error:
             print(f"Error in login(GET) : {error}")
@@ -166,10 +192,11 @@ def Login():
 def update_basic_info():
     if request.method == "PATCH":   
         try: 
-            JWT_in_headers = request.headers.get("authorization").split(" ")
-            if "Bearer" in JWT_in_headers:
-                user_id, email = Decode_JWT_Token(JWT_in_headers[1]).values()
-                username = memberTool.Search_member_by_id(user_id).get("username")
+            response_decoding_JWT = Decode_JWT_Token(request.headers.get("authorization"))
+            if not response_decoding_JWT.get("ok"):
+                return jsonify(response_decoding_JWT), 401
+            *rest, user_id, email = response_decoding_JWT.values()
+            username = memberTool.Search_member_by_id(user_id).get("username")
 
             # check if there are new information
             has_new_username = request.form.get("usernameToUpdate") != username
@@ -212,18 +239,21 @@ def allow_change_password(email, password):
 @member_bp.route("/api/member/update/pwd", methods = ["PUT"])
 def update_password():
     if request.method == "PUT":
-        JWT_in_headers = request.headers.get("authorization").split(" ")
-        if "Bearer" in JWT_in_headers:
-            user_id, username, email = Decode_JWT_Token(JWT_in_headers[1]).values()
-
         try:
-            if not allow_change_password(email = email, password = request.json.get("pwd_in_use")):
-                response = {"error": True, "message": "The password in use is incorrect."}
-                return jsonify(response), 403
-            else:
-                new_password_hashed = generate_password_hash(request.json.get("pwd_to_update"))
-                memberTool.Update_password(user_id = user_id, password = new_password_hashed)
-                return jsonify({"ok": True}), 200
+            response_decoding_JWT = Decode_JWT_Token(request.headers.get("authorization"))
+            if not response_decoding_JWT.get("ok"):
+                return jsonify(response_decoding_JWT), 401
+            *rest, user_id, email = response_decoding_JWT.values()
+
+            if not allow_change_password(email = email, password = request.json.get("oldPassword")):
+                return jsonify({
+                    "error": True, 
+                    "message": "The password in use is incorrect."}), 403
+
+            new_password_hashed = generate_password_hash(request.json.get("newPassword"))
+            memberTool.Update_password(user_id = user_id, password_to_update = new_password_hashed)
+            return jsonify({"ok": True}), 200
+        
         except Exception as error:
             print(error)
             response = {"error": True, "message": "伺服器內部錯誤"}
