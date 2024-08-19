@@ -628,16 +628,3 @@ export function ControlMebmerMsgBox(msgCssSelector, display) {
     if (display === "none") {msgBoxContent.textContent = ""}
     msgBox.style.display = display;
 }
-
-export function VerifyPasswordInputs(){
-    let isAllInputValuesEligible = true;
-    const [oldPwdInput, newPwdInput, confirmPwdInput] = document.querySelectorAll("div.update-password input");
-    [oldPwdInput, newPwdInput, confirmPwdInput].forEach(pwdInput => {
-        isAllInputValuesEligible &= VerifyInputValue(pwdInput, isInputFilledIn).pass;
-    });
-    if (isAllInputValuesEligible == true){
-        isAllInputValuesEligible &= VerifyInputValue(newPwdInput, isInputValuesUnique, oldPwdInput).pass;
-        isAllInputValuesEligible &= VerifyInputValue(confirmPwdInput, isInputValuesConsistent, newPwdInput).pass;
-    }
-    return {pass: isAllInputValuesEligible}
-}
