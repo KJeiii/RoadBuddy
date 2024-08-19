@@ -1,14 +1,11 @@
 import { map } from "./AppClass.js";
+import { VerifyInputValue } from "./GeneralControl.js";
 
 export async function SignupNewAccount(dataToSingup){
     try{
         const//
-            response = await fetch("/api/member", {
-            method: "POST",
-            body: dataToSingup
-            }),
+            response = await fetch("/api/member", {method: "POST",body: dataToSingup}),
             result = await response.json();
-
         if (response.status !== 200) {return {...result, ok: false}}
         return {...result}
     }
@@ -25,18 +22,14 @@ export async function CheckUserStatus() {
         // Return promise result if not logging yet
         if ( jwt === null) {return {"ok":false, "data": null}}
 
-        // Verify user's token
+        // Verify user's token and return result
         let//
             response = await fetch("/api/member/auth", {
                 method: "GET",
                 headers: {"authorization": `Bearer ${jwt}`}
             }),
             result = await response.json();
-
-        // If verification does not pass
         if (result.data === null) {return {"ok": false, "data": null}}
-        
-        // If verification passes
         return {"ok": true, "data": result}
     }
     catch(error) {
@@ -45,15 +38,12 @@ export async function CheckUserStatus() {
     }
 }
 
-
 // cache user_id, username, team_id, email, friendList in sessionStorage
 export function ManipulateSessionStorage(setOrRemoveOrClear, ...rest){
     try {
         //store data
         if (setOrRemoveOrClear === "set") {
-            for (let key in rest[0]){
-                window.sessionStorage.setItem(key, rest[0][key])
-            }
+            for (let key in rest[0]){window.sessionStorage.setItem(key, rest[0][key])}
         }
         //remove specified data
         if (setOrRemoveOrClear === "remove"){
@@ -170,12 +160,53 @@ export async function UpdateUserInformation(formDataToUpdate){
             headers: {"authorization": `Bearer ${window.localStorage.getItem("token")}`},
             body: formDataToUpdate
         });
-        if (!response.ok){throw {responseCode: 0, message: response.statusText}}
+        if (!response.ok){return {responseCode: 0, message: response.statusText}}
         const result = await response.json();
         return {...result, responseCode: 1}
     }
     catch(error){
         console.log("Failed to execute UpdateUserInformation: ", error)
-        throw {responseCode: 0, message: error}
+        throw {responseCode: 0, ...error}
+    }
+}
+
+export async function UpdatePassword(oldPassword, newPassword, JWT){
+    try{
+        const//
+            response = await fetch('/api/member/update/pwd', {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "authorization": `Bearer ${JWT}`},
+            body: JSON.stringify({oldPassword: oldPassword, newPassword: newPassword})
+        }),
+        resultOfUpdate = await response.json();
+        if (resultOfUpdate.error){
+            console.log(resultOfUpdate);
+            return {...resultOfUpdate, responseCode: 4}
+        }
+        return {...resultOfUpdate, responseCode: 1}
+    }
+    catch(error){
+        console.log("Failed to execute UpdatePassword (ManageUser.js): ", error)
+        throw {...error, responseCode: 0}
+    }
+}
+
+export async function VerifyPasswordInputs(){
+    let isAllInputValuesEligible = true;
+    const [oldPwdInput, newPwdInput, confirmPwdInput] = document.querySelectorAll("div.update-password input");
+    [oldPwdInput, newPwdInput, confirmPwdInput].forEach(pwdInput => {
+        isAllInputValuesEligible &= VerifyInputValue(pwdInput, isInputFilledIn).pass;
+    });
+    if (isAllInputValuesEligible){
+        isAllInputValuesEligible &= VerifyInputValue(newPwdInput, isInputValuesUnique, oldPwdInput).pass;
+        isAllInputValuesEligible &= VerifyInputValue(confirmPwdInput, isInputValuesConsistent, newPwdInput).pass;
+    }
+    if (!isAllInputValuesEligible){throw {pass: isAllInputValuesEligible}}
+    return {
+        pass: isAllInputValuesEligible,
+        oldPassword: oldPwdInput.value,
+        newPassword: newPwdInput.value
     }
 }
