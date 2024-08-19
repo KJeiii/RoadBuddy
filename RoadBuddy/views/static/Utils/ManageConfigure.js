@@ -1,5 +1,3 @@
-import { isInputFilledIn, isPasswordInputPass, isInputValuesConsistent, RenderErrorMessage, inputErrorMessages, isInputErrorRepeating, isInputValuesUnique } from "./GeneralControl.js";
-
 export function PreviewAvatar(avatarFile, elementToPreviewAvatar){
     const fileReader = new FileReader();
     fileReader.onload = () =>{
@@ -26,8 +24,9 @@ export function RenderUpdateResponse(responseCode){
     const resultObj = {
         0: {title: "更新失敗", img_src: "../static/images/error.gif"},
         1: {title: "更新完成", img_src: "../static/images/check.gif"},
-        2: {title: "無資料需更新", img_src: "../static/images/error.gif"},
-        3: {title: "更新中", img_src: "../static/images/loading.gif"}
+        2: {title: "更新中", img_src: "../static/images/loading.gif"},
+        3: {title: "無資料需更新", img_src: "../static/images/error.gif"},
+        4: {title: "舊密碼不正確", img_src: "../static/images/error.gif"}
     };
     responseTitle.textContent = resultObj[responseCode].title;
     img.src = resultObj[responseCode].img_src;
@@ -37,10 +36,9 @@ export function SwitchChangePasswordPrompt(){
     const//
         prompt = document.querySelector("div.update-password"),
         isShown = prompt.style.display === "flex";
-    console.log(isShown);
     prompt.style.display = isShown ? "none" : "flex";
 }
 
-export function ClearInputValues(inputElementsArray){
-    inputElementsArray.forEach(input => {input.value = "";});
+export function ClearInputValues(...inputElements){
+    inputElements.forEach(input => {input.value = "";});
 }
