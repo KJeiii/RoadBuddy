@@ -92,13 +92,13 @@ def Encode_JWT_Token(user_id: int, email: str) -> str:
 def check_headers_authorization(authorization_value: str) -> dict:
     try:
         if authorization_value == None:
-            return {"ok": False, "message": "The value of authorization is empty"}
+            return {"error": True, "message": "The value of authorization is empty"}
 
         split_value_of_authorization = authorization_value.split(" ")
         if "Bearer" not in split_value_of_authorization:
-            return {"ok": False, "message": "The type of authorization scheme is not Bearer"}
+            return {"error": True, "message": "The type of authorization scheme is not Bearer"}
         if len(split_value_of_authorization) != 2:
-            return {"ok": False, "message": "The credential is missing"}
+            return {"error": True, "message": "The credential is missing"}
         return {"ok": True, "token": split_value_of_authorization[1]}
 
     except Exception as error:
@@ -107,7 +107,7 @@ def check_headers_authorization(authorization_value: str) -> dict:
 def Decode_JWT_Token(authorization_value: str) -> dict: 
     try:
         response_checking_authorization = check_headers_authorization(authorization_value)
-        if not response_checking_authorization.get("ok"):
+        if response_checking_authorization.get("error"):
             return response_checking_authorization
         jwt_payload = jwt.decode(response_checking_authorization.get("token"), os.environ.get("jwtsecret"),"HS256")
         user_id = jwt_payload["usi"]
@@ -115,10 +115,10 @@ def Decode_JWT_Token(authorization_value: str) -> dict:
         return {"ok": True, "user_id": user_id, "email": email}
     except jwt.exceptions.InvalidTokenError as error:
         print("Failed to decode JWT: ", error)
-        return {"ok": False, "message": "JWT token is unacceptable"}
+        return {"error": True, "message": "JWT token is unacceptable"}
     except Exception as error:
         print("Failed to execute Decode_JWT_token: ", error)
-        return {"ok": False, "message": "JWT decoding does not work"}
+        return {"error": True, "message": "JWT decoding does not work"}
 
 # signin and check user status
 @member_bp.route("/api/member/auth", methods = ["PUT", "GET"])
@@ -157,7 +157,7 @@ def Login():
     if request.method == "GET":
         try:
             response_decoding_JWT = Decode_JWT_Token(request.headers.get("authorization"))
-            if not response_decoding_JWT.get("ok"):
+            if response_decoding_JWT.get("error"):
                 return jsonify(response_decoding_JWT), 401
             *rest, user_id, email = response_decoding_JWT.values()
         
@@ -193,7 +193,7 @@ def update_basic_info():
     if request.method == "PATCH":   
         try: 
             response_decoding_JWT = Decode_JWT_Token(request.headers.get("authorization"))
-            if not response_decoding_JWT.get("ok"):
+            if response_decoding_JWT.get("error"):
                 return jsonify(response_decoding_JWT), 401
             *rest, user_id, email = response_decoding_JWT.values()
             username = memberTool.Search_member_by_id(user_id).get("username")
@@ -241,7 +241,7 @@ def update_password():
     if request.method == "PUT":
         try:
             response_decoding_JWT = Decode_JWT_Token(request.headers.get("authorization"))
-            if not response_decoding_JWT.get("ok"):
+            if response_decoding_JWT.get("error"):
                 return jsonify(response_decoding_JWT), 401
             *rest, user_id, email = response_decoding_JWT.values()
 
