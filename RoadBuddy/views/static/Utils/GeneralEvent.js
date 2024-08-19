@@ -5,13 +5,13 @@ import { SearchNewFriends, RenderSearchResult, SearchOldFriends, FetchSelectedIt
 import { ControlFriendMsgBox, ClearList, RenderList, SwitchSettingBtn, SwitchPullAndDropBtn, 
     ShowPannelContent, SwitchMenuToggle, onWhichPannelContent, SwitchPannel, SwitchMenuTitle, 
     isPannelPulledUp, ControlTeamMsgBox, ExpandOrClosePannel, RenderOnlineStatus, ReRenderList, 
-    isInputValuesConsistent, ClearErrorMessage, VerifyPasswordInputs, VerifyInputValue, isInputFilledIn, isInputValuesUnique
+    isInputValuesConsistent, ClearErrorMessage, VerifyInputValue, isInputFilledIn, isInputValuesUnique
 } from "./GeneralControl.js";
 import { CreateNewTeam, SearchTeams, EmitEnterTeamEvent, EmitInviteTeamEvent, EmitJoinTeamRequestEvent, 
     EmitAcceptTeamRequestEvent, EmitLeaveTeamEvent } from "./ManageTeam.js";
 import { AddTeamClickEvent, AddTeamHoverEvent } from "./TeamEvent.js";
 import { ChangeIconColor, ManipulateSessionStorage, RenderAvatar, 
-    RenderUsername, CollectInformationToUpdate, UpdateUserInformation } from "./ManageUser.js";
+    RenderUsername, CollectInformationToUpdate, UpdateUserInformation, UpdatePassword, VerifyPasswordInputs } from "./ManageUser.js";
 import { AppendUserInPartnerList, BuildPartnership, CreatePartner, UpdatePartnersColor} from "./ManagePartner.js";
 import { map, messages, onlineUsers} from "./AppClass.js";
 import { RenderMessageBtn, SearchMessage } from "./ManageMessage.js";
@@ -72,7 +72,7 @@ export function AddEventsToSetting() {
     // click close to initialize update-response prompt
     const updateResponseCloseBtn = document.querySelector(".configure-response .close");
     updateResponseCloseBtn.addEventListener("click", ()=>{
-        RenderUpdateResponse(3);
+        RenderUpdateResponse(2);
         document.querySelector(".configure-response").style.display = "none";
         SwitchAvatarUndoBtn("div.configure-outer div.undo");
     });
@@ -128,7 +128,7 @@ export function AddEventsToSetting() {
                     })
             })
             .catch((error) => {
-                RenderUpdateResponse(2)
+                RenderUpdateResponse(3);
                 console.log(error)
             })
     })
@@ -143,7 +143,7 @@ export function AddEventsToSetting() {
     document.querySelector("div.update-password button.cancel").addEventListener("click", ()=>{
         document.querySelector("div.configure-pannel").style.display = "flex";
         SwitchChangePasswordPrompt();
-        ClearInputValues(document.querySelectorAll("div.update-password input"));
+        ClearInputValues(...document.querySelectorAll("div.update-password input"));
         ClearErrorMessage(
             document.querySelector("div.update-password div.update-password__old-password__title"),
             document.querySelector("div.update-password div.update-password__new-password__title"),
@@ -159,9 +159,22 @@ export function AddEventsToSetting() {
 
     // click change password button to update
     document.querySelector("div.update-password button.update").addEventListener("click", ()=>{
-        if(VerifyPasswordInputs().pass){
-            // send request to api:  asynchornizingly check old pwd pass and update new pwd
-        }
+        VerifyPasswordInputs()
+            .then(dataToUpdate => {
+                SwitchChangePasswordPrompt();
+                SwitchPannel("main");
+                document.querySelector(".configure-response").style.display = "flex";
+                UpdatePassword(dataToUpdate.oldPassword, dataToUpdate.newPassword, localStorage.getItem("token"))
+                    .then((updateResponse) => {
+                        RenderUpdateResponse(updateResponse.responseCode);
+                        ClearInputValues(...document.querySelectorAll("div.update-password input"));
+                    })
+                    .catch((error) => {
+                        RenderUpdateResponse(error.responseCode);
+                        ClearInputValues(...document.querySelectorAll("div.update-password input"));
+                    })
+            })
+            .catch((error) => {console.log(error)})
     })
 }
 
