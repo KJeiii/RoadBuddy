@@ -48,12 +48,14 @@ img.modify:hover,
     z-index: 1000;
     top: 15px;
     right: 15px; 
+    width: 8%;
+    aspect-ratio: 1/1;
 }
 
 .setting-btn
 {
-    width: 30px;
-    height: 30px;
+    width: 100%;
+    height: 100%;
     background-image: url("../static/images/gear.svg");
     background-color: white;
     background-position: center;
@@ -367,14 +369,14 @@ nav {
 
 .close,
 .close-invitation {
-    position: relative;
-    top: 7%;
-    left: 42%;
+    position: absolute;
+    top: 5%;
+    right: 5%;
     background-image: url("../static/images/close-icon.svg");
     background-position: center;
     background-size: cover;
-    width: 20px;
-    height: 20px;
+    width: 8.3%;
+    aspect-ratio: 1/1;
 }
 
 .close-invitation{
@@ -575,14 +577,18 @@ input[name=create-team]
     justify-content: start;
     align-items: center;
     position: absolute;
-    top: 10vh;
-    left: 25vw;
+    top: 15%;
+    left: calc(calc(100% - 240px) / 2);
     z-index: 2000;
-    width: 50vw;
-    height: 55vh;
+    width: 240px;
+    height: fit-content;
     background-color: white;
     border-radius: 10px;
     box-shadow: 2px;
+}
+
+.configure-outer {
+    width: 170px;
 }
 
 .configure-outer .image{
@@ -599,14 +605,14 @@ input[name=create-team]
 .configure-outer .image .undo{
     display: none;
     position: absolute;
-    left: 35vw;
-    top: 19vh;
+    left: 180px;
+    top: 100px;
     background-image: url("../static/images/trash.svg");
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
     width: 20px;
-    height: 20px;
+    aspect-ratio: 1/1;
 }
 
 input#avatar{
@@ -615,7 +621,7 @@ input#avatar{
 
 label.avatar{
     position: absolute;
-    left: 35vw;
+    left: 180px;
     background-image: url("../static/images/modify.svg");
     background-position: center;
     background-repeat: no-repeat;
@@ -625,11 +631,10 @@ label.avatar{
 }
 
 .configure-form-username,
-.configure-form-email,
-.configure-form-password{
+.configure-form-email {
     display: flex;
     justify-content: space-between;
-    width: 35vw;
+    width: 165px;
 }
 
 .configure-form p {
@@ -640,16 +645,15 @@ label.avatar{
     color: grey;
 }
 
-.configure-form-username img,
-.configure-form-email div:nth-child(3){
+.configure-form-username img{
     width: 20px;
-    height: 20px;
+    aspect-ratio: 1/1;
 }
 
-.configure-form-username input{
+.configure-form-username input#username-to-update {
     font-size: 15px;
     text-align: center;
-    width: 20vw;
+    width: 95px;
 }
 
 div.configure-outer div.button{
@@ -663,7 +667,7 @@ div.configure-outer div.button{
 
 div.configure-outer div.button button{
     margin: 5px 0;
-    width: 28vw;
+    width: 135px;
     border-radius: 5px;
     border-style: none;
     opacity: 0.7;    
@@ -678,11 +682,11 @@ div.configure-outer div.button button{
     justify-content: start;
     align-items: center;
     position: absolute;
-    top: 10vh;
-    left: 37.5vw;
+    top: 20vh;
+    left: calc(calc(100% - 250px) / 2);
     z-index: 2000;
-    width: 25vw;
-    height: 25vh;
+    width: 250px;
+    height: fit-content;
     background-color: white;
     border-radius: 10px;
     box-shadow: 2px;
@@ -690,14 +694,14 @@ div.configure-outer div.button button{
 
 .configure-response p.configure-response-title{
     padding: 0;
-    font-size: 20px;
+    font-size: 30px;
     font-weight: bold;
-    margin: 10px 0 5px 0;
+    margin: 30px 0 10px 0;
 }
 
 .configure-response img{
-    width: 60px;
-    height: 60px;
+    width: 80px;
+    height: 80px;
 }
 
 div.configure-response-icon-src{
@@ -705,7 +709,7 @@ div.configure-response-icon-src{
     flex:none;
     justify-items: center;
     align-items: center;
-    margin-top: 5px;
+    margin: 5px 0 20px 0;
 }
 
 div.configure-response-icon-src p,
@@ -722,14 +726,14 @@ div.configure-response-icon-src p,
 }
 
 div.update-password{
-    display: flex; /*flex */
+    display: none; /*flex */
     flex: none;
     flex-direction: column;
     justify-content: start;
     align-items: center;
     position: absolute;
     top: 10vh;
-    left: 27vw;
+    left: calc(calc(100% - 240px) / 2);
     z-index: 2000;
     width: 240px;
     height: fit-content;
@@ -923,8 +927,80 @@ div.update-password__button button{
     display: none;
 }
 
-/* ------ alert test ------*/
-.alert {
-    width: 80%;
-    display: none;
+/* RWD for ipad 600-1200px */
+@media (min-width: 600px) {
+    /* configure pannel */
+    .configure-pannel{
+        top: 10%;
+        left: calc(calc(100% - 400px) / 2);
+        width: 400px;
+        height: fit-content;
+    }
+
+    .configure-outer {
+        width: 400px;
+    }
+
+    .pannel-title{
+        font-size: 35px;
+    }
+
+    .configure-outer .image .undo{
+        left: 280px;
+        top: 150px;
+        width: 25px;
+    }
+
+    label.avatar{
+        left: 280px;
+        width: 25px;
+        height: 25px;
+    }
+
+    .configure-outer .image{
+        aspect-ratio: 1/1;
+        width: 120px;
+    }
+
+    .configure-form-username,
+    .configure-form-email {
+        width: 260px;
+    }
+
+    div.configure-form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    div.configure-form-email div.item, 
+    div.configure-form-username label {
+        font-size: 20px;
+    }
+
+    div.configure-form-email div.value{
+        font-size: 20px;
+    }
+
+    .configure-form-username input#username-to-update{
+        width: 160px;
+        font-size: 20px;
+    }
+
+    img.modify {
+        width: 25px;
+    }
+
+    div.configure-outer div.button button{
+        width: 240px;
+        font-size: 20px;
+    }
+
+    .configure-response {
+        width: 256px;
+    }
 }
+/* 
+@media (min-width: 1200px) {
+
+} */
