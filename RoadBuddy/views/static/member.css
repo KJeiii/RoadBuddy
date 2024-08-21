@@ -12,6 +12,7 @@ body {
     font-size: 40px;
     font-weight: 900;
     margin: auto;
+    margin-top: 20px;
 }
 
 .title {
@@ -136,14 +137,14 @@ button:hover {
 .form-div.avatar .outer{
     position: relative;
     width: 170px;
-    height: 170px;
+    aspect-ratio: 1/1;
     margin: 0;
     padding: 0;
 }
 
 .form-div.avatar label{
     aspect-ratio: 1/1;
-    width: 170px;
+    width: 100%;
     border-radius: 10px;
     border: 5px solid rgb(244, 244, 244);
     background-image: url("./images/upload.svg");
@@ -204,3 +205,93 @@ div.signup-prompt-button button{
     margin: 0;
     background-color: white;
 } 
+
+@media (min-width: 600px) and (max-width: 1200px) {
+    .RoadBuddy {
+        font-size: 80px;
+        margin-top: 150px;
+    }
+
+    div.title{
+        align-items: center;
+        justify-content: center;
+        margin: 20px calc(50% - 300px) 0 calc(50% - 300px);
+    }
+
+    .title-signup,
+    .title-login {
+        width: 260px;
+        font-size: 30px;
+    }
+
+    div.signup,
+    div.login{
+        width: 600px;
+        margin: 0 calc(calc( 100% - 600px) / 2);
+    }
+
+    .form-div {
+        width: 90%;
+    }
+
+    .form-div-title{
+        font-size: 30px;
+    }
+
+    input[type=email], input[type=text], input[type=password] {
+        font-size: 30px;
+    }
+
+    .form-btns {
+        width: 90%;
+    }
+
+    div.form-btns{
+        justify-content: center;
+    }
+
+    button{
+        font-size: 30px;       
+        width: 150px;
+        height: 60px;
+    }
+
+    .form-div-title.avatar{
+        font-size: 30px;
+    }
+
+    .form-div.avatar .outer{
+        width: 350px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .RoadBuddy {
+        font-size: 50px;
+        margin-top: 20px;
+    }
+
+    div.title{
+        align-items: center;
+        justify-content: center;
+        margin: 20px calc(50% - 200px) 0 calc(50% - 200px);
+    }
+
+    .title-login {
+        margin-left: 4vw;
+    }
+
+    div.signup,
+    div.login{
+        width: 400px;
+        margin: 0 calc(calc( 100% - 400px) / 2);
+    }
+
+    .form-div-title.avatar{
+        font-size: 30px;
+    }
+
+    .form-div.avatar .outer{
+        width: 200px;
+    }
+}
