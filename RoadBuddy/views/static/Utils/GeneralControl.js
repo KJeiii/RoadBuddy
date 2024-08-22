@@ -3,13 +3,16 @@ import * as DOMElements from "./DOMElements.js";
 import { UpdateFriends } from "./ManageFriend.js";
 import { DeleteMessage } from "./ManageMessage.js";
 
+// ***************** 要改top, height
+// ***************** 要改top, height
+// ***************** 要改top, height
 export function InitializeAllPannelsTagAttributes(){
     DOMElements.mainPannel.style.display = "block";
-    DOMElements.mainPannel.style.top = "70vh";
-    DOMElements.mainPannel.style.height = "30vh";
+    DOMElements.mainPannel.style.top = "83vh";
+    DOMElements.mainPannel.style.height = "17vh";
     DOMElements.trackingPannel.style.display = "none";
-    DOMElements.trackingPannel.style.top = "70vh";
-    DOMElements.trackingPannel.style.height = "30vh";
+    DOMElements.trackingPannel.style.top = "83vh";
+    DOMElements.trackingPannel.style.height = "17vh";
     DOMElements.friendPannel.style.display = "none";
     DOMElements.teamPannel.style.display = "none";
 }
@@ -18,7 +21,7 @@ export function isPannelPulledUp(pannelCSSSelector){
     let//   
         isPulledUp,
         pannel = document.querySelector(pannelCSSSelector);
-    isPulledUp = pannel.style.top === "20vh";
+    isPulledUp = pannel.style.top === "17vh";
     return isPulledUp;
 }
 
@@ -37,20 +40,23 @@ export function onWhichPannelContent(){
     return pannelAndContent
 }
 
+// ***************** 要改top, height
+// ***************** 要改top, height
+// ***************** 要改top, height
 export function ExpandOrClosePannel(pannelCssSelector, expandOrClose){
     const pannels = [DOMElements.mainPannel, DOMElements.trackingPannel];
     if (expandOrClose === "close"){
         for (let pannel of pannels){
-            pannel.style.top = "70vh";
-            pannel.style.height = "30vh"; 
+            pannel.style.top = "83vh";
+            pannel.style.height = "17vh"; 
         }
         return
     }
     if (expandOrClose === "expand"){
         for (let pannel of pannels){
             if (`.${pannel.getAttribute("class")}` === pannelCssSelector){
-                pannel.style.top = "20vh";
-                pannel.style.height = "80vh"; 
+                pannel.style.top = "17vh";
+                pannel.style.height = "83vh"; 
             }
         }
     }
@@ -335,20 +341,21 @@ export function RenderList(listCssSelector, listItemArray) {
             for (let item of listItemArray) {
                 const//
                     messageItem = document.createElement("div"),
-                    name = document.createElement("div"),
+                    usernameDiv = document.createElement("div"),
                     btnOuter = document.createElement("div"),
                     acceptBtn = document.createElement("div"),
                     rejectBtn = document.createElement("div");
 
                 messageItem.setAttribute("class", "item");
                 messageItem.setAttribute("id", item.senderID);
-                name.textContent = item.senderName;
+                usernameDiv.setAttribute("class", "username");
+                usernameDiv.textContent = item.senderName;
                 btnOuter.setAttribute("class", "btn-outer");
                 acceptBtn.setAttribute("class", "accept-btn");
                 rejectBtn.setAttribute("class", "reject-btn");
                 
                 btnOuter.append(acceptBtn, rejectBtn)
-                messageItem.append(name, btnOuter);
+                messageItem.append(usernameDiv, btnOuter);
                 messageList.appendChild(messageItem);
                 acceptBtn.addEventListener("click", function(){
                     const//
