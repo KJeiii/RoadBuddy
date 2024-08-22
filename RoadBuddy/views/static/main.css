@@ -538,17 +538,35 @@ input[name=create-team]
 
 .message-outer{
     width: 50%;
+    overflow-y: scroll;
+    height: 80%;
+}
+
+.message-list{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .message-list .item{
     display: flex;
     margin: 10px 0px;
-    justify-content: space-between;
+    justify-content: center;
+    width: fit-content;
 }
+
+.message-list .username{
+    width: 60px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 
 .message-list .btn-outer{
     display: flex;
     justify-content: center;
+    margin-left: 20px;
 }
 
 .btn-outer div{
@@ -1119,6 +1137,26 @@ div.update-password__button button{
 
     .team-outer .team-outer-title{
         font-size: 25px;
+    }
+
+    /* message pannel */
+    .message-pannel{
+        top: 10%;
+        left: calc(calc( 100% - 400px) /2 );
+        width: 400px;
+        height: 400px;
+    }
+
+    div.message-pannel div.pannel-title{
+        margin-top: 30px;
+    }
+
+    .message-list .username{
+        width: 100px;
+    }
+    
+    .message-list .btn-outer{
+        margin-left: 40px;
     }
 }
 
