@@ -2,7 +2,6 @@ export function PreviewAvatar(avatarFile, elementToPreviewAvatar){
     const fileReader = new FileReader();
     fileReader.onload = () =>{
         elementToPreviewAvatar.style.backgroundImage = `url(${fileReader.result})`;
-        elementToPreviewAvatar.style.backgroundSize = "80%";
     };
     fileReader.readAsDataURL(avatarFile);
 }
