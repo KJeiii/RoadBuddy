@@ -425,7 +425,8 @@ input[name=create-team]
 
 .search-outer {
     width: 100%;
-    height: 55%;
+    height: 70%;
+    overflow-y: scroll;
 }
 
 .search-list {
@@ -445,11 +446,10 @@ input[name=create-team]
 }
 
 .friend-pannel label {
-    width: 65px;
+    width: 80%;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    text-align: center;
     margin-left: 5px;
 }
 
@@ -476,7 +476,7 @@ input[name=create-team]
 .team-pannel .friend-outer {
     justify-content: center;
     width: 80%;
-    height: 40%;
+    height: 60%;
     overflow-y: scroll;
     margin-top: 10px;
 }
@@ -1158,6 +1158,36 @@ div.update-password__button button{
     .message-list .btn-outer{
         margin-left: 40px;
     }
+
+    /* tema pannel and friend pannel */
+    .friend-pannel,
+    .team-pannel {
+        top: 30vh;
+        width: 90%;
+        left: 5%;
+        height: 70vh;
+    }
+
+    .friend-pannel div.close,
+    .team-pannel div.close {
+        width: 35px;
+        top: 3%;
+    }
+
+    .friend-pannel .search input,
+    .team-pannel .search input{
+        font-size: 25px;
+    }
+
+    .search-list {
+        grid-template-columns: 30% 30% 30%;
+        gap: 10px;
+    }
+
+    .friend-pannel label{
+        width: 60%;
+        margin-left: 15px;
+    }
 }
 
 @media (min-width: 1200px) {
@@ -1167,5 +1197,24 @@ div.update-password__button button{
         top: 75vh;
         width: 80%;
         height: 25vh;
+    }
+
+    /* team pannel and friend pannel */
+    .search-list {
+        grid-template-columns: 20% 20% 20% 20%;
+        gap: 10px;
+    }
+
+    .friend-pannel label{
+        width: 60%;
+        margin-left: 15px;
+    }
+
+    .search-outer {
+        height: 60%;
+    }
+
+    .team-pannel .friend-outer {
+        height: 45%;
     }
 }
