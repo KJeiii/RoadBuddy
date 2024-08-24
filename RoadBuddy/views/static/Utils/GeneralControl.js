@@ -4,16 +4,17 @@ import { UpdateFriends } from "./ManageFriend.js";
 import { DeleteMessage } from "./ManageMessage.js";
 
 export function InitializeAllPannelsTagAttributes(){
-    const//
-        {availWidth} = GetUserScreenAvailSize(),
-        feasibleSize = GetFeasibleRWDStyle(availWidth);
+    const {availWidth} = GetUserScreenAvailSize();
+        // feasibleSize = GetFeasibleRWDStyle(availWidth);
     [DOMElements.mainPannel, DOMElements.trackingPannel, 
     DOMElements.friendPannel, DOMElements.teamPannel].forEach(pannel => {
         const isMainPannel = pannel === DOMElements.mainPannel;
         pannel.style.display = isMainPannel ? "block" : "none";
-        if (pannel !== DOMElements.friendPannel && pannel !== DOMElements.teamPannel){
-            pannel.style.top = feasibleSize.top;
-            pannel.style.height = feasibleSize.height;
+        if (pannel.getAttribute("class") === "main-pannel" ||
+            pannel.getAttribute("class") === "tracking-pannel"){
+            const feasibleSize = GetFeasibleRWDStyle(availWidth, pannel.getAttribute("class"));
+            pannel.style.top = feasibleSize.dropDown.top;
+            pannel.style.height = feasibleSize.dropDown.height;
         }
     })
 }
@@ -23,8 +24,8 @@ export function isPannelPulledUp(pannelCSSSelector){
         isPulledUp,
         pannel = document.querySelector(pannelCSSSelector),
         {availWidth} = GetUserScreenAvailSize(),
-        feasibleSize = GetFeasibleRWDStyle(availWidth);
-    isPulledUp = pannel.style.top === feasibleSize.height;
+        feasibleSize = GetFeasibleRWDStyle(availWidth, pannel.getAttribute("class"));
+    isPulledUp = pannel.style.top === feasibleSize.pullUp.top;
     return isPulledUp;
 }
 
@@ -47,10 +48,10 @@ export function SwitchPannelOnAndOff(pannelCssSelector){
     const//
         pannel = document.querySelector(pannelCssSelector),
         {availWidth} = GetUserScreenAvailSize(),
-        feasibleSize = GetFeasibleRWDStyle(availWidth),
+        feasibleSize = GetFeasibleRWDStyle(availWidth, pannel.getAttribute("class")),
         isPulledUp = isPannelPulledUp(pannelCssSelector);
-    pannel.style.top = (isPulledUp) ? feasibleSize.top : feasibleSize.height;
-    pannel.style.height = (isPulledUp) ? feasibleSize.height : feasibleSize.top;
+    pannel.style.top = (isPulledUp) ? feasibleSize.dropDown.top : feasibleSize.pullUp.top;
+    pannel.style.height = (isPulledUp) ? feasibleSize.dropDown.height : feasibleSize.pullUp.height;
 }
 
 export function SwitchMenuTitle(toWhichContent){
@@ -634,26 +635,41 @@ export function GetUserScreenAvailSize(){
     }
 }
 
-export function GetFeasibleRWDStyle(userScreenWidth){
-    /*75+25 < 600px; 80+20 600-1200px; 70+30 >1200px */
+export function GetFeasibleRWDStyle(userScreenWidth, pannelType){
+    //main-pannel: 75+25 < 600px; 80+20 600-1200px; 70+30 >1200px
+    //tracking-pannel: drop down - 70top + 30height / pull up - 50top + 50height
     const//
         RWDSize = {
-        600: {top: "75vh", height: "25vh"},
-        1200: {top: "80vh", height: "20vh"},
-        1920: {top: "70vh", height: "30vh"} 
+            "main-pannel": {
+                600: {
+                    dropDown: {top: "75vh", height: "25vh"}, 
+                    pullUp: {top: "25vh", height: "75vh"}},
+                1200: {
+                    dropDown: {top: "80vh", height: "20vh"}, 
+                    pullUp: {top: "20vh", height: "80vh"}},
+                1920: {
+                    dropDown: {top: "70vh", height: "30vh"}, 
+                    pullUp: {top: "30vh", height: "70vh"}} 
+            },
+            "tracking-pannel": {
+                600: {
+                    dropDown: {top: "80vh", height: "20vh"}, 
+                    pullUp: {top: "50vh", height: "50vh"}}
+            }
         },
-        feasibleSize = {height:null, top: null};
+        feasibleSize = {dropDown: null, pullUp: null};
 
-    for ( const widthLevel of Object.keys(RWDSize)){
+    for (const widthLevel of Object.keys(RWDSize[pannelType])){
         if (userScreenWidth - widthLevel <= 0){
-            feasibleSize.top = RWDSize[widthLevel].top;
-            feasibleSize.height = RWDSize[widthLevel].height;
+            feasibleSize.dropDown = RWDSize[pannelType][widthLevel].dropDown;
+            feasibleSize.pullUp = RWDSize[pannelType][widthLevel].pullUp;
             break
         }
     }
-    if (feasibleSize.height === null){
-        feasibleSize.top = RWDSize[1920].top;
-        feasibleSize.height = RWDSize[1920].height; 
+    if (feasibleSize.dropDown === null){
+        const largestAvailSize = Object.keys(RWDSize[pannelType])[Object.keys(RWDSize[pannelType]).length - 1];
+        feasibleSize.dropDown = RWDSize[pannelType][largestAvailSize].dropDown;
+        feasibleSize.pullUp = RWDSize[pannelType][largestAvailSize].pullUp; 
     }
     return feasibleSize
 }
