@@ -212,7 +212,7 @@ nav {
     display: none;
     justify-content: center;
     width: 80%;
-    height: 40%;
+    height: 50%;
     margin: auto;
     overflow-y: scroll;    
 }
@@ -370,12 +370,12 @@ nav {
 .close,
 .close-invitation {
     position: absolute;
-    top: 5%;
+    top: 4%;
     right: 5%;
     background-image: url("../static/images/close-icon.svg");
     background-position: center;
     background-size: cover;
-    width: 8.3%;
+    width: 7%;
     aspect-ratio: 1/1;
 }
 
@@ -1160,6 +1160,11 @@ div.update-password__button button{
     }
 
     /* tema pannel and friend pannel */
+    .main-pannel .friend-outer,
+    .main-pannel .team-outer {
+        height: 60%;
+    }
+
     .friend-pannel,
     .team-pannel {
         top: 30vh;
@@ -1172,6 +1177,7 @@ div.update-password__button button{
     .team-pannel div.close {
         width: 35px;
         top: 3%;
+        right: 3%;
     }
 
     .friend-pannel .search input,
@@ -1200,6 +1206,12 @@ div.update-password__button button{
     }
 
     /* team pannel and friend pannel */
+    .friend-pannel,
+    .team-pannel {
+        width: 70%;
+        left: 15%;
+    }
+
     .search-list {
         grid-template-columns: 20% 20% 20% 20%;
         gap: 10px;
@@ -1212,6 +1224,11 @@ div.update-password__button button{
 
     .search-outer {
         height: 60%;
+    }
+
+    .main-pannel .friend-outer,
+    .main-pannel .team-outer {
+        height: 40%;
     }
 
     .team-pannel .friend-outer {
