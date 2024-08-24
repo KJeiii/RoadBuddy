@@ -4,7 +4,7 @@ import { SearchNewFriends, RenderSearchResult, SearchOldFriends, FetchSelectedIt
 } from "./ManageFriend.js";
 import { ControlFriendMsgBox, ClearList, RenderList, SwitchSettingBtn, SwitchPullAndDropBtn, 
     ShowPannelContent, SwitchMenuToggle, onWhichPannelContent, SwitchPannel, SwitchMenuTitle, 
-    isPannelPulledUp, ControlTeamMsgBox, ExpandOrClosePannel, RenderOnlineStatus, ReRenderList, 
+    isPannelPulledUp, ControlTeamMsgBox, SwitchPannelOnAndOff, RenderOnlineStatus, ReRenderList, 
     isInputValuesConsistent, ClearErrorMessage, VerifyInputValue, isInputFilledIn, isInputValuesUnique
 } from "./GeneralControl.js";
 import { CreateNewTeam, SearchTeams, EmitEnterTeamEvent, EmitInviteTeamEvent, EmitJoinTeamRequestEvent, 
@@ -190,11 +190,9 @@ export function AddEventsToPullAndDrop() {
             const// 
                 parentPannelCssSelector = this.parentElement.getAttribute("class"),
                 isPulledUp = isPannelPulledUp(`.${parentPannelCssSelector}`),
-                expandOrClose = (!isPulledUp) ? "expand" : "close",
                 pannelAndContent = onWhichPannelContent();
-
             SwitchPullAndDropBtn(`.${parentPannelCssSelector}`);
-            ExpandOrClosePannel(`.${parentPannelCssSelector}`, expandOrClose);
+            SwitchPannelOnAndOff(`.${parentPannelCssSelector}`);
             ShowPannelContent(`.${parentPannelCssSelector}`, pannelAndContent.content, !isPulledUp)
         })}
     );
@@ -341,7 +339,6 @@ export function AddEventsToTeam() {
     // ----- move to add team page-----
     DOMElements.addTeam.addEventListener("click", ()=>{
         SwitchPannel("team");
-        ExpandOrClosePannel(".team-pannel", "expand");
         ShowPannelContent(".team-pannel", "create", true);
     });
 
@@ -487,7 +484,7 @@ export function AddEventsToTeam() {
 
         // switch to mainPannel
         SwitchPannel("main");
-        ExpandOrClosePannel(".main-pannel", "close");
+        // SwitchPannelOnAndOff(".main-pannel");
         ShowPannelContent(".main-pannel", "team", false);
 
         //remove all user in the partner list and just leave own marker on the map
