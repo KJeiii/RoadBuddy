@@ -3,25 +3,28 @@ import * as DOMElements from "./DOMElements.js";
 import { UpdateFriends } from "./ManageFriend.js";
 import { DeleteMessage } from "./ManageMessage.js";
 
-// ***************** 要改top, height
-// ***************** 要改top, height
-// ***************** 要改top, height
 export function InitializeAllPannelsTagAttributes(){
-    DOMElements.mainPannel.style.display = "block";
-    DOMElements.mainPannel.style.top = "83vh";
-    DOMElements.mainPannel.style.height = "17vh";
-    DOMElements.trackingPannel.style.display = "none";
-    DOMElements.trackingPannel.style.top = "83vh";
-    DOMElements.trackingPannel.style.height = "17vh";
-    DOMElements.friendPannel.style.display = "none";
-    DOMElements.teamPannel.style.display = "none";
+    const//
+        {availWidth} = GetUserScreenAvailSize(),
+        feasibleSize = GetFeasibleRWDStyle(availWidth);
+    [DOMElements.mainPannel, DOMElements.trackingPannel, 
+    DOMElements.friendPannel, DOMElements.teamPannel].forEach(pannel => {
+        const isMainPannel = pannel === DOMElements.mainPannel;
+        pannel.style.display = isMainPannel ? "block" : "none";
+        if (pannel !== DOMElements.friendPannel && pannel !== DOMElements.teamPannel){
+            pannel.style.top = feasibleSize.top;
+            pannel.style.height = feasibleSize.height;
+        }
+    })
 }
 
 export function isPannelPulledUp(pannelCSSSelector){
     let//   
         isPulledUp,
-        pannel = document.querySelector(pannelCSSSelector);
-    isPulledUp = pannel.style.top === "17vh";
+        pannel = document.querySelector(pannelCSSSelector),
+        {availWidth} = GetUserScreenAvailSize(),
+        feasibleSize = GetFeasibleRWDStyle(availWidth);
+    isPulledUp = pannel.style.top === feasibleSize.height;
     return isPulledUp;
 }
 
@@ -40,26 +43,14 @@ export function onWhichPannelContent(){
     return pannelAndContent
 }
 
-// ***************** 要改top, height
-// ***************** 要改top, height
-// ***************** 要改top, height
-export function ExpandOrClosePannel(pannelCssSelector, expandOrClose){
-    const pannels = [DOMElements.mainPannel, DOMElements.trackingPannel];
-    if (expandOrClose === "close"){
-        for (let pannel of pannels){
-            pannel.style.top = "83vh";
-            pannel.style.height = "17vh"; 
-        }
-        return
-    }
-    if (expandOrClose === "expand"){
-        for (let pannel of pannels){
-            if (`.${pannel.getAttribute("class")}` === pannelCssSelector){
-                pannel.style.top = "17vh";
-                pannel.style.height = "83vh"; 
-            }
-        }
-    }
+export function SwitchPannelOnAndOff(pannelCssSelector){
+    const//
+        pannel = document.querySelector(pannelCssSelector),
+        {availWidth} = GetUserScreenAvailSize(),
+        feasibleSize = GetFeasibleRWDStyle(availWidth),
+        isPulledUp = isPannelPulledUp(pannelCssSelector);
+    pannel.style.top = (isPulledUp) ? feasibleSize.top : feasibleSize.height;
+    pannel.style.height = (isPulledUp) ? feasibleSize.height : feasibleSize.top;
 }
 
 export function SwitchMenuTitle(toWhichContent){
@@ -634,4 +625,35 @@ export function ControlMebmerMsgBox(msgCssSelector, display) {
     if (display === "flex") {msgBoxContent.textContent = "是否跳過上傳照片？"}
     if (display === "none") {msgBoxContent.textContent = ""}
     msgBox.style.display = display;
+}
+
+export function GetUserScreenAvailSize(){
+    return {
+        availWidth: window.screen.availWidth, 
+        availHeight: window.screen.availHeight
+    }
+}
+
+export function GetFeasibleRWDStyle(userScreenWidth){
+    /*75+25 < 600px; 80+20 600-1200px; 70+30 >1200px */
+    const//
+        RWDSize = {
+        600: {top: "75vh", height: "25vh"},
+        1200: {top: "80vh", height: "20vh"},
+        1920: {top: "70vh", height: "30vh"} 
+        },
+        feasibleSize = {height:null, top: null};
+
+    for ( const widthLevel of Object.keys(RWDSize)){
+        if (userScreenWidth - widthLevel <= 0){
+            feasibleSize.top = RWDSize[widthLevel].top;
+            feasibleSize.height = RWDSize[widthLevel].height;
+            break
+        }
+    }
+    if (feasibleSize.height === null){
+        feasibleSize.top = RWDSize[1920].top;
+        feasibleSize.height = RWDSize[1920].height; 
+    }
+    return feasibleSize
 }
