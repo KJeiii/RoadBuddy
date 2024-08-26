@@ -161,11 +161,11 @@ document.querySelector("button.login").addEventListener("click", async() => {
         if (response.status === 400) {
             let msg = result.message;
             if ( msg.includes("電子信件") ) {
-                RenderErrorMsg(".login .email", result.message);
+                RenderErrorMessage(document.querySelector(".login .email"), result.message);
                 return;
             }
             else{
-                RenderErrorMsg(".login .password", result.message);
+                RenderErrorMessage(document.querySelector(".login .password"), result.message);
                 return;
             }
         }
