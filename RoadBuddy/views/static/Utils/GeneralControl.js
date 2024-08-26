@@ -5,7 +5,6 @@ import { DeleteMessage } from "./ManageMessage.js";
 
 export function InitializeAllPannelsTagAttributes(){
     const {availWidth} = GetUserScreenAvailSize();
-        // feasibleSize = GetFeasibleRWDStyle(availWidth);
     [DOMElements.mainPannel, DOMElements.trackingPannel, 
     DOMElements.friendPannel, DOMElements.teamPannel].forEach(pannel => {
         const isMainPannel = pannel === DOMElements.mainPannel;
@@ -52,6 +51,10 @@ export function SwitchPannelOnAndOff(pannelCssSelector){
         isPulledUp = isPannelPulledUp(pannelCssSelector);
     pannel.style.top = (isPulledUp) ? feasibleSize.dropDown.top : feasibleSize.pullUp.top;
     pannel.style.height = (isPulledUp) ? feasibleSize.dropDown.height : feasibleSize.pullUp.height;
+    if (pannelCssSelector === ".tracking-pannel"){
+        document.querySelector(".tracking-pannel .partner-outer").style.height = 
+        (isPulledUp) ? "35%" : "60%";
+    }
 }
 
 export function SwitchMenuTitle(toWhichContent){
@@ -63,7 +66,7 @@ export function SwitchMenuTitle(toWhichContent){
 }
 
 export function ShowPannelContent(pannelCssSelector, contentType, toShow, ...teamPannelInfo){ //SwitchPannelContent
-    if (pannelCssSelector === ".main-pannel" || pannelCssSelector === ".tracking-pannel"){
+    if (pannelCssSelector === ".main-pannel"){
         const elementsOnPannel = [
             ...document.querySelectorAll(`${pannelCssSelector} div[class$='intro']`),
             ...document.querySelectorAll(`${pannelCssSelector}  div[class$='outer']`)
