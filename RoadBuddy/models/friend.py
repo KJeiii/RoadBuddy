@@ -14,7 +14,7 @@ class FriendTool(pooling.MySQLConnectionPool):
         connection = self.get_connection()
         cursor = connection.cursor(dictionary=True)
 
-        create_string = ("create table friends (" 
+        create_string = ("create table friend (" 
                          "id bigint primary key auto_increment, "
                          "user_id bigint not null, "
                          "friend_id bigint not null, "
@@ -30,7 +30,7 @@ class FriendTool(pooling.MySQLConnectionPool):
         connection = self.get_connection()
         cursor = connection.cursor(dictionary=True)
 
-        create_string = ("drop table friends")
+        create_string = ("drop table friend")
  
         cursor.execute(create_string)
         connection.close() 
@@ -40,7 +40,7 @@ class FriendTool(pooling.MySQLConnectionPool):
         connection = self.get_connection()
         cursor = connection.cursor(dictionary=True)
 
-        insert_string = ("insert into friends(user_id, friend_id) "
+        insert_string = ("insert into friend(user_id, friend_id) "
                          "values (%s, %s), (%s, %s)"
                          )
         data_string = (user_id, friend_id, friend_id, user_id)
@@ -54,7 +54,7 @@ class FriendTool(pooling.MySQLConnectionPool):
         connection = self.get_connection()
         cursor = connection.cursor(dictionary=True)
 
-        delete_string = ("delete from friends "
+        delete_string = ("delete from friend "
                          "where (user_id = %s and friend_id = %s) "
                          )
         data_string = (user_id, friend_id)
@@ -70,9 +70,9 @@ class FriendTool(pooling.MySQLConnectionPool):
 
         search_string = ("select "
                  "member.user_id, member.username, member.email "
-                 "from friends inner join member "
-                 "on friends.friend_id = member.user_id "
-                 "where friends.user_id = %s"
+                 "from friend inner join member "
+                 "on friend.friend_id = member.user_id "
+                 "where friend.user_id = %s"
                  )
         data_string = (user_id,)
         
