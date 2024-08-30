@@ -6,7 +6,7 @@ from RoadBuddy.models import db_config
 class MemberTool(pooling.MySQLConnectionPool):
     def __init__(self):
         super().__init__(pool_name = "RoadBuddy",
-                         pool_size = 10,
+                         pool_size = 5,
                          pool_reset_session = True,
                          **db_config)
         
@@ -26,7 +26,8 @@ class MemberTool(pooling.MySQLConnectionPool):
                          "user_id bigint primary key auto_increment, "
                          "username varchar(255) not null, "
                          "email longtext not null, "
-                         "password longtext not null)"
+                         "password longtext not null, "
+                         "image_url longtext)"
                          )
  
         cursor.execute(create_string)

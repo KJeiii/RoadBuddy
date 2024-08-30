@@ -6,7 +6,7 @@ from RoadBuddy.models import db_config
 class TeamTool(pooling.MySQLConnectionPool):
     def __init__(self):
         super().__init__(pool_name = "RoadBuddy",
-                         pool_size = 10,
+                         pool_size = 3,
                          pool_reset_session = True,
                          **db_config)
         
