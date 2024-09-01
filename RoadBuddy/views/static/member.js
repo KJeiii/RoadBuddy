@@ -134,29 +134,25 @@ document.querySelector("button.login").addEventListener("click", async() => {
         document.querySelector("div.login div.form-div-title.password")
     );
 
-    // feedback error message when one of the inputs is empty
+    // check if input is empty
     for (const input of document.querySelectorAll("div.login input")) {
-        if  (input.value === "") {
-            input.setAttribute("placeholder", "此欄位不可空白");
-            input.style.border = "2px solid rgb(255, 197, 197)";
-            return;
-        }
+        VerifyInputValue(input, isInputFilledIn);
     }
 
-    // check email and password to log in
+    // verify and log in
     Login(
         document.querySelector("div.login input[name=email]").value, 
         document.querySelector("div.login input[name=password]").value)
     .then(loginResult => {
         RenderResponse(".member-response", 0, true);
-        // verification failed
+        // if verification fails
         if (loginResult.error){
             const titleDivToAddErrorMsg = loginResult.message.includes("電子信件") ? 
                 document.querySelector(".login .email") : document.querySelector(".login .password");
             RenderErrorMessage(titleDivToAddErrorMsg, loginResult.message);
             return
         }
-        // verification passed
+        // verification passes
         window.localStorage.setItem("token", loginResult.token);
         window.location.replace("/main");
     })
