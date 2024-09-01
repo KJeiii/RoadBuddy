@@ -87,8 +87,14 @@ document.querySelector("button.signup").addEventListener("click", () => {
     RenderResponse(".member-response", 1);
     SignupNewAccount(CollectInformationToSignup())
         .then((signupResponse) => {
-            if (!signupResponse.ok){
+            if (signupResponse.error){
                 SwitchSignUpStep();
+
+                if (signupResponse.status === 500){
+                    RenderResponse(".member-response", 4);
+                    return
+                }
+
                 RenderErrorMessage(document.querySelector("div.signup div.form-div-title.email"), signupResponse.message);
                 RenderResponse(".member-response", 0, true);    
                 return
@@ -112,8 +118,14 @@ document.querySelector("div.signup-prompt button.yes").addEventListener("click",
     RenderResponse(".member-response", 1);
     SignupNewAccount(CollectInformationToSignup())
         .then((signupResponse) => {
-            if (!signupResponse.ok){
+            if (signupResponse.error){
                 SwitchSignUpStep();
+        
+                if (signupResponse.status === 500){
+                    RenderResponse(".member-response", 4);
+                    return
+                }
+
                 RenderResponse(".member-response", 0, true);
                 RenderErrorMessage(document.querySelector("div.signup div.form-div-title.email"), signupResponse.message);
                 return
@@ -147,6 +159,11 @@ document.querySelector("button.login").addEventListener("click", async() => {
         RenderResponse(".member-response", 0, true);
         // if verification fails
         if (loginResult.error){
+            if(loginResult.status === 500){
+                RenderResponse(".member-response", 4);
+                return
+            }
+
             const titleDivToAddErrorMsg = loginResult.message.includes("電子信件") ? 
                 document.querySelector(".login .email") : document.querySelector(".login .password");
             RenderErrorMessage(titleDivToAddErrorMsg, loginResult.message);
