@@ -676,3 +676,31 @@ export function GetFeasibleRWDStyle(userScreenWidth, pannelType){
     }
     return feasibleSize
 }
+
+export const responseCatalogue = {
+    ".configure-response": {
+        0: {title: "更新失敗", img_src: "../static/images/error.gif"},
+        1: {title: "更新完成", img_src: "../static/images/check.gif"},
+        2: {title: "更新中", img_src: "../static/images/loading.gif"},
+        3: {title: "無資料需更新", img_src: "../static/images/error.gif"},
+        4: {title: "舊密碼不正確", img_src: "../static/images/error.gif"}
+    },
+    ".member-response": {
+        0: {title: "", img_src: ""},
+        1: {title: "註冊中", img_src: "../static/images/loading.gif"},
+        2: {title: "註冊完成", img_src: "../static/images/check.gif"},
+        3: {title: "驗證中", img_src: "../static/images/loading.gif"},
+        4: {title: "伺服器異常", img_src: "../static/images/error.gif"}
+    }
+};
+
+export function RenderResponse(responseCssSelector, responseCode, reset = false){
+    const//
+        responseTitle = document.querySelector(`${responseCssSelector} p`),
+        img = document.querySelector(`${responseCssSelector} img`);
+
+    // document.querySelector(".configure-pannel").style.display = "none";
+    document.querySelector(responseCssSelector).style.display = reset ? "none" : "flex";
+    responseTitle.textContent = responseCatalogue[responseCssSelector][responseCode].title;
+    img.src = responseCatalogue[responseCssSelector][responseCode].img_src;
+}
