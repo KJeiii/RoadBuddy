@@ -161,37 +161,4 @@ document.querySelector("button.login").addEventListener("click", async() => {
         window.location.replace("/main");
     })
     .catch(error => {console.log(error)})
-
-    // try {
-    //     let response = await fetch("/api/member/auth", {
-    //         method: "PUT",
-    //         headers: {"Content-Type": "application/json"},
-    //         body: JSON.stringify({
-    //             email: document.querySelector("div.login input[name=email]").value,
-    //             password: document.querySelector("div.login input[name=password]").value
-    //         })
-    //     });
-
-    //     let result = await response.json();
-    //     console.log(result);
-
-    //     if (response.status === 400) {
-    //         RenderResponse(".member-response", 0, true);
-    //         let msg = result.message;
-    //         if ( msg.includes("電子信件") ) {
-    //             RenderErrorMessage(document.querySelector(".login .email"), result.message);
-    //             return;
-    //         }
-    //         else{
-    //             RenderErrorMessage(document.querySelector(".login .password"), result.message);
-    //             return;
-    //         }
-    //     }
-        
-    //     RenderResponse(".member-response", 0, true);
-    //     let jwt = result.token;
-    //     window.localStorage.setItem("token", jwt);
-    //     window.location.replace("/main");
-    // }
-    // catch(error) {console.log(error)}
 });
