@@ -5,7 +5,8 @@ import { SearchNewFriends, RenderSearchResult, SearchOldFriends, FetchSelectedIt
 import { ControlFriendMsgBox, ClearList, RenderList, SwitchSettingBtn, SwitchPullAndDropBtn, 
     ShowPannelContent, SwitchMenuToggle, onWhichPannelContent, SwitchPannel, SwitchMenuTitle, 
     isPannelPulledUp, ControlTeamMsgBox, SwitchPannelOnAndOff, RenderOnlineStatus, ReRenderList, 
-    isInputValuesConsistent, ClearErrorMessage, VerifyInputValue, isInputFilledIn, isInputValuesUnique
+    isInputValuesConsistent, ClearErrorMessage, VerifyInputValue, isInputFilledIn, isInputValuesUnique,
+    RenderResponse
 } from "./GeneralControl.js";
 import { CreateNewTeam, SearchTeams, EmitEnterTeamEvent, EmitInviteTeamEvent, EmitJoinTeamRequestEvent, 
     EmitAcceptTeamRequestEvent, EmitLeaveTeamEvent } from "./ManageTeam.js";
@@ -15,7 +16,7 @@ import { ChangeIconColor, ManipulateSessionStorage, RenderAvatar,
 import { AppendUserInPartnerList, BuildPartnership, CreatePartner, UpdatePartnersColor} from "./ManagePartner.js";
 import { map, messages, onlineUsers} from "./AppClass.js";
 import { RenderMessageBtn, SearchMessage } from "./ManageMessage.js";
-import { ClearInputValues, PreviewAvatar, RenderUpdateResponse, SwitchAvatarUndoBtn, SwitchChangePasswordPrompt } from "./ManageConfigure.js";
+import { ClearInputValues, PreviewAvatar, SwitchAvatarUndoBtn, SwitchChangePasswordPrompt } from "./ManageConfigure.js";
 
 
 export const AllEvents = [
@@ -72,7 +73,7 @@ export function AddEventsToSetting() {
     // click close to initialize update-response prompt
     const updateResponseCloseBtn = document.querySelector(".configure-response .close");
     updateResponseCloseBtn.addEventListener("click", ()=>{
-        RenderUpdateResponse(2);
+        RenderResponse(".configure-response", 2);
         document.querySelector(".configure-response").style.display = "none";
         SwitchAvatarUndoBtn("div.configure-outer div.undo");
     });
@@ -106,7 +107,7 @@ export function AddEventsToSetting() {
                         // close configure pannel
                         SwitchPannel("main");
                         // pop up prompt to show update success
-                        RenderUpdateResponse(updateResponse.responseCode);
+                        RenderResponse(".configure-response", updateResponse.responseCode);
         
                         // re-render username and avatar in the configure pannel and main pannel
                         if (updateResponse.ok && updateResponse.responseCode === 1 ){
@@ -123,12 +124,12 @@ export function AddEventsToSetting() {
                         SwitchAvatarUndoBtn("div.configure-outer div.undo");
                     })
                     .catch((updateResponse)=>{
-                        RenderUpdateResponse(updateResponse.responseCode);
+                        RenderResponse(".configure-response", updateResponse.responseCode);
                         console.log(updateResponse.message)
                     })
             })
             .catch((error) => {
-                RenderUpdateResponse(3);
+                RenderResponse(".configure-response", 3);
                 console.log(error)
             })
     })
@@ -166,11 +167,11 @@ export function AddEventsToSetting() {
                 document.querySelector(".configure-response").style.display = "flex";
                 UpdatePassword(dataToUpdate.oldPassword, dataToUpdate.newPassword, localStorage.getItem("token"))
                     .then((updateResponse) => {
-                        RenderUpdateResponse(updateResponse.responseCode);
+                        RenderResponse(".configure-response", updateResponse.responseCode);
                         ClearInputValues(...document.querySelectorAll("div.update-password input"));
                     })
                     .catch((error) => {
-                        RenderUpdateResponse(error.responseCode);
+                        RenderResponse(".configure-response", error.responseCode);
                         ClearInputValues(...document.querySelectorAll("div.update-password input"));
                     })
             })
