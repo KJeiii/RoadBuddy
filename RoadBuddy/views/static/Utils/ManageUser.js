@@ -210,3 +210,20 @@ export async function VerifyPasswordInputs(){
         newPassword: newPwdInput.value
     }
 }
+
+export async function Login(email, password){
+    try {
+        const//
+            loginResponse = await fetch("/api/member/auth", {
+                method: "PUT",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({email: email, password: password})
+            }),
+            result = await loginResponse.json();
+        return result
+    }
+    catch(error) {
+        console.log(error);
+        throw error
+    }
+}
