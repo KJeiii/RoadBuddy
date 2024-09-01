@@ -6,8 +6,7 @@ export async function SignupNewAccount(dataToSingup){
         const//
             response = await fetch("/api/member", {method: "POST",body: dataToSingup}),
             result = await response.json();
-        if (response.status !== 200) {return {...result, ok: false}}
-        return {...result}
+        return {...result, status: response.status}
     }
     catch(error){
         console.log("Failed to execute SignupNewAccount (ManageUser.js): ", error);
@@ -220,7 +219,7 @@ export async function Login(email, password){
                 body: JSON.stringify({email: email, password: password})
             }),
             result = await loginResponse.json();
-        return result
+        return {...result, status: loginResponse.status}
     }
     catch(error) {
         console.log(error);
