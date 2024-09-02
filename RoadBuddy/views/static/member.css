@@ -185,24 +185,36 @@ button.signup{
 }
 
 div.signup-prompt{
-    display: none; /*flex*/
-    flex-wrap: wrap;
-    flex: 90%;
+    display: flex; /*flex*/
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     width: 250px;
-    height: 100px;
+    height: fit-content;
     position: absolute;
     top: 35%;
-    left: 25%;
+    left: calc(50% - 125px);
     text-align: center;
     background-color: rgb(210, 242, 243);
     border-radius: 10px;
     border: 1px rgb(226, 240, 241) solid;
 }
 
+div.signup-prompt div.content{
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 20px;
+}
+
+div.signup-prompt-button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0;
+}
+
 div.signup-prompt-button button{
-    margin: 0;
+    margin: 0 10px;
     background-color: white;
 } 
 
@@ -319,6 +331,16 @@ div.member-response a{
 
     .form-div.avatar .outer{
         width: 350px;
+    }
+
+    div.signup-prompt{
+        width: 350px;
+        top: 35%;
+        left: calc(50% - 175px);
+    }
+
+    div.signup-prompt div.content{
+        font-size: 30px;
     }
 }
 
