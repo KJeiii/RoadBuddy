@@ -773,7 +773,7 @@ div.update-password div.update-password__confirm-password__title{
     margin: 1px 15px;
     font-size: 15px;
     display: flex;
-    line-height: 30px;
+    align-items: center;
 }
 
 div.update-password div.update-password__new-password,
