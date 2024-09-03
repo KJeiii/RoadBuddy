@@ -96,6 +96,7 @@ input[type=email], input[type=text], input[type=password] {
 
 .form-div-title {
     display: flex;
+    align-items: center;
     font-size: 20px;
     margin-bottom: 5px;
     color: grey;
@@ -185,7 +186,7 @@ button.signup{
 }
 
 div.signup-prompt{
-    display: flex; /*flex*/
+    display: none; /*flex*/
     flex-direction: column;
     justify-content: center;
     align-items: center;
