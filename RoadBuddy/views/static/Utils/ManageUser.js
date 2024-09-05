@@ -54,13 +54,8 @@ export function ManipulateSessionStorage(setOrRemoveOrClear, ...rest){
     catch(error){console.log(error)}
 }
 
-export function EmitStoreUserInfoEvent(userID, username, email, friendList){
-    let userInfo = {
-        user_id: userID,
-        username: username,
-        email: email,
-        friend_list: friendList
-    };
+export function EmitStoreUserInfoEvent(userSID, userID){
+    const userInfo = {userSID: userSID, userID: userID};
     socket.emit("store_userinfo", userInfo);
 }
 
