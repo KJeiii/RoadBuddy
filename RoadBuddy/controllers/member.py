@@ -162,16 +162,8 @@ def Login():
             *rest, user_id, email = response_decoding_JWT.values()
         
             *rest, username, image_url = memberTool.Search_member_by_id(user_id).values()
-            RoadBuddy.event_handler.sid_reference[RoadBuddy.event_handler.my_sid] = user_id
-            RoadBuddy.event_handler.user_info[user_id] = {
-                "sid": RoadBuddy.event_handler.my_sid,
-                "username": username,
-                "email": email,
-                "team_id": None,
-                "image_url": image_url,
-                "messages": []
-            }
-            
+            RoadBuddy.event_handler.online_users.append_user_information(user_id, username, email)
+
             response = {
                 "user_id": user_id,
                 "username": username,
@@ -221,7 +213,8 @@ def update_basic_info():
             )
 
             # update username of user_info stored in the server side
-            RoadBuddy.event_handler.user_info[user_id]["username"] = username_to_update
+            RoadBuddy.event_handler.online_users[user_id].update_user_information(
+                user_id, username = username_to_update)
 
             response = {"ok": True, "username": username_to_update, "image_url": avatar_upload_response.get("image_url")}
             return jsonify(response), 200
