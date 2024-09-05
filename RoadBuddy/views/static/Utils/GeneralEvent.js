@@ -390,25 +390,15 @@ export function AddEventsToTeam() {
             friendIdsToAdd = selectedFriends.map(friend => friend.id);
 
         // create owner information in partner-list;others will be created when they join in
-        const {user_id:userID, sid, username, image_url:imageUrl, iconColor} = window.sessionStorage;
+        const//
+            teamIDToJoin = document.querySelector(".team-pannel .pannel-title").getAttribute("id"),
+            {user_id:userID, sid, username, image_url:imageUrl, iconColor} = window.sessionStorage;
         AppendUserInPartnerList(userID, username, imageUrl, document.querySelector(".tracking-pannel .partner-list")); 
         //Issue of not having avatar was tacked in main.js at the beginning of rendering main page
   
         // send request for joining team
-        EmitInviteTeamEvent(
-            socket.id, 
-            document.querySelector(".team-pannel .pannel-title").getAttribute("id"),
-            iconColor,
-            myCoord, 
-            friendIdsToAdd
-        );
-        EmitEnterTeamEvent(
-            true, 
-            "create", 
-            document.querySelector(".team-pannel .pannel-title").getAttribute("id"),
-            window.sessionStorage.getItem("iconColor"),
-            myCoord
-        );
+        EmitInviteTeamEvent(socket.id, teamIDToJoin, imageUrl, iconColor, myCoord, friendIdsToAdd);
+        EmitEnterTeamEvent(true, "create", teamIDToJoin, imageUrl, iconColor, myCoord);
         // update team using status to other uses
         socket.emit("update_team_status");
     })
@@ -425,8 +415,9 @@ export function AddEventsToTeam() {
         // 2. update other partners when they join in
         const//
             partnerList = document.querySelector(".tracking-pannel .partner-list"),
-            {user_id:userID, username, image_url:imageUrl} = window.sessionStorage;
+            {user_id:userID, username, image_url:imageUrl, iconColor} = window.sessionStorage;
         AppendUserInPartnerList(userID, username, imageUrl, partnerList); //own imageUrl has been managed at the beginning of render main page
+
         const//
             {user_id:leaderID, username: leaderUsername, sid:leaderSID, icon_Color: leaaderIconColor,
             image_url:leaderImageUrl, coordination:leaderCoordination} = team_sender_info_cache;
@@ -438,17 +429,13 @@ export function AddEventsToTeam() {
         ControlTeamMsgBox(".team-invite-prompt", "none");
 
         // Organize data emitted to listener "enter_team" on server
-        EmitEnterTeamEvent(
-            true, 
-            "join", 
-            team_sender_info_cache.team_id, 
-            window.sessionStorage.getItem("iconColor"), myCoord);
+        EmitEnterTeamEvent(true, "join", team_sender_info_cache.team_id, imageUrl, iconColor, myCoord);
         ManipulateSessionStorage("set", {team_id: team_sender_info_cache["team_id"]});
 
         // Create partner record in partner table in database
-        BuildPartnership(Number(window.sessionStorage.getItem("user_id")), team_sender_info_cache.team_id)
+        BuildPartnership(Number(userID), team_sender_info_cache.team_id)
             .then((result) => {
-                SearchTeams(Number(window.sessionStorage.getItem("user_id")), "joined")
+                SearchTeams(Number(userID), "joined")
                     .then((result) => {
                         joinedTeamArray = [...result.joinedTeamList];
                         ClearList(".join-list");
@@ -518,15 +505,11 @@ export function AddEventsToTeam() {
         const//
             selectItemsfrom = FetchSelectedItemIDsByCondition("inviteJoiningTeam", {partnersColor: partnersColor}),
             selectedFriends = selectItemsfrom(".team-pannel"),
-            friendIDsToInvite = selectedFriends.map(friend => friend.id);
+            friendIDsToInvite = selectedFriends.map(friend => friend.id),
+            {team_id: teamID, iconColor, image_url: imageUrl} = window.sessionStorage;
 
-        UpdatePartnersColor(partnersColor, selectedFriends)
-        EmitInviteTeamEvent(
-            socket.id, 
-            window.sessionStorage.getItem("team_id"), 
-            window.sessionStorage.getItem("iconColor"),
-            myCoord,
-            friendIDsToInvite)
+        UpdatePartnersColor(partnersColor, selectedFriends);
+        EmitInviteTeamEvent(socket.id, teamID, imageUrl, iconColor, myCoord, friendIDsToInvite);
 
         // close team pannel and go back to tracking pannel
         SwitchPannel("tracking");
