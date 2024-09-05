@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, jsonify
 from RoadBuddy.models import friend, member
-import RoadBuddy.event_handler 
+import RoadBuddy.event_handler
 
 friendTool = friend.FriendTool()
 memberTool = member.MemberTool()
@@ -17,7 +17,7 @@ def Load_friend_list():
         try:
             user_id = request.json["user_id"]
             friend_list = friendTool.Load_friend_list(user_id)
-            RoadBuddy.event_handler.user_info[user_id]["friend_list"] = friend_list
+            RoadBuddy.event_handler.online_users.update_user_information(user_id, friend_list = friend_list)
             response = {
                 "ok": True,
                 "data": friend_list 
@@ -62,8 +62,7 @@ def Add_friend():
             friend_id = int(request.json["friend_id"])
             friend_name = memberTool.Search_member_by_id(friend_id).get("username")
             friendTool.Add_friend(user_id,friend_id)
-            RoadBuddy.event_handler.user_info.get(user_id).get("friend_list").append({"user_id":friend_id, "username": friend_name})
-            RoadBuddy.event_handler.user_info.get(friend_id).get("friend_list").append({"user_id":user_id, "username": user_name})
+            RoadBuddy.event_handler.online_users.update_friend_list(user_id, user_name, friend_id, friend_name)
             response = {
                 "ok": True,
                 "message": "success"
