@@ -7,60 +7,59 @@ from RoadBuddy.models.message import MessageTool
 messageTool = MessageTool()
 
 @socketio.on("friend_reqeust")
-def friend_request(data):
-    sender_id = int(data.get("senderID"))
+def friend_request(invitation_from_sender):
+    sender_id = int(invitation_from_sender.get("senderID"))
     sender_sid = request.sid
     receivers_in_travel = []
-
-    for receiver_id in data["receiverIDs"]:
-        is_receiver_online = RoadBuddy.event_handler.user_info.get(receiver_id) != None
-        is_receiver_in_traveling = RoadBuddy.event_handler.user_info.get(receiver_id).get("team_id") != None if is_receiver_online else False
-
+    for receiver_id in invitation_from_sender["receiverIDs"]:
+        is_receiver_online = RoadBuddy.event_handler.online_users.is_user_online(receiver_id)
+        is_receiver_in_traveling = RoadBuddy.event_handler.online_users.is_user_traveling(receiver_id)
+        (sender_name, sender_email, *rest) = RoadBuddy.event_handler.online_users.get_user_information(sender_id).values()
         if is_receiver_online and not is_receiver_in_traveling:
             sender_data = {
                 "sid": sender_sid,
                 "user_id": sender_id,
-                "username": RoadBuddy.event_handler.user_info[sender_id]["username"],
-                "email": RoadBuddy.event_handler.user_info[sender_id]["email"]
+                "username": sender_name,
+                "email": sender_email
             }
-            emit("friend_request", sender_data, to=RoadBuddy.event_handler.user_info[receiver_id]["sid"])
+            emit("friend_request", sender_data, to=RoadBuddy.event_handler.online_users.get_user_sid(receiver_id))
 
         if is_receiver_in_traveling:
             receivers_in_travel.append(receiver_id)
             
     if len(receivers_in_travel) != 0:
         messageTool.Create_message(sender_id, receivers_in_travel)
-        RoadBuddy.event_handler.user_info[sender_id]["message"] = messageTool.Search_message(sender_id)
-
+        RoadBuddy.event_handler.online_users.update_user_information(
+            sender_id,
+            message_list = messageTool.Search_message(sender_id)
+        )
 
 
 @socketio.on("friend_request_result")
-def friend_request_result(data):
-    # organize data and emit event "friend_request_result" to client (sender)
-    is_sender_online = RoadBuddy.event_handler.user_info.get(int(data["senderID"])) != None
+def friend_request_result(reply_from_receiver):
+    # emit event "friend_request_result" to client (sender)
+    is_sender_online = RoadBuddy.event_handler.online_users.is_user_online(int(reply_from_receiver["senderID"]))
     if is_sender_online:
-        emit("friend_request_result", data, to=RoadBuddy.event_handler.user_info[int(data["senderID"])]["sid"])
+        emit("friend_request_result", reply_from_receiver, to=RoadBuddy.event_handler.online_users.get_user_sid(int(reply_from_receiver["senderID"])))    
 
 
 @socketio.on("initial_friend_status")
 def initial_friend_status():
     # get online friends data for user first time login
-    user_id = RoadBuddy.event_handler.sid_reference[request.sid]
-    friend_list = RoadBuddy.event_handler.user_info[user_id]["friend_list"]
+    friend_list = RoadBuddy.event_handler.online_users.get_user_information(RoadBuddy.event_handler.online_users.get_user_id(request.sid)).get("friend_list")
     online_friend_list = []
-    
     for friend in friend_list:
         friend_id = int(friend["user_id"])
-        if friend_id in RoadBuddy.event_handler.user_info.keys():
+        if RoadBuddy.event_handler.online_users.is_user_online(friend_id):
+            friend_information = RoadBuddy.event_handler.online_users.get_user_information(friend_id)
             online_friend_list.append(
                 {"user_id": friend_id,
-                "user_sid": RoadBuddy.event_handler.user_info[friend_id]["sid"],
-                "username": RoadBuddy.event_handler.user_info[friend_id]["username"]
+                "user_sid": friend_information.get("sid"),
+                "username": friend_information.get("username")
                 })
 
     emit("update_friend_status", 
-         {"update-type" : "online",
-            "online_friend_list": online_friend_list}, 
+         {"update-type": "online", "online_friend_list": online_friend_list}, 
          to=request.sid)
 
 
@@ -68,26 +67,22 @@ def initial_friend_status():
 def online_friend_status():
     # send "online_friend_status" event to friends on-line
     # 1. collect all friends online
-    user_id = RoadBuddy.event_handler.sid_reference[request.sid]
-    friend_list = RoadBuddy.event_handler.user_info[user_id]["friend_list"]
-    friend_sid_online = []
+    user_id = RoadBuddy.event_handler.online_users.get_user_id(request.sid)
+    friend_list = RoadBuddy.event_handler.online_users.get_user_information(user_id).get("friend_list")
+    online_friend_sid_list = []
     for friend in friend_list:
         friend_id = int(friend["user_id"])
-        if friend_id in RoadBuddy.event_handler.user_info.keys() and friend_id != user_id:
-            friend_sid = RoadBuddy.event_handler.user_info[friend_id]["sid"]
-            friend_sid_online.append(friend_sid)
+        notMe = friend_id != user_id
+        if RoadBuddy.event_handler.online_users.is_user_online(friend_id) and notMe:
+            online_friend_sid_list.append(RoadBuddy.event_handler.online_users.get_user_sid(friend_id))
 
     # 2. emit socket event to update_friend_status
-    for sid in friend_sid_online:
-        emit("update_friend_status",
-             {"update-type" : "online", 
-              "online_friend_list": [{
-                  "user_id": user_id,
-                  "user_sid": request.sid,
-                  "username": RoadBuddy.event_handler.user_info[user_id]["username"]}]},  
-             to=sid)
-
-
-@socketio.on("alert")
-def alert(data):
-    emit("alert", data, to=data["receiver_sid"])
+    my_online_information = {
+        "update-type" : "online", 
+        "online_friend_list": [{
+            "user_id": user_id,
+            "user_sid": request.sid,
+            "username": RoadBuddy.event_handler.online_users.get_user_information(user_id).get("username")}]
+    }
+    for friend_sid in online_friend_sid_list:
+        emit("update_friend_status", my_online_information, to = friend_sid)
