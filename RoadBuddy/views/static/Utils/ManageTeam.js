@@ -35,21 +35,23 @@ export async function CreateNewTeam(userID, teamName){
     return result
 }
 
-export function EmitEnterTeamEvent(accept, enterType, teamID, iconColor, coordination){
+export function EmitEnterTeamEvent(accept, enterType, teamID, imageUrl, iconColor, coordination){
     const enterTeamInfo = {
         accept: accept,
         enter_type: enterType,
         team_id: teamID,
+        imageUrl: imageUrl,
         iconColor: iconColor,
         coordination: coordination
     };
     socket.emit("enter_team", enterTeamInfo)
 }
 
-export function EmitInviteTeamEvent(senderSID, teamID, senderIconColor, senderCoordination, friendIDsToInviteArray){
+export function EmitInviteTeamEvent(senderSID, teamID, senderImageUrl, senderIconColor, senderCoordination, friendIDsToInviteArray){
     const invitation = {
         senderSID: senderSID,
         teamID: teamID,
+        senderImageUrl: senderImageUrl,
         senderIconColor: senderIconColor,
         senderCoordination: senderCoordination,
         friendIDsToInvite: friendIDsToInviteArray            
