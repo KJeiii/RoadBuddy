@@ -1,6 +1,6 @@
 import { messages, map} from "./Utils/AppClass.js";
 import { ManipulateSessionStorage, CheckUserStatus, ClearCanvasContext, CreateIconImage, 
-    GetRandomIconColor, RenderAvatar, RenderEmail, RenderUsername 
+    GetRandomIconColor, RenderAvatar, RenderEmail, RenderUsername, EmitStoreUserInfoEvent 
 } from "./Utils/ManageUser.js";
 import { SearchTeams } from "./Utils/ManageTeam.js";
 import { SearchOldFriends, EmitUpdateOnlineStatusEvents } from "./Utils/ManageFriend.js";
@@ -19,6 +19,7 @@ CheckUserStatus()
         // store user info
         ManipulateSessionStorage("clear");
         ManipulateSessionStorage("set", {...result.data, sid: socket.id, iconColor: GetRandomIconColor()});
+        EmitStoreUserInfoEvent(socket.id, userID);
 
         // create imageUrl if user doesn't upload avatar
         const//
