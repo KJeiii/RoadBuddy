@@ -1,5 +1,9 @@
-user_info = {}
-sid_reference = {}
+from RoadBuddy.event_handler.util import Online_users
+
+online_users = Online_users()
+
+# user_info = {}
+# sid_reference = {}
 rooms_info = {}
 own_coords = []
 my_sid = None
