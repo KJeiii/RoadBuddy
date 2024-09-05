@@ -8,62 +8,64 @@ import RoadBuddy.event_handler
 @socketio.on("team_invite")
 def team_invite(invitation):
     sender_sid = invitation["senderSID"]
-    sender_id = RoadBuddy.event_handler.sid_reference[sender_sid]
+    sender_id = RoadBuddy.event_handler.online_users.get_user_id(sender_sid)
     team_id = invitation["teamID"]
 
-    for id in invitation["friendIDsToInvite"]:
+    for friend_id in invitation["friendIDsToInvite"]:
         sender_info = {
-            **RoadBuddy.event_handler.user_info.get(sender_id),
+            **RoadBuddy.event_handler.online_users.get_user_information(sender_id),
             "user_id": sender_id,
             "coordination": invitation.get("senderCoordination"),
             "team_id": team_id,
+            "image_url": invitation.get("senderImageUrl"),
             "icon_color": invitation.get("senderIconColor")
         }
         del sender_info["friend_list"]
-        emit("team_invite", sender_info, to=RoadBuddy.event_handler.user_info[id]["sid"])
+        del sender_info["message_list"]
+        emit("team_invite", sender_info, to=RoadBuddy.event_handler.online_users.get_user_sid(friend_id))
 
 
 # Listener for receiving event "enter team" from server
 @socketio.on("enter_team")
-def enter_team(data):
+def enter_team(user_to_join_team):
     try:
-        user_id = RoadBuddy.event_handler.sid_reference[request.sid]
-        if data["accept"]:
-            team_id = data["team_id"]
+        user_id = RoadBuddy.event_handler.online_users.get_user_id(request.sid)
+        if user_to_join_team["accept"]:
+            team_id = user_to_join_team["team_id"]
             team_is_online = team_id in RoadBuddy.event_handler.rooms_info.keys()
             # team owner create team
-            if data["enter_type"] == "create" and not team_is_online:
+            if user_to_join_team["enter_type"] == "create" and not team_is_online:
                 RoadBuddy.event_handler.rooms_info[team_id] = {
                     "owner_sid": request.sid,
                     "partners": {request.sid : {
-                        "image_url": RoadBuddy.event_handler.user_info.get(user_id).get("image_url"),
-                        "icon_color": data.get("iconColor"),
-                        "coordination": data.get("coordination"),
-                        "username": RoadBuddy.event_handler.user_info.get(user_id).get("username"),
+                        "image_url": user_to_join_team.get("imageUrl"),
+                        "icon_color": user_to_join_team.get("iconColor"),
+                        "coordination": user_to_join_team.get("coordination"),
+                        "username": RoadBuddy.event_handler.online_users.get_user_information(user_id).get("username"),
                         "user_id": user_id
                     }}
                 }
                 join_room(team_id)
-                RoadBuddy.event_handler.user_info[user_id]["team_id"] = team_id
+                RoadBuddy.event_handler.online_users.update_user_information(user_id, team_id = team_id)
 
             # partner join team by owner invitation
-            if data["enter_type"] == "join" and team_is_online:
+            if user_to_join_team["enter_type"] == "join" and team_is_online:
                 RoadBuddy.event_handler.rooms_info[team_id]["partners"][request.sid] = {
-                    "image_url": RoadBuddy.event_handler.user_info.get(user_id).get("image_url"),
-                    "icon_color": data.get("iconColor"),
-                    "coordination": data.get("coordination"),
-                    "username": RoadBuddy.event_handler.user_info.get(user_id).get("username"),
+                    "image_url": user_to_join_team.get("imageUrl"),
+                    "icon_color": user_to_join_team.get("iconColor"),
+                    "coordination": user_to_join_team.get("coordination"),
+                    "username": RoadBuddy.event_handler.online_users.get_user_information(user_id).get("username"),
                     "user_id": user_id
                 }
                 join_room(team_id)
-                RoadBuddy.event_handler.user_info[user_id]["team_id"] = team_id
+                RoadBuddy.event_handler.online_users.update_user_information(user_id, team_id = team_id)
                 partner = {
                     "user_id": user_id,
                     "sid": request.sid,
-                    "username": RoadBuddy.event_handler.user_info.get(user_id).get("username"),
-                    "image_url": RoadBuddy.event_handler.user_info.get(user_id).get("image_url"),
-                    "icon_color": data.get("iconColor"),
-                    "coordination": data.get("coordination")
+                    "username": RoadBuddy.event_handler.online_users.get_user_information(user_id).get("username"),
+                    "image_url": user_to_join_team.get("imageUrl"),
+                    "icon_color": user_to_join_team.get("iconColor"),
+                    "coordination": user_to_join_team.get("coordination")
                 }
                 emit("add_partner", partner, to=team_id)
     except Exception as error:
@@ -80,7 +82,7 @@ def leave_team(leaving_user):
 
     leave_room(team_id)
     del RoadBuddy.event_handler.rooms_info[team_id]["partners"][sid]
-    del RoadBuddy.event_handler.user_info[user_id]["team_id"]
+    RoadBuddy.event_handler.online_users.update_user_information(user_id, team_id = None)
 
     if len(RoadBuddy.event_handler.rooms_info[team_id]["partners"].keys()) <= 0:
         del RoadBuddy.event_handler.rooms_info[team_id]
@@ -99,15 +101,13 @@ def initial_team_status():
 @socketio.on("update_team_status")
 def update_team_status():
     team_online_list = list(RoadBuddy.event_handler.rooms_info.keys())
-    user_id = RoadBuddy.event_handler.sid_reference[request.sid]
-    friend_list = RoadBuddy.event_handler.user_info[user_id]["friend_list"]
+    user_id = RoadBuddy.event_handler.online_users.get_user_id(request.sid)
+    friend_list = RoadBuddy.event_handler.online_users.get_user_information(user_id).get("friend_list")
 
     for friend in friend_list:
         friend_id = int(friend["user_id"])
-        if friend_id in RoadBuddy.event_handler.user_info.keys():
-            sid = RoadBuddy.event_handler.user_info[friend_id]["sid"]
-            emit("update_team_status", team_online_list, to=sid)
-
+        if RoadBuddy.event_handler.online_users.is_user_online(friend_id):
+            emit("update_team_status", team_online_list, to = RoadBuddy.event_handler.online_users.get_user_sid(friend_id))
 
 
 # Event listener for receiving event "join_team_request" from frontend
@@ -124,8 +124,8 @@ def join_team_request(applicant):
 def accept_team_request(accept_application_data):
     if accept_application_data["accept"]:
         applicant_sid = accept_application_data["applicantSID"]
-        team_owner_id = RoadBuddy.event_handler.sid_reference[request.sid]
-        team_id = RoadBuddy.event_handler.user_info.get(team_owner_id).get("team_id")
+        team_owner_id = RoadBuddy.event_handler.online_users.get_user_id(request.sid)
+        team_id = RoadBuddy.event_handler.online_users.get_user_information(team_owner_id).get("team_id")
         accept_application_response = {
             "team_id": team_id,
             "partners": RoadBuddy.event_handler.rooms_info.get(team_id).get("partners")
