@@ -1,6 +1,6 @@
-from flask_socketio import SocketIO, emit, send, join_room, leave_room
+from flask_socketio import emit
 from RoadBuddy import socketio
-from flask import request, session
+from flask import request
 import RoadBuddy.event_handler
 from RoadBuddy.models.message import MessageTool
 
@@ -29,10 +29,6 @@ def friend_request(invitation_from_sender):
             
     if len(receivers_in_travel) != 0:
         messageTool.Create_message(sender_id, receivers_in_travel)
-        RoadBuddy.event_handler.online_users.update_user_information(
-            sender_id,
-            message_list = messageTool.Search_message(sender_id)
-        )
 
 
 @socketio.on("friend_request_result")
