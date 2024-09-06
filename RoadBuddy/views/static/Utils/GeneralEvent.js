@@ -32,6 +32,7 @@ export function AddEventsToSetting() {
     // ----- logout button -----
     DOMElements.logout.addEventListener("click", () => {
         window.localStorage.removeItem("token");
+        ManipulateSessionStorage("clear");
         window.location.replace("/member");
     })
 
