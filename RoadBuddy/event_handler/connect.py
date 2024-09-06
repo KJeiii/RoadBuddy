@@ -1,4 +1,4 @@
-from flask_socketio import SocketIO, emit, send, join_room, leave_room, rooms
+from flask_socketio import emit, leave_room
 from RoadBuddy import socketio
 from flask import request
 import RoadBuddy.event_handler
@@ -10,6 +10,7 @@ friendTool = friend.FriendTool()
 @socketio.on("connect")
 def connect():
     RoadBuddy.event_handler.online_users.append_user_sid(request.sid)
+
 
 # Listener for receiver event "store_userinfo" from client
 @socketio.on("store_userinfo")
@@ -26,9 +27,7 @@ def sync_online_user():
 # Listener for receiver event "disconnect" from client
 @socketio.on("disconnect")
 def disconnect():
-    user_sid = request.sid
-    user_id = RoadBuddy.event_handler.online_users.get_user_id(user_sid)
-
+    user_id = RoadBuddy.event_handler.online_users.get_user_id(request.sid)
     if RoadBuddy.event_handler.online_users.is_user_online(user_id):
         (username, email, team_id, sid, friend_list, *rest) = RoadBuddy.event_handler.online_users.get_user_information(user_id).values()
 
@@ -45,7 +44,7 @@ def disconnect():
                 "update-type" : "offline", 
                 "offline_friend_id": {
                     "user_id": user_id,
-                    "user_sid": user_sid,
+                    "user_sid": request.sid,
                     "username": username
                     }
             }
@@ -54,7 +53,7 @@ def disconnect():
         # send event "leave_team" to team partners for removing marker
         if RoadBuddy.event_handler.online_users.is_user_traveling(user_id):
             my_leaving_team_information = {
-                "sid": user_sid,
+                "sid": request.sid,
                 "user_id": user_id,
                 "username": username,
                 "email":  email,
@@ -62,13 +61,13 @@ def disconnect():
             }
             emit("leave_team", my_leaving_team_information, to=team_id)
             leave_room(team_id)
-            del RoadBuddy.event_handler.rooms_info[team_id]["partners"][user_sid]
+            RoadBuddy.event_handler.online_teams.remove_partner(team_id, request.sid)
 
-            if len(RoadBuddy.event_handler.rooms_info[team_id]["partners"].keys()) <= 0 :
-                del RoadBuddy.event_handler.rooms_info[team_id]
+            if RoadBuddy.event_handler.online_teams.get_partner_amount(team_id) <= 0:
+                RoadBuddy.event_handler.online_teams.remove_team(team_id)
 
         # remove user online status
-        RoadBuddy.event_handler.online_users.remove_user(user_sid)
+        RoadBuddy.event_handler.online_users.remove_user(request.sid)
 
 
 
