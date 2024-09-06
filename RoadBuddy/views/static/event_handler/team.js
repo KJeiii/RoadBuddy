@@ -62,16 +62,15 @@ socket.on("accept_team_request", (acceptApplicationResponse) => {
     const {team_id:teamID, partners} = acceptApplicationResponse;
 
     // Organize data emitted to listener "enter_team" on server
-    EmitEnterTeamEvent(true, "join", teamID, window.sessionStorage.getItem("iconColor"), myCoord);
+    const {user_id: userID, username, image_url: imageUrl, iconColor} = window.sessionStorage;
+    EmitEnterTeamEvent(true, "join", teamID, imageUrl, iconColor, myCoord);
     ManipulateSessionStorage("set", {team_id: teamID});
 
     // switch to tracking pannel
     SwitchPannel("tracking");
 
     // append partners icon and markers
-    const//
-        {user_id:userID, username, image_url:imageUrl} = window.sessionStorage,
-        partnerList = document.querySelector(".tracking-pannel .partner-list");
+    const partnerList = document.querySelector(".tracking-pannel .partner-list");
     AppendUserInPartnerList(userID, username, imageUrl, partnerList);
     for (const partner in partners){
         const isNotMe = partner !== socket.id;
