@@ -473,8 +473,6 @@ export function AddEventsToTeam() {
 
         // switch to mainPannel
         SwitchPannel("main");
-        // SwitchPannelOnAndOff(".main-pannel");
-        ShowPannelContent(".main-pannel", "team", false);
 
         //remove all user in the partner list and just leave own marker on the map
         ClearList(".tracking-pannel .partner-list");
@@ -558,7 +556,6 @@ export function AddEventsToClose() {
     for (let closeBtn of DOMElements.closePannel) {
         closeBtn.addEventListener("click", () => {
             SwitchPannel("main");
-            ClearList(".team-pannel .friend-list");
         })
     };
 }
@@ -567,7 +564,7 @@ export function AddEventsToUser(){
     // change avatar color
     const//
         iconDiv = document.querySelector("div.user-info>div.icon"),
-        notUploadingAvatar = window.sessionStorage.getItem("image_url").split(":")[0] === "data";
+        notUploadingAvatar = !String(window.sessionStorage.getItem("image_url")).includes("https");
     if (notUploadingAvatar) {
         iconDiv.addEventListener("click", ()=>{
             ChangeIconColor(socket.id, window.sessionStorage.getItem("username"))   
