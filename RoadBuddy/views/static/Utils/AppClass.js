@@ -72,7 +72,6 @@ export class Map{
 
     UpdateMarkerImage(sid, imageUrl){
         try{
-            console.log(this.sidAndmarkerPair[sid])
             const marker = document.querySelector(`.leaflet-marker-pane img.sid${sid}`);
             marker.src = imageUrl;
         }
