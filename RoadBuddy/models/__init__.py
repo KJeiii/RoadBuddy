@@ -11,10 +11,10 @@ db_config = {
 }
 
 # AWS RDS
-# db_config = {
-#     "host": os.environ.get("db_host"),
-#     "port": os.environ.get("db_port"),
-#     "user": os.environ.get("db_user"),
-#     "password": os.environ.get("db_password"),
-#     "database": os.environ.get("database")
-# }
+db_config = {
+    "host": os.environ.get("db_host"),
+    "port": os.environ.get("db_port"),
+    "user": os.environ.get("db_user"),
+    "password": os.environ.get("db_password"),
+    "database": os.environ.get("database")
+}
