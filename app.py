@@ -16,4 +16,4 @@ app.register_blueprint(friend_bp)
 app.register_blueprint(team_bp)
 app.register_blueprint(message_bp)
 
-socketio.run(app, debug=True, port=3000, allow_unsafe_werkzeug=True)
+socketio.run(app, debug=True, host="0.0.0.0", port=3000, allow_unsafe_werkzeug=True)
