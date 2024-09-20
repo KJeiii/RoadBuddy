@@ -82,6 +82,11 @@ export class Map{
         try{return Object.keys(this.sidAndmarkerPair)}
         catch(error){console.log("Failed to execute method GetAllMarkersSID: ", error)}
     }
+
+    isMarkerCreated(sid){
+        try{return this.sidAndmarkerPair[sid] != undefined}
+        catch(error){console.log("Failed to execute method isMarkerCreated: ", error)}
+    }
 }
 
 export class Messages{
