@@ -3,8 +3,7 @@ import { map } from "../Utils/AppClass.js";
 // ----- update partners postion when moving -----
 socket.on("movingPostion", (partners) => {
     for (const partnerSID in partners){
-        const parterIsOnMap = map.GetAllMarkersSID().includes(partnerSID);
-        if (parterIsOnMap){
+        if (map.isMarkerCreated(partnerSID)){
             map.UpdateMarkerPosition(partnerSID, partners[partnerSID]["coordination"]);
         }
     }
@@ -18,7 +17,7 @@ setInterval(()=> {
         notInTeam = window.sessionStorage.getItem("team_id") === "" 
                    || window.sessionStorage.getItem("team_id") === null;
     delete dataToUpdatePosition["friendList"];
-    if (notInTeam){
+    if (notInTeam && map.isMarkerCreated(socket.id)){
         myCoord = {...myCoord, ...randomCoords}
         map.UpdateMarkerPosition(socket.id, myCoord);
         return
