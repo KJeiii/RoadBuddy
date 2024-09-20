@@ -12,7 +12,6 @@ export function InitializeAllPannelsTagAttributes(){
         if (pannel.getAttribute("class") === "main-pannel" ||
             pannel.getAttribute("class") === "tracking-pannel"){
             const feasiblePannelStyle = GetFeasiblePannelRWDStyle(availWidth, pannel.getAttribute("class"));
-            pannel.style.top = feasiblePannelStyle.dropDown.top;
             pannel.style.height = feasiblePannelStyle.dropDown.height;
         }
     })
@@ -20,7 +19,7 @@ export function InitializeAllPannelsTagAttributes(){
 
 export function isPannelPulledUp(pannelCSSSelector){
     const pannel = document.querySelector(pannelCSSSelector);
-    return pannel.style.height > pannel.style.top
+    return Number(pannel.style.height.split("vh")[0]) > 50
 }
 
 export function onWhichPannelContent(){
@@ -44,7 +43,6 @@ export function SwitchPannelOnAndOff(pannelCssSelector){
         {availWidth} = GetUserScreenAvailSize(),
         feasiblePannelStyle = GetFeasiblePannelRWDStyle(availWidth, pannel.getAttribute("class")),
         isPulledUp = isPannelPulledUp(pannelCssSelector);
-    pannel.style.top = (isPulledUp) ? feasiblePannelStyle.dropDown.top : feasiblePannelStyle.pullUp.top;
     pannel.style.height = (isPulledUp) ? feasiblePannelStyle.dropDown.height : feasiblePannelStyle.pullUp.height;
     if (pannelCssSelector === ".tracking-pannel"){
         document.querySelector(".tracking-pannel .partner-outer").style.height = 
@@ -641,10 +639,10 @@ export const pannelRWDStyle = {
             dropDown: {top: "75vh", height: "25vh"}, //dropDown: {top: "75vh", height: "25vh"}, 
             pullUp: {top: "25vh", height: "75vh"}}, //pullUp: {top: "25vh", height: "75vh"}},
         1200: {
-            dropDown: {top: "70vh", height: "30vh"}, //dropDown: {top: "75vh", height: "25vh"}, 
+            dropDown: {top: "70vh", height: "35vh"}, //dropDown: {top: "75vh", height: "25vh"}, 
             pullUp: {top: "30vh", height: "70vh"}}, //pullUp: {top: "25vh", height: "75vh"}},
         1920: {
-            dropDown: {top: "70vh", height: "30vh"}, 
+            dropDown: {top: "70vh", height: "35vh"}, 
             pullUp: {top: "20vh", height: "80vh"}}  //pullUp: {top: "30vh", height: "70vh"}} 
     },
     "tracking-pannel": {
