@@ -19,13 +19,8 @@ export function InitializeAllPannelsTagAttributes(){
 }
 
 export function isPannelPulledUp(pannelCSSSelector){
-    let//   
-        isPulledUp,
-        pannel = document.querySelector(pannelCSSSelector),
-        {availWidth} = GetUserScreenAvailSize(),
-        feasiblePannelStyle = GetFeasiblePannelRWDStyle(availWidth, pannel.getAttribute("class"));
-    isPulledUp = pannel.style.top === feasiblePannelStyle.pullUp.top;
-    return isPulledUp;
+    const pannel = document.querySelector(pannelCSSSelector);
+    return pannel.style.height > pannel.style.top
 }
 
 export function onWhichPannelContent(){
@@ -643,25 +638,23 @@ export function GetUserScreenAvailSize(){
 export const pannelRWDStyle = {
     "main-pannel": {
         600: {
-            dropDown: {top: "75vh", height: "25vh"}, 
-            pullUp: {top: "25vh", height: "75vh"}},
+            dropDown: {top: "75vh", height: "25vh"}, //dropDown: {top: "75vh", height: "25vh"}, 
+            pullUp: {top: "25vh", height: "75vh"}}, //pullUp: {top: "25vh", height: "75vh"}},
         1200: {
-            dropDown: {top: "80vh", height: "20vh"}, 
-            pullUp: {top: "20vh", height: "80vh"}},
+            dropDown: {top: "70vh", height: "30vh"}, //dropDown: {top: "75vh", height: "25vh"}, 
+            pullUp: {top: "30vh", height: "70vh"}}, //pullUp: {top: "25vh", height: "75vh"}},
         1920: {
             dropDown: {top: "70vh", height: "30vh"}, 
-            pullUp: {top: "30vh", height: "70vh"}} 
+            pullUp: {top: "20vh", height: "80vh"}}  //pullUp: {top: "30vh", height: "70vh"}} 
     },
     "tracking-pannel": {
         600: {
-            dropDown: {top: "80vh", height: "20vh"}, 
-            pullUp: {top: "50vh", height: "50vh"}}
+            dropDown: {top: "75vh", height: "25vh"}, 
+            pullUp: {top: "40vh", height: "60vh"}}
     }
 };
 
 export function GetFeasiblePannelRWDStyle(userScreenWidth, pannelType, pannelRWDStyleReference = pannelRWDStyle){
-    //main-pannel: 75+25 < 600px; 80+20 600-1200px; 70+30 >1200px
-    //tracking-pannel: drop down - 70top + 30height / pull up - 50top + 50height
     const feasiblePannelStyle = {dropDown: null, pullUp: null};
     for (const widthLevel of Object.keys(pannelRWDStyleReference[pannelType])){
         if (userScreenWidth - widthLevel <= 0){
