@@ -93,8 +93,8 @@ img.modify:hover,
 /* ------ main pannel -----*/
 .main-pannel {
     display: block;
-    position: absolute;
-    top: 75vh;
+    position: fixed; /*absolute*/
+    /* top: 75vh; */
     z-index: 1000;
     width: 100vw;
     height: 25vh;
@@ -871,7 +871,7 @@ div.update-password__button button{
 /* ----- tracking pannel ----- */
 .tracking-pannel {
     display: none;
-    position: absolute;
+    position: fixed; /*absolute*/
     top: 80vh;
     z-index: 1000;
     width: 100vw;
@@ -1067,9 +1067,9 @@ div.update-password__button button{
     /* main pannel */
     .main-pannel {
         left: 5%;
-        top: 80vh;
+        top: 65vh; /*75vh*/ 
         width: 90%;
-        height: 20vh;
+        height: 35vh; /*25vh*/
     }
 
     .pull-up,
@@ -1161,7 +1161,7 @@ div.update-password__button button{
     /* tema pannel and friend pannel */
     .main-pannel .friend-outer,
     .main-pannel .team-outer {
-        height: 60%;
+        height: 40%;
     }
 
     .friend-pannel,
@@ -1245,7 +1245,7 @@ div.update-password__button button{
 
     .main-pannel .friend-outer,
     .main-pannel .team-outer {
-        height: 40%;
+        height: 50%;
     }
 
     .team-pannel .friend-outer {
