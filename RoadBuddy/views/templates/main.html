@@ -19,138 +19,136 @@
 
 </head>
 <body>
-    <div class="background">
-        <div class="setting">
-            <div class="setting-btn"></div>
-            <div class="configure">個人資料</div>
-            <div class="message">訊息</div>
-            <div class="logout">登出</div>
-            <div class="invite">新增隊員</div>
-            <div class="leave">離開隊伍</div>
+    <div class="setting">
+        <div class="setting-btn"></div>
+        <div class="configure">個人資料</div>
+        <div class="message">訊息</div>
+        <div class="logout">登出</div>
+        <div class="invite">新增隊員</div>
+        <div class="leave">離開隊伍</div>
+    </div>
+    <div id="map"></div>
+    <div class="main-pannel">
+        <div class="pull-up"></div>
+        <div class="drop-down"></div>
+        <nav>
+            <div class="nav-menu">
+                <div class="nav-menu-title">好友列表</div>
+                <div class="nav-menu-list">
+                    <div class="nav-menu-friend">好友列表</div>
+                    <div class="nav-menu-team">隊伍列表</div>
+                </div>
+            </div>
+            
+            <div class="nav-toggle"></div>
+            <div class="nav-add-friend"></div>
+            <div class="nav-add-team"></div>
+        </nav>
+        <div class="user-info">
+            <div class="icon"></div>
+            <div class="description">Loading...</div>
         </div>
-        <div id="map"></div>
-        <div class="main-pannel">
-            <div class="pull-up"></div>
-            <div class="drop-down"></div>
-            <nav>
-                <div class="nav-menu">
-                    <div class="nav-menu-title">好友列表</div>
-                    <div class="nav-menu-list">
-                        <div class="nav-menu-friend">好友列表</div>
-                        <div class="nav-menu-team">隊伍列表</div>
-                    </div>
-                </div>
-                
-                <div class="nav-toggle"></div>
-                <div class="nav-add-friend"></div>
-                <div class="nav-add-team"></div>
-            </nav>
-            <div class="user-info">
-                <div class="icon"></div>
-                <div class="description">Loading...</div>
+        <div class="friend-color-intro">
+            <div class="online">上線</div>
+            <div class="offline">離線</div>
+        </div>
+        <div class="friend-outer">
+            <div class="friend-list">
             </div>
-            <div class="friend-color-intro">
-                <div class="online">上線</div>
-                <div class="offline">離線</div>
-            </div>
-            <div class="friend-outer">
-                <div class="friend-list">
-                </div>
-            </div>
-            <div class="team-color-intro">
-                <div class="online">旅程中</div>
-                <div class="offline">未啟程</div>
-            </div>
-            <div class="team-outer">
-                <div class="team-outer-create">
-                    <div class="team-outer-title">你建立的</div>
-                        <div class="team-outer-overflow">
-                            <div class="create-list">
-                            </div>
-                        </div>
-                </div>
-                <div class="team-outer-join">
-                    <div class="team-outer-title">你加入的</div>
+        </div>
+        <div class="team-color-intro">
+            <div class="online">旅程中</div>
+            <div class="offline">未啟程</div>
+        </div>
+        <div class="team-outer">
+            <div class="team-outer-create">
+                <div class="team-outer-title">你建立的</div>
                     <div class="team-outer-overflow">
-                        <div class="join-list">
+                        <div class="create-list">
                         </div>
                     </div>
-                </div>
             </div>
-        </div>
-
-        <div class="friend-pannel">
-            <div class="close"></div>
-            <div class="pannel-title">新增好友</div>
-            <div class="search">
-                <div class="search-icon"></div>
-                <input type="text" name="search-friend" placeholder="搜尋姓名">
-            </div>
-            <div class="search-outer">
-                <div class="search-list">
-                </div>
-            </div>
-            <button type="button">加入好友</button>
-        </div>
-
-        <div class="team-pannel">
-            <div class="close"></div>
-            <div class="pannel-title">創建隊伍</div>
-            <div class="search">
-                <input type="text" name="create-team" placeholder="隊伍名稱">
-            </div>
-            <div class="friend-title">新增隊員</div>
-            <div class="friend-outer">
-                <div class="friend-list">
-                </div>
-            </div>
-            <button type="button" class="create-team-btn">創建</button>
-            <button type="button" class="start-trip-btn">啟程</button>
-            <button type="button" class="invite-trip-btn">邀請</button>
-            <button type="button" class="join-trip-btn">申請加入</button>
-        </div>
-
-        <div class="tracking-pannel">
-            <div class="pull-up"></div>
-            <div class="drop-down"></div>
-            <div class="pannel-title">隊員</div>
-            <div class="partner-outer">
-                <div class="partner-list">
-                </div>
-            </div>
-        </div>
-        <div class="message-pannel">
-            <div class="close"></div>
-            <div class="pannel-title">交友邀請</div>
-            <div class="message-outer">
-                <div class="message-list"></div>
-            </div>
-        </div>
-        <div class="configure-pannel">
-            <div class="close"></div>
-            <div class="pannel-title">個人資料</div>
-            <div class="configure-outer">
-                <div class="image">
-                    <div class="undo"></div>
-                    <label for="avatar" class="avatar"></label>
-                    <input type="file" name="avatar" id="avatar" accept="image/png, image/jpg, image/jpeg">
-                </div>
-                <div class="configure-form">
-                    <div class="configure-form-email">
-                        <div class="item">信箱</div>
-                        <div class="value">123@mail</div>
-                        <div></div>
-                    </div>
-                    <div class="configure-form-username">
-                        <label for="username-to-update">姓名</label>
-                        <input id="username-to-update" type="text" value="username" disabled>
-                        <img src="../static/images/modify.svg" alt="modify.svg" class="modify">
+            <div class="team-outer-join">
+                <div class="team-outer-title">你加入的</div>
+                <div class="team-outer-overflow">
+                    <div class="join-list">
                     </div>
                 </div>
-                <div class="button">
-                    <button class="update-basic">確認修改基本資料</button>
-                    <button class="update-password">更改密碼</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="friend-pannel">
+        <div class="close"></div>
+        <div class="pannel-title">新增好友</div>
+        <div class="search">
+            <div class="search-icon"></div>
+            <input type="text" name="search-friend" placeholder="搜尋姓名">
+        </div>
+        <div class="search-outer">
+            <div class="search-list">
+            </div>
+        </div>
+        <button type="button">加入好友</button>
+    </div>
+
+    <div class="team-pannel">
+        <div class="close"></div>
+        <div class="pannel-title">創建隊伍</div>
+        <div class="search">
+            <input type="text" name="create-team" placeholder="隊伍名稱">
+        </div>
+        <div class="friend-title">新增隊員</div>
+        <div class="friend-outer">
+            <div class="friend-list">
+            </div>
+        </div>
+        <button type="button" class="create-team-btn">創建</button>
+        <button type="button" class="start-trip-btn">啟程</button>
+        <button type="button" class="invite-trip-btn">邀請</button>
+        <button type="button" class="join-trip-btn">申請加入</button>
+    </div>
+
+    <div class="tracking-pannel">
+        <div class="pull-up"></div>
+        <div class="drop-down"></div>
+        <div class="pannel-title">隊員</div>
+        <div class="partner-outer">
+            <div class="partner-list">
+            </div>
+        </div>
+    </div>
+    <div class="message-pannel">
+        <div class="close"></div>
+        <div class="pannel-title">交友邀請</div>
+        <div class="message-outer">
+            <div class="message-list"></div>
+        </div>
+    </div>
+    <div class="configure-pannel">
+        <div class="close"></div>
+        <div class="pannel-title">個人資料</div>
+        <div class="configure-outer">
+            <div class="image">
+                <div class="undo"></div>
+                <label for="avatar" class="avatar"></label>
+                <input type="file" name="avatar" id="avatar" accept="image/png, image/jpg, image/jpeg">
+            </div>
+            <div class="configure-form">
+                <div class="configure-form-email">
+                    <div class="item">信箱</div>
+                    <div class="value">123@mail</div>
+                    <div></div>
                 </div>
+                <div class="configure-form-username">
+                    <label for="username-to-update">姓名</label>
+                    <input id="username-to-update" type="text" value="username" disabled>
+                    <img src="../static/images/modify.svg" alt="modify.svg" class="modify">
+                </div>
+            </div>
+            <div class="button">
+                <button class="update-basic">確認修改基本資料</button>
+                <button class="update-password">更改密碼</button>
             </div>
         </div>
     </div>
