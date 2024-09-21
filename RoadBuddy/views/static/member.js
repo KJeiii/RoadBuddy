@@ -4,13 +4,19 @@ import { ClearErrorMessage, ControlMebmerMsgBox, RenderErrorMessage, RenderRespo
 import { PreviewAvatar, SwitchAvatarUndoBtn } from "./Utils/ManageConfigure.js";
 import { CheckUserStatus, CollectInformationToSignup, Login, SignupNewAccount } from "./Utils/ManageUser.js";
 
-CheckUserStatus()
-    .then((result) => {
-        if (result.ok) {
-            window.location.replace("/main");
-        }
-    })
-    .catch((error) => {console.log(`Error from CheckUserStatus in member page : ${error}`)})
+if (localStorage.getItem("token") !== null){
+    RenderResponse(".member-response", 3);
+    CheckUserStatus()
+        .then((result) => {
+            if (result.ok) {
+                window.location.replace("/main");
+            }
+        })
+        .catch((error) => {
+            console.log(`Error from CheckUserStatus in member page : ${error}`);
+            RenderResponse(".member-response", 0, true);
+        })    
+}
 
 // ----- switch sigup/login page -----
 document.querySelector("div.title-signup").addEventListener("click", SwitchBetweenSignupAndLogin);
