@@ -4,6 +4,7 @@ body {
     linear-gradient(to bottom right, 
                     rgb(83,157,179),
                     rgb(100,193,198));
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 .RoadBuddy {
