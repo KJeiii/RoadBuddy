@@ -4,11 +4,13 @@ import { ManipulateSessionStorage, CheckUserStatus, ClearCanvasContext, CreateIc
 } from "./Utils/ManageUser.js";
 import { SearchTeams } from "./Utils/ManageTeam.js";
 import { SearchOldFriends, EmitUpdateOnlineStatusEvents } from "./Utils/ManageFriend.js";
-import { ClearList, RenderList, RenderOnlineStatus, InitializeAllPannelsTagAttributes 
+import { ClearList, RenderList, RenderOnlineStatus, InitializeAllPannelsTagAttributes, ResizeHTMLBodyHeight 
 } from "./Utils/GeneralControl.js";
 import * as GeneralEvents from "./Utils/GeneralEvent.js";
 import { AddTeamClickEvent, AddTeamHoverEvent } from "./Utils/TeamEvent.js";
 import { SearchMessage, RenderMessageBtn } from "./Utils/ManageMessage.js";
+
+ResizeHTMLBodyHeight();
 
 // check user status and load info when passing check
 CheckUserStatus()
