@@ -18,8 +18,11 @@ export function InitializeAllPannelsTagAttributes(){
 }
 
 export function isPannelPulledUp(pannelCSSSelector){
-    const pannel = document.querySelector(pannelCSSSelector);
-    return Number(pannel.style.height.split("vh")[0]) > 50
+    const//
+        pannel = document.querySelector(pannelCSSSelector),
+        {availWidth} = GetUserScreenAvailSize(),
+        feasiblePannelStyle = GetFeasiblePannelRWDStyle(availWidth, pannel.getAttribute("class"));
+    return pannel.style.height === feasiblePannelStyle.pullUp.height
 }
 
 export function onWhichPannelContent(){
@@ -38,6 +41,7 @@ export function onWhichPannelContent(){
 }
 
 export function SwitchPannelOnAndOff(pannelCssSelector){
+    ResizeHTMLBodyHeight();
     const//
         pannel = document.querySelector(pannelCssSelector),
         {availWidth} = GetUserScreenAvailSize(),
@@ -633,17 +637,24 @@ export function GetUserScreenAvailSize(){
     }
 }
 
+export function GetUserWindowInnerSize(){
+    return {
+        innerWidth: window.innerWidth,
+        innerHeight: window.innerHeight
+    }
+}
+
 export const pannelRWDStyle = {
     "main-pannel": {
         600: {
-            dropDown: {top: "75vh", height: "25vh"}, //dropDown: {top: "75vh", height: "25vh"}, 
-            pullUp: {top: "25vh", height: "75vh"}}, //pullUp: {top: "25vh", height: "75vh"}},
+            dropDown: {top: "75vh", height: "180px"}, //dropDown: {top: "75vh", height: "25vh"}, 
+            pullUp: {top: "25vh", height: "550px"}}, //pullUp: {top: "25vh", height: "75vh"}},
         1200: {
-            dropDown: {top: "70vh", height: "35vh"}, //dropDown: {top: "75vh", height: "25vh"}, 
-            pullUp: {top: "30vh", height: "70vh"}}, //pullUp: {top: "25vh", height: "75vh"}},
+            dropDown: {top: "70vh", height: "220px"}, //dropDown: {top: "75vh", height: "25vh"}, 
+            pullUp: {top: "30vh", height: "700px"}}, //pullUp: {top: "25vh", height: "75vh"}},
         1920: {
-            dropDown: {top: "70vh", height: "35vh"}, 
-            pullUp: {top: "20vh", height: "80vh"}}  //pullUp: {top: "30vh", height: "70vh"}} 
+            dropDown: {top: "70vh", height: "220px"},  //{top: "70vh", height: "30vh"}
+            pullUp: {top: "20vh", height: "550px"}}  //pullUp: {top: "30vh", height: "70vh"}} 
     },
     "tracking-pannel": {
         600: {
@@ -717,3 +728,8 @@ export function GetFeasibleFontStyle(userScreenWidth, fontFeasibleStyleReference
     }
     return feasibleFontStyle
 };
+
+export function ResizeHTMLBodyHeight(){
+    const {innerHeight} = GetUserWindowInnerSize();
+    document.body.style.height = `${innerHeight}px`;
+}
