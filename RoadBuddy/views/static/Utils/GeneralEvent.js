@@ -117,7 +117,7 @@ export function AddEventsToSetting() {
                                 ManipulateSessionStorage("set", {username: updateResponse.username})}
                             if (updateResponse.image_url !== ""){
                                 RenderAvatar(updateResponse.image_url);
-                                map.UpdateMarkerImage(socket.id, updateResponse.image_url);
+                                map.UpdateMarkerImage(updateResponse.image_url);
                                 ManipulateSessionStorage("set", {image_url: updateResponse.image_url})}
                         }
                         //remove the value(file) of input#avatar
@@ -476,7 +476,7 @@ export function AddEventsToTeam() {
 
         //remove all user in the partner list and just leave own marker on the map
         ClearList(".tracking-pannel .partner-list");
-        map.RemoveAllOtherMarkersExcept(socket.id);
+        map.RemoveAllOtherMarkersExcept(userID);
 
         // re-render message list
         SearchMessage(userID)
@@ -527,6 +527,7 @@ export function AddEventsToTeam() {
             {user_id: userID, username, image_url:imageUrl, iconColor} = window.sessionStorage,
             teamID = document.querySelector(".team-pannel .pannel-title").getAttribute("id");
         EmitJoinTeamRequestEvent(socket.id, userID, username, imageUrl, iconColor, myCoord, teamID);
+        SwitchPannel("main");
     })
 
     // Yes or No response to join team requeset
@@ -555,6 +556,11 @@ export function AddEventsToTeam() {
 export function AddEventsToClose() {
     for (let closeBtn of DOMElements.closePannel) {
         closeBtn.addEventListener("click", () => {
+            const isTraveling = sessionStorage.getItem("team_id") !== null;
+            if(isTraveling){
+                SwitchPannel("tracking");
+                return
+            }
             SwitchPannel("main");
         })
     };
@@ -567,7 +573,7 @@ export function AddEventsToUser(){
         notUploadingAvatar = !String(window.sessionStorage.getItem("image_url")).includes("https");
     if (notUploadingAvatar) {
         iconDiv.addEventListener("click", ()=>{
-            ChangeIconColor(socket.id, window.sessionStorage.getItem("username"))   
+            ChangeIconColor(window.sessionStorage.getItem("username"))   
         })
     }
 }
