@@ -16,9 +16,9 @@ socket.on("team_invite", (data) => {
 //  ----- add new partners if they join -----
 socket.on("add_partner", (partner) => { 
     const//
-        {user_id:userID, sid, username, image_url:imageUrl, coordination, icon_color: iconColor} = partner,
-        notMyself = userID !== Number(window.sessionStorage.getItem("user_id"));
-    if (notMyself){
+        {user_id:userID, username, image_url:imageUrl, coordination, icon_color: iconColor} = partner,
+        isNotMe = Number(userID) !== Number(window.sessionStorage.getItem("user_id"));
+    if (isNotMe){
         CreatePartner(userID, username, imageUrl, iconColor, coordination, 
             document.querySelector(".tracking-pannel .partner-list"));
     }
@@ -27,7 +27,7 @@ socket.on("add_partner", (partner) => {
 // ----- Listener for receiving event "leave_team" from server -----
 socket.on("leave_team", (leavingUser) => {
     // remove leaving partner's marker and information in the partner list
-    const isNotMe = leavingUser.sid !== socket.id;
+    const isNotMe = Number(leavingUser.user_id) !== Number(sessionStorage.getItem("user_id"));
     if (isNotMe){
         map.RemoveMarker(leavingUser.user_id);
         RemoveUserFromPartnerList(leavingUser["user_id"])
@@ -56,9 +56,7 @@ socket.on("join_team_request", (applicant) => {
 })
 
 // (Requester) Listener for receiving event "accept_team_request" from team owner
-socket.on("accept_team_request", (acceptApplicationResponse) => {
-    // // cache sender_info
-    // team_sender_info_cache = acceptApplicationResponse;   
+socket.on("accept_team_request", (acceptApplicationResponse) => {  
     const {team_id:teamID, partners} = acceptApplicationResponse;
 
     // Organize data emitted to listener "enter_team" on server
@@ -73,7 +71,7 @@ socket.on("accept_team_request", (acceptApplicationResponse) => {
     const partnerList = document.querySelector(".tracking-pannel .partner-list");
     AppendUserInPartnerList(userID, username, imageUrl, partnerList);
     for (const partner in partners){
-        const isNotMe = partner !== socket.id;
+        const isNotMe = Number(partners[partner].user_id) !== Number(userID);
         if (isNotMe){
             const {user_id:userID, username, image_url:imageUrl, coordination, icon_color:iconColor} = partners[partner];
             CreatePartner(userID, username, imageUrl, iconColor, coordination, partnerList);
