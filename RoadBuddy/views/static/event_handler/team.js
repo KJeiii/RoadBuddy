@@ -19,7 +19,7 @@ socket.on("add_partner", (partner) => {
         {user_id:userID, sid, username, image_url:imageUrl, coordination, icon_color: iconColor} = partner,
         notMyself = userID !== Number(window.sessionStorage.getItem("user_id"));
     if (notMyself){
-        CreatePartner(userID, sid, username, imageUrl, iconColor, coordination, 
+        CreatePartner(userID, username, imageUrl, iconColor, coordination, 
             document.querySelector(".tracking-pannel .partner-list"));
     }
 })
@@ -76,7 +76,7 @@ socket.on("accept_team_request", (acceptApplicationResponse) => {
         const isNotMe = partner !== socket.id;
         if (isNotMe){
             const {user_id:userID, username, image_url:imageUrl, coordination, icon_color:iconColor} = partners[partner];
-            CreatePartner(userID, partner, username, imageUrl, iconColor, coordination, partnerList);
+            CreatePartner(userID, username, imageUrl, iconColor, coordination, partnerList);
         }
     }
 })
