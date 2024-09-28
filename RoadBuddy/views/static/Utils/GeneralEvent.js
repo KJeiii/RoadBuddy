@@ -423,7 +423,7 @@ export function AddEventsToTeam() {
             {user_id:leaderID, username: leaderUsername, sid:leaderSID, icon_Color: leaaderIconColor,
             image_url:leaderImageUrl, coordination:leaderCoordination} = team_sender_info_cache;
         CreatePartner(
-            leaderID, leaderSID, leaderUsername, leaderImageUrl, 
+            leaderID, leaderUsername, leaderImageUrl, 
             leaaderIconColor, leaderCoordination, partnerList);
  
         // recover team prompt
