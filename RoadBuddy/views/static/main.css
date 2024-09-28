@@ -41,7 +41,7 @@ img.modify:hover,
 
 /* ----- map ----- */
 .setting {
-    position: absolute;
+    position: fixed;
     display: flex;
     flex: none;
     flex-direction: column;
@@ -341,13 +341,13 @@ nav {
     flex-direction: column;
     justify-content: start;
     align-items: center;
-    position: absolute;
-    top: 25vh;
+    position: fixed;
+    bottom: 5vh;
     z-index: 1100;
     width: 100vw;
     height: 75vh;
     background-color: white;
-    border-radius: 30px 30px 0 0;
+    border-radius: 30px;
 }
 
 .pannel-title,
@@ -478,7 +478,7 @@ input[name=create-team]
 .team-pannel .friend-outer {
     justify-content: center;
     width: 80%;
-    height: 45%;
+    height: 55%;
     overflow-y: scroll;
     margin-top: 10px;
 }
@@ -510,7 +510,8 @@ input[name=create-team]
     background-color: rgb(210, 210, 210);
     font-size: 20px;
     font-weight: bold;
-    margin-top: 10px;
+    /* margin-top: 10px; */
+    margin: 20px;
 }
 
 .team-pannel button.start-trip-btn,
@@ -1168,7 +1169,7 @@ div.update-password__button button{
 
     .friend-pannel,
     .team-pannel {
-        top: 30vh;
+        /* top: 30vh; */
         width: 90%;
         left: 5%;
         height: 70vh;
@@ -1250,7 +1251,7 @@ div.update-password__button button{
     }
 
     .team-pannel .friend-outer {
-        height: 45%;
+        height: 55%;
     }
 
     /* tracking pannel */
