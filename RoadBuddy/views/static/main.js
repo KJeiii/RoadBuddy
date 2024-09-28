@@ -10,18 +10,21 @@ import * as GeneralEvents from "./Utils/GeneralEvent.js";
 import { AddTeamClickEvent, AddTeamHoverEvent } from "./Utils/TeamEvent.js";
 import { SearchMessage, RenderMessageBtn } from "./Utils/ManageMessage.js";
 
-ResizeHTMLBodyHeight();
+ResizeHTMLBodyHeight(); 
 
 // check user status and load info when passing check
 CheckUserStatus()
     .then((result) => {
-        if (!result.ok){window.location.replace("/member")};
+        if (!result.ok){
+            localStorage.removeItem("token");
+            window.location.replace("/member");
+        };
 
         const {user_id:userID, username, email} = result.data;
         // store user info
         ManipulateSessionStorage("clear");
         ManipulateSessionStorage("set", {...result.data, sid: socket.id, iconColor: GetRandomIconColor()});
-        EmitStoreUserInfoEvent(socket.id, userID);
+        EmitStoreUserInfoEvent(userID);
 
         // create imageUrl if user doesn't upload avatar
         const//
@@ -33,8 +36,8 @@ CheckUserStatus()
         // ************** 這邊要改抓真實位置*******************
         const testCoord = {latitude: 24.982 + Math.random()*0.006, longitude: 121.534 + Math.random()*0.006};
         map.CreateMap(testCoord);
-        map.CreateMarker(socket.id, imageUrl, testCoord);
-        
+        map.CreateMarker(userID, imageUrl, testCoord);
+
         // update main-pannel description and configure pannel username input
         RenderUsername(username);
         RenderEmail(email);
