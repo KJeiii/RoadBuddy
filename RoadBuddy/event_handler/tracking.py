@@ -4,10 +4,10 @@ import RoadBuddy.event_handler
 
 @socketio.on("position")
 def position(new_movement):
-    sid = new_movement.get("sid")
+    user_id = int(new_movement.get("user_id"))
+    sid = RoadBuddy.event_handler.online_users.get_user_sid(user_id)
     new_coordination = new_movement.get("coordination")
     team_id = new_movement.get("team_id")
-    user_id = RoadBuddy.event_handler.online_users.get_user_id(sid)
     if RoadBuddy.event_handler.online_users.is_user_traveling(user_id):
         is_user_in_team = RoadBuddy.event_handler.online_users.get_user_information(user_id).get("team_id") == team_id
         if is_user_in_team:
