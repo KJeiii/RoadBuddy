@@ -13,7 +13,7 @@ export class OnlineFriends{
 
 export class Map{
     constructor(){}
-    sidAndmarkerPair = {}; // {sid: markerobject}
+    userIDAndMarkerPair = {}; // {id: markerobject}
     map = null;
 
     CreateMap(coordination){
@@ -33,58 +33,53 @@ export class Map{
         catch(error){console.log("Failed to execute method CreateMap in Map class: ", error)}
     }
 
-    CreateMarker(sid, imageUrl, coordination){ //coordination = {latitude: XXX, longitude: XXX}
+    CreateMarker(userID, imageUrl, coordination){ //coordination = {latitude: XXX, longitude: XXX}
         try{
             const//
-                myIcon = L.icon({iconUrl: imageUrl, iconSize: [40, 40], className: `sid${sid}`}),
+                myIcon = L.icon({iconUrl: imageUrl, iconSize: [40, 40], className: `id${userID}`}),
                 newMarker = L.marker(
                     [coordination.latitude, coordination.longitude], 
                     {icon: myIcon}).addTo(this.map);
-            this.sidAndmarkerPair[sid] = newMarker;
+            this.userIDAndMarkerPair[userID] = newMarker;
         }
         catch(error){console.log("Failed to execute method CreateMarker in Map class: ", error)}
     }
 
-    RemoveMarker(sid){
+    RemoveMarker(id){
         try{
-            this.map.removeLayer(this.sidAndmarkerPair[sid]);
-            delete this.sidAndmarkerPair[sid];
+            this.map.removeLayer(this.userIDAndMarkerPair[id]);
+            delete this.userIDAndMarkerPair[id];
         }
         catch(error){"Failed to execute method RemoveMarker in Map class: ", error}
     }
 
-    RemoveAllOtherMarkersExcept(sidToSave){
+    RemoveAllOtherMarkersExcept(userIDToSave){
         try{
-            for(const sid in this.sidAndmarkerPair){
-                const isSidToRemove = sid !== sidToSave;
-                if (isSidToRemove){
-                    this.map.removeLayer(this.sidAndmarkerPair[sid]);
-                    delete this.sidAndmarkerPair[sid];
+            for(const userID in this.userIDAndMarkerPair){
+                const toRemove = Number(userID) !== Number(userIDToSave);
+                if (toRemove){
+                    this.map.removeLayer(this.userIDAndMarkerPair[userID]);
+                    delete this.userIDAndMarkerPair[userID];
                 }}
         }
         catch(error){console.log("Failed to execute method RemoveAllOtherMarkersExcept in Map class: ",error)}
     }
 
-    UpdateMarkerPosition(sid, newCoordination){ //coordination = {latitude:xxx, longitude:xxx}
-        try{this.sidAndmarkerPair[sid].setLatLng([newCoordination.latitude, newCoordination.longitude])}
+    UpdateMarkerPosition(userID, newCoordination){ //coordination = {latitude:xxx, longitude:xxx}
+        try{this.userIDAndMarkerPair[userID].setLatLng([newCoordination.latitude, newCoordination.longitude])}
         catch(error){console.log("Failed to execute method UpdateMarkerPosition in Map class: ", error)}
     }
 
-    UpdateMarkerImage(sid, imageUrl){
+    UpdateMarkerImage(imageUrl){
         try{
-            const marker = document.querySelector(`.leaflet-marker-pane img.sid${sid}`);
+            const marker = document.querySelector(`.leaflet-marker-pane img`);
             marker.src = imageUrl;
         }
         catch(error){console.log("Failed to execute method UpdateMarkerImage in Map class: ", error)}
     }
 
-    GetAllMarkersSID(){
-        try{return Object.keys(this.sidAndmarkerPair)}
-        catch(error){console.log("Failed to execute method GetAllMarkersSID: ", error)}
-    }
-
-    isMarkerCreated(sid){
-        try{return this.sidAndmarkerPair[sid] != undefined}
+    isMarkerCreated(userID){
+        try{return this.userIDAndMarkerPair[userID] != undefined}
         catch(error){console.log("Failed to execute method isMarkerCreated: ", error)}
     }
 }
