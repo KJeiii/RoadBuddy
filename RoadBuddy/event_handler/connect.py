@@ -14,9 +14,9 @@ def connect():
 
 # Listener for receiver event "store_userinfo" from client
 @socketio.on("store_userinfo")
-def store_userinfo(user):
-    RoadBuddy.event_handler.online_users.update_user_information(user["userID"], sid = user["userSID"])
-    RoadBuddy.event_handler.online_users.update_user_sid_category(request.sid, user["userID"])
+def store_userinfo(user_id):
+    RoadBuddy.event_handler.online_users.update_user_information(user_id, sid = request.sid)
+    RoadBuddy.event_handler.online_users.update_user_sid_category(request.sid, user_id)
 
 
 @socketio.on("sync_online_user")
