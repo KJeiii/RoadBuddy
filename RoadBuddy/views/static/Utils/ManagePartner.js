@@ -63,11 +63,11 @@ export function UpdatePartnersColor(partnersColorObject, userIDAndNamePairs, ...
     });
 }
 
-export function CreatePartner(userID, userSID, username, imageUrl, iconColor, coordination, partnerListDOMElement){
+export function CreatePartner(userID, username, imageUrl, iconColor, coordination, partnerListDOMElement){
     const//
         partnerHasAvatar = imageUrl !== null,
         imageUrlToRenderPartner = partnerHasAvatar ? imageUrl : CreateIconImage(username, iconColor);
     AppendUserInPartnerList(userID, username, imageUrlToRenderPartner, partnerListDOMElement);
-    map.CreateMarker(userSID, imageUrlToRenderPartner, coordination);
+    map.CreateMarker(userID, imageUrlToRenderPartner, coordination);
     ClearCanvasContext();
 }
