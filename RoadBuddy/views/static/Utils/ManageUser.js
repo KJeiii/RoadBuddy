@@ -54,9 +54,8 @@ export function ManipulateSessionStorage(setOrRemoveOrClear, ...rest){
     catch(error){console.log(error)}
 }
 
-export function EmitStoreUserInfoEvent(userSID, userID){
-    const userInfo = {userSID: userSID, userID: userID};
-    socket.emit("store_userinfo", userInfo);
+export function EmitStoreUserInfoEvent(userID){
+    socket.emit("store_userinfo", userID);
 }
 
 export function RenderUsername(username){
@@ -109,14 +108,14 @@ export function CreateIconImage(username, userColor){
     return imageUrl
 }
 
-export function ChangeIconColor(sid, username){
+export function ChangeIconColor(username){
     ClearCanvasContext();
     const//
         newColor = GetRandomIconColor(),
         newImageUrl = CreateIconImage(username, newColor);   
     ManipulateSessionStorage("set", {iconColor: newColor, image_url: newImageUrl});
     RenderAvatar(newImageUrl);
-    map.UpdateMarkerImage(sid, newImageUrl);
+    map.UpdateMarkerImage(newImageUrl);
     ClearCanvasContext();
 }
 
