@@ -29,7 +29,7 @@ socket.on("leave_team", (leavingUser) => {
     // remove leaving partner's marker and information in the partner list
     const isNotMe = leavingUser.sid !== socket.id;
     if (isNotMe){
-        map.RemoveMarker(leavingUser.sid);
+        map.RemoveMarker(leavingUser.user_id);
         RemoveUserFromPartnerList(leavingUser["user_id"])
     }
 })
