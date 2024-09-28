@@ -6,5 +6,5 @@ socket.on("initialization", () => {
 });
 
 socket.on("sync_online_user", (userIDArray) => {
-    onlineUsers.AppendUserID(userIDArray)
+    onlineUsers.AppendUserID(userIDArray);
 })
