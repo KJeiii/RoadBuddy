@@ -1,1 +1,0 @@
-export function UserCoordError(error) {console.log(`Error in drawing initial map: ${error}`)};
