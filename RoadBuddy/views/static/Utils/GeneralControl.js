@@ -80,6 +80,7 @@ export function ShowPannelContent(pannelCssSelector, contentType, toShow, ...tea
 
     if (pannelCssSelector === ".team-pannel" || pannelCssSelector === ".friend-pannel"){
         const//
+            pannel = document.querySelector(pannelCssSelector),
             pannelTitle = document.querySelector(".team-pannel .pannel-title"),
             search = document.querySelector(".team-pannel .search"),
             friendTitle = document.querySelector(".team-pannel .friend-title"),
@@ -103,16 +104,18 @@ export function ShowPannelContent(pannelCssSelector, contentType, toShow, ...tea
                 break;
                 
             case "invite":
-                friendOuter.style.height = "55%";
+                pannel.style.height = "50vh";
                 break
 
             case "start":
-                friendOuter.style.height = "55%";
                 break
 
             case "join":
                 friendTitle.style.display = "none";
                 friendOuter.style.display = "none";
+                pannel.style.height = "20vh";
+                pannel.style.width = "80%";
+                pannel.style.left = "10%";
                 break
 
             default:
