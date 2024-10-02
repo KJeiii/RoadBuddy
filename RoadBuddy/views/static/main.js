@@ -4,7 +4,7 @@ import { ManipulateSessionStorage, CheckUserStatus, ClearCanvasContext, CreateIc
 } from "./Utils/ManageUser.js";
 import { SearchTeams } from "./Utils/ManageTeam.js";
 import { SearchOldFriends, EmitUpdateOnlineStatusEvents } from "./Utils/ManageFriend.js";
-import { ClearList, RenderList, RenderOnlineStatus, InitializeAllPannelsTagAttributes, ResizeHTMLBodyHeight 
+import { ClearList, RenderList, RenderOnlineStatus, InitializeAllPannelsTagAttributes, ResizeHTMLBodyHeight, RenderTrackingMode 
 } from "./Utils/GeneralControl.js";
 import * as GeneralEvents from "./Utils/GeneralEvent.js";
 import { AddTeamClickEvent, AddTeamHoverEvent } from "./Utils/TeamEvent.js";
@@ -22,7 +22,6 @@ CheckUserStatus()
 
         const {user_id:userID, username, email} = result.data;
         // store user info
-        ManipulateSessionStorage("clear");
         ManipulateSessionStorage("set", {...result.data, sid: socket.id, iconColor: GetRandomIconColor()});
         EmitStoreUserInfoEvent(userID);
 
@@ -33,10 +32,24 @@ CheckUserStatus()
                         CreateIconImage(username, window.sessionStorage.getItem("iconColor"));
         (!hasAvatar) && ManipulateSessionStorage("set", {image_url: imageUrl});
         ClearCanvasContext();
-        // ************** 這邊要改抓真實位置*******************
-        const testCoord = {latitude: 24.982 + Math.random()*0.006, longitude: 121.534 + Math.random()*0.006};
-        map.CreateMap(testCoord);
-        map.CreateMarker(userID, imageUrl, testCoord);
+
+        // create map and marker; start updating position
+        if (navigator.geolocation){
+            navigator.geolocation.getCurrentPosition((position)=>{
+                const//
+                {latitude, longitude} = position.coords,
+                initialCoordination = {latitude: latitude, longitude: longitude};
+                ManipulateSessionStorage("set", {initialLatitude: latitude, initialLongitude: longitude});
+                map.CreateMap(initialCoordination);
+                map.CreateMarker(userID, imageUrl, initialCoordination);
+            });
+            map.TrackRealtimePostion();
+            RenderTrackingMode("realtime");
+        }
+        else{
+            map.ChangePositionRandomly();
+            RenderTrackingMode("random");
+        }
 
         // update main-pannel description and configure pannel username input
         RenderUsername(username);
@@ -111,20 +124,6 @@ CheckUserStatus()
 
 // Add events to general DOM elements
 for (let event of GeneralEvents.AllEvents) {event()}    
-
-
-
-
-
-// ----- draw initial map -----
-// if (window.navigator.geolocation) {
-//     try {
-//         window.navigator.geolocation.getCurrentPosition(drawMap, userCoordError);
-//     }
-//     catch(error) {console.log(`Error in getting user postion : ${error}`)}
-// }
-
-
 
 
 
