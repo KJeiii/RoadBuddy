@@ -87,8 +87,7 @@ export class Map{
             userID = Number(window.sessionStorage.getItem("user_id"));
         delete dataToUpdatePosition["friendList"];
         if (notInTeam && this.isMarkerCreated(userID)){
-            myCoord = {...myCoord, ...newCoordination}
-            this.UpdateMarkerPosition(userID, myCoord);
+            this.UpdateMarkerPosition(userID, newCoordination);
             return
         }
         socket.emit("position", dataToUpdatePosition);
