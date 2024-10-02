@@ -166,7 +166,7 @@ export function SwitchSettingBtn(...manualSwitch){
     const//
         btnsForMainPannel = [DOMElements.logout, DOMElements.message, DOMElements.config], 
         btnsForTrackingPannel = [DOMElements.invite, DOMElements.leave],
-        btnsForBoth = [document.querySelector("div.tracking-mode")];
+        btnsForBoth = [document.querySelector("div.mode")];
     
     const onMainPannel = (DOMElements.mainPannel.style.display === "block");
 
@@ -201,9 +201,9 @@ export function SwitchPannel(toPannelType){
         pannelList = [
             ...document.querySelectorAll("div[class$='pannel']"),
             document.querySelector("div.configure-response"),
-            document.querySelector("div.tracking-mode-prompt")
+            document.querySelector("div.mode-prompt")
             ],
-        pannelsExceptMain = ["friend", "team", "message", "configure", "tracking-mode"],
+        pannelsExceptMain = ["friend", "team", "message", "configure", "mode"],
         showDisplayStyle = (pannelsExceptMain.includes(toPannelType)) ? "flex" : "block";
     pannelList.forEach((pannel)=>{
         const typeOfPannel = pannel.getAttribute("class").split("-")[0];
@@ -763,9 +763,9 @@ export function GetUserInitialPosition(){
 
 export function RenderTrackingMode(...specifiedMode){ //specifiedMode = [mode]
     const//
-        modeCheckbox = document.querySelector("input#tracking-mode"),
+        modeCheckbox = document.querySelector("input#mode"),
         isRealtimeMode = modeCheckbox.checked || specifiedMode[0] === "realtime",
-        [randomOption, realtimeOption] = document.querySelectorAll("div.tracking-mode-prompt__switch-outer p.option");
+        [randomOption, realtimeOption] = document.querySelectorAll("div.mode-prompt__switch-outer p.option");
     randomOption.style.backgroundColor = (isRealtimeMode) ? "#ccc" : "#2196F3";
     realtimeOption.style.backgroundColor = (isRealtimeMode) ? "#2196F3" : "#ccc";
     modeCheckbox.checked = (isRealtimeMode) ? true : false;
