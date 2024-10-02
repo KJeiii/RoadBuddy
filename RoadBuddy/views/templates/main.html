@@ -22,7 +22,7 @@
 <body>
     <div class="setting">
         <div class="setting-btn"></div>
-        <div class="tracking-mode">追蹤設定</div>
+        <div class="mode">追蹤設定</div>
         <div class="configure">個人資料</div>
         <div class="message">訊息</div>
         <div class="logout">登出</div>
@@ -237,13 +237,13 @@
         </div>
     </div>
 
-    <div class="tracking-mode-prompt">
+    <div class="mode-prompt">
         <div class="close"></div>
-        <p class="tracking-mode-prompt__title">位置追蹤模式</p>
-        <div class="tracking-mode-prompt__switch-outer">
+        <p class="mode-prompt__title">位置追蹤模式</p>
+        <div class="mode-prompt__switch-outer">
             <p class="option">隨機變化</p>
-            <label class="switch" for="tracking-mode">
-                <input type="checkbox" id="tracking-mode">
+            <label class="switch" for="mode">
+                <input type="checkbox" id="mode">
                 <div class="slider">
                     <div class="dot"></div>
                 </div>
@@ -257,7 +257,6 @@
     <script>
         // build global variables
         let//
-        myCoord = {},
         sidReference,
         ownColor = `rgb(${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)})`,
         partnersColor = {},
