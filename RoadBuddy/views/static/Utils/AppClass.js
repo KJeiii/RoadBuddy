@@ -15,6 +15,8 @@ export class Map{
     constructor(){}
     userIDAndMarkerPair = {}; // {id: markerobject}
     map = null;
+    setIntervalID = null;
+    watchPostionID = null;
 
     CreateMap(coordination){
         try{
@@ -23,12 +25,6 @@ export class Map{
                 maxZoom: 19,
                 attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
                 }).addTo(this.map);
-            // let markerOption = {
-            //     color: ownColor,
-            //     fillOpacity: 0.7
-            // };
-            // marker = L.marker([initialCoord.latitude, initialCoord.longitude], {icon: myIcon}).addTo(map);
-            // 如果是要用其他marker，{icon:myIcon}這組變數要改
         }
         catch(error){console.log("Failed to execute method CreateMap in Map class: ", error)}
     }
@@ -81,6 +77,52 @@ export class Map{
     isMarkerCreated(userID){
         try{return this.userIDAndMarkerPair[userID] != undefined}
         catch(error){console.log("Failed to execute method isMarkerCreated: ", error)}
+    }
+
+    UpdatePosition(newCoordination){
+        const//
+            dataToUpdatePosition = { ...window.sessionStorage, coordination: {...newCoordination}},
+            notInTeam = window.sessionStorage.getItem("team_id") === "" 
+                    || window.sessionStorage.getItem("team_id") === null,
+            userID = Number(window.sessionStorage.getItem("user_id"));
+        delete dataToUpdatePosition["friendList"];
+        if (notInTeam && this.isMarkerCreated(userID)){
+            myCoord = {...myCoord, ...newCoordination}
+            this.UpdateMarkerPosition(userID, myCoord);
+            return
+        }
+        socket.emit("position", dataToUpdatePosition);
+    }
+
+    ChangePositionRandomly(){
+        if (this.watchPostionID !== null){
+            navigator.geolocation.clearWatch(this.watchPostionID);
+            this.watchPostionID = null;
+        }
+        if (this.setIntervalID === null){
+            this.setIntervalID = setInterval(()=>{
+                const//
+                {initialLatitude, initialLongitude} = sessionStorage,
+                randomCoords = {
+                    latitude: Number(initialLatitude) + Math.random()*0.006, 
+                    longitude: Number(initialLongitude) + Math.random()*0.006
+                };
+                this.UpdatePosition(randomCoords);
+            }, 1000)
+        }
+    }
+
+    TrackRealtimePostion(){
+        if (this.setIntervalID !== null) {
+            clearInterval(this.setIntervalID);
+            this.setIntervalID = null;
+        }
+        if (this.watchPostionID === null){
+            this.watchPostionID = navigator.geolocation.watchPosition((position)=>{
+                const newCoordination = {latitude: position.coords.latitude, longitude: position.coords.longitude};
+                this.UpdatePosition(newCoordination);
+            })
+        }
     }
 }
 
