@@ -34,7 +34,7 @@ label.avatar:hover,
 img.modify:hover,
 .configure-outer .image .undo:hover,
 .user-info .icon:hover,
-.tracking-mode
+.mode
  {
     cursor: pointer;
 }
@@ -71,7 +71,7 @@ img.modify:hover,
 .invite,
 .leave,
 .message,
-.tracking-mode {
+.mode {
     display: none;
     margin: 5px 0;
     text-align: end;
@@ -824,7 +824,7 @@ div.update-password__button button{
 .team-create-response,
 .team-join-response,
 .team-join-request,
-.tracking-mode-prompt
+.mode-prompt
 {
     display: none;
     position: absolute;
@@ -842,7 +842,7 @@ div.update-password__button button{
 
 }
 
-.tracking-mode-prompt{
+.mode-prompt{
     width: 40vw;
     left: 30vw;
 }
@@ -935,12 +935,12 @@ div.update-password__button button{
     display: none;
 }
 
-/* The switch on tracking-mode prompt */
-p.tracking-mode-prompt__title{
+/* The switch on mode prompt */
+p.mode-prompt__title{
     margin: 20px 0 0 0;
 }
 
-div.tracking-mode-prompt__switch-outer p.option{
+div.mode-prompt__switch-outer p.option{
     width: 100px;
     height: 40px;
     border-radius: 20px;
@@ -949,7 +949,7 @@ div.tracking-mode-prompt__switch-outer p.option{
     transition: 0.4s;
 }
 
-div.tracking-mode-prompt__switch-outer{
+div.mode-prompt__switch-outer{
     display: flex;
     align-items: center;
     justify-content: center;
@@ -990,7 +990,7 @@ div.dot {
     border-radius: 50%;
 }
 
-input#tracking-mode:checked + div.slider div.dot {
+input#mode:checked + div.slider div.dot {
     transform: translateX(26px);
 }
 
@@ -1011,7 +1011,7 @@ input#tracking-mode:checked + div.slider div.dot {
     .invite,
     .leave,
     .message,
-    .tracking-mode {
+    .mode {
         font-size: 20px;
     }
 
