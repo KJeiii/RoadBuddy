@@ -22,6 +22,7 @@
 <body>
     <div class="setting">
         <div class="setting-btn"></div>
+        <div class="tracking-mode">追蹤設定</div>
         <div class="configure">個人資料</div>
         <div class="message">訊息</div>
         <div class="logout">登出</div>
@@ -233,6 +234,21 @@
         <div class="update-password__button">
             <button class="cancel">取消</button>
             <button class="update">確認更改</button>    
+        </div>
+    </div>
+
+    <div class="tracking-mode-prompt">
+        <div class="close"></div>
+        <p class="tracking-mode-prompt__title">位置追蹤模式</p>
+        <div class="tracking-mode-prompt__switch-outer">
+            <p class="option">隨機變化</p>
+            <label class="switch" for="tracking-mode">
+                <input type="checkbox" id="tracking-mode">
+                <div class="slider">
+                    <div class="dot"></div>
+                </div>
+            </label>
+            <p class="option">即時追蹤</p>
         </div>
     </div>
 
