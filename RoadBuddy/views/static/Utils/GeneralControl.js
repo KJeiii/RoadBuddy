@@ -2,6 +2,7 @@ import { messages } from "./AppClass.js";
 import * as DOMElements from "./DOMElements.js";
 import { UpdateFriends } from "./ManageFriend.js";
 import { DeleteMessage } from "./ManageMessage.js";
+import { ManipulateSessionStorage } from "./ManageUser.js";
 
 export function InitializeAllPannelsTagAttributes(){
     const {availWidth} = GetUserScreenAvailSize();
@@ -164,9 +165,14 @@ export function SwitchSettingBtn(...manualSwitch){
 
     const//
         btnsForMainPannel = [DOMElements.logout, DOMElements.message, DOMElements.config], 
-        btnsForTrackingPannel = [DOMElements.invite, DOMElements.leave];
+        btnsForTrackingPannel = [DOMElements.invite, DOMElements.leave],
+        btnsForBoth = [document.querySelector("div.tracking-mode")];
     
     const onMainPannel = (DOMElements.mainPannel.style.display === "block");
+
+    // both pannels of main and tracking
+    btnsForBoth.forEach((btn) => {btn.style.display = (btn.style.display !== "block") ? "block" : "none";});
+
     // on main pannel
     if (onMainPannel) {
         btnsForMainPannel.forEach((btn) => {btn.style.display = (btn.style.display !== "block") ? "block" : "none";});
@@ -194,9 +200,10 @@ export function SwitchPannel(toPannelType){
     const//
         pannelList = [
             ...document.querySelectorAll("div[class$='pannel']"),
-            document.querySelector("div.configure-response")
+            document.querySelector("div.configure-response"),
+            document.querySelector("div.tracking-mode-prompt")
             ],
-        pannelsExceptMain = ["friend", "team", "message", "configure"],
+        pannelsExceptMain = ["friend", "team", "message", "configure", "tracking-mode"],
         showDisplayStyle = (pannelsExceptMain.includes(toPannelType)) ? "flex" : "block";
     pannelList.forEach((pannel)=>{
         const typeOfPannel = pannel.getAttribute("class").split("-")[0];
@@ -735,4 +742,31 @@ export function GetFeasibleFontStyle(userScreenWidth, fontFeasibleStyleReference
 export function ResizeHTMLBodyHeight(){
     const {innerHeight} = GetUserWindowInnerSize();
     document.body.style.height = `${innerHeight}px`;
+}
+
+export function GetUserInitialPosition(){
+    try{
+        const options = {maximumAge: 0};
+        if (window.navigator.geolocation) {
+            window.navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const {latitude, longitude} = position.coords;
+                    ManipulateSessionStorage("set", {initialLatitude: latitude, initialLongitude: longitude});
+                },
+                (error)=>{console.log(error)},
+                options
+            ); 
+        }  
+    }
+    catch(error){console.log("Fail to execute GetUserInitialPosition: ", error)}
+}
+
+export function RenderTrackingMode(...specifiedMode){ //specifiedMode = [mode]
+    const//
+        modeCheckbox = document.querySelector("input#tracking-mode"),
+        isRealtimeMode = modeCheckbox.checked || specifiedMode[0] === "realtime",
+        [randomOption, realtimeOption] = document.querySelectorAll("div.tracking-mode-prompt__switch-outer p.option");
+    randomOption.style.backgroundColor = (isRealtimeMode) ? "#ccc" : "#2196F3";
+    realtimeOption.style.backgroundColor = (isRealtimeMode) ? "#2196F3" : "#ccc";
+    modeCheckbox.checked = (isRealtimeMode) ? true : false;
 }
