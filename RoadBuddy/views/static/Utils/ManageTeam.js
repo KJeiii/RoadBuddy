@@ -35,38 +35,56 @@ export async function CreateNewTeam(userID, teamName){
     return result
 }
 
-export function EmitEnterTeamEvent(accept, enterType, teamID, imageUrl, iconColor, coordination){
+export function EmitEnterTeamEvent(accept, enterType, teamID, imageUrl, iconColor, ...coordination){
+    const initialCoordination = (coordination.length !== 0) ? 
+                                coordination[0] : 
+                                {
+                                    latitude: Number(sessionStorage.getItem("initialLatitude")),
+                                    longitude: Number(sessionStorage.getItem("initialLongitude"))
+                                };
     const enterTeamInfo = {
         accept: accept,
         enter_type: enterType,
         team_id: teamID,
         imageUrl: imageUrl,
         iconColor: iconColor,
-        coordination: coordination
+        coordination: initialCoordination
     };
     socket.emit("enter_team", enterTeamInfo)
 }
 
-export function EmitInviteTeamEvent(senderSID, teamID, senderImageUrl, senderIconColor, senderCoordination, friendIDsToInviteArray){
+export function EmitInviteTeamEvent(senderSID, teamID, senderImageUrl, senderIconColor, friendIDsToInviteArray, ...senderCoordination){
+    const initialCoordination = (senderCoordination.length !== 0) ?
+                                senderCoordination[0] :
+                                {
+                                    latitude: Number(sessionStorage.getItem("initialLatitude")),
+                                    longitude: Number(sessionStorage.getItem("initialLongitude"))
+                                };
     const invitation = {
         senderSID: senderSID,
         teamID: teamID,
         senderImageUrl: senderImageUrl,
         senderIconColor: senderIconColor,
-        senderCoordination: senderCoordination,
+        senderCoordination: initialCoordination,
         friendIDsToInvite: friendIDsToInviteArray            
     };
     socket.emit("team_invite", invitation)
 }
 
-export function EmitJoinTeamRequestEvent(userSID, userID, username, imageUrl, iconColor, coordination, teamID){
+export function EmitJoinTeamRequestEvent(userSID, userID, username, imageUrl, iconColor, teamID, ...coordination){
+    const initialCoordination = (coordination.length !== 0) ?
+                                coordination[0] :
+                                {
+                                    latitude: Number(sessionStorage.getItem("initialLatitude")),
+                                    longitude: Number(sessionStorage.getItem("initialLongitude"))
+                                };
     const applicant = {
         userSID: userSID,
         userID: userID,
         username: username,
         imageUrl: imageUrl,
         iconColor: iconColor,
-        coordination: coordination,
+        coordination: initialCoordination,
         teamID: teamID
     };
     socket.emit("join_team_request", applicant);
