@@ -6,8 +6,7 @@ import { ControlFriendMsgBox, ClearList, RenderList, SwitchSettingBtn, SwitchPul
     ShowPannelContent, SwitchMenuToggle, onWhichPannelContent, SwitchPannel, SwitchMenuTitle, 
     isPannelPulledUp, ControlTeamMsgBox, SwitchPannelOnAndOff, RenderOnlineStatus, ReRenderList, 
     isInputValuesConsistent, ClearErrorMessage, VerifyInputValue, isInputFilledIn, isInputValuesUnique,
-    RenderResponse
-} from "./GeneralControl.js";
+    RenderResponse, RenderTrackingMode } from "./GeneralControl.js";
 import { CreateNewTeam, SearchTeams, EmitEnterTeamEvent, EmitInviteTeamEvent, EmitJoinTeamRequestEvent, 
     EmitAcceptTeamRequestEvent, EmitLeaveTeamEvent } from "./ManageTeam.js";
 import { AddTeamClickEvent, AddTeamHoverEvent } from "./TeamEvent.js";
@@ -178,6 +177,21 @@ export function AddEventsToSetting() {
             })
             .catch((error) => {console.log(error)})
     })
+
+    // ----- tracking mode prompt
+    // show prompt
+    document.querySelector("div.tracking-mode").addEventListener("click", ()=>{
+        document.querySelector(".tracking-mode-prompt").style.display = "block";
+        SwitchSettingBtn({"all": "none"});
+    })
+
+    // render tracking mode on tracking mode prompt
+    document.querySelector("input#tracking-mode").addEventListener("click", ()=>{
+        RenderTrackingMode();
+        const isRealtimeMode = document.querySelector("input#tracking-mode").checked;
+        if (isRealtimeMode){map.TrackRealtimePostion()}
+        else{map.ChangePositionRandomly()}
+    });
 }
 
 
