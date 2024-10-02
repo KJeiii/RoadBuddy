@@ -180,15 +180,15 @@ export function AddEventsToSetting() {
 
     // ----- tracking mode prompt
     // show prompt
-    document.querySelector("div.tracking-mode").addEventListener("click", ()=>{
-        document.querySelector(".tracking-mode-prompt").style.display = "block";
+    document.querySelector("div.mode").addEventListener("click", ()=>{
+        document.querySelector(".mode-prompt").style.display = "block";
         SwitchSettingBtn({"all": "none"});
     })
 
     // render tracking mode on tracking mode prompt
-    document.querySelector("input#tracking-mode").addEventListener("click", ()=>{
+    document.querySelector("input#mode").addEventListener("click", ()=>{
         RenderTrackingMode();
-        const isRealtimeMode = document.querySelector("input#tracking-mode").checked;
+        const isRealtimeMode = document.querySelector("input#mode").checked;
         if (isRealtimeMode){map.TrackRealtimePostion()}
         else{map.ChangePositionRandomly()}
     });
@@ -412,8 +412,9 @@ export function AddEventsToTeam() {
         //Issue of not having avatar was tacked in main.js at the beginning of rendering main page
   
         // send request for joining team
-        EmitInviteTeamEvent(socket.id, teamIDToJoin, imageUrl, iconColor, myCoord, friendIdsToAdd);
-        EmitEnterTeamEvent(true, "create", teamIDToJoin, imageUrl, iconColor, myCoord);
+        EmitInviteTeamEvent(socket.id, teamIDToJoin, imageUrl, iconColor, friendIdsToAdd);
+        EmitEnterTeamEvent(true, "create", teamIDToJoin, imageUrl, iconColor);
+
         // update team using status to other uses
         socket.emit("update_team_status");
     })
@@ -444,7 +445,7 @@ export function AddEventsToTeam() {
         ControlTeamMsgBox(".team-invite-prompt", "none");
 
         // Organize data emitted to listener "enter_team" on server
-        EmitEnterTeamEvent(true, "join", team_sender_info_cache.team_id, imageUrl, iconColor, myCoord);
+        EmitEnterTeamEvent(true, "join", team_sender_info_cache.team_id, imageUrl, iconColor);
         ManipulateSessionStorage("set", {team_id: team_sender_info_cache["team_id"]});
 
         // Create partner record in partner table in database
@@ -522,7 +523,7 @@ export function AddEventsToTeam() {
             {team_id: teamID, iconColor, image_url: imageUrl} = window.sessionStorage;
 
         UpdatePartnersColor(partnersColor, selectedFriends);
-        EmitInviteTeamEvent(socket.id, teamID, imageUrl, iconColor, myCoord, friendIDsToInvite);
+        EmitInviteTeamEvent(socket.id, teamID, imageUrl, iconColor, friendIDsToInvite);
 
         // close team pannel and go back to tracking pannel
         SwitchPannel("tracking");
@@ -540,7 +541,7 @@ export function AddEventsToTeam() {
         const// 
             {user_id: userID, username, image_url:imageUrl, iconColor} = window.sessionStorage,
             teamID = document.querySelector(".team-pannel .pannel-title").getAttribute("id");
-        EmitJoinTeamRequestEvent(socket.id, userID, username, imageUrl, iconColor, myCoord, teamID);
+        EmitJoinTeamRequestEvent(socket.id, userID, username, imageUrl, iconColor, teamID);
         SwitchPannel("main");
     })
 
