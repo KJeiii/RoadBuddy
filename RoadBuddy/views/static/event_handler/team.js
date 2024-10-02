@@ -61,7 +61,7 @@ socket.on("accept_team_request", (acceptApplicationResponse) => {
 
     // Organize data emitted to listener "enter_team" on server
     const {user_id: userID, username, image_url: imageUrl, iconColor} = window.sessionStorage;
-    EmitEnterTeamEvent(true, "join", teamID, imageUrl, iconColor, myCoord);
+    EmitEnterTeamEvent(true, "join", teamID, imageUrl, iconColor);
     ManipulateSessionStorage("set", {team_id: teamID});
 
     // switch to tracking pannel
