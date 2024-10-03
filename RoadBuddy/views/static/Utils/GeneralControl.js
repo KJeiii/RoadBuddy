@@ -770,3 +770,18 @@ export function RenderTrackingMode(...specifiedMode){ //specifiedMode = [mode]
     realtimeOption.style.backgroundColor = (isRealtimeMode) ? "#2196F3" : "#ccc";
     modeCheckbox.checked = (isRealtimeMode) ? true : false;
 }
+
+export function GetSelectedUsersFromPannel(pannelCssSelector){
+    const//
+        allCheckboxesOnPannel = document.querySelectorAll(`${pannelCssSelector} input[type=checkbox]`),
+        selectedUsersArray = []; //[{id:XXX, name:XXX}, {}, {}.....]
+    for (const checkbox of allCheckboxesOnPannel) {
+        if (checkbox.checked) {
+            selectedUsersArray.push({
+                id: Number(checkbox.getAttribute("id")), 
+                name: checkbox.getAttribute("name")
+            })
+        }
+    }
+    return selectedUsersArray
+}
