@@ -1,18 +1,18 @@
 import * as DOMElements from "./DOMElements.js";
-import { SearchNewFriends, RenderSearchResult, SearchOldFriends, FetchSelectedItemIDsByCondition,
-    CheckRelationship, SendFriendRequest, EmitFriendRequestResultEvent, UpdateFriends
+import { SearchNewFriends, RenderSearchResult, SearchOldFriends, CheckRelationship, 
+    SendFriendRequest, EmitFriendRequestResultEvent, UpdateFriends
 } from "./ManageFriend.js";
 import { ControlFriendMsgBox, ClearList, RenderList, SwitchSettingBtn, SwitchPullAndDropBtn, 
     ShowPannelContent, SwitchMenuToggle, onWhichPannelContent, SwitchPannel, SwitchMenuTitle, 
     isPannelPulledUp, ControlTeamMsgBox, SwitchPannelOnAndOff, RenderOnlineStatus, ReRenderList, 
     isInputValuesConsistent, ClearErrorMessage, VerifyInputValue, isInputFilledIn, isInputValuesUnique,
-    RenderResponse, RenderTrackingMode } from "./GeneralControl.js";
+    RenderResponse, RenderTrackingMode, GetSelectedUsersFromPannel } from "./GeneralControl.js";
 import { CreateNewTeam, SearchTeams, EmitEnterTeamEvent, EmitInviteTeamEvent, EmitJoinTeamRequestEvent, 
     EmitAcceptTeamRequestEvent, EmitLeaveTeamEvent } from "./ManageTeam.js";
 import { AddTeamClickEvent, AddTeamHoverEvent } from "./TeamEvent.js";
 import { ChangeIconColor, ManipulateSessionStorage, RenderAvatar, 
     RenderUsername, CollectInformationToUpdate, UpdateUserInformation, UpdatePassword, VerifyPasswordInputs } from "./ManageUser.js";
-import { AppendUserInPartnerList, BuildPartnership, CreatePartner, UpdatePartnersColor} from "./ManagePartner.js";
+import { AppendUserInPartnerList, BuildPartnership, CreatePartner} from "./ManagePartner.js";
 import { map, messages, onlineUsers, teams} from "./AppClass.js";
 import { RenderMessageBtn, SearchMessage } from "./ManageMessage.js";
 import { ClearInputValues, PreviewAvatar, SwitchAvatarUndoBtn, SwitchChangePasswordPrompt } from "./ManageConfigure.js";
@@ -276,8 +276,7 @@ export function AddEventsToFriend() {
     // --- send add friend request ---
     DOMElements.addFriendBtn.addEventListener("click", () => {
         const//     
-            selectedItemFrom = FetchSelectedItemIDsByCondition(null),
-            selectedFriends = selectedItemFrom(".friend-pannel"),
+            selectedFriends = GetSelectedUsersFromPannel(".friend-pannel"),
             selectedFriedIDs = selectedFriends.map((friend) => friend.id);
 
         //  response if no ckeckbox is checked
@@ -400,8 +399,7 @@ export function AddEventsToTeam() {
         SwitchSettingBtn({"all":"none"});
         // Organize data emitted to listener "enter_team" on server
         const//
-            selectedItemsFrom = FetchSelectedItemIDsByCondition(null),
-            selectedFriends = selectedItemsFrom(".team-pannel"),
+            selectedFriends = GetSelectedUsersFromPannel(".team-pannel"),
             friendIdsToAdd = selectedFriends.map(friend => friend.id);
 
         // create owner information in partner-list;others will be created when they join in
@@ -517,14 +515,19 @@ export function AddEventsToTeam() {
     // send invitation
     DOMElements.inviteTripBtn.addEventListener("click", () => {
         const//
-            selectItemsfrom = FetchSelectedItemIDsByCondition("inviteJoiningTeam", {partnersColor: partnersColor}),
-            selectedFriends = selectItemsfrom(".team-pannel"),
-            friendIDsToInvite = selectedFriends.map(friend => friend.id),
-            {team_id: teamID, iconColor, image_url: imageUrl} = window.sessionStorage;
-
-        UpdatePartnersColor(partnersColor, selectedFriends);
-        EmitInviteTeamEvent(socket.id, teamID, imageUrl, iconColor, friendIDsToInvite);
-
+            selectedFriends = GetSelectedUsersFromPannel(".team-pannel"),
+            partnerIDsArray = Array(
+                ...document.querySelectorAll("div.partner-list div.item")).map(partner => Number(partner.getAttribute("id")));
+        if (partnerIDsArray.length > 0){
+            const//
+                friendIDsToInvite = [],
+                {team_id: teamID, iconColor, image_url: imageUrl} = window.sessionStorage;
+            selectedFriends.forEach(friend => {
+                const notJoinedYet = !partnerIDsArray.includes(friend.id);
+                if(notJoinedYet){friendIDsToInvite.push(friend.id)}
+            });
+            EmitInviteTeamEvent(socket.id, teamID, imageUrl, iconColor, friendIDsToInvite);
+        }                
         // close team pannel and go back to tracking pannel
         SwitchPannel("tracking");
     })
