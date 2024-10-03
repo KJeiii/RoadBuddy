@@ -19,9 +19,9 @@ export function AddTeamClickEvent(teamItemCssSelector, ...onlineTeamArray){
     if (teamItemCssSelector === ".join-list .item"){
         for ( let item of teamList) {
             // 1. Team in use
-            const teamIsInUse = (onlineTeamArray[0].length === 0) ? 
+            const teamIsInUse = (onlineTeamArray.length === 0) ? 
                                 false : 
-                                onlineTeamArray[0].includes(item.getAttribute("id"));
+                                onlineTeamArray.includes(item.getAttribute("id"));
 
             if (teamIsInUse) {item.addEventListener("click", function() {
                 SwitchPannel("team");
