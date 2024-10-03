@@ -4,7 +4,7 @@ import { AppendUserInPartnerList, CreatePartner, RemoveUserFromPartnerList } fro
 import { AddTeamClickEvent, AddTeamHoverEvent } from "../Utils/TeamEvent.js";
 import { ManipulateSessionStorage } from "../Utils/ManageUser.js";
 import { EmitEnterTeamEvent } from "../Utils/ManageTeam.js";
-import { map } from "../Utils/AppClass.js";
+import { map, teams } from "../Utils/AppClass.js";
 
 // ----- listener for receiving event "team_invite" from server -----
 socket.on("team_invite", (data) => {
@@ -35,12 +35,12 @@ socket.on("leave_team", (leavingUser) => {
 })
 
 socket.on("update_team_status", (teamArray) => {
-    // update global var
-    onlineTeamArray = teamArray;
+    // update joinTeamArray
+    teams.UpdateOnlineTeam(teamArray);
     ClearList(".join-list");
-    RenderList(".join-list", joinedTeamArray);
-    RenderOnlineStatus(".join-list .item", onlineTeamArray);
-    AddTeamClickEvent(".join-list .item", onlineTeamArray);
+    RenderList(".join-list", teams.GetJoinedTeams());
+    RenderOnlineStatus(".join-list .item", teams.GetOnlineTeams());
+    AddTeamClickEvent(".join-list .item", ...teams.GetOnlineTeams());
     AddTeamHoverEvent(".join-list .item");
 })
 
