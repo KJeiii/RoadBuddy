@@ -63,40 +63,6 @@ export async function SearchOldFriends(userID){ //userID
     }
 }
 
-export function CreateItemFetchingCondition(condtionType, ...conditionInfo){
-    switch(condtionType){
-        case null:
-            return null
-        case "makeNewFriend":
-            return null
-        case "inviteJoiningTeam":
-            return !Object.keys(conditionInfo[0].partnersColor).includes(conditionInfo[0].itemID)
-    }
-}
-
-export function FetchSelectedItemIDsByCondition(conditionType, ...reference){
-    return function(pannelCssSelector){
-        let//
-        selectedCheckboxes = document.querySelectorAll(`${pannelCssSelector} input[type=checkbox]`), //.friends-pannel
-        itemIDAndNamePairs = []; //[{id:XXX, name:XXX}, {}, {}.....]
-        for ( let checkbox of selectedCheckboxes) {
-            const//
-                itemID = checkbox.getAttribute("id")*1,
-                itemName = checkbox.getAttribute("name"),
-                fetchingCondition = CreateItemFetchingCondition(conditionType, 
-                    {
-                        ...reference[0],
-                        itemID: itemID
-                    }),
-                criteria = (fetchingCondition !== null) ? 
-                (checkbox.checked && fetchingCondition) : checkbox.checked; //!Object.keys(partnersColor).includes(itemID)
-            if ( criteria ) { itemIDAndNamePairs.push({id: itemID, name: itemName})}
-        }
-        return itemIDAndNamePairs
-    }
-
-}
-
 export function CheckRelationship(selectedFriendIDs, oldFriendList){
     // find all old friends user_id
     let oldFriendId = [];
