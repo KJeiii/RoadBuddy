@@ -209,10 +209,56 @@ export class OnlineUsers{
     }
 }
 
+export class Teams {
+    constructor(){}
+    onlineTeamArray = []; 
+    createdTeamArray = [];
+    joinedTeamArray = [];
+
+    UpdateOnlineTeam(onlineTeamIDArray){
+        try{this.onlineTeamArray = onlineTeamIDArray}
+        catch(error){console.log("Failed to execute method UpdateOnlineTeam in Teams class: ", error)}
+    }
+
+    isTeamOnline(teamID){
+        try{return this.onlineTeamArray.includes(teamID)}
+        catch(error){console.log("Failed to execute method isTeamOnline in Teams class: ", error)}
+    }
+
+    GetOnlineTeams(){
+        try{return this.onlineTeamArray}
+        catch(error){console.log("Failed to execute method GetOnlineTeams in Teams class: ", error)}
+    }
+
+    UpdateCreatedTeam(...createdTeamIDArray){
+        try{
+            createdTeamIDArray.forEach((teamID)=>{
+                if (!this.createdTeamArray.includes(teamID)) {this.createdTeamArray.push(teamID)}
+            })
+        }
+        catch(error){console.log("Failed to execute method UpdateCreatedTeam in Teams class: ", error)}
+    }
+
+    UpdateJoinedTeam(...joinedTeamIDArray){
+        try{
+            joinedTeamIDArray.forEach((teamID)=>{
+                if (!this.joinedTeamArray.includes(teamID)) {this.joinedTeamArray.push(teamID)}
+            })
+        }
+        catch(error){console.log("Failed to execute method UpdateJoinedTeam in Teams class: ", error)}
+    }
+
+    GetJoinedTeams(){
+        try{return this.joinedTeamArray}
+        catch(error){console.log("Failed to execute method GetJoinedTeam in Teams class: ", error)}
+    }
+}
+
 // initialize objects
 export const//
     onlineFriends = new OnlineFriends(),
     messages = new Messages(),
     onlineUsers = new OnlineUsers(),
-    map = new Map();
+    map = new Map(),
+    teams = new Teams();
 
