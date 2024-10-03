@@ -1,4 +1,4 @@
-import { messages, map} from "./Utils/AppClass.js";
+import { messages, map, teams} from "./Utils/AppClass.js";
 import { ManipulateSessionStorage, CheckUserStatus, ClearCanvasContext, CreateIconImage, 
     GetRandomIconColor, RenderAvatar, RenderEmail, RenderUsername, EmitStoreUserInfoEvent 
 } from "./Utils/ManageUser.js";
@@ -77,8 +77,8 @@ CheckUserStatus()
         // render team list
         // 1. created team list
         SearchTeams(userID, "created")
-            .then((result) => {
-                createdTeamArray = [...result.createdTeamList];
+            .then((result) => {                
+                teams.UpdateCreatedTeam(...result.createdTeamList);
                 ClearList(".create-list");
                 RenderList(".create-list", result.createdTeamList);
                 AddTeamClickEvent(".create-list .item");
@@ -91,11 +91,11 @@ CheckUserStatus()
         // 2. joined team list 
         SearchTeams(userID, "joined")
             .then((result) => {
-                joinedTeamArray = [...result.joinedTeamList];
+                teams.UpdateJoinedTeam(...result.joinedTeamList);
                 ClearList(".join-list");
                 RenderList(".join-list", result.joinedTeamList);
-                RenderOnlineStatus(".join-list .item", onlineTeamArray);
-                AddTeamClickEvent(".join-list .item", onlineTeamArray);
+                RenderOnlineStatus(".join-list .item", teams.GetOnlineTeams());
+                AddTeamClickEvent(".join-list .item", ...teams.GetOnlineTeams());
                 AddTeamHoverEvent(".join-list .item");
             })
             .catch((error) => console.log(
