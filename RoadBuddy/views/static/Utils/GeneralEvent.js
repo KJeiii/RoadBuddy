@@ -13,7 +13,7 @@ import { AddTeamClickEvent, AddTeamHoverEvent } from "./TeamEvent.js";
 import { ChangeIconColor, ManipulateSessionStorage, RenderAvatar, 
     RenderUsername, CollectInformationToUpdate, UpdateUserInformation, UpdatePassword, VerifyPasswordInputs } from "./ManageUser.js";
 import { AppendUserInPartnerList, BuildPartnership, CreatePartner, UpdatePartnersColor} from "./ManagePartner.js";
-import { map, messages, onlineUsers} from "./AppClass.js";
+import { map, messages, onlineUsers, teams} from "./AppClass.js";
 import { RenderMessageBtn, SearchMessage } from "./ManageMessage.js";
 import { ClearInputValues, PreviewAvatar, SwitchAvatarUndoBtn, SwitchChangePasswordPrompt } from "./ManageConfigure.js";
 
@@ -371,7 +371,7 @@ export function AddEventsToTeam() {
             .then((result)=>{
                 SearchTeams(window.sessionStorage.getItem("user_id"), "created")
                     .then((result) => {
-                        createdTeamArray = [...result.createdTeamList];
+                        teams.UpdateCreatedTeam(...result.createdTeamList);
                         ClearList(".create-list");
                         RenderList(".create-list", result.createdTeamList);
                         AddTeamClickEvent(".create-list .item");
@@ -453,11 +453,11 @@ export function AddEventsToTeam() {
             .then((result) => {
                 SearchTeams(Number(userID), "joined")
                     .then((result) => {
-                        joinedTeamArray = [...result.joinedTeamList];
+                        teams.UpdateJoinedTeam(...result.joinedTeamList);
                         ClearList(".join-list");
                         RenderList(".join-list", result.joinedTeamList);
-                        RenderOnlineStatus(".join-list .item", onlineTeamArray);
-                        AddTeamClickEvent(".join-list .item", onlineTeamArray);
+                        RenderOnlineStatus(".join-list .item", teams.GetOnlineTeams());
+                        AddTeamClickEvent(".join-list .item", ...teams.GetOnlineTeams());
                         AddTeamHoverEvent(".join-list .item");
                     })})
             .catch((error) => {console.log(`Error in accept team request : ${error}`)})
