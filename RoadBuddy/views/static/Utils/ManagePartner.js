@@ -47,22 +47,6 @@ export async function BuildPartnership(userID, teamID){
     return result
 }
 
-export function UpdatePartnersColor(partnersColorObject, userIDAndNamePairs, ...rest){
-    userIDAndNamePairs.forEach(user => {
-        const partnerColor = (user.id === window.sessionStorage.getItem("user_id")*1) ? 
-                            (rest[0]) : 
-                            (`rgb(
-                                ${Math.floor(Math.random()*255)}, 
-                                ${Math.floor(Math.random()*255)}, 
-                                ${Math.floor(Math.random()*255)}
-                            )`);
-        partnersColorObject[user.id] = {
-        username: user.name,
-        color: partnerColor
-        };
-    });
-}
-
 export function CreatePartner(userID, username, imageUrl, iconColor, coordination, partnerListDOMElement){
     const//
         partnerHasAvatar = imageUrl !== null,
