@@ -321,13 +321,16 @@ export function AddEventsToFriend() {
         ControlFriendMsgBox(".friend-prompt", "none")
 
         // receiver fetch api to add friend
-        const {user_id, username} = window.sessionStorage;
+        const//
+            {user_id, username} = window.sessionStorage,
+            senderID = Number(document.querySelector("div.friend-prompt div.content").getAttribute("id"));
         UpdateFriends(Number(user_id), {
-            senderID: makeFriendInvitation.GetValue("user_id"),
-            senderName: makeFriendInvitation.GetValue("username"),
+            senderID: makeFriendInvitation.GetValue(senderID, "user_id"),
+            senderName: makeFriendInvitation.GetValue(senderID, "username"),
             receiverID: Number(user_id),
             receiverName: username
         });
+        makeFriendInvitation.DeleteObject(senderID);
     })
 
     // if reject request
@@ -336,13 +339,16 @@ export function AddEventsToFriend() {
         ControlFriendMsgBox(".friend-prompt", "none")
 
         // feedback result to sender
-        const {user_id, username} = window.sessionStorage;
+        const//
+            {user_id, username} = window.sessionStorage,
+            senderID = Number(document.querySelector("div.friend-prompt div.content").getAttribute("id"));
         EmitFriendRequestResultEvent(false, {
-                senderID: makeFriendInvitation.GetValue("user_id"),
-                senderName: makeFriendInvitation.GetValue("username"),
+                senderID: makeFriendInvitation.GetValue(senderID, "user_id"),
+                senderName: makeFriendInvitation.GetValue(senderID, "username"),
                 receiverID: user_id,
                 receiverName: username
-        })
+        });
+        makeFriendInvitation.DeleteObject(senderID);
     })
 
     // confirm frined response
