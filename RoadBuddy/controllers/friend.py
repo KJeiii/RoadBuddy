@@ -14,9 +14,8 @@ friend_bp = Blueprint("friend_bp",
 def Search_old_friend(user_id: int):
     if request.method == "GET": 
         try:
-            user_id = int(user_id)
-            friend_list = friendTool.Load_friend_list(user_id)
-            RoadBuddy.event_handler.online_users.update_user_information(user_id, friend_list = friend_list)
+            friend_list = friendTool.Load_friend_list(int(user_id))
+            RoadBuddy.event_handler.online_users.update_user_information(int(user_id), friend_list = friend_list)
             response = {
                 "ok": True,
                 "data": friend_list 
