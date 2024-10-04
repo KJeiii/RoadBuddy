@@ -298,6 +298,7 @@ export const//
     map = new Map(),
     teams = new Teams(),
     makeFriendInvitation = new RequestCache(),
-    teamApplication = new RequestCache();
+    teamApplication = new RequestCache(),
+    teamInvitation = new RequestCache();
     
 
