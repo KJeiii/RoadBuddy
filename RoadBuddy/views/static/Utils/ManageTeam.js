@@ -1,12 +1,8 @@
 export async function SearchTeams(userID, teamType){
     try {
-        let response = await fetch("/api/team", {
-            method: "PUT",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({user_id: userID, team_type: teamType})
-        });
-        
-        let result = await response.json();
+        let//
+            response = await fetch(`/api/team?userID=${userID}&teamType=${teamType}`),
+            result = await response.json();
         return {
             createdTeamList: result.data.created_team_list,
             joinedTeamList: result.data.joined_team_list
