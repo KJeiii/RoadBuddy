@@ -10,12 +10,11 @@ friend_bp = Blueprint("friend_bp",
                       template_folder="templates",
                       static_folder="static")
 
-# Load friends list and find new friends
-@friend_bp.route("/api/friend", methods = ["POST"])
-def Load_friend_list():
-    if request.method == "POST":
+@friend_bp.route("/api/friend/<user_id>", methods = ["GET"])
+def Search_old_friend(user_id: int):
+    if request.method == "GET": 
         try:
-            user_id = request.json["user_id"]
+            user_id = int(user_id)
             friend_list = friendTool.Load_friend_list(user_id)
             RoadBuddy.event_handler.online_users.update_user_information(user_id, friend_list = friend_list)
             response = {
@@ -32,13 +31,11 @@ def Load_friend_list():
             }
             return jsonify(response), 500
     
-
-@friend_bp.route("/api/friend/search", methods = ["POST"])
+@friend_bp.route("/api/friend", methods = ["GET"])
 def Search_new_friend():
-    if request.method == "POST":
+    if request.method == "GET":
         try:
-            username = request.json["username"]
-            new_friend_list = memberTool.Search_member_by_username(username)
+            new_friend_list = memberTool.Search_member_by_username(request.args.get("searchName"))
             response = {
                 "ok": True,
                 "data": new_friend_list
