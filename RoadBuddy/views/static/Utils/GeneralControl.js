@@ -458,6 +458,7 @@ export function ControlTeamMsgBox(msgCssSelector, display, ...rest) {
         case ".team-invite-prompt":
             if(display === "block"){
                 msgBoxContent.textContent = `來自 ${rest[0].leaderName} 的隊伍邀請`;
+                msgBoxContent.setAttribute("id", rest[0].teamID);
                 msgBox.style.display = display;   
             }
             break
