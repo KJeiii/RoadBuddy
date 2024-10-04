@@ -7,7 +7,7 @@ message_bp = Blueprint("message",
                       template_folder="templates",
                       static_folder="static")
 
-@message_bp.route("/api/message", methods = ["PATCH", "POST", "DELETE"])
+@message_bp.route("/api/message", methods = ["GET", "POST", "DELETE"])
 def message():
     if request.method == "POST":
         try:
@@ -18,10 +18,10 @@ def message():
         except Exception as error:
             print(f'Error in controller(message) - (POST method) : {error}')
             return jsonify({"error": True, "message": "伺服器內部錯誤"}), 500
-
-    if request.method == "PATCH":
+        
+    if request.method == "GET": 
         try:  
-            user_id = int(request.json["user_id"])
+            user_id = int(request.args.get("userID"))
             messages = MessageTool.Search_message(user_id)
             return jsonify({"ok": True, "data": messages}), 200
         except Exception as error:
