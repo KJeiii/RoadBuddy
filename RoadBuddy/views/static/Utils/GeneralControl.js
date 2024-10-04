@@ -227,7 +227,8 @@ export function ControlFriendMsgBox(msgCssSelector, display, ...rest) {
         let//
             msgBox = document.querySelector(msgCssSelector),
             msgBoxContent = document.querySelector(`${msgCssSelector} .content`);
-        msgBoxContent.textContent = `來自 ${rest[0].friendName} 的好友邀請`;
+        msgBoxContent.setAttribute("id", rest[0].userID);
+        msgBoxContent.textContent = `來自 ${rest[0].username} 的好友邀請`;
         msgBox.style.display = display;
         return
     }
