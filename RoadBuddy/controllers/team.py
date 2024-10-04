@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, jsonify
+from flask import Blueprint, request, jsonify
 from RoadBuddy.models import team
 
 teamTool = team.TeamTool()

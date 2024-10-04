@@ -1,4 +1,4 @@
-from flask import Flask, Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify
 from RoadBuddy.models.message import MessageTool
 
 MessageTool = MessageTool()
