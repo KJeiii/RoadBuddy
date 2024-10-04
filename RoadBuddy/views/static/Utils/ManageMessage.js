@@ -20,15 +20,10 @@ export async function CreateMessage(senderID, receiverIDArray){
 
 export async function SearchMessage(userID){
     try{
-        const response = await fetch(
-            "/api/message", {
-                method: "PATCH",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({user_id: userID})
-            });
-        const result = await response.json();
+        const//
+            response = await fetch(`/api/message?userID=${userID}`),
+            result = await response.json();
+        console.log( result.data) ;
         if(response.ok){return result.data}
         throw new Error("Failed to execute SearchMessage (ManageMessage.hs)")
     }
