@@ -4,21 +4,12 @@ import { ReRenderList } from "./GeneralControl.js";
 import { ControlFriendMsgBox, SwitchPannel } from "./GeneralControl.js";
 import { CreateMessage, SearchMessage } from "./ManageMessage.js";
 
-// ----- build function for searching new friend -----
-export async function SearchNewFriends(username) {
-    let response = await fetch("/api/friend/search", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({username: username})
-    });
-
+export async function SearchNewFriends(searchName) {
+    let response = await fetch(`/api/friend?searchName=${searchName}`);
     if (!response.ok){throw new Error("Seaching new friend failed (ManageFriends.js)")}
-
     let//
-    result = await response.json(),
-    newfriendsList = result.data;
+        result = await response.json(),
+        newfriendsList = result.data;
     return newfriendsList;
 }
 
@@ -42,19 +33,12 @@ export function RenderSearchResult(friendsList){
     }
 }
 
-export async function SearchOldFriends(userID){ //userID
+export async function SearchOldFriends(userID){ 
     try {
-        let response = await fetch("/api/friend", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({user_id: userID})
-        });
-
         let//
-        result = await response.json(),
-        oldFriendList = result.data;
+            response = await fetch(`/api/friend/${userID}`),
+            result = await response.json(),
+            oldFriendList = result.data;
         return oldFriendList
     }
     catch(error){
