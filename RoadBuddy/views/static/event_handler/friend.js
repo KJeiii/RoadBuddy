@@ -1,10 +1,10 @@
 import { SearchOldFriends } from "../Utils/ManageFriend.js";
 import { ControlFriendMsgBox, RenderOnlineStatus, ReRenderList } from "../Utils/GeneralControl.js";
-import { onlineFriends } from "../Utils/AppClass.js";
+import { onlineFriends, makeFriendInvitation } from "../Utils/AppClass.js";
 
 // *** as a receiver
 socket.on("friend_request", (data) => {
-    friend_sender_info_cache = data;
+    makeFriendInvitation.StoreObject(data);
     // prompt to ask willness
     ControlFriendMsgBox(".friend-prompt", "block", {friendName: data.username})
 })
