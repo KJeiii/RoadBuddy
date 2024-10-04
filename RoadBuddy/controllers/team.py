@@ -8,13 +8,13 @@ team_bp = Blueprint("team_bp",
                       static_folder="static")
 
 # Load team list
-@team_bp.route("/api/team", methods = ["POST", "PUT", "PATCH"])
+@team_bp.route("/api/team", methods = ["POST", "GET", "PATCH"])
 def Team():
-    # PUT method: search team that use created and joined
-    if request.method == "PUT":
+    # GET method: search team that use created and joined
+    if request.method == "GET": 
         try:
-            user_id = request.json["user_id"]
-            if request.json["team_type"] == "created":
+            user_id = int(request.args.get("userID"))
+            if request.args.get("teamType") == "created":
                 created_team_list = teamTool.Search_created_team(user_id)
                 joined_team_list = []
                 response = {
@@ -26,7 +26,7 @@ def Team():
                 }
                 return jsonify(response), 200
             
-            if request.json["team_type"] == "joined":
+            if request.args.get("teamType") == "joined":
                 created_team_list = []
                 joined_team_list = teamTool.Search_joined_team(user_id)
                 response = {
