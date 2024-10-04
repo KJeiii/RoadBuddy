@@ -72,6 +72,4 @@ class MessageTool(pooling.MySQLConnectionPool):
         connection.close()
         return result
    
-if __name__ == "__main__":
-    test = MessageTool()
-    test.Create_Message_table()
+

@@ -141,7 +141,5 @@ class MemberTool(pooling.MySQLConnectionPool):
         connection.commit()
         connection.close()
 
-if __name__ == "__main__":
-    test = MemberTool()
-    print(test.Search_member_by_id(16))
+
 

@@ -155,12 +155,3 @@ class TeamTool(pooling.MySQLConnectionPool):
         connection.close()
 
         return result
-
-# test = TeamTool()
-# test = TeamTool().Create_team("Taipei", 1)
-# test = TeamTool().Create_team("Hsinchu", 5)
-# test = TeamTool().Create_team("20231129", 5)
-
-# test = TeamTool().Add_partner(7, [1,5,6,7,9])
-# test = TeamTool().Search_partner(3)
-# print(test.Search_joined_team(1))
