@@ -4,9 +4,12 @@ import { onlineFriends, makeFriendInvitation } from "../Utils/AppClass.js";
 
 // *** as a receiver
 socket.on("friend_request", (data) => {
-    makeFriendInvitation.StoreObject(data);
+    makeFriendInvitation.AppendRequestObject(data, data.user_id);
     // prompt to ask willness
-    ControlFriendMsgBox(".friend-prompt", "block", {friendName: data.username})
+    ControlFriendMsgBox(".friend-prompt", "block", {
+        username: data.username,
+        userID: data.user_id
+    })
 })
 
 // *** as a sender
