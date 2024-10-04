@@ -13,7 +13,7 @@ import { AddTeamClickEvent, AddTeamHoverEvent } from "./TeamEvent.js";
 import { ChangeIconColor, ManipulateSessionStorage, RenderAvatar, 
     RenderUsername, CollectInformationToUpdate, UpdateUserInformation, UpdatePassword, VerifyPasswordInputs } from "./ManageUser.js";
 import { AppendUserInPartnerList, BuildPartnership, CreatePartner} from "./ManagePartner.js";
-import { makeFriendInvitation, map, messages, onlineUsers, teams} from "./AppClass.js";
+import { makeFriendInvitation, map, messages, onlineUsers, teamApplication, teams} from "./AppClass.js";
 import { RenderMessageBtn, SearchMessage } from "./ManageMessage.js";
 import { ClearInputValues, PreviewAvatar, SwitchAvatarUndoBtn, SwitchChangePasswordPrompt } from "./ManageConfigure.js";
 
@@ -560,21 +560,21 @@ export function AddEventsToTeam() {
     requestYesBtn.addEventListener("click", () => {
         const applicantID = document.querySelector(".team-join-request .content").getAttribute("id");
         // emit event "enter_team" to server to initialize 
-        EmitAcceptTeamRequestEvent(true, team_applicants_cache[applicantID].userSID);
-        // recover team prompt and remove team_applicants_cache
+        EmitAcceptTeamRequestEvent(true, teamApplication.GetValue(applicantID, "userSID"));
+        // recover team prompt and remove applicant object
         ControlTeamMsgBox(".team-join-request", "none");
-        delete team_applicants_cache[applicantID];
+        teamApplication.DeleteObject(applicantID);
     })
 
     // if no
     let requesetNoBtn = document.querySelector(".team-join-request .no");
     requesetNoBtn.addEventListener("click", () => {
         ControlTeamMsgBox(".team-join-request", "none");
-        // remove team_applicants_cache
-        delete team_applicants_cache[document.querySelector(".team-join-request .content").getAttribute("id")];
+        // remove applicant object
+        teamApplication.DeleteObject(
+            Number(document.querySelector(".team-join-request .content").getAttribute("id"))
+        )
     })
-
-
 }
 
 export function AddEventsToClose() {
