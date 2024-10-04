@@ -13,7 +13,7 @@ import { AddTeamClickEvent, AddTeamHoverEvent } from "./TeamEvent.js";
 import { ChangeIconColor, ManipulateSessionStorage, RenderAvatar, 
     RenderUsername, CollectInformationToUpdate, UpdateUserInformation, UpdatePassword, VerifyPasswordInputs } from "./ManageUser.js";
 import { AppendUserInPartnerList, BuildPartnership, CreatePartner} from "./ManagePartner.js";
-import { makeFriendInvitation, map, messages, onlineUsers, teamApplication, teams} from "./AppClass.js";
+import { makeFriendInvitation, map, messages, onlineUsers, teamApplication, teamInvitation, teams} from "./AppClass.js";
 import { RenderMessageBtn, SearchMessage } from "./ManageMessage.js";
 import { ClearInputValues, PreviewAvatar, SwitchAvatarUndoBtn, SwitchChangePasswordPrompt } from "./ManageConfigure.js";
 
@@ -439,8 +439,9 @@ export function AddEventsToTeam() {
         AppendUserInPartnerList(userID, username, imageUrl, partnerList); //own imageUrl has been managed at the beginning of render main page
 
         const//
-            {user_id:leaderID, username: leaderUsername, sid:leaderSID, icon_Color: leaaderIconColor,
-            image_url:leaderImageUrl, coordination:leaderCoordination} = team_sender_info_cache;
+            teamID = document.querySelector("div.team-invite-prompt div.content").getAttribute("id"),
+            {user_id:leaderID, username: leaderUsername, icon_Color: leaaderIconColor,
+            image_url:leaderImageUrl, coordination:leaderCoordination} = teamInvitation.cachedObject[teamID];
         CreatePartner(
             leaderID, leaderUsername, leaderImageUrl, 
             leaaderIconColor, leaderCoordination, partnerList);
@@ -449,11 +450,11 @@ export function AddEventsToTeam() {
         ControlTeamMsgBox(".team-invite-prompt", "none");
 
         // Organize data emitted to listener "enter_team" on server
-        EmitEnterTeamEvent(true, "join", team_sender_info_cache.team_id, imageUrl, iconColor);
-        ManipulateSessionStorage("set", {team_id: team_sender_info_cache["team_id"]});
+        EmitEnterTeamEvent(true, "join", teamID, imageUrl, iconColor);
+        ManipulateSessionStorage("set", {team_id: teamID});
 
         // Create partner record in partner table in database
-        BuildPartnership(Number(userID), team_sender_info_cache.team_id)
+        BuildPartnership(Number(userID), teamID)
             .then((result) => {
                 SearchTeams(Number(userID), "joined")
                     .then((result) => {
@@ -464,7 +465,8 @@ export function AddEventsToTeam() {
                         AddTeamClickEvent(".join-list .item", ...teams.GetOnlineTeams());
                         AddTeamHoverEvent(".join-list .item");
                     })})
-            .catch((error) => {console.log(`Error in accept team request : ${error}`)})
+            .catch((error) => {console.log(`Error in accept team request : ${error}`)});
+        teamInvitation.DeleteObject(teamID);
     })
 
     // if reject
@@ -472,7 +474,8 @@ export function AddEventsToTeam() {
     teamNoBtn.addEventListener("click", () => {
         ControlTeamMsgBox(".team-invite-prompt", "none");
         // Organize data emitted to listener "enter_team" on server
-        EmitEnterTeamEvent(false, "join", document.querySelector(".team-pannel .pannel-title").getAttribute("id"))
+        EmitEnterTeamEvent(false, "join", document.querySelector(".team-pannel .pannel-title").getAttribute("id"));
+        teamInvitation.DeleteObject(teamID);
     })
 
     // ----- confirm team response -----
@@ -483,12 +486,10 @@ export function AddEventsToTeam() {
     DOMElements.leaveTeamBtn.addEventListener("click", ()=> {
         // emit socket event "leave_team"
         const//
-            leaderSID = ( team_sender_info_cache === undefined ) ? socket.id : team_sender_info_cache["sid"],
             userID = Number(window.sessionStorage.getItem("user_id")),
             teamID = window.sessionStorage.getItem("team_id");
-        EmitLeaveTeamEvent(socket.id, userID, teamID, leaderSID);
+        EmitLeaveTeamEvent(userID, teamID);
         ManipulateSessionStorage("remove", "team_id");
-        team_sender_info_cache = undefined;
 
         // switch to mainPannel
         SwitchPannel("main");
