@@ -843,8 +843,10 @@ div.update-password__button button{
 }
 
 .mode-prompt{
-    width: 40vw;
-    left: 30vw;
+    width: 70vw;
+    left: 15vw;
+    /* width: 40vw;
+    left: 30vw; */
 }
 
 .friend-prompt button,
@@ -1266,6 +1268,12 @@ input#mode:checked + div.slider div.dot {
     .partner-list  {
         grid-template-columns: 60% 60% 60%;
     }
+
+    /* mode prompt */
+    .mode-prompt{
+        width: 40vw;
+        left: 30vw;
+    }
 }
 
 @media (min-width: 1200px) {
@@ -1315,5 +1323,11 @@ input#mode:checked + div.slider div.dot {
     .partner-list  {
         grid-template-columns: 40% 40% 40% 40%;
         margin-top: 15px;
+    }
+
+    /* mode prompt */
+    .mode-prompt{
+        width: 40vw;
+        left: 30vw;
     }
 }
