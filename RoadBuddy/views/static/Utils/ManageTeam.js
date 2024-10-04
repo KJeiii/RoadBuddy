@@ -98,12 +98,7 @@ export function EmitAcceptTeamRequestEvent(accept, applicantSID){
     socket.emit("accept_team_request", acceptApplicationData);
 }
 
-export function EmitLeaveTeamEvent(userSID, userID, teamID, leaderSID){
-    const leavingUser = {
-        sid: userSID,
-        user_id: userID,
-        team_id: teamID,
-        leader_sid: leaderSID
-    };
+export function EmitLeaveTeamEvent(userID, teamID){
+    const leavingUser = {user_id: userID, team_id: teamID};
     socket.emit("leave_team", leavingUser);
 }
