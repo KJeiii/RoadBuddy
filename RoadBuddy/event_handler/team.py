@@ -62,7 +62,7 @@ def enter_team(user_to_join_team):
 @socketio.on("leave_team")
 def leave_team(leaving_user):
     team_id = leaving_user["team_id"]
-    sid = leaving_user["sid"]
+    sid = request.sid 
     user_id = int(leaving_user["user_id"])
     emit("leave_team", leaving_user, to=team_id)
 
