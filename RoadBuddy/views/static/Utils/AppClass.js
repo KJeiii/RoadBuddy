@@ -254,16 +254,9 @@ export class Teams {
     }
 }
 
-export class Deprecated_RequestCache{
-    constructor(){}
-    teamInvitation = null; //team_sender_info_cache {user_id: xxx, username: xxx, image_url: xxx, ...}
-    teamApplication = null; //team_applicants_cache {user_id-1:{applicant information}, user_id-2:{applicant information}}
-    makeFriendInvitation = null; //friend_sender_info_cache {user_id=1: {user_id: xxx, username: xxx, image_url: xxx, ...}}
-}
-
 export class RequestCache{
     constructor(){}
-    cachedObject = {}; 
+    cachedObject = {}; // structure {idenitfierKeyForObject : {object}}
 
     AppendRequestObject(object, idenitfierKeyForObject){
         try{this.cachedObject = {...this.cachedObject, [idenitfierKeyForObject]: object}}
