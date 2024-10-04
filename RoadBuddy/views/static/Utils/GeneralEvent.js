@@ -13,7 +13,7 @@ import { AddTeamClickEvent, AddTeamHoverEvent } from "./TeamEvent.js";
 import { ChangeIconColor, ManipulateSessionStorage, RenderAvatar, 
     RenderUsername, CollectInformationToUpdate, UpdateUserInformation, UpdatePassword, VerifyPasswordInputs } from "./ManageUser.js";
 import { AppendUserInPartnerList, BuildPartnership, CreatePartner} from "./ManagePartner.js";
-import { map, messages, onlineUsers, teams} from "./AppClass.js";
+import { makeFriendInvitation, map, messages, onlineUsers, teams} from "./AppClass.js";
 import { RenderMessageBtn, SearchMessage } from "./ManageMessage.js";
 import { ClearInputValues, PreviewAvatar, SwitchAvatarUndoBtn, SwitchChangePasswordPrompt } from "./ManageConfigure.js";
 
@@ -323,8 +323,8 @@ export function AddEventsToFriend() {
         // receiver fetch api to add friend
         const {user_id, username} = window.sessionStorage;
         UpdateFriends(Number(user_id), {
-            senderID: friend_sender_info_cache.user_id,
-            senderName: friend_sender_info_cache.username,
+            senderID: makeFriendInvitation.GetValue("user_id"),
+            senderName: makeFriendInvitation.GetValue("username"),
             receiverID: Number(user_id),
             receiverName: username
         });
@@ -338,8 +338,8 @@ export function AddEventsToFriend() {
         // feedback result to sender
         const {user_id, username} = window.sessionStorage;
         EmitFriendRequestResultEvent(false, {
-                senderID: friend_sender_info_cache.user_id,
-                senderName: friend_sender_info_cache.username,
+                senderID: makeFriendInvitation.GetValue("user_id"),
+                senderName: makeFriendInvitation.GetValue("username"),
                 receiverID: user_id,
                 receiverName: username
         })
