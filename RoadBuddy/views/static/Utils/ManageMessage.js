@@ -23,7 +23,6 @@ export async function SearchMessage(userID){
         const//
             response = await fetch(`/api/message?userID=${userID}`),
             result = await response.json();
-        console.log( result.data) ;
         if(response.ok){return result.data}
         throw new Error("Failed to execute SearchMessage (ManageMessage.hs)")
     }
