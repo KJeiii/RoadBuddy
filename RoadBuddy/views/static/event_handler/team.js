@@ -4,7 +4,7 @@ import { AppendUserInPartnerList, CreatePartner, RemoveUserFromPartnerList } fro
 import { AddTeamClickEvent, AddTeamHoverEvent } from "../Utils/TeamEvent.js";
 import { ManipulateSessionStorage } from "../Utils/ManageUser.js";
 import { EmitEnterTeamEvent } from "../Utils/ManageTeam.js";
-import { map, teams } from "../Utils/AppClass.js";
+import { map, teamApplication, teams } from "../Utils/AppClass.js";
 
 // ----- listener for receiving event "team_invite" from server -----
 socket.on("team_invite", (data) => {
@@ -52,7 +52,7 @@ socket.on("join_team_request", (applicant) => {
         applicantSID: applicant.userSID,
         applicantUsername: applicant.username
     });
-    team_applicants_cache[applicant.userID] = {...applicant};
+    teamApplication.AppendRequestObject(applicant, applicant.userID);
 })
 
 // (Requester) Listener for receiving event "accept_team_request" from team owner
