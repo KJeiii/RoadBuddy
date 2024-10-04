@@ -254,11 +254,49 @@ export class Teams {
     }
 }
 
+export class Deprecated_RequestCache{
+    constructor(){}
+    teamInvitation = null; //team_sender_info_cache {user_id: xxx, username: xxx, image_url: xxx, ...}
+    teamApplication = null; //team_applicants_cache {user_id-1:{applicant information}, user_id-2:{applicant information}}
+    makeFriendInvitation = null; //friend_sender_info_cache {user_id: xxx, username: xxx, image_url: xxx, ...}
+}
+
+export class RequestCache{
+    constructor(){}
+    cacheObject = null; 
+
+    StoreObject(Object){
+        try{if(this.cacheObject === null){this.cacheObject = Object}}
+        catch(error){console.log("Failed to execute method StoreObeject in RequestCache class: ", error)}
+    }
+
+    ClearObject(){
+        try{this.cacheObject = null}
+        catch(error){console.log("Failed to execute method ClearObject in RequestCache class: ", error)}
+    }
+
+    DeleteItem(key){
+        try{
+            if(this.cacheObject !== null){delete this.cacheObject[key]}
+        }
+        catch(error){console.log("Failed to execute method DeleteItem in RequestCache class: ", error)}
+    }
+
+    GetValue(key){
+        try{
+            if(this.cacheObject !== null){return this.cacheObject[key]}
+        }
+        catch(error){console.log("Failed to execute method GetValue in RequestCache class: ", error)}
+    }
+}
+
 // initialize objects
 export const//
     onlineFriends = new OnlineFriends(),
     messages = new Messages(),
     onlineUsers = new OnlineUsers(),
     map = new Map(),
-    teams = new Teams();
+    teams = new Teams(),
+    makeFriendInvitation = new RequestCache();
+    
 
