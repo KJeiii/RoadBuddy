@@ -4,13 +4,16 @@ import { AppendUserInPartnerList, CreatePartner, RemoveUserFromPartnerList } fro
 import { AddTeamClickEvent, AddTeamHoverEvent } from "../Utils/TeamEvent.js";
 import { ManipulateSessionStorage } from "../Utils/ManageUser.js";
 import { EmitEnterTeamEvent } from "../Utils/ManageTeam.js";
-import { map, teamApplication, teams } from "../Utils/AppClass.js";
+import { map, teamApplication, teamInvitation, teams } from "../Utils/AppClass.js";
 
 // ----- listener for receiving event "team_invite" from server -----
 socket.on("team_invite", (data) => {
-    team_sender_info_cache = data
+    teamInvitation.AppendRequestObject(data, data.team_id);
     // prompt to ask willness
-    ControlTeamMsgBox(".team-invite-prompt", "block", {leaderName: data.username})
+    ControlTeamMsgBox(".team-invite-prompt", "block", {
+        leaderName: data.username,
+        teamID: data.team_id
+    })
 })
 
 //  ----- add new partners if they join -----
