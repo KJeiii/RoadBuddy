@@ -26,7 +26,7 @@ The front end is rendered using HTML, CSS, and JavaScript.
 - User configuration : modify username, password and avatar.
 
 ## Demo
-![demo](./README%20images/demo.gif)
+![demo](./images/demo.gif)
 
 ## Installation
 ### Prerequisites
@@ -79,33 +79,33 @@ python3 app.py
 ## Usage
 - Sign up for an account and login.
 
-![sign up and login](./README%20images/signup%20and%20login.gif)
+![sign up and login](./images/signup%20and%20login.gif)
 
 - Search your friend’s name and send requests for making new friends; if the friend is offline, the requests would turn to be messages and receivers would get notification as they get online.
 
-![make friend-1](./README%20images/FirendMaking-1.gif)
-![make friend-2](./README%20images/FirendMaking-2.gif)
+![make friend-1](./images/FirendMaking-1.gif)
+![make friend-2](./images/FirendMaking-2.gif)
 
 - Create your own team, click the team you created, invite your friends to join and start the trip.
 
-![create team and invite friend](./README%20images/create%20team%20and%20invite%20friend.gif)
-![invite friend while traveling](./README%20images/invite%20friend%20whilte%20traveling.gif)
+![create team and invite friend](./images/create%20team%20and%20invite%20friend.gif)
+![invite friend while traveling](./images/invite%20friend%20whilte%20traveling.gif)
 
 - If you’ve not joined team yet, click the team you ever joined and send the request to team owner; you would join the trip if team owner accepts your request.
 
-![apply joining team](./README%20images/apply%20joining%20team.gif)
+![apply joining team](./images/apply%20joining%20team.gif)
 
 - Leave the team if the trip finished or you don’t need to trace anymore.
 
-![leave team](./README%20images/leave%20team.gif)
+![leave team](./images/leave%20team.gif)
 
 - Modify your own information, for example: username, password and avatar.
 
-![modify user info](./README%20images/update%20user%20info.gif)
+![modify user info](./images/update%20user%20info.gif)
 
 - Logout after finishing the web app.
 
-![log out](./README%20images/log%20out.gif)
+![log out](./images/log%20out.gif)
 
 ## Technologies Used
 - Backend: Python, Flask
