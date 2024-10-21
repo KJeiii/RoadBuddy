@@ -259,12 +259,12 @@ export function AddEventsToFriend() {
     // ----- search username-----
     DOMElements.searchIcon.addEventListener("click", () => {
         let searchInput = document.querySelector("input[name=search-friend]");
-        searchInput.setAttribute("placeholder", "搜尋姓名");
+        searchInput.setAttribute("placeholder", "Friend's name");
         while (DOMElements.searchList.hasChildNodes()) {
             DOMElements.searchList.removeChild(DOMElements.searchList.lastChild)
         }
         if (searchInput.value === "") {
-            searchInput.setAttribute("placeholder", "請填入姓名");
+            searchInput.setAttribute("placeholder", "Enter friend's name");
             return
         }
         let username = document.querySelector("input[name=search-friend]").value;
@@ -366,10 +366,10 @@ export function AddEventsToTeam() {
     // ----- create a new team -----
     DOMElements.createTeamBtn.addEventListener("click", () => {
         let searchInput = document.querySelector("input[name=create-team]");
-        searchInput.setAttribute("placeholder", "請輸入隊伍名稱");
+        searchInput.setAttribute("placeholder", "Team name");
 
         if (searchInput.value === "") {
-            searchInput.setAttribute("placeholder", "請輸入隊伍名稱");
+            searchInput.setAttribute("placeholder", "Enter team name");
             return
         }
         CreateNewTeam(window.sessionStorage.getItem("user_id"), searchInput.value)
