@@ -213,7 +213,7 @@ def update_basic_info():
             )
 
             # update username of user_info stored in the server side
-            RoadBuddy.event_handler.online_users[user_id].update_user_information(
+            RoadBuddy.event_handler.online_users.update_user_information(
                 user_id, username = username_to_update)
 
             response = {"ok": True, "username": username_to_update, "image_url": avatar_upload_response.get("image_url")}
