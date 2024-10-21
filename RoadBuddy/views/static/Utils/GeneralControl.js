@@ -228,7 +228,7 @@ export function ControlFriendMsgBox(msgCssSelector, display, ...rest) {
             msgBox = document.querySelector(msgCssSelector),
             msgBoxContent = document.querySelector(`${msgCssSelector} .content`);
         msgBoxContent.setAttribute("id", rest[0].userID);
-        msgBoxContent.textContent = `來自 ${rest[0].username} 的好友邀請`;
+        msgBoxContent.textContent = `Friend-making invitation from ${rest[0].username}.`;
         msgBox.style.display = display;
         return
     }
@@ -237,10 +237,10 @@ export function ControlFriendMsgBox(msgCssSelector, display, ...rest) {
         let//
             msgBox = document.querySelector(msgCssSelector),
             msgBoxContent = document.querySelector(`${msgCssSelector} .content`),
-            statement = `已發出交友申請`;
+            statement = `Invitation sent.`;
 
         // Not allowed if no one is selected
-        if (rest[0].selectedFriendIDs.length === 0) { statement = `你尚未選擇對象` }
+        if (rest[0].selectedFriendIDs.length === 0) { statement = `Nobody is selected.` }
 
         // NOT allowed if they are already in friendship 
         // between sender and some of the selected guys
@@ -251,7 +251,7 @@ export function ControlFriendMsgBox(msgCssSelector, display, ...rest) {
                     repeatIDString += ` ${friend.username} `;
                 }
             }
-            statement = `你與${repeatIDString}已經是好友關係，請重新選擇對象`;
+            statement = `You have made friends with ${repeatIDString} already.`;
         }
 
         msgBoxContent.textContent = statement;
@@ -266,10 +266,10 @@ export function ControlFriendMsgBox(msgCssSelector, display, ...rest) {
             isSender = Number(window.sessionStorage.getItem("user_id")) === Number(rest[0].senderID);
 
         if (isSender) {
-            msgBoxContent.textContent = (rest[0].accept) ? `${rest[0].receiverName} 接受你的好友邀請` : `${rest[0].rest[0].receiverName} 拒絕你的好友邀請`;
+            msgBoxContent.textContent = (rest[0].accept) ? `${rest[0].receiverName} is added in your friend list.` : `${rest[0].rest[0].receiverName} rejected your friend-making invitation`;
         }
         else{
-            msgBoxContent.textContent = (rest[0].accept) ? `你與 ${rest[0].senderName} 已結為好友` : `你已拒絕 ${rest[0].senderName} 的好友邀請`;
+            msgBoxContent.textContent = (rest[0].accept) ? `${rest[0].senderName} is added in your friend list.` : `You've rejected the invitation from ${rest[0].senderName}.`;
         }
 
         msgBox.style.display = "block";
@@ -337,7 +337,7 @@ export function RenderList(listCssSelector, listItemArray) {
             if (listItemArray.length === 0) {
                 const messageItem = document.createElement("div");
                 messageItem.setAttribute("class", "item");
-                messageItem.textContent = "目前沒有交友申請";
+                messageItem.textContent = "No messages";
                 messageList.appendChild(messageItem);
                 return
             }
@@ -457,7 +457,7 @@ export function ControlTeamMsgBox(msgCssSelector, display, ...rest) {
     switch(msgCssSelector){
         case ".team-invite-prompt":
             if(display === "block"){
-                msgBoxContent.textContent = `來自 ${rest[0].leaderName} 的隊伍邀請`;
+                msgBoxContent.textContent = `Travel invitation from ${rest[0].leaderName}`;
                 msgBoxContent.setAttribute("id", rest[0].teamID);
                 msgBox.style.display = display;   
             }
@@ -465,7 +465,7 @@ export function ControlTeamMsgBox(msgCssSelector, display, ...rest) {
 
         case ".team-join-request":
             if(display === "block"){
-                msgBoxContent.textContent = `來自 ${rest[0].applicantUsername} 的入隊申請`;
+                msgBoxContent.textContent = `Joining application from ${rest[0].applicantUsername}`;
                 msgBoxContent.setAttribute("id", rest[0].applicantID);
                 msgBoxFrom.textContent = rest[0].applicantUsername;
                 msgBoxFrom.setAttribute("id", rest[0].applicantSID);
@@ -475,7 +475,7 @@ export function ControlTeamMsgBox(msgCssSelector, display, ...rest) {
 
         case ".team-join-response":
             if(display === "block"){
-                msgBoxContent.textContent = `隊伍${rest[0].teamName}，尚未啟程`;
+                msgBoxContent.textContent = `Team ${rest[0].teamName} is offline.`;
                 msgBox.style.display = display;
             }
             break
@@ -487,7 +487,7 @@ export function ControlTeamMsgBox(msgCssSelector, display, ...rest) {
         
         case ".team-create-response":    
             if(display === "block"){
-                msgBoxContent.textContent = `你已建立隊伍 ${rest[0].teamName}`;
+                msgBoxContent.textContent = `${rest[0].teamName} is created.`;
                 msgBox.style.display = display;
             }
             break
@@ -529,10 +529,10 @@ export function SwitchSignUpStep(){
 }
 
 export const inputErrorMessages = {
-    isInputFilledIn: "(此欄位不可空白)",
-    isInputValuesConsistent: "(與新密碼不一致)",
-    isInputValueIncludingCharacters: "(格式錯誤，須包含@)",
-    isInputValuesUnique: "(不可與舊密碼相同)"
+    isInputFilledIn: "(The value cann't be blank)",
+    isInputValuesConsistent: "(The value isn't consistent with new password)",
+    isInputValueIncludingCharacters: "(The value is in wrong format)",
+    isInputValuesUnique: "(The value must be different from old password)"
 }
 
 export function isInputErrorRepeating(inputTitleElement, message){
@@ -637,7 +637,7 @@ export function ControlMebmerMsgBox(msgCssSelector, display) {
     const//
         msgBox = document.querySelector(msgCssSelector),
         msgBoxContent = document.querySelector(`${msgCssSelector} div.content`);
-    if (display === "flex") {msgBoxContent.textContent = "是否跳過上傳照片？"}
+    if (display === "flex") {msgBoxContent.textContent = "Are you sure to pass avatar uploading？"}
     if (display === "none") {msgBoxContent.textContent = ""}
     msgBox.style.display = display;
 }
@@ -694,18 +694,18 @@ export function GetFeasiblePannelRWDStyle(userScreenWidth, pannelType, pannelRWD
 
 export const responseCatalogue = {
     ".configure-response": {
-        0: {title: "更新失敗", img_src: "../static/images/error.gif"},
-        1: {title: "更新完成", img_src: "../static/images/check.gif"},
-        2: {title: "更新中", img_src: "../static/images/loading.gif"},
-        3: {title: "無資料需更新", img_src: "../static/images/error.gif"},
-        4: {title: "舊密碼不正確", img_src: "../static/images/error.gif"}
+        0: {title: "Fail", img_src: "../static/images/error.gif"},
+        1: {title: "Success", img_src: "../static/images/check.gif"},
+        2: {title: "Updating", img_src: "../static/images/loading.gif"},
+        3: {title: "Nothing needs to be updated", img_src: "../static/images/error.gif"},
+        4: {title: "Old password is incorrect", img_src: "../static/images/error.gif"}
     },
     ".member-response": {
         0: {title: "", img_src: ""},
-        1: {title: "註冊中", img_src: "../static/images/loading.gif"},
-        2: {title: "註冊完成", img_src: "../static/images/check.gif"},
-        3: {title: "驗證中", img_src: "../static/images/loading.gif"},
-        4: {title: "伺服器異常", img_src: "../static/images/error.gif"}
+        1: {title: "Signing up", img_src: "../static/images/loading.gif"},
+        2: {title: "Done", img_src: "../static/images/check.gif"},
+        3: {title: "Verifying", img_src: "../static/images/loading.gif"},
+        4: {title: "Server failure", img_src: "../static/images/error.gif"}
     }
 };
 
