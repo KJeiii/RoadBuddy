@@ -50,6 +50,13 @@ CheckUserStatus()
             map.ChangePositionRandomly();
             RenderTrackingMode("random");
         }
+        
+        // for README demo video
+        // const initialCoordination = {latitude: 25.034248549791037, longitude: 121.56398900864755};
+        // ManipulateSessionStorage("set", {initialLatitude: initialCoordination.latitude, initialLongitude: initialCoordination.longitude});
+        // map.CreateMap(initialCoordination);
+        // map.CreateMarker(userID, imageUrl, initialCoordination);
+        // RenderTrackingMode("realtime");
 
         // update main-pannel description and configure pannel username input
         RenderUsername(username);
