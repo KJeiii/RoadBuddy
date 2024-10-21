@@ -25,8 +25,8 @@ export async function CreateNewTeam(userID, teamName){
     let result = await response.json();
     if (result.error) {
         searchInput.value = "";
-        searchInput.setAttribute("placeholder", "隊伍名稱已被使用，請輸入其他名稱");
-        throw new Error("隊伍名稱已被使用，請輸入其他名稱")
+        searchInput.setAttribute("placeholder", "The name is used by other user.");
+        throw new Error("The name is used by other user.")
     }
     return result
 }
