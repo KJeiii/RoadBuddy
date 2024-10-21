@@ -541,10 +541,16 @@ input[name=create-team]
     box-shadow: 2px;
 }
 
+.message-pannel .pannel-title{
+    font-size: 20px;
+    margin-top: 40px;
+}
+
 .message-outer{
-    width: 50%;
+    width: 70%;
     overflow-y: scroll;
     height: 80%;
+    margin-top: 10px;
 }
 
 .message-list{
@@ -610,8 +616,13 @@ input[name=create-team]
     box-shadow: 2px;
 }
 
+.configure-pannel .pannel-title{
+    font-size: 20px;
+    margin-top: 40px;
+}
+
 .configure-outer {
-    width: 170px;
+    width: 100%;
 }
 
 .configure-outer .image{
@@ -653,10 +664,17 @@ label.avatar{
     height: 20px;
 }
 
+.configure-form{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 .configure-form-username,
 .configure-form-email {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     width: 165px;
 }
 
@@ -664,8 +682,8 @@ label.avatar{
     margin: 5px 0;
 }
 
-.configure-form p.value{
-    color: grey;
+.configure-form div.value{
+    margin: 0 10px;
 }
 
 .configure-form-username img{
@@ -677,6 +695,7 @@ label.avatar{
     font-size: 15px;
     text-align: center;
     width: 95px;
+    margin: 0 5px;
 }
 
 div.configure-outer div.button{
@@ -713,11 +732,12 @@ div.configure-outer div.button button{
     background-color: white;
     border-radius: 10px;
     box-shadow: 2px;
+    text-align: center;
 }
 
 .configure-response p.configure-response-title{
     padding: 0;
-    font-size: 30px;
+    font-size: 25px;
     font-weight: bold;
     margin: 30px 0 10px 0;
 }
@@ -845,8 +865,6 @@ div.update-password__button button{
 .mode-prompt{
     width: 70vw;
     left: 15vw;
-    /* width: 40vw;
-    left: 30vw; */
 }
 
 .friend-prompt button,
@@ -940,6 +958,7 @@ div.update-password__button button{
 /* The switch on mode prompt */
 p.mode-prompt__title{
     margin: 20px 0 0 0;
+    font-size: 20px;
 }
 
 div.mode-prompt__switch-outer p.option{
