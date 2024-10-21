@@ -1,5 +1,5 @@
 import { map } from "./AppClass.js";
-import { VerifyInputValue, isInputFilledIn } from "./GeneralControl.js";
+import { VerifyInputValue, isInputFilledIn, isInputValuesUnique, isInputValuesConsistent,  } from "./GeneralControl.js";
 
 export async function SignupNewAccount(dataToSingup){
     try{
