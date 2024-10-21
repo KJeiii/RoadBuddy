@@ -22,12 +22,12 @@
 <body>
     <div class="setting">
         <div class="setting-btn"></div>
-        <div class="mode">追蹤設定</div>
-        <div class="configure">個人資料</div>
-        <div class="message">訊息</div>
-        <div class="logout">登出</div>
-        <div class="invite">新增隊員</div>
-        <div class="leave">離開隊伍</div>
+        <div class="mode">Tracking mode</div>
+        <div class="configure">User Config</div>
+        <div class="message">Messages</div>
+        <div class="logout">Logout</div>
+        <div class="invite">Invite</div>
+        <div class="leave">Leave</div>
     </div>
     <div id="map"></div>
     <div class="main-pannel">
@@ -35,10 +35,10 @@
         <div class="drop-down"></div>
         <nav>
             <div class="nav-menu">
-                <div class="nav-menu-title">好友列表</div>
+                <div class="nav-menu-title">Friends</div>
                 <div class="nav-menu-list">
-                    <div class="nav-menu-friend">好友列表</div>
-                    <div class="nav-menu-team">隊伍列表</div>
+                    <div class="nav-menu-friend">Friends</div>
+                    <div class="nav-menu-team">Teams</div>
                 </div>
             </div>
             
@@ -51,27 +51,27 @@
             <div class="description">Loading...</div>
         </div>
         <div class="friend-color-intro">
-            <div class="online">上線</div>
-            <div class="offline">離線</div>
+            <div class="online">Online</div>
+            <div class="offline">Offline</div>
         </div>
         <div class="friend-outer">
             <div class="friend-list">
             </div>
         </div>
         <div class="team-color-intro">
-            <div class="online">旅程中</div>
-            <div class="offline">未啟程</div>
+            <div class="online">Online</div>
+            <div class="offline">Offline</div>
         </div>
         <div class="team-outer">
             <div class="team-outer-create">
-                <div class="team-outer-title">你建立的</div>
+                <div class="team-outer-title">Your create</div>
                     <div class="team-outer-overflow">
                         <div class="create-list">
                         </div>
                     </div>
             </div>
             <div class="team-outer-join">
-                <div class="team-outer-title">你加入的</div>
+                <div class="team-outer-title">You join</div>
                 <div class="team-outer-overflow">
                     <div class="join-list">
                     </div>
@@ -82,39 +82,39 @@
 
     <div class="friend-pannel">
         <div class="close"></div>
-        <div class="pannel-title">新增好友</div>
+        <div class="pannel-title">Make new friends</div>
         <div class="search">
             <div class="search-icon"></div>
-            <input type="text" name="search-friend" placeholder="搜尋姓名">
+            <input type="text" name="search-friend" placeholder="Friend's name">
         </div>
         <div class="search-outer">
             <div class="search-list">
             </div>
         </div>
-        <button type="button">加入好友</button>
+        <button type="button">Request</button>
     </div>
 
     <div class="team-pannel">
         <div class="close"></div>
-        <div class="pannel-title">創建隊伍</div>
+        <div class="pannel-title">Create Team</div>
         <div class="search">
-            <input type="text" name="create-team" placeholder="隊伍名稱">
+            <input type="text" name="create-team" placeholder="Team name">
         </div>
-        <div class="friend-title">新增隊員</div>
+        <div class="friend-title">Invite friends</div>
         <div class="friend-outer">
             <div class="friend-list">
             </div>
         </div>
-        <button type="button" class="create-team-btn">創建</button>
-        <button type="button" class="start-trip-btn">啟程</button>
-        <button type="button" class="invite-trip-btn">邀請</button>
-        <button type="button" class="join-trip-btn">申請加入</button>
+        <button type="button" class="create-team-btn">Create</button>
+        <button type="button" class="start-trip-btn">Start</button>
+        <button type="button" class="invite-trip-btn">Invite</button>
+        <button type="button" class="join-trip-btn">Apply</button>
     </div>
 
     <div class="tracking-pannel">
         <div class="pull-up"></div>
         <div class="drop-down"></div>
-        <div class="pannel-title">隊員</div>
+        <div class="pannel-title">Partners</div>
         <div class="partner-outer">
             <div class="partner-list">
             </div>
@@ -122,14 +122,14 @@
     </div>
     <div class="message-pannel">
         <div class="close"></div>
-        <div class="pannel-title">交友邀請</div>
+        <div class="pannel-title">Friend-making Invitation</div>
         <div class="message-outer">
             <div class="message-list"></div>
         </div>
     </div>
     <div class="configure-pannel">
         <div class="close"></div>
-        <div class="pannel-title">個人資料</div>
+        <div class="pannel-title">User Configuration</div>
         <div class="configure-outer">
             <div class="image">
                 <div class="undo"></div>
@@ -138,19 +138,19 @@
             </div>
             <div class="configure-form">
                 <div class="configure-form-email">
-                    <div class="item">信箱</div>
+                    <div class="item">Email</div>
                     <div class="value">123@mail</div>
                     <div></div>
                 </div>
                 <div class="configure-form-username">
-                    <label for="username-to-update">姓名</label>
+                    <label for="username-to-update">Username</label>
                     <input id="username-to-update" type="text" value="username" disabled>
                     <img src="../static/images/modify.svg" alt="modify.svg" class="modify">
                 </div>
             </div>
             <div class="button">
-                <button class="update-basic">確認修改基本資料</button>
-                <button class="update-password">更改密碼</button>
+                <button class="update-basic">Update</button>
+                <button class="update-password">Password Reset</button>
             </div>
         </div>
     </div>
@@ -158,8 +158,8 @@
     <div class="friend-prompt">
         <div class="from"></div>
         <div class="content"></div>
-        <button class="no">No</button>
-        <button class="yes">Yes</button>
+        <button class="yes">Accept</button>
+        <button class="no">Reject</button>
     </div>
 
     <div class="friend-response">
@@ -203,7 +203,7 @@
 
     <div class="configure-response">
         <div class="close"></div>
-        <p class="configure-response-title">更新中</p>
+        <p class="configure-response-title">Updating</p>
         <img src="../static/images/loading.gif" alt="loading.gif">
         <div class="configure-response-icon-src">
             <p>Icon by&nbsp</p>
@@ -212,43 +212,43 @@
     </div>
 
     <div class="update-password">
-        <p class="update-password__title">更改密碼</p>
+        <p class="update-password__title">Password Reset</p>
         <div class="update-password__old-password">
             <div class="update-password__old-password__title">
-                <div>舊密碼</div>
+                <div>Old password</div>
             </div>
-            <input type="password" name="original-password" id="old-password" placeholder="輸入舊密碼">
+            <input type="password" name="original-password" id="old-password" placeholder="Enter old password">
         </div>
         <div class="update-password__new-password">
             <div class="update-password__new-password__title">
-                <div>新密碼</div>
+                <div>New Password</div>
             </div>
-            <input type="password" name="original-password" id="new-password" placeholder="輸入新密碼">
+            <input type="password" name="original-password" id="new-password" placeholder="Enter new password">
         </div>
         <div class="update-password__confirm-password">
             <div class="update-password__confirm-password__title">
-                <div>確認密碼</div>
+                <div>Confirm New Password</div>
             </div>
-            <input type="password" name="original-password" id="confirm-password" placeholder="再次輸入新密碼">
+            <input type="password" name="original-password" id="confirm-password" placeholder="Enter again new password">
         </div>
         <div class="update-password__button">
-            <button class="cancel">取消</button>
-            <button class="update">確認更改</button>    
+            <button class="cancel">Cancel</button>
+            <button class="update">Confirm</button>    
         </div>
     </div>
 
     <div class="mode-prompt">
         <div class="close"></div>
-        <p class="mode-prompt__title">位置追蹤模式</p>
+        <p class="mode-prompt__title">Tracking mode</p>
         <div class="mode-prompt__switch-outer">
-            <p class="option">隨機變化</p>
+            <p class="option">Random</p>
             <label class="switch" for="mode">
                 <input type="checkbox" id="mode">
                 <div class="slider">
                     <div class="dot"></div>
                 </div>
             </label>
-            <p class="option">即時追蹤</p>
+            <p class="option">Real-Time</p>
         </div>
     </div>
 
