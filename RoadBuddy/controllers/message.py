@@ -17,7 +17,7 @@ def message():
             return jsonify({"ok": True}), 200
         except Exception as error:
             print(f'Error in controller(message) - (POST method) : {error}')
-            return jsonify({"error": True, "message": "伺服器內部錯誤"}), 500
+            return jsonify({"error": True, "message": "Internal server error"}), 500
         
     if request.method == "GET": 
         try:  
@@ -26,7 +26,7 @@ def message():
             return jsonify({"ok": True, "data": messages}), 200
         except Exception as error:
             print(f'Error in controller(message) - (PATCH method) : {error}')
-            return jsonify({"error": True, "message": "伺服器內部錯誤"}), 500
+            return jsonify({"error": True, "message": "Internal server error"}), 500
         
     if request.method == "DELETE":
         try:
@@ -34,7 +34,7 @@ def message():
             return jsonify({"ok": True}), 200
         except Exception as error:
             print(f'Error in controller(message) - (DELETE method) : {error}')
-            return jsonify({"error": True, "message": "伺服器內部錯誤"}), 500
+            return jsonify({"error": True, "message": "Internal server error"}), 500
         
     
     
