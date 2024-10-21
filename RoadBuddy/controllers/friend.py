@@ -26,7 +26,7 @@ def Search_old_friend(user_id: int):
             print(f'Error in controller(friend) - Load_friend_list : {error}')
             response = {
                 "error": True,
-                "message": "伺服器內部錯誤"
+                "message": "Internal server error"
             }
             return jsonify(response), 500
     
@@ -45,7 +45,7 @@ def Search_new_friend():
             print(f'Error in controller(friend) - Search_new_friend : {error}')
             response = {
                 "error": True,
-                "message": "伺服器內部錯誤"
+                "message": "Internal server error"
             }
             return jsonify(response), 500
 
@@ -69,6 +69,6 @@ def Add_friend():
             print(f'Error in controller(friend) - Add_friend : {error}')
             response = {
                 "error": True,
-                "message": "伺服器內部錯誤"
+                "message": "Internal server error"
             }
             return jsonify(response), 500
