@@ -43,7 +43,7 @@ def Team():
             print(f'Error in controller(team) - Team(PUT method) : {error}')
             response = {
                 "error": True,
-                "message": "伺服器內部錯誤"
+                "message": "Internal server error"
             }
             return jsonify(response), 500
         
@@ -57,7 +57,7 @@ def Team():
             if len(search_team) != 0 :
                 response = {
                     "error": True,
-                    "message": "隊伍名稱已被使用"
+                    "message": "The team name has been used."
                 }
                 return jsonify(response), 400
 
@@ -73,7 +73,7 @@ def Team():
             print(f'Error in controller(team) - Team(POST method) : {error}')
             response = {
                 "error": True,
-                "message": "伺服器內部錯誤"
+                "message": "Internal server error"
             }
             return jsonify(response), 500
     
@@ -103,14 +103,14 @@ def Team():
             
             response = {
                 "error": True,
-                "message": "曾經已是隊員"
+                "message": "You have been in partnership already."
             }
-            return jsonify(response), 400
+            return jsonify(response), 200
         
         except Exception as error:
             print(f'Error in controller(team) - Team(PATCH method) : {error}')
             response = {
                 "error": True,
-                "message": "伺服器內部錯誤"
+                "message": "Internal server error"
             }
             return jsonify(response), 500            
