@@ -119,4 +119,4 @@ python3 app.py
 ## Contact
 - Email: pleaemailtokj@gmail.com
 - GitHub: [KJeiii](https://github.com/kjeiii)
-- LinkedIn: [Kai-Chieh Chang](www.linkedin.com/in/kai-chieh-chang-張凱捷-a10221b9)
+- LinkedIn: [Kai-Chieh Chang](https://www.linkedin.com/in/kai-chieh-chang-張凱捷-a10221b9)
