@@ -55,7 +55,7 @@ def Signup():
             if email_is_used :
                 response = {
                     "error": True,
-                    "message": "註冊失敗，該電子信箱已註冊"
+                    "message": "The email has been used."
                 }
                 return jsonify(response), 409
             
@@ -77,7 +77,7 @@ def Signup():
             print(error)
             response = {
                 "error": True,
-                "message": "伺服器內部錯誤"
+                "message": "Internal server error"
             }
             return jsonify(response), 500
 
@@ -92,13 +92,13 @@ def Encode_JWT_Token(user_id: int, email: str) -> str:
 def check_headers_authorization(authorization_value: str) -> dict:
     try:
         if authorization_value == None:
-            return {"error": True, "message": "The value of authorization is empty"}
+            return {"error": True, "message": "The value of authorization is empty."}
 
         split_value_of_authorization = authorization_value.split(" ")
         if "Bearer" not in split_value_of_authorization:
-            return {"error": True, "message": "The type of authorization scheme is not Bearer"}
+            return {"error": True, "message": "The type of authorization scheme is not Bearer."}
         if len(split_value_of_authorization) != 2:
-            return {"error": True, "message": "The credential is missing"}
+            return {"error": True, "message": "The credential is missing."}
         return {"ok": True, "token": split_value_of_authorization[1]}
 
     except Exception as error:
@@ -115,10 +115,10 @@ def Decode_JWT_Token(authorization_value: str) -> dict:
         return {"ok": True, "user_id": user_id, "email": email}
     except jwt.exceptions.InvalidTokenError as error:
         print("Failed to decode JWT: ", error)
-        return {"error": True, "message": "JWT token is unacceptable"}
+        return {"error": True, "message": "JWT token is unacceptable."}
     except Exception as error:
         print("Failed to execute Decode_JWT_token: ", error)
-        return {"error": True, "message": "JWT decoding does not work"}
+        return {"error": True, "message": "JWT decoding does not work."}
 
 # signin and check user status
 @member_bp.route("/api/member/auth", methods = ["PUT", "GET"])
@@ -130,7 +130,7 @@ def Login():
             if len(memberTool.Search_member_by_email(email)) == 0:
                 response = {
                     "error": True,
-                    "message": "此電子信件尚未註冊"
+                    "message": "The email has not been registered yet."
                 }
                 return jsonify(response), 400
             
@@ -141,7 +141,7 @@ def Login():
             else:
                 response = {
                     "error": True,
-                    "message": "密碼不正確"
+                    "message": "The password is incorrect."
                 }
                 return jsonify(response), 400
         
@@ -149,7 +149,7 @@ def Login():
             print(error)
             response = {
                 "error": True,
-                "message": "伺服器內部錯誤"
+                "message": "Internal server error"
             }
             return jsonify(response), 500
     
@@ -221,7 +221,7 @@ def update_basic_info():
         
         except Exception as error:
             print("Failed to update basic information (update_basic_info()): ", error)
-            response = {"error": True, "message": "伺服器內部錯誤"}
+            response = {"error": True, "message": "Internal server error"}
             return jsonify(response), 500
 
 
@@ -241,7 +241,7 @@ def update_password():
             if not allow_change_password(email = email, password = request.json.get("oldPassword")):
                 return jsonify({
                     "error": True, 
-                    "message": "The password in use is incorrect."}), 403
+                    "message": "The old password is incorrect."}), 403
 
             new_password_hashed = generate_password_hash(request.json.get("newPassword"))
             memberTool.Update_password(user_id = user_id, password_to_update = new_password_hashed)
@@ -249,7 +249,7 @@ def update_password():
         
         except Exception as error:
             print(error)
-            response = {"error": True, "message": "伺服器內部錯誤"}
+            response = {"error": True, "message": "Internal server error"}
             return jsonify(response), 500
 
 
