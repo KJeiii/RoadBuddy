@@ -139,11 +139,13 @@ export async function CollectInformationToUpdate(){
             avatarFile = document.querySelector("input#avatar").files[0],
             usernameToUpdate = document.querySelector("input#username-to-update").value,
             dataToUpdate = new FormData();
-        dataToUpdate.append("usernameToUpdate", usernameToUpdate);
         dataToUpdate.append("avatar", avatarFile);
+
+        if (avatarFile.size < 5120){dataToUpdate.append("usernameToUpdate", usernameToUpdate)}
+        else{throw {message:"File size is larger than 5MB", responseCode: 5}}
         return dataToUpdate
     }
-    throw "There is no new information to update."
+    throw {message: "There is no new information to update.", responseCode: 3}
 }
 
 export async function UpdateUserInformation(formDataToUpdate){
