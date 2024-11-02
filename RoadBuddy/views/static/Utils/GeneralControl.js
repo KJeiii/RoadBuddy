@@ -706,7 +706,8 @@ export const responseCatalogue = {
         1: {title: "Signing up", img_src: "../static/images/loading.gif"},
         2: {title: "Done", img_src: "../static/images/check.gif"},
         3: {title: "Verifying", img_src: "../static/images/loading.gif"},
-        4: {title: "Server failure", img_src: "../static/images/error.gif"}
+        4: {title: "Server failure", img_src: "../static/images/error.gif"},
+        5: {title: "File size must be smaller than 5MB", img_src: "../static/images/error.gif"}
     }
 };
 
@@ -715,7 +716,6 @@ export function RenderResponse(responseCssSelector, responseCode, reset = false)
         responseTitle = document.querySelector(`${responseCssSelector} p`),
         img = document.querySelector(`${responseCssSelector} img`);
 
-    // document.querySelector(".configure-pannel").style.display = "none";
     document.querySelector(responseCssSelector).style.display = reset ? "none" : "flex";
     responseTitle.textContent = responseCatalogue[responseCssSelector][responseCode].title;
     img.src = responseCatalogue[responseCssSelector][responseCode].img_src;
