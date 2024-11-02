@@ -698,7 +698,8 @@ export const responseCatalogue = {
         1: {title: "Success", img_src: "../static/images/check.gif"},
         2: {title: "Updating", img_src: "../static/images/loading.gif"},
         3: {title: "Nothing needs to be updated", img_src: "../static/images/error.gif"},
-        4: {title: "Old password is incorrect", img_src: "../static/images/error.gif"}
+        4: {title: "Old password is incorrect", img_src: "../static/images/error.gif"},
+        5: {title: "File size must be smaller than 5MB", img_src: "../static/images/error.gif"}
     },
     ".member-response": {
         0: {title: "", img_src: ""},
