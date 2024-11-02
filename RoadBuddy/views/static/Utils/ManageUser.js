@@ -119,11 +119,15 @@ export function ChangeIconColor(username){
     ClearCanvasContext();
 }
 
-export function CollectInformationToSignup(){
-    const dataToSingup = new FormData();
+export async function CollectInformationToSignup(){
+    const//
+        dataToSingup = new FormData(),
+        avatar = document.querySelector("div.signup div.form-div input[name='avatar']").files[0];
     dataToSingup.append("email", document.querySelector("div.signup div.form-div input[name='email']").value);
     dataToSingup.append("username", document.querySelector("div.signup div.form-div input[name='username']").value);
     dataToSingup.append("password", document.querySelector("div.signup div.form-div input[name='password']").value);
+
+    if (avatar != undefined && avatar.size > 5120){throw {message:"File size is larger than 5MB", responseCode: 5}}
     dataToSingup.append("avatar", document.querySelector("div.signup div.form-div input[name='avatar']").files[0]);
     return dataToSingup
 }
@@ -139,10 +143,10 @@ export async function CollectInformationToUpdate(){
             avatarFile = document.querySelector("input#avatar").files[0],
             usernameToUpdate = document.querySelector("input#username-to-update").value,
             dataToUpdate = new FormData();
+        dataToUpdate.append("usernameToUpdate", usernameToUpdate)
+        
+        if (avatarFile.size > 5120){throw {message:"File size is larger than 5MB", responseCode: 5}}
         dataToUpdate.append("avatar", avatarFile);
-
-        if (avatarFile.size < 5120){dataToUpdate.append("usernameToUpdate", usernameToUpdate)}
-        else{throw {message:"File size is larger than 5MB", responseCode: 5}}
         return dataToUpdate
     }
     throw {message: "There is no new information to update.", responseCode: 3}
