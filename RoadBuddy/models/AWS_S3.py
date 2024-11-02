@@ -8,26 +8,26 @@ s3_client = boto3.client("s3",
 
 def Upload_file(file: bytes, filename:str) -> None:
     try:    
-        s3_client.upload_fileobj(file, "picboard-bucket", filename)
+        s3_client.upload_fileobj(file, os.environ.get("S3_bucket"), filename)
     except Exception as error:
         print("Failed to execute Upload_file: ", error)
 
 def Delete_file(filename: str) -> None:
     try:
-        s3_client.delete_object(Bucket="picboard-bucket", Key=filename)
+        s3_client.delete_object(Bucket=os.environ.get("S3_bucket"), Key=filename)
     except Exception as error:
         print("Failed to execute Delete_file: ", error)
 
 def List_all_files() -> list:
     try:
-        return s3_client.list_objects(Bucket="picboard-bucket")["Contents"]
+        return s3_client.list_objects(Bucket=os.environ.get("S3_bucket"))["Contents"]
     except Exception as error:
         print("Failed to execute List_all_files: ", error)
 
 def Find_files(email: str) -> list:
     try:
         prefix = f"roadbuddy_avatar_{email}"
-        return s3_client.list_objects(Bucket="picboard-bucket", Prefix=prefix).get("Contents")
+        return s3_client.list_objects(Bucket=os.environ.get("S3_bucket"), Prefix=prefix).get("Contents")
     except Exception as error:
         print("Failed to execute Find_files: ", error)
 
@@ -41,8 +41,3 @@ def Update_file(email: str, file_to_update: bytes, filename_to_update: str) -> N
     except Exception as error:
         print("Failed to execute Update_file: ", error)
 
-    
-if __name__ == "__main__":
-    for object in Find_files(6, "test1@mail"):
-        Delete_file(object.get("Key"))
-    print(Find_files(6, "test1@mail"))

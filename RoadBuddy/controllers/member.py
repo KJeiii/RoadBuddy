@@ -41,7 +41,7 @@ def upload_avatar(avatar_file: object, email: str) -> dict:
         RoadBuddy.models.AWS_S3.Update_file(email, avatar_file, new_filename)
     return {
         "ok": True,
-        "image_url": os.getenv("RDS_domain_name") + new_filename if has_new_avatar else None
+        "image_url": os.getenv("S3_domain_name") + new_filename if has_new_avatar else None
     }
 
 # Signup
