@@ -194,3 +194,9 @@ document.querySelector("button.login").addEventListener("click", async() => {
     })
     .catch(error => {console.log(error)})
 });
+
+// close button on member reponse 
+document.querySelector(".member-response > .close").addEventListener("click", function(){
+    this.parentElement.style.display = "none";
+})
+    
