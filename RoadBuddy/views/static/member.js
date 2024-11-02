@@ -91,26 +91,32 @@ document.querySelector("button.signup").addEventListener("click", () => {
         return
     }
     RenderResponse(".member-response", 1);
-    SignupNewAccount(CollectInformationToSignup())
-        .then((signupResponse) => {
-            if (signupResponse.error){
-                SwitchSignUpStep();
-
-                if (signupResponse.status === 500){
-                    RenderResponse(".member-response", 4);
-                    return
-                }
-
-                RenderErrorMessage(document.querySelector("div.signup div.form-div-title.email"), signupResponse.message);
-                RenderResponse(".member-response", 0, true);    
-                return
-            };
-            RenderResponse(".member-response", 2);
-            SwitchBetweenSignupAndLogin();
-            RenderResponse(".member-response", 0, true);
-            document.querySelector("div.login input[name=email]").value = signupResponse.email;
+    CollectInformationToSignup()
+        .then((informationToSignUp)=>{
+            SignupNewAccount(informationToSignUp)
+                .then((signupResponse) => {
+                    if (signupResponse.error){
+                        SwitchSignUpStep();
+                        if (signupResponse.status === 500){
+                            RenderResponse(".member-response", 4);
+                            return
+                        }
+        
+                        RenderErrorMessage(document.querySelector("div.signup div.form-div-title.email"), signupResponse.message);
+                        RenderResponse(".member-response", 0, true);    
+                        return
+                    };
+                    RenderResponse(".member-response", 2);
+                    SwitchBetweenSignupAndLogin();
+                    RenderResponse(".member-response", 0, true);
+                    document.querySelector("div.login input[name=email]").value = signupResponse.email;
+                })
+                .catch((error)=>{console.log(error)})
         })
-        .catch((error)=>{console.log(error)})
+        .catch(error => {
+            console.log(error);
+            RenderResponse(".member-response", error.responseCode);
+        })
 });
 
 // --- click no button of signup prompt ---
@@ -122,26 +128,33 @@ document.querySelector("div.signup-prompt button.no").addEventListener("click", 
 document.querySelector("div.signup-prompt button.yes").addEventListener("click", ()=>{
     ControlMebmerMsgBox("div.signup-prompt", "none");
     RenderResponse(".member-response", 1);
-    SignupNewAccount(CollectInformationToSignup())
-        .then((signupResponse) => {
-            if (signupResponse.error){
-                SwitchSignUpStep();
+    CollectInformationToSignup()
+        .then((informationToSignUp) => {
+            SignupNewAccount(informationToSignUp)
+                .then((signupResponse) => {
+                    if (signupResponse.error){
+                        SwitchSignUpStep();
+                
+                        if (signupResponse.status === 500){
+                            RenderResponse(".member-response", 4);
+                            return
+                        }
         
-                if (signupResponse.status === 500){
-                    RenderResponse(".member-response", 4);
-                    return
-                }
-
-                RenderResponse(".member-response", 0, true);
-                RenderErrorMessage(document.querySelector("div.signup div.form-div-title.email"), signupResponse.message);
-                return
-            }
-            RenderResponse(".member-response", 2);
-            SwitchBetweenSignupAndLogin();
-            RenderResponse(".member-response", 0, true);
-            document.querySelector("div.login input[name=email]").value = signupResponse.email;
+                        RenderResponse(".member-response", 0, true);
+                        RenderErrorMessage(document.querySelector("div.signup div.form-div-title.email"), signupResponse.message);
+                        return
+                    }
+                    RenderResponse(".member-response", 2);
+                    SwitchBetweenSignupAndLogin();
+                    RenderResponse(".member-response", 0, true);
+                    document.querySelector("div.login input[name=email]").value = signupResponse.email;
+                })
+                .catch((error)=>{console.log(error)})
         })
-        .catch((error)=>{console.log(error)})
+        .catch(error => {
+            console.error(error);
+            RenderResponse(".member-response", error.responseCode);
+        })
 })
 
 // --- login ---
