@@ -129,8 +129,8 @@ export function AddEventsToSetting() {
                     })
             })
             .catch((error) => {
-                RenderResponse(".configure-response", 3);
-                console.log(error)
+                console.log(error);
+                RenderResponse(".configure-response", error.responseCode);
             })
     })
 
