@@ -186,7 +186,7 @@ document.querySelector("button.login").addEventListener("click", async() => {
                 return
             }
 
-            const titleDivToAddErrorMsg = loginResult.message.includes("電子信件") ? 
+            const titleDivToAddErrorMsg = loginResult.message.includes("email") ? 
                 document.querySelector(".login .email") : document.querySelector(".login .password");
             RenderErrorMessage(titleDivToAddErrorMsg, `(${loginResult.message})`);
             return
