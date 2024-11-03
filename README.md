@@ -103,6 +103,10 @@ python3 app.py
 
 ![modify user info](./images/update%20user%20info.gif)
 
+- Change icon color if the avatar has not been uploaded.
+
+![change icon color](./images/change%20icon%20color.gif)
+
 - Logout after finishing the web app.
 
 ![log out](./images/log%20out.gif)
