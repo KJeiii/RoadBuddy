@@ -147,7 +147,10 @@ document.querySelector("div.signup-prompt button.yes").addEventListener("click",
                     RenderResponse(".member-response", 2);
                     SwitchBetweenSignupAndLogin();
                     RenderResponse(".member-response", 0, true);
+
+                    document.querySelectorAll("div.login input").forEach(input => {input.value = ""});
                     document.querySelector("div.login input[name=email]").value = signupResponse.email;
+                    ClearErrorMessage(...Array.from(document.querySelectorAll("div.login .form-div-title")));
                 })
                 .catch((error)=>{console.log(error)})
         })
