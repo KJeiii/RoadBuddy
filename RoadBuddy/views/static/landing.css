@@ -14,7 +14,7 @@ body {
 
 .title {
     position: absolute;
-    top: 30%;
+    top: 20%;
     width: 100%;
     text-align: center;
     font-size: 65px;
@@ -23,16 +23,28 @@ body {
 
 .intro {
     position: absolute;
-    top: 43%;
+    top: 32%;
     width: 100%;
     text-align: center;
     font-size: 25px;
     font-weight: 400;
 }
 
+.image{
+    position: absolute;
+    left: 15%;
+    top: 35%;
+    width: 70%;
+    aspect-ratio: 1/1;
+    background-image: url("../static/images/landing-img.png");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
 .start {
     position: absolute;
-    top: 55%;
+    top: 75%;
     left: 20%;
     width: 60%;
     height: 60px;
@@ -63,18 +75,33 @@ body {
         font-size: 40px;
     }
 
+    .image{
+        top: 30%
+    }
+
     .start {
         font-size: 40px;
+        top: 80%;
     }
 }
 
 @media (min-width: 1200px) {
+    .title {
+        top: 13%;
+    }
+
     .intro {
-        top: 45%;
+        top: 27%;
+    }
+
+    .image{
+        top: 30%;
+        width: 30%;
+        left: 35%;
     }
 
     .start {
-        top: 60%;
+        top: 85%;
         width: 40%;
         left: 30%
     }
