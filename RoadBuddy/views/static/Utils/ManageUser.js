@@ -128,7 +128,7 @@ export async function CollectInformationToSignup(){
     dataToSingup.append("password", document.querySelector("div.signup div.form-div input[name='password']").value);
 
     if (avatar != undefined && avatar.size > 5120){throw {message:"File size is larger than 5MB", responseCode: 5}}
-    dataToSingup.append("avatar", document.querySelector("div.signup div.form-div input[name='avatar']").files[0]);
+    dataToSingup.append("avatar", avatar);
     return dataToSingup
 }
 
